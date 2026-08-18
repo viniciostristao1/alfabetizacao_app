@@ -100,4 +100,35 @@ void main() {
       }
     });
   });
+
+  group('selecionar animais', () {
+    test('todosOsAnimais() traz só animais, sem repetir e em ordem A→Z', () {
+      final lista = todosOsAnimais();
+      expect(lista, isNotEmpty);
+      expect(lista.every((p) => p.categoria == Categoria.animais), isTrue,
+          reason: 'entrou algo que não é animal');
+      final textos = lista.map((p) => p.texto).toList();
+      expect(textos.toSet().length, equals(textos.length),
+          reason: 'animal repetido na seleção');
+      for (var i = 1; i < lista.length; i++) {
+        expect(
+          semAcento(lista[i].texto).compareTo(semAcento(lista[i - 1].texto)) >=
+              0,
+          isTrue,
+          reason: 'fora de ordem alfabética: '
+              '${lista.map((p) => p.texto).toList()}',
+        );
+      }
+    });
+
+    test('semAcento() normaliza acentos e caixa (busca amigável)', () {
+      expect(semAcento('Águia'), equals('aguia'));
+      expect(semAcento('LEÃO'), equals('leao'));
+      expect(semAcento('tucano'), equals('tucano'));
+      expect(semAcento('pinguim'), equals('pinguim'));
+      // buscar sem acento acha a palavra acentuada (substring)
+      expect(semAcento('onça'), equals('onca'));
+      expect(semAcento('Águia').contains('gui'), isTrue);
+    });
+  });
 }

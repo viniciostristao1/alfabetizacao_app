@@ -2,6 +2,33 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-18 — v0.4.0 (fix dimensão do mapa + selecionar animais + mapa-múndi de fases)
+- **Fix "imagem cortada" do mapa (o pedido):** o v0.3.1 usava `BoxFit.cover` em `Stack(expand)`,
+  que recortava as bordas. Agora `HabitatMapScreen` volta ao `Center(AspectRatio(kMapaAnimaisAspect))`
+  com **`BoxFit.fill`** — como a box JÁ tem o aspecto certo (1536/1024), `fill` == sem distorção e
+  **sem corte**; o `Scaffold` fica `backgroundColor: kAgua` e a água preenche o resto da tela
+  ("infinita" sem perder nada). Imersivo (`immersiveSticky`) mantido. Constantes de aspecto/água
+  centralizadas em `models/habitat.dart` (`kMapaAnimaisAspect`, `kMapaMundiAspect`, `kAgua`).
+- **Selecionar animais:** `features/selecao/selecao_animais_screen.dart` (RETRATO — é tela de
+  digitação; volta à paisagem no `dispose`). `banco_palavras.dart` ganhou `todosOsAnimais()`
+  (só `Categoria.animais`, ordenado A→Z por `semAcento`) e `semAcento()` (normaliza acento+caixa
+  p/ busca amigável — tabela `de`/`para` de 46 chars, comprimentos casados; como aplica
+  `toLowerCase()` antes, só o ramo minúsculo é atingido). Devolve `List<Palavra>` via `Navigator.pop`
+  ordenada por sílabas; o `HabitatMapScreen._selecionarAnimais` abre o Estudo com os escolhidos.
+- **Mapa-múndi de FASES:** `features/mapa_mundi/mapa_mundi_screen.dart`. Círculos posicionados por
+  fração `fx`/`fy` (0..1) de cada `Habitat` sobre `AspectRatio(1)` (mapa 1024²) via `LayoutBuilder`
+  (diâmetro `= (w*0.13).clamp(44,88)`). Contorno **neon** = `Border` + `BoxShadow` (NÃO usei
+  `MaskFilter.blur` de propósito — pesa/flaky no raster). Caminho entre fases = `CustomPaint`
+  (`_CaminhoPainter`) que acende o trecho i→i+1 quando `fases[i]` está concluída.
+- **Persistência de progresso:** `services/progresso_fases.dart` (shared_preferences, chave
+  `fases_concluidas_v1`, valores = `Habitat.chave`). `EstudoScreen` ganhou `habitatConcluivel`;
+  `_talvezConcluir()` chama `ProgressoFases.marcarConcluido` ao chegar na **última** palavra
+  (no `initState` p/ habitat de 1 palavra e no `_proxima()`). Só o fluxo do mapa-múndi passa a
+  chave — o fluxo normal de habitat/nível NÃO marca fase. Ao voltar, `_recarregar()` reacende.
+- **Ordem das fases:** `Habitat.fases` (getter) ordena por `ordem` (1→5): Ártico→Savana→Selva→
+  Aquático→Aves. `fx`/`fy` de cada habitat definidos em `habitat.dart`; ajustar lá se o desenho
+  do `mapa_mundi.jpg` mudar.
+
 ## 2026-08-18 — v0.3.1 (desfazer + mapa tela cheia + fix orientação + +animais)
 - **Desfazer rabisco:** `_desfazer()` faz `_tracos.removeLast()` (a vassoura `_limparDesenho()`
   limpa tudo). Botão `undo_rounded` abaixo da vassoura, na coluna das canetas.

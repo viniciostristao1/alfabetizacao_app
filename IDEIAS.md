@@ -21,11 +21,15 @@ A criança **fala** a palavra; o app reconhece se **acertou**.
 - Guardar em `shared_preferences` (Riverpod) — 1º uso real da persistência. Molde em ARQUITETURA.
 - Ideias: barrinha de progresso por nível, "vitrine" de troféus, som/animação de recompensa.
 
-## 🗺️ Mapa de habitats (Animais) — FEITO na v0.3.0, com pontas a evoluir
-- Já existe: Home → mapa de habitats (paisagem) → 5 botões (Ártico/Savana/Selva/Aquático/Aves);
-  cada um roda do mais fácil ao mais difícil. Imagem em `assets/habitats/mapa_animais.jpg`.
-- **Mapa-múndi** (6ª célula) está **reservado** (só um aviso "em breve"). Ideias: virar um índice
-  que abre todos os habitats, ou um "modo mundo" com todos os animais.
+## 🗺️ Mapa de habitats (Animais) — FEITO (v0.3.0 → v0.4.0), com pontas a evoluir
+- Já existe: Home → mapa de habitats (paisagem, na dimensão certa + água ao redor) → 5 botões
+  (Ártico/Savana/Selva/Aquático/Aves); cada um roda do mais fácil ao mais difícil.
+- **Selecionar animais** (v0.4.0): botão no mapa → busca com lupa + "+" por animal → Confirmar.
+- **Mapa-múndi de FASES** (v0.4.0): círculos neon por habitat; concluir acende o círculo + o
+  caminho até a próxima fase (progresso salvo em `progresso_fases.dart`). **A evoluir:** o
+  progresso hoje é global (não por perfil de criança); pensar em resetar/escolher perfil quando
+  entrar a gamificação. As fases seguem a ordem fixa de `Habitat.ordem` (não bloqueia jogar
+  fora de ordem — é livre; se quiser "trancar" fase futura até concluir a anterior, dá pra fazer).
 - **Animais que ficaram de fora** (domésticos: gato, cachorro, vaca…; insetos: formiga, abelha…)
   não cabem nos 5 habitats da imagem. Criar habitats **🚜 Fazenda** e **🐜 Insetos** (nova imagem
   ou células extras) pra readmiti-los.

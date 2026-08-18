@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../../models/estudo_opcoes.dart';
 import '../../models/palavra.dart';
+import '../../services/progresso_fases.dart';
 import '../../theme/app_colors.dart';
 
 /// Tela de estudo (PAISAGEM): mostra uma palavra grande de cada vez, com:
@@ -20,6 +21,7 @@ class EstudoScreen extends StatefulWidget {
     required this.titulo,
     required this.palavras,
     this.manterPaisagemAoSair = false,
+    this.habitatConcluivel,
   });
 
   /// Cabeçalho da tela, ex.: "🍎  Alimentos · Fácil" ou "🐶  Animais · Ártico".
@@ -29,6 +31,11 @@ class EstudoScreen extends StatefulWidget {
   /// Se `true`, ao sair volta para PAISAGEM (fluxo do mapa de habitats, que já é
   /// deitado); se `false` (padrão, fluxo de Nível), volta para RETRATO.
   final bool manterPaisagemAoSair;
+
+  /// Se preenchido (chave do habitat), marca a **fase concluída** no
+  /// [ProgressoFases] quando a criança chega na última palavra — o mapa-múndi
+  /// então acende o círculo e o caminho até a próxima fase.
+  final String? habitatConcluivel;
 
   @override
   State<EstudoScreen> createState() => _EstudoScreenState();
@@ -47,6 +54,15 @@ class _EstudoScreenState extends State<EstudoScreen> {
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
+    _talvezConcluir(); // caso o habitat tenha 1 palavra só
+  }
+
+  /// Marca a fase concluída quando a criança chega na última palavra do habitat.
+  void _talvezConcluir() {
+    if (widget.habitatConcluivel != null &&
+        _i == widget.palavras.length - 1) {
+      ProgressoFases.marcarConcluido(widget.habitatConcluivel!);
+    }
   }
 
   @override
@@ -91,6 +107,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
       _i++;
       _tracos.clear();
     });
+    _talvezConcluir();
   }
 
   void _recomecar() => setState(() {

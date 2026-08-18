@@ -2,6 +2,17 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.4.0 (2026-08-18)
+- **Mapa dos habitats na medida certa.** A imagem agora aparece **inteira** (nada cortado),
+  na proporção correta, e o resto da tela fica preenchido com **água** — continua ocupando a
+  tela toda ("infinita"), sem perder as bordas.
+- **Escolher os animais! 🔎** Botão **"SELECIONAR ANIMAIS"** (canto inferior esquerdo do mapa):
+  abre uma lista com **busca por lupa**; toque no **+** de cada bicho pra adicionar e no
+  **Confirmar** pra brincar só com os escolhidos (do mais fácil ao mais difícil).
+- **Mapa-múndi virou fases! 🗺️** Tocando no mapa-múndi, cada habitat é um **círculo de fase**
+  com contorno **neon**. Toque num círculo pra jogar aquele habitat; ao terminar, a fase
+  **acende** e o **caminho** até a próxima fase **brilha** — e fica salvo pra da próxima vez.
+
 ## v0.3.1 (2026-08-18)
 - **Desfazer:** abaixo da vassoura (limpar tudo) tem um botão **↩︎ desfazer** — apaga só o
   último rabisco; clicando várias vezes, vai apagando um a um.

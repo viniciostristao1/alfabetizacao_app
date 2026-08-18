@@ -278,3 +278,25 @@ List<Palavra> palavrasDoHabitat(String habitatChave) {
   lista.sort((a, b) => a.nivelSilabas.compareTo(b.nivelSilabas));
   return lista;
 }
+
+/// Todos os animais do app (para a tela "Selecionar animais"), em ordem
+/// alfabética (sem acento) para achar fácil na busca.
+List<Palavra> todosOsAnimais() {
+  final lista =
+      bancoPalavras.where((p) => p.categoria == Categoria.animais).toList();
+  lista.sort((a, b) => semAcento(a.texto).compareTo(semAcento(b.texto)));
+  return lista;
+}
+
+/// Remove acentos e baixa a caixa — para busca "amigável" (ex.: "aguia" acha
+/// "águia"). Cobre os acentos comuns do português.
+String semAcento(String s) {
+  const de = 'áàâãäéèêëíìîïóòôõöúùûüçÁÀÂÃÄÉÈÊËÍÌÎÏÓÒÔÕÖÚÙÛÜÇ';
+  const para = 'aaaaaeeeeiiiiooooouuuucAAAAAEEEEIIIIOOOOOUUUUC';
+  final b = StringBuffer();
+  for (final c in s.toLowerCase().split('')) {
+    final i = de.indexOf(c);
+    b.write(i >= 0 ? para[i].toLowerCase() : c);
+  }
+  return b.toString();
+}
