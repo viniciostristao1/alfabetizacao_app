@@ -2,6 +2,27 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-18 — v0.2.0 (fundo + caneta + botões baixos + +palavras)
+- **Escrever na tela (caderno):** `Listener` (onPointerDown/Move, `HitTestBehavior.opaque`)
+  sobre um `Stack[palavra, CustomPaint]`; usa `event.localPosition` (relativo à box do Listener,
+  = mesma da CustomPaint) → sem conversão manual de coordenadas. Cada "canetada" = `_Traco`
+  (lista de `Offset` + cor). `_DesenhoPainter` desenha `Path` com `strokeCap/Join.round` (ponto
+  único vira `drawCircle`). `IgnorePointer` na CustomPaint p/ não roubar toque. Desenho é limpo
+  ao trocar de palavra (próximo/anterior/recomeçar) e pelo botão "limpar". **Caneta capacitiva
+  passiva = toque normal**, então o mesmo `Listener` já cobre.
+- **Cor de fundo por `FundoTela`** (enum em `models/estudo_opcoes.dart`) com `corLetra` embutida:
+  só o **preto** usa letra branca; branco/bege usam letra preta (regra do usuário). A UI (título,
+  progresso, botões, bordas das bolinhas) deriva de `corLetra.withValues(alpha:)` p/ ler em
+  qualquer fundo. Cores de caneta em `CorCaneta`.
+- **Layout:** bolinhas de fundo **horizontais** no topo (ao lado do título); bolinhas de caneta
+  **verticais** à esquerda (+ "limpar"). Botões inferiores agora **baixos** (ícone+texto na
+  horizontal, `vertical: 9`) → mais área p/ a palavra (`fontSize 200` no FittedBox).
+- **Banco expandido p/ ~209 palavras** (animais 63 · objetos 59 · alimentos 57 · nomes 30). O
+  teste de invariantes (2–4 sílabas, sem duplicata) segura a mão ao adicionar. Evitei palavras
+  com hífen (ex.: guarda-chuva) porque `texto = silabas.join()` não preserva o hífen.
+- Lint: `if (cond) setState(...)` sem chaves acusa `curly_braces_in_flow_control_structures` →
+  troquei por `if (!cond) return;` + `setState`.
+
 ## 2026-08-18 — v0.1.0 (nascimento do app)
 - **Scaffold:** `flutter create --org com.vinyapps --project-name alfabetizacao --platforms
   android /root/alfabetizacao_app/app`. Pasta do projeto = `app/` (igual aos irmãos).

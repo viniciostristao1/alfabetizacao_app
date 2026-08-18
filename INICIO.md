@@ -23,19 +23,24 @@ minimalista). Meta futura: Play Store, como os apps irmãos.
 
 ## ⭐ ESTADO ATUAL (2026-08-18) — ler primeiro pós-/clear
 
-**v0.1.0 — MVP de TEXTO** (`flutter analyze` limpo, 7 testes passando). Primeiro corte:
+**v0.2.0 — TEXTO + FUNDO + CANETA** (`flutter analyze` limpo, 7 testes passando).
 
 **O que existe e funciona:**
 - **Home** (retrato) — 4 cards: **Animais 🐶 · Objetos 🧸 · Alimentos 🍎 · Nomes 🔤**
   (emoji/cor são só apoio visual de navegação p/ quem ainda não lê).
 - **Níveis** (retrato) — dentro da categoria: **Fácil (2 sílabas) · Média (3) · Difícil (4)**,
   cada card mostra quantas palavras tem.
-- **Estudo** (PAISAGEM) — mostra **uma palavra grande em CAIXA ALTA** de cada vez
-  (`FittedBox` escala p/ caber). Botões embaixo: **Voltar** (volta p/ o menu e restaura o
-  retrato), **Anterior**, **Recomeçar**, **Próximo**. Progresso "3 / 12" no topo.
-- **Banco de palavras** curado em `app/lib/services/banco_palavras.dart` (~95 palavras),
-  **offline**, guardando as **sílabas** (não só o texto) — isso já deixa pronto o futuro
-  "modo sílabas coloridas" e as **subcategorias** (ver IDEIAS).
+- **Estudo** (PAISAGEM) — **uma palavra grande em CAIXA ALTA** de cada vez (`FittedBox`).
+  - **Cor de fundo** (bolinhas HORIZONTAIS no topo, ao lado do título): preto/branco/bege
+    escuro/bege claro. A palavra é **branca só no preto**, **preta** nos demais (contraste).
+  - **Escrever na tela** (bolinhas de caneta VERTICAIS à esquerda: azul/vermelho/amarelo/roxo +
+    botão limpar) — a criança escreve por cima como num caderno (dedo ou caneta capacitiva). O
+    desenho some ao trocar de palavra.
+  - Botões **baixos** embaixo: **Voltar** (volta ao menu + restaura retrato), **Anterior**,
+    **Recomeçar**, **Próximo**. Progresso "3 / 12" no topo.
+- **Banco de palavras** curado em `app/lib/services/banco_palavras.dart` (**~209 palavras**:
+  animais 63 · objetos 59 · alimentos 57 · nomes 30), **offline**, guardando as **sílabas** (não
+  só o texto) — já deixa pronto o futuro "sílabas coloridas" e as **subcategorias** (ver IDEIAS).
 
 **Decisões de origem (2026-08-18):**
 - MVP = **só a palavra, sem áudio e sem imagem** (pedido do usuário; começar simples).
