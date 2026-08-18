@@ -2,6 +2,25 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-18 — v0.10.5 (V/X flutuantes no canto + botões do mapa numa linha + sem emojis)
+- Usuário via o comportamento da v0.10.3 (V/X empilhados = o Wrap quebrava;
+  INICIAR JOGO cobria o Reiniciar = os 3 Aligns). Mesmo com o v0.10.4 já
+  corrigido, fiz a versão **à prova de falhas**:
+  - **V/X = flutuantes**: `body: Stack([Column(...), Positioned(top:10, right:0,
+    Row(min, [V, 8, X]))])` — colados na TELA (o Stack é o body, sem SafeArea;
+    a linha do topo reserva 104px à direita p/ não ficar texto embaixo).
+    Lado a lado sempre (Row min não empilha).
+  - **Botões do mapa = uma linha**: `FittedBox(fit: scaleDown) + Row(min)` com
+    os 4 botões — nunca empilha (encolhe junto se a tela for estreita), em vez
+    do Wrap (que podia quebrar linha).
+  - **Emojis removidos do mapa-múndi** (pedido): `_AnelFase` perdeu o emoji "em
+    pé" e o parâmetro `emoji`; fica o anel + medalha/estrelinha quando concluída.
+    ⚠️ Cuidado: remover o parâmetro quebra o construtor — atualizar a chamada
+    (for dos anéis).
+- Testes: layout_test agora verifica V/X na MESMA linha (top igual) + X.right
+  == 800; botões do mapa com o MESMO top (linha única); e ausência dos 6 emojis
+  no mapa. 32 testes, analyze limpo.
+
 ## 2026-08-18 — v0.10.4 (fix REAL do V/X no canto + botões do mapa sem sobreposição)
 - Usuário disse que o v0.10.3 não resolveu (X fora do canto e "ainda redondo").
   Causas reais (verificadas com teste de layout + sondas):

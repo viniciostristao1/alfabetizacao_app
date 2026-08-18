@@ -53,7 +53,8 @@ void main() {
     expect(vBotao.width, 40);
     expect(vBotao.height, 40);
 
-    // V colado à esquerda do X (spacing de 8)
+    // LADO A LADO: mesma linha (mesmo top) e V colado à esquerda do X
+    expect(vBotao.top, xBotao.top);
     expect(vBotao.right + 8, xBotao.left);
 
     // forma: QUADRADO com cantos arredondados (não círculo)
@@ -96,9 +97,31 @@ void main() {
     expect(reiniciar.overlaps(iniciar), isFalse);
     expect(iniciar.overlaps(inicio), isFalse);
 
-    // todos na metade de baixo da tela
+    // TODOS lado a lado na MESMA linha (mesmo top) e na metade de baixo
+    expect(iniciar.top, voltar.top);
+    expect(inicio.top, voltar.top);
+    expect(reiniciar.top, voltar.top);
     expect(voltar.bottom, lessThanOrEqualTo(360));
     expect(iniciar.bottom, lessThanOrEqualTo(360));
     expect(inicio.bottom, lessThanOrEqualTo(360));
+  });
+
+  testWidgets('mapa: fases sem emoji de bicho (só os anéis)', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    tester.view.physicalSize = const Size(800, 360);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(const MaterialApp(home: MapaMundiScreen()));
+    await tester.pumpAndSettle();
+
+    // nenhum emoji de categoria/animal na tela do mapa
+    expect(find.text('❄️'), findsNothing);
+    expect(find.text('🐮'), findsNothing);
+    expect(find.text('🐠'), findsNothing);
+    expect(find.text('🌴'), findsNothing);
+    expect(find.text('🦁'), findsNothing);
+    expect(find.text('🦅'), findsNothing);
+    expect(find.text('🐧'), findsNothing);
   });
 }

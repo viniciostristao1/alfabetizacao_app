@@ -180,7 +180,8 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
                             ),
                           ),
                         ),
-                        // anéis das fases (na ordem configurada)
+                        // anéis das fases (na ordem configurada) — só o anel,
+                        // SEM emoji de bicho (pedido do usuário)
                         for (var i = 0; i < _fases.length; i++)
                           Positioned(
                             left: _fases[i].fx * w - d / 2,
@@ -188,7 +189,6 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
                             width: d,
                             height: d,
                             child: _AnelFase(
-                              emoji: _fases[i].emoji,
                               anelAltura: anelH,
                               concluida: _concluidas.contains(_fases[i].chave),
                               medalha: _medalhas[_fases[i].chave],
@@ -223,43 +223,46 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
               ),
             ),
           ),
-          // botões de baixo: TODOS numa linha centralizada (Wrap → nunca fica
-          // um sobre o outro; em telas estreitas quebra a linha).
+          // botões de baixo: TODOS numa ÚNICA linha lado a lado (FittedBox
+          // encolhe se a tela for estreita — nunca empilha nem sobrepõe).
           SafeArea(
             child: Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
                 padding: const EdgeInsets.all(10),
-                child: Wrap(
-                  alignment: WrapAlignment.center,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  spacing: 10,
-                  runSpacing: 8,
-                  children: [
-                    _BotaoTransparente(
-                      icon: Icons.undo_rounded,
-                      texto: 'VOLTAR HABITAT',
-                      onTap: _voltarHabitat,
-                    ),
-                    _BotaoTransparente(
-                      icon: Icons.refresh_rounded,
-                      texto: 'REINICIAR AVENTURA',
-                      onTap: _reiniciarAventura,
-                    ),
-                    _BotaoTransparente(
-                      icon: Icons.play_arrow_rounded,
-                      texto: 'INICIAR JOGO',
-                      fundo: Colors.white,
-                      letra: AppColors.bg,
-                      onTap: _iniciarJogo,
-                    ),
-                    _BotaoTransparente(
-                      icon: Icons.home_rounded,
-                      texto: 'VOLTAR INÍCIO',
-                      onTap: () => Navigator.of(context)
-                          .popUntil((route) => route.isFirst),
-                    ),
-                  ],
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _BotaoTransparente(
+                        icon: Icons.undo_rounded,
+                        texto: 'VOLTAR HABITAT',
+                        onTap: _voltarHabitat,
+                      ),
+                      const SizedBox(width: 10),
+                      _BotaoTransparente(
+                        icon: Icons.refresh_rounded,
+                        texto: 'REINICIAR AVENTURA',
+                        onTap: _reiniciarAventura,
+                      ),
+                      const SizedBox(width: 10),
+                      _BotaoTransparente(
+                        icon: Icons.play_arrow_rounded,
+                        texto: 'INICIAR JOGO',
+                        fundo: Colors.white,
+                        letra: AppColors.bg,
+                        onTap: _iniciarJogo,
+                      ),
+                      const SizedBox(width: 10),
+                      _BotaoTransparente(
+                        icon: Icons.home_rounded,
+                        texto: 'VOLTAR INÍCIO',
+                        onTap: () => Navigator.of(context)
+                            .popUntil((route) => route.isFirst),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -320,18 +323,16 @@ class _CaminhoPainter extends CustomPainter {
 }
 
 /// Anel/pódio de fase (estilo "anel embaixo do personagem"): elipse bem achatada
-/// no "chão" com contorno neon e brilho difuso ("fumacinha"); o emoji fica em
-/// cima. Concluída = anel ACESO (neon forte) + estrelinha; pendente = apagado.
+/// no "chão" com contorno neon e brilho difuso ("fumacinha"). SEM emoji de bicho
+/// (pedido do usuário — só o anel). Concluída = anel ACESO + medalha/estrelinha.
 class _AnelFase extends StatelessWidget {
   const _AnelFase({
-    required this.emoji,
     required this.anelAltura,
     required this.concluida,
     required this.medalha,
     required this.onTap,
   });
 
-  final String emoji;
   final double anelAltura;
   final bool concluida;
 
@@ -407,23 +408,7 @@ class _AnelFase extends StatelessWidget {
               ),
             ),
           ),
-          // EMOJI "em pé" no anel
-          Positioned(
-            bottom: anelAltura * 0.28,
-            child: Text(
-              emoji,
-              style: TextStyle(
-                fontSize: anelAltura * 1.5,
-                shadows: [
-                  Shadow(
-                    color: Colors.black.withValues(alpha: 0.5),
-                    blurRadius: 6,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          // EMOJI removido (pedido do usuário) — fica só o anel/pódio.
           // medalha da fase (ou estrelinha quando só concluída)
           if (concluida)
             Positioned(

@@ -2,6 +2,17 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.10.5 (2026-08-18)
+- **V/X no canto (garantido):** os botões agora são **flutuantes**, colados no
+  canto superior direito da tela, sempre **um ao lado do outro** — nada de
+  empilhar.
+- **Botões de baixo do mapa-múndi:** os 4 (Voltar habitat, Reiniciar aventura,
+  Iniciar jogo, Voltar início) agora ficam **todos lado a lado numa única
+  linha** — nenhum cobre o outro (em telas estreitas eles encolhem juntos).
+- **Mapa-múndi sem emojis:** removidos os emojis dos anéis (❄️🐮🐠🌴🦁🦅) —
+  ficam só os **círculos/anéis** das fases onde estão (com a medalha quando a
+  fase é concluída).
+
 ## v0.10.4 (2026-08-18)
 - **V/X (correção de verdade):** os botões agora ficam **colados no canto
   superior direito da tela** (sem nenhuma margem) e são **quadrados de 40×40

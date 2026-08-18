@@ -214,55 +214,56 @@ class _EstudoScreenState extends State<EstudoScreen> {
 
     return Scaffold(
       backgroundColor: _fundo.cor,
-      // A linha do topo fica FORA do SafeArea (com removePadding horizontal):
-      // o V/X encosta BEM no canto superior direito da tela, mesmo com notch.
-      body: Column(
+      body: Stack(
         children: [
-          MediaQuery.removePadding(
-            context: context,
-            removeLeft: true,
-            removeRight: true,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 10, 0, 0),
-              child: Row(
-                children: [
-                  // Grupo esquerdo (título + bolinhas de fundo) absorve o
-                  // espaço livre; o bloco da direita (progresso/moedas/V/X),
-                  // inflexível e por último, encosta BEM na borda direita.
-                  Expanded(
-                    child: Row(
-                      children: [
-                        Flexible(
-                          child: Text(
-                            widget.titulo,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: ui.withValues(alpha: 0.65),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 14),
-                        for (final f in FundoTela.values)
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: _Bolinha(
-                              cor: f.cor,
-                              selecionada: f == _fundo,
-                              contraste: ui,
-                              onTap: () => setState(() => _fundo = f),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  // Bloco da direita (progresso + moedas + nível + V/X) com
-                  // TAMANHO MÍNIMO → o X encosta BEM no canto superior direito.
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
+          Column(
+            children: [
+              // Linha do topo FORA do SafeArea. O padding direito (104)
+              // RESERVA o espaço dos botões V/X flutuantes (eles ficam por cima,
+              // colados no canto). Sem V/X aqui — são posicionados no Stack.
+              MediaQuery.removePadding(
+                context: context,
+                removeLeft: true,
+                removeRight: true,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 10, 104, 0),
+                  child: Row(
                     children: [
+                      // Grupo esquerdo (título + bolinhas de fundo) absorve o
+                      // espaço livre.
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Flexible(
+                              child: Text(
+                                widget.titulo,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: ui.withValues(alpha: 0.65),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 14),
+                            for (final f in FundoTela.values)
+                              Padding(
+                                padding: const EdgeInsets.only(right: 8),
+                                child: _Bolinha(
+                                  cor: f.cor,
+                                  selecionada: f == _fundo,
+                                  contraste: ui,
+                                  onTap: () => setState(() => _fundo = f),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      // Bloco da direita (progresso + moedas + nível).
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
                       Text(
                         '${_i + 1} / ${widget.palavras.length}',
                         style: TextStyle(
@@ -289,22 +290,6 @@ class _EstudoScreenState extends State<EstudoScreen> {
                           fontSize: 14,
                           fontWeight: FontWeight.w700,
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      // V/X — o adulto diz se a criança acertou ou errou.
-                      _BotaoAcertoErro(
-                        cor: AppColors.acerto,
-                        letra: 'V',
-                        tooltip:
-                            'Acertou! Ganha os pontos e passa pra próxima',
-                        onTap: _acertou,
-                      ),
-                      const SizedBox(width: 8),
-                      _BotaoAcertoErro(
-                        cor: AppColors.danger,
-                        letra: 'X',
-                        tooltip: 'Errou. Perde os pontos e repete a palavra',
-                        onTap: _errou,
                       ),
                     ],
                   ),
@@ -446,6 +431,32 @@ class _EstudoScreenState extends State<EstudoScreen> {
             ),
                 ],
               ),
+            ),
+          ),
+            ],
+          ),
+          // V/X FLUTUANTES: colados no canto superior direito da TELA,
+          // lado a lado, sempre (independente do layout da linha do topo).
+          Positioned(
+            top: 10,
+            right: 0,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _BotaoAcertoErro(
+                  cor: AppColors.acerto,
+                  letra: 'V',
+                  tooltip: 'Acertou! Ganha os pontos e passa pra próxima',
+                  onTap: _acertou,
+                ),
+                const SizedBox(width: 8),
+                _BotaoAcertoErro(
+                  cor: AppColors.danger,
+                  letra: 'X',
+                  tooltip: 'Errou. Perde os pontos e repete a palavra',
+                  onTap: _errou,
+                ),
+              ],
             ),
           ),
         ],
