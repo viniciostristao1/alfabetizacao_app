@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../models/categoria.dart';
 import '../../models/estudo_opcoes.dart';
 import '../../models/palavra.dart';
 import '../../theme/app_colors.dart';
@@ -18,13 +17,12 @@ import '../../theme/app_colors.dart';
 class EstudoScreen extends StatefulWidget {
   const EstudoScreen({
     super.key,
-    required this.categoria,
-    required this.nivel,
+    required this.titulo,
     required this.palavras,
   });
 
-  final Categoria categoria;
-  final Nivel nivel;
+  /// Cabeçalho da tela, ex.: "🍎  Alimentos · Fácil" ou "🐶  Animais · Ártico".
+  final String titulo;
   final List<Palavra> palavras;
 
   @override
@@ -111,7 +109,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
                 children: [
                   Flexible(
                     child: Text(
-                      '${widget.categoria.emoji}  ${widget.categoria.rotulo} · ${widget.nivel.rotulo}',
+                      widget.titulo,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: ui.withValues(alpha: 0.65),

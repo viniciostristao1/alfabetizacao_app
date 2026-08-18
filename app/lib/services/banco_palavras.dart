@@ -12,72 +12,52 @@ import '../models/palavra.dart';
 /// ou 4 sílabas, sem vazios e sem duplicatas.
 const List<Palavra> bancoPalavras = [
   // ─────────────────────────── ANIMAIS ───────────────────────────
-  // fácil (2 sílabas)
-  Palavra(['ga', 'to'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['pa', 'to'], Categoria.animais, sub: 'aquatico'),
-  Palavra(['va', 'ca'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['ra', 'to'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['lo', 'bo'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['ur', 'so'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['pei', 'xe'], Categoria.animais, sub: 'aquatico'),
-  Palavra(['fo', 'ca'], Categoria.animais, sub: 'aquatico'),
-  Palavra(['ga', 'lo'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['por', 'co'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['co', 'bra'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['sa', 'po'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['on', 'ça'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['ta', 'tu'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['ze', 'bra'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['bo', 'de'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['pom', 'ba'], Categoria.animais, sub: 'voador'),
-  Palavra(['mos', 'ca'], Categoria.animais, sub: 'voador'),
-  Palavra(['ca', 'bra'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['tou', 'ro'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['bur', 'ro'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['pin', 'to'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['pul', 'ga'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['ti', 'gre'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['le', 'ão'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['pa', 'vão'], Categoria.animais, sub: 'voador'),
-  Palavra(['pe', 'ru'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['pin', 'guim'], Categoria.animais, sub: 'aquatico'),
-  // média (3 sílabas)
-  Palavra(['ca', 'va', 'lo'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['ga', 'li', 'nha'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['ma', 'ca', 'co'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['co', 'e', 'lho'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['gi', 'ra', 'fa'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['a', 'be', 'lha'], Categoria.animais, sub: 'voador'),
-  Palavra(['ba', 'lei', 'a'], Categoria.animais, sub: 'aquatico'),
-  Palavra(['for', 'mi', 'ga'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['co', 'ru', 'ja'], Categoria.animais, sub: 'voador'),
-  Palavra(['ca', 'chor', 'ro'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['ja', 'ca', 'ré'], Categoria.animais, sub: 'aquatico'),
-  Palavra(['ja', 'bu', 'ti'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['ba', 'ra', 'ta'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['ca', 'me', 'lo'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['ga', 'vi', 'ão'], Categoria.animais, sub: 'voador'),
-  Palavra(['o', 've', 'lha'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['a', 'ra', 'nha'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['ra', 'po', 'sa'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['ja', 'va', 'li'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['mi', 'nho', 'ca'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['la', 'gar', 'ta'], Categoria.animais, sub: 'terrestre'),
-  // difícil (4 sílabas)
-  Palavra(['bor', 'bo', 'le', 'ta'], Categoria.animais, sub: 'voador'),
-  Palavra(['tar', 'ta', 'ru', 'ga'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['cro', 'co', 'di', 'lo'], Categoria.animais, sub: 'aquatico'),
-  Palavra(['e', 'le', 'fan', 'te'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['pas', 'sa', 'ri', 'nho'], Categoria.animais, sub: 'voador'),
-  Palavra(['jo', 'a', 'ni', 'nha'], Categoria.animais, sub: 'voador'),
-  Palavra(['di', 'nos', 'sau', 'ro'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['pa', 'pa', 'gai', 'o'], Categoria.animais, sub: 'voador'),
-  Palavra(['ca', 'ran', 'gue', 'jo'], Categoria.animais, sub: 'aquatico'),
-  Palavra(['ga', 'fa', 'nho', 'to'], Categoria.animais, sub: 'voador'),
-  Palavra(['ca', 'pi', 'va', 'ra'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['la', 'gar', 'ti', 'xa'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['ca', 'ma', 'le', 'ão'], Categoria.animais, sub: 'terrestre'),
-  Palavra(['pe', 'ri', 'qui', 'to'], Categoria.animais, sub: 'voador'),
+  // Organizados por HABITAT (jogo do mapa). Dentro de cada habitat, a tela roda
+  // do MENOS para o MAIS sílabas (ver palavrasDoHabitat). Sílabas de 2 a 5.
+  // ❄️ Ártico
+  Palavra(['fo', 'ca'], Categoria.animais, sub: 'aquatico', habitat: 'artico'),
+  Palavra(['pin', 'guim'], Categoria.animais, sub: 'aquatico', habitat: 'artico'),
+  Palavra(['mor', 'sa'], Categoria.animais, sub: 'aquatico', habitat: 'artico'),
+  Palavra(['nar', 'val'], Categoria.animais, sub: 'aquatico', habitat: 'artico'),
+  Palavra(['ra', 'po', 'sa'], Categoria.animais, sub: 'terrestre', habitat: 'artico'),
+  Palavra(['ur', 'so', 'po', 'lar'], Categoria.animais,
+      sub: 'terrestre', habitat: 'artico', texto: 'urso polar'),
+  // 🦁 Savana
+  Palavra(['le', 'ão'], Categoria.animais, sub: 'terrestre', habitat: 'savana'),
+  Palavra(['ze', 'bra'], Categoria.animais, sub: 'terrestre', habitat: 'savana'),
+  Palavra(['gi', 'ra', 'fa'], Categoria.animais, sub: 'terrestre', habitat: 'savana'),
+  Palavra(['e', 'le', 'fan', 'te'], Categoria.animais, sub: 'terrestre', habitat: 'savana'),
+  Palavra(['hi', 'po', 'pó', 'ta', 'mo'], Categoria.animais,
+      sub: 'terrestre', habitat: 'savana'),
+  Palavra(['ri', 'no', 'ce', 'ron', 'te'], Categoria.animais,
+      sub: 'terrestre', habitat: 'savana'),
+  // 🌴 Selva
+  Palavra(['on', 'ça'], Categoria.animais, sub: 'terrestre', habitat: 'selva'),
+  Palavra(['co', 'bra'], Categoria.animais, sub: 'terrestre', habitat: 'selva'),
+  Palavra(['ti', 'gre'], Categoria.animais, sub: 'terrestre', habitat: 'selva'),
+  Palavra(['ma', 'ca', 'co'], Categoria.animais, sub: 'terrestre', habitat: 'selva'),
+  Palavra(['tu', 'ca', 'no'], Categoria.animais, sub: 'voador', habitat: 'selva'),
+  Palavra(['go', 'ri', 'la'], Categoria.animais, sub: 'terrestre', habitat: 'selva'),
+  Palavra(['le', 'o', 'par', 'do'], Categoria.animais, sub: 'terrestre', habitat: 'selva'),
+  // 🐠 Aquático
+  Palavra(['pei', 'xe'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico'),
+  Palavra(['pol', 'vo'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico'),
+  Palavra(['rai', 'a'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico'),
+  Palavra(['ba', 'lei', 'a'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico'),
+  Palavra(['gol', 'fi', 'nho'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico'),
+  Palavra(['tu', 'ba', 'rão'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico'),
+  Palavra(['tar', 'ta', 'ru', 'ga'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico'),
+  Palavra(['ca', 'ran', 'gue', 'jo'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico'),
+  // 🦅 Aves
+  Palavra(['pom', 'ba'], Categoria.animais, sub: 'voador', habitat: 'aves'),
+  Palavra(['á', 'gui', 'a'], Categoria.animais, sub: 'voador', habitat: 'aves'),
+  Palavra(['a', 'ra', 'ra'], Categoria.animais, sub: 'voador', habitat: 'aves'),
+  Palavra(['co', 'ru', 'ja'], Categoria.animais, sub: 'voador', habitat: 'aves'),
+  Palavra(['gai', 'vo', 'ta'], Categoria.animais, sub: 'voador', habitat: 'aves'),
+  Palavra(['fla', 'min', 'go'], Categoria.animais, sub: 'voador', habitat: 'aves'),
+  Palavra(['bei', 'ja', 'flor'], Categoria.animais,
+      sub: 'voador', habitat: 'aves', texto: 'beija-flor'),
+  Palavra(['pa', 'pa', 'gai', 'o'], Categoria.animais, sub: 'voador', habitat: 'aves'),
 
   // ─────────────────────────── OBJETOS ───────────────────────────
   // fácil (2 sílabas)
@@ -249,3 +229,14 @@ List<Palavra> palavrasDe(Categoria categoria, Nivel nivel) => bancoPalavras
 /// Quantas palavras existem numa categoria + nível (para mostrar no card).
 int contarPalavras(Categoria categoria, Nivel nivel) =>
     palavrasDe(categoria, nivel).length;
+
+/// Animais de um habitat (jogo do mapa), **ordenados do MENOS para o MAIS
+/// sílabas** — a criança começa pelos mais fáceis e vai passando. `sort` é
+/// estável, então empates mantêm a ordem do banco.
+List<Palavra> palavrasDoHabitat(String habitatChave) {
+  final lista = bancoPalavras
+      .where((p) => p.categoria == Categoria.animais && p.habitat == habitatChave)
+      .toList();
+  lista.sort((a, b) => a.nivelSilabas.compareTo(b.nivelSilabas));
+  return lista;
+}

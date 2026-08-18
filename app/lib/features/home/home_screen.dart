@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/categoria.dart';
 import '../../theme/app_colors.dart';
 import '../../util/versao.dart';
+import '../habitat/habitat_map_screen.dart';
 import '../nivel/nivel_screen.dart';
 
 /// Tela principal (retrato): as 4 modalidades de palavras.
@@ -81,7 +82,11 @@ class _CategoriaCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (_) => NivelScreen(categoria: categoria),
+            builder: (_) => categoria == Categoria.animais
+                // Animais viram um JOGO: mapa de habitats (paisagem), sem escolher
+                // nível — cada habitat roda do mais fácil ao mais difícil.
+                ? const HabitatMapScreen()
+                : NivelScreen(categoria: categoria),
           ),
         ),
         child: Container(

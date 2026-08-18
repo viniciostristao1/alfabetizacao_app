@@ -4,7 +4,7 @@ publish_to: 'none'
 
 # versionName+versionCode. Ex.: 0.1.0+1 → versionName "0.1.0", versionCode 1.
 # O +N (versionCode) TEM de crescer a cada release.
-version: 0.2.2+4
+version: 0.3.0+5
 
 environment:
   sdk: ^3.12.2
@@ -26,6 +26,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/habitats/mapa_animais.jpg
 
 # Ícone do app (livro + cartas: urso/carro/melancia, fundo âmbar). Gera os
 # mipmaps após alterar a arte: `dart run flutter_launcher_icons`.

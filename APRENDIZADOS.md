@@ -2,6 +2,28 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-18 — v0.3.0 (jogo de habitats — Animais reestruturado)
+- **Fluxo novo p/ Animais:** Home → `HabitatMapScreen` (paisagem) → `EstudoScreen`. As outras
+  categorias seguem no fluxo de Nível. Roteamento em `home_screen.dart` (`if categoria == animais`).
+- **`HabitatMapScreen`:** imagem `assets/habitats/mapa_animais.jpg` (grade **3×2**) num
+  `AspectRatio(3/2)` + overlay de 6 células (`Column` de 2 `Expanded` × `Row` de 3 `Expanded`) →
+  alinhamento perfeito à imagem **independente do tamanho da tela** (imagem e grade preenchem a
+  MESMA box). 5 células = habitats (botão + nome); a 6ª (col2,linha1 = mapa-múndi) é reservada
+  (SnackBar "em breve"). `Image.asset` com `errorBuilder` (não quebra em teste/asset ausente).
+- **Orientação entre telas:** habitat força paisagem; ao voltar do Estudo (que restaura RETRATO no
+  dispose), o `_abrirHabitat` faz `await push` e **re-força paisagem** ao retornar. Sem isso a tela
+  de habitats voltaria em retrato.
+- **`EstudoScreen` generalizada:** agora recebe `titulo` (String) + `palavras`, em vez de
+  categoria+nível. Nível e Habitat montam o título. (Quebrou o widget_test antigo que tocava em
+  "Animais" esperando os níveis → teste passou a usar "Objetos" p/ nível e um novo p/ habitat.)
+- **Modelo `Palavra`:** ganhou `habitat` e `textoOverride` (p/ palavras com **espaço/hífen**:
+  "urso polar", "beija-flor" — `silabas` ainda conta sílabas p/ ordenar). `palavrasDoHabitat` filtra
+  animais por habitat e **ordena por nº de sílabas** (sort estável). Sílabas agora vão até 5
+  (hipopótamo/rinoceronte) → teste do banco afrouxado p/ 2–6.
+- **Animais reescritos por habitat** (35 animais em 5 habitats). Os antigos domésticos/insetos
+  (gato, vaca, formiga…) SAÍRAM do jogo por não caberem nos 5 habitats da imagem — candidatos a um
+  habitat "Fazenda"/"Insetos" futuro (ver IDEIAS). Fonte da imagem em `assets/habitats/*_fonte.png`.
+
 ## 2026-08-18 — v0.2.2 (BUG: assinatura instável → "conflito com pacote existente")
 - **Sintoma:** usuário não conseguia instalar por cima de uma versão já instalada — Android:
   *"um pacote tem conflito com um pacote já existente"*.

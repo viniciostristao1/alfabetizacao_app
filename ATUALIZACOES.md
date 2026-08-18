@@ -2,6 +2,14 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.3.0 (2026-08-18)
+- **Animais viraram um jogo! 🗺️** Ao tocar em "Animais", abre um **mapa de habitats** (deitado,
+  clima de jogo). Toque num habitat pra brincar só com aqueles animais:
+  ❄️ Ártico · 🦁 Savana · 🌴 Selva · 🐠 Aquático · 🦅 Aves. (O mapa-múndi fica pra depois.)
+- Nos animais **não se escolhe mais o nível**: cada habitat começa pelas palavras **mais fáceis**
+  (menos sílabas) e vai ficando mais difícil conforme a criança avança — inclusive palavras
+  maiores, como "hipopótamo" e "rinoceronte".
+
 ## v0.2.2 (2026-08-18)
 - **Correção de instalação.** As versões anteriores eram assinadas com uma chave diferente a
   cada build, o que fazia o Android recusar a instalação por cima ("conflito com pacote

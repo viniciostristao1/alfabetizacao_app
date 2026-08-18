@@ -23,14 +23,18 @@ minimalista). Meta futura: Play Store, como os apps irmãos.
 
 ## ⭐ ESTADO ATUAL (2026-08-18) — ler primeiro pós-/clear
 
-**v0.2.1 — TEXTO + FUNDO + CANETA + ÍCONE** (`flutter analyze` limpo, 7 testes passando).
-Ícone do app em `app/assets/icon/` (fonte `logo_fonte.png`, processado `logo.png` âmbar cheio +
-`logo_foreground.png`); gerado por `flutter_launcher_icons` (rodar `dart run flutter_launcher_icons`).
+**v0.3.0 — + JOGO DE HABITATS (Animais)** (`flutter analyze` limpo, 10 testes passando).
+Assinatura estável desde v0.2.2 (`app/android/app/debug.keystore` versionado — NÃO apagar).
+Ícone do app em `app/assets/icon/` (gerado por `flutter_launcher_icons`).
 
 **O que existe e funciona:**
 - **Home** (retrato) — 4 cards: **Animais 🐶 · Objetos 🧸 · Alimentos 🍎 · Nomes 🔤**
   (emoji/cor são só apoio visual de navegação p/ quem ainda não lê).
-- **Níveis** (retrato) — dentro da categoria: **Fácil (2 sílabas) · Média (3) · Difícil (4)**,
+- **Animais = JOGO de habitats** (v0.3.0): tocar em Animais abre o **mapa de habitats** (PAISAGEM,
+  `assets/habitats/mapa_animais.jpg`, grade 3×2). 5 botões: ❄️ Ártico · 🦁 Savana · 🌴 Selva ·
+  🐠 Aquático · 🦅 Aves (6ª célula = mapa-múndi, reservada). Cada habitat abre o Estudo **SEM escolher
+  nível**, rodando do menos ao mais sílabas. `palavrasDoHabitat` em `services/banco_palavras.dart`.
+- **Níveis** (retrato) — para Objetos/Alimentos/Nomes: **Fácil (2 sílabas) · Média (3) · Difícil (4)**,
   cada card mostra quantas palavras tem.
 - **Estudo** (PAISAGEM) — **uma palavra grande em CAIXA ALTA** de cada vez (`FittedBox`).
   - **Cor de fundo** (bolinhas HORIZONTAIS no topo, ao lado do título): preto/branco/bege
@@ -40,9 +44,9 @@ minimalista). Meta futura: Play Store, como os apps irmãos.
     desenho some ao trocar de palavra.
   - Botões **baixos** embaixo: **Voltar** (volta ao menu + restaura retrato), **Anterior**,
     **Recomeçar**, **Próximo**. Progresso "3 / 12" no topo.
-- **Banco de palavras** curado em `app/lib/services/banco_palavras.dart` (**~209 palavras**:
-  animais 63 · objetos 59 · alimentos 57 · nomes 30), **offline**, guardando as **sílabas** (não
-  só o texto) — já deixa pronto o futuro "sílabas coloridas" e as **subcategorias** (ver IDEIAS).
+- **Banco de palavras** curado em `app/lib/services/banco_palavras.dart` (**~181 palavras**:
+  animais 35 por habitat · objetos 59 · alimentos 57 · nomes 30), **offline**, guardando as
+  **sílabas** (não só o texto) — já deixa pronto o "sílabas coloridas" e as subcategorias (`sub`).
 
 **Decisões de origem (2026-08-18):**
 - MVP = **só a palavra, sem áudio e sem imagem** (pedido do usuário; começar simples).
@@ -80,12 +84,14 @@ minimalista). Meta futura: Play Store, como os apps irmãos.
 
 ## Estrutura do código (`app/lib/`)
 > Mapa de PADRÕES (como adicionar tela/palavra/subcategoria) → [`ARQUITETURA.md`](ARQUITETURA.md).
-- `models/` — `categoria.dart` (enums `Categoria` e `Nivel`, com rótulo/emoji/cor),
-  `palavra.dart` (sílabas + `texto`/`nivelSilabas` + `sub` da subcategoria futura).
-- `services/` — `banco_palavras.dart` (lista curada + `palavrasDe`/`contarPalavras`).
+- `models/` — `categoria.dart` (enums `Categoria` e `Nivel`), `palavra.dart` (sílabas +
+  `texto`/`nivelSilabas` + `sub` + `habitat` + `textoOverride`), `habitat.dart` (5 habitats +
+  posição na grade 3×2), `estudo_opcoes.dart` (`FundoTela`, `CorCaneta`).
+- `services/` — `banco_palavras.dart` (lista curada + `palavrasDe`/`contarPalavras`/`palavrasDoHabitat`).
 - `theme/` — `app_colors.dart` (tokens do tema escuro), `app_theme.dart` (`buildAppTheme`).
 - `util/` — `versao.dart` (`kVersao`).
-- `features/` — `home/` (as 4 categorias), `nivel/` (os 3 níveis), `estudo/` (paisagem, a palavra).
+- `features/` — `home/` (as 4 categorias), `nivel/` (Objetos/Alimentos/Nomes), `habitat/` (mapa de
+  habitats dos Animais, paisagem), `estudo/` (paisagem: palavra + fundo + caneta).
 - `main.dart` — trava retrato global; a EstudoScreen gira p/ paisagem e restaura ao sair.
 
 ## Ambiente

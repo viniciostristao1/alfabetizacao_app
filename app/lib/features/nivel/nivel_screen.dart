@@ -59,8 +59,8 @@ class _NivelCard extends StatelessWidget {
             ? () => Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (_) => EstudoScreen(
-                      categoria: categoria,
-                      nivel: nivel,
+                      titulo:
+                          '${categoria.emoji}  ${categoria.rotulo} · ${nivel.rotulo}',
                       palavras: palavrasDe(categoria, nivel),
                     ),
                   ),

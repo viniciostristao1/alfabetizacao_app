@@ -21,12 +21,21 @@ A criança **fala** a palavra; o app reconhece se **acertou**.
 - Guardar em `shared_preferences` (Riverpod) — 1º uso real da persistência. Molde em ARQUITETURA.
 - Ideias: barrinha de progresso por nível, "vitrine" de troféus, som/animação de recompensa.
 
-## 🗂️ Subcategorias (o campo `sub` do banco já vem preenchido)
-- **Animais:** aquáticos / terrestres / voadores.
+## 🗺️ Mapa de habitats (Animais) — FEITO na v0.3.0, com pontas a evoluir
+- Já existe: Home → mapa de habitats (paisagem) → 5 botões (Ártico/Savana/Selva/Aquático/Aves);
+  cada um roda do mais fácil ao mais difícil. Imagem em `assets/habitats/mapa_animais.jpg`.
+- **Mapa-múndi** (6ª célula) está **reservado** (só um aviso "em breve"). Ideias: virar um índice
+  que abre todos os habitats, ou um "modo mundo" com todos os animais.
+- **Animais que ficaram de fora** (domésticos: gato, cachorro, vaca…; insetos: formiga, abelha…)
+  não cabem nos 5 habitats da imagem. Criar habitats **🚜 Fazenda** e **🐜 Insetos** (nova imagem
+  ou células extras) pra readmiti-los.
+- Nomes/áudio: quando entrar o TTS, o mapa fica ótimo com o nome do habitat falado.
+
+## 🗂️ Subcategorias das OUTRAS categorias (o campo `sub` do banco já vem preenchido)
 - **Nomes:** de menino / de menina.
 - **Objetos:** de casa / de rua.
 - (Alimentos: dá pra criar depois — ex.: frutas / comidas / bebidas.)
-- Basta uma tela de filtro entre categoria e nível (ver ARQUITETURA §Subcategorias).
+- Mesma ideia do mapa de habitats, ou uma tela de filtro simples entre categoria e nível.
 
 ## 🔤 Áudio e figura (o que ficou de fora do MVP por escolha)
 - **TTS** para falar a palavra ao tocar (mesmo fora do Modo Microfone).
