@@ -77,6 +77,13 @@ void main() {
     expect(find.text('Gato'), findsOneWidget);
     expect(find.text('Confirmar (1)'), findsOneWidget);
 
+    // Gira ANTES do Confirmar: a EstudoScreen abre em PAISAGEM (como no
+    // celular) — o topo com V/X só cabe deitado.
+    tester.view.physicalSize = const Size(2400, 1080);
+    tester.view.devicePixelRatio = 3.0;
+    addTearDown(tester.view.reset);
+    await tester.pumpAndSettle();
+
     await tester.tap(find.text('Confirmar (1)'));
     await tester.pumpAndSettle();
 
@@ -93,13 +100,14 @@ void main() {
     await tester.enterText(find.byType(TextField), 'gato');
     await tester.tap(find.byIcon(Icons.add_rounded));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Confirmar (1)'));
-    await tester.pumpAndSettle();
 
-    // tela de estudo em PAISAGEM, como no celular (para o topo caber)
+    // gira ANTES do Confirmar — tela de estudo em PAISAGEM, como no celular
     tester.view.physicalSize = const Size(2400, 1080);
     tester.view.devicePixelRatio = 3.0;
     addTearDown(tester.view.reset);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Confirmar (1)'));
     await tester.pumpAndSettle();
 
     expect(find.text('🪙 0'), findsOneWidget);

@@ -2,6 +2,14 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.10.4 (2026-08-18)
+- **V/X (correção de verdade):** os botões agora ficam **colados no canto
+  superior direito da tela** (sem nenhuma margem) e são **quadrados de 40×40
+  com bordas levemente arredondadas** — não redondos.
+- **Mapa-múndi (correção):** o botão **INICIAR JOGO** não fica mais por cima do
+  "Reiniciar aventura" — os 4 botões de baixo agora ficam todos numa linha
+  única centralizada, sem nenhum se sobrepor.
+
 ## v0.10.3 (2026-08-18)
 - **Botões V/X (ajuste):** agora ficam **bem no canto superior direito**
   (sem espaço até a margem) e viraram **quadrados com cantos arredondados**,

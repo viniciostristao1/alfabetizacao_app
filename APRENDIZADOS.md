@@ -2,6 +2,31 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-18 — v0.10.4 (fix REAL do V/X no canto + botões do mapa sem sobreposição)
+- Usuário disse que o v0.10.3 não resolveu (X fora do canto e "ainda redondo").
+  Causas reais (verificadas com teste de layout + sondas):
+  1. **SafeArea** adicionava o inset do notch (44px) → o X ficava longe da
+     borda. Fix: a linha do topo saiu do SafeArea do body e ganhou
+     `MediaQuery.removePadding(removeLeft/Right)` — encosta na TELA.
+  2. **`Wrap` é "guloso"** (preenche a linha toda; `mainAxisSize` não existe
+     nele) e dentro de `Flexible` ficava preso num pedaço → X no meio da tela.
+     Fix: `Expanded(grupo esquerdo) + Row(mainAxisSize.min, cluster)` — o
+     cluster, inflexível e por último, encosta na borda.
+  3. **Raio 12 ainda parecia redondo** → `BorderRadius.circular(8)` (40×40).
+  4. Testes que renderizavam a EstudoScreen em RETRATO estouravam (109px) —
+     agora TODOS giram pra paisagem ANTES de abrir a tela (senão o overflow
+     acontece no frame em que a tela nasce). `test/layout_test.dart` novo:
+     mede os RETÂNGULOS dos botões (não do texto!) com `FakeViewPadding(right:
+     44)` simulado: X.right == 800, top == 10, 40×40, V+8==X, decoração
+     retangular com raio 8. ⚠️ `tester.getRect(find.text())` mede o TEXTO
+     (centrado no botão) — parecia "10px de sobra" que não existia.
+- **Botões do mapa:** os 3 Aligns separados (esq/centro/dir) viravam um sobre o
+  outro; agora TODOS os 4 botões (Voltar habitat, Reiniciar aventura, Iniciar
+  jogo, Voltar início) estão num único `SafeArea(Align(bottomCenter, Wrap))` —
+  Wrap centralizado NUNCA sobrepõe (quebra linha se apertar). Teste no
+  layout_test: rects dos 4 botões não se sobrepõem.
+- 31 testes, analyze limpo.
+
 ## 2026-08-18 — v0.10.3 (V/X no canto + quadrados arredondados)
 - Usuário pediu: V/X **bem no canto superior direito** e **quadrados com
   cantos arredondados** (não círculos). Feito: padding do topo mudou de

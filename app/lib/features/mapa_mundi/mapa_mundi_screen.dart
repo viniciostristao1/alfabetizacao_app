@@ -223,60 +223,43 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
               ),
             ),
           ),
-          // ações (inferior-esq): desfazer última fase / reiniciar tudo
+          // botões de baixo: TODOS numa linha centralizada (Wrap → nunca fica
+          // um sobre o outro; em telas estreitas quebra a linha).
           SafeArea(
             child: Align(
-              alignment: Alignment.bottomLeft,
+              alignment: Alignment.bottomCenter,
               child: Padding(
                 padding: const EdgeInsets.all(10),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
+                child: Wrap(
+                  alignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 10,
+                  runSpacing: 8,
                   children: [
                     _BotaoTransparente(
                       icon: Icons.undo_rounded,
                       texto: 'VOLTAR HABITAT',
                       onTap: _voltarHabitat,
                     ),
-                    const SizedBox(width: 10),
                     _BotaoTransparente(
                       icon: Icons.refresh_rounded,
                       texto: 'REINICIAR AVENTURA',
                       onTap: _reiniciarAventura,
                     ),
+                    _BotaoTransparente(
+                      icon: Icons.play_arrow_rounded,
+                      texto: 'INICIAR JOGO',
+                      fundo: Colors.white,
+                      letra: AppColors.bg,
+                      onTap: _iniciarJogo,
+                    ),
+                    _BotaoTransparente(
+                      icon: Icons.home_rounded,
+                      texto: 'VOLTAR INÍCIO',
+                      onTap: () => Navigator.of(context)
+                          .popUntil((route) => route.isFirst),
+                    ),
                   ],
-                ),
-              ),
-            ),
-          ),
-          // INICIAR JOGO (inferior-CENTRO, fundo BRANCO — mesma forma/tamanho
-          // dos demais botões) — começa a aventura na 1ª fase da ordem
-          // configurada.
-          SafeArea(
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: _BotaoTransparente(
-                  icon: Icons.play_arrow_rounded,
-                  texto: 'INICIAR JOGO',
-                  fundo: Colors.white,
-                  letra: AppColors.bg,
-                  onTap: _iniciarJogo,
-                ),
-              ),
-            ),
-          ),
-          // voltar início (inferior-dir, casinha)
-          SafeArea(
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: _BotaoTransparente(
-                  icon: Icons.home_rounded,
-                  texto: 'VOLTAR INÍCIO',
-                  onTap: () => Navigator.of(context)
-                      .popUntil((route) => route.isFirst),
                 ),
               ),
             ),
