@@ -8,13 +8,13 @@ import 'package:flutter/material.dart';
 ///   é a sequência das fases (1→5); `fx`/`fy` são a posição do círculo da fase
 ///   sobre o mapa-múndi, como fração 0..1 (x=coluna, y=linha).
 enum Habitat {
-  // fx/fy = sobre o mapa-múndi VETORIAL (mapa_mundi_arte.dart): cada bicho no
-  // seu continente. ordem = caminho das fases (flui suave pelo mapa).
-  artico('artico', 'Ártico', '❄️', 0, 0, 1, 0.38, 0.10), // calota de gelo (topo)
-  aves('aves', 'Aves', '🦅', 1, 1, 2, 0.74, 0.22), //         Ásia
-  savana('savana', 'Savana', '🦁', 1, 0, 3, 0.53, 0.46), //   África
-  selva('selva', 'Selva', '🌴', 2, 0, 4, 0.25, 0.68), //      América do Sul
-  aquatico('aquatico', 'Aquático', '🐠', 0, 1, 5, 0.42, 0.83); // mar aberto
+  // fx/fy = posição do círculo sobre a arte `mapa_mundi.jpg` (1376×768), cada
+  // bicho no seu continente/região. ordem = caminho das fases (flui pelo mapa).
+  artico('artico', 'Ártico', '❄️', 0, 0, 1, 0.44, 0.15), //   gelo/urso polar (topo)
+  aves('aves', 'Aves', '🦅', 1, 1, 2, 0.85, 0.15), //          aves voando (dir. sup.)
+  savana('savana', 'Savana', '🦁', 1, 0, 3, 0.59, 0.60), //    África (leão)
+  selva('selva', 'Selva', '🌴', 2, 0, 4, 0.34, 0.72), //       Am. do Sul (onça)
+  aquatico('aquatico', 'Aquático', '🐠', 0, 1, 5, 0.12, 0.66); // mar (baleias, à esq.)
 
   const Habitat(
     this.chave,
@@ -46,9 +46,9 @@ const int kHabitatColunas = 3;
 const int kHabitatLinhas = 2;
 
 /// Aspecto das imagens: `mapa_animais.jpg` = 1536×1024 (3:2); `mapa_mundi.jpg`
-/// = 1024×1024 (1:1).
+/// = 1376×768 (≈16:9). Exibição usa `kMapaDisplayAspect` (esticado p/ tela cheia).
 const double kMapaAnimaisAspect = 1536 / 1024;
-const double kMapaMundiAspect = 1;
+const double kMapaMundiAspect = 1376 / 768;
 
 /// Aspecto de EXIBIÇÃO dos mapas em paisagem — um pouco mais largo que o nativo,
 /// pra imagem **encostar nas laterais** (não ficar "quadrada"). A imagem enche a

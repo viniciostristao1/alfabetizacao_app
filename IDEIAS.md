@@ -31,10 +31,11 @@ A criança **fala** a palavra; o app reconhece se **acertou**.
   criança); pensar em escolher perfil quando entrar a gamificação. As fases seguem a ordem fixa de
   `Habitat.ordem` mas não bloqueiam jogar fora de ordem — se quiser "trancar" fase futura até
   concluir a anterior, dá pra fazer.
-- **Arte do mapa-múndi — FEITO (v0.6.0):** virou **vetorial** (`mapa_mundi_arte.dart`, `CustomPaint`),
-  nítido em qualquer tela, estilo infográfico com relevo/profundidade. **A evoluir se quiser:** nomes
-  dos continentes/habitats (com o TTS), animar o brilho do caminho, ou trocar por arte gerada externa
-  (raster) se um dia quiser um visual mais fotográfico — hoje o vetorial atende bem.
+- **Arte do mapa-múndi — FEITO (v0.7.0):** virou **ilustração raster** gerada por IA
+  (`assets/habitats/mapa_mundi.jpg`, 1376×768) com relevo/sombra/bichos por continente; o vetorial da
+  v0.6.0 foi aposentado. **A evoluir se quiser:** animar o brilho "fumacinha" das fases (pulsar),
+  nomes dos continentes/habitats falados (com o TTS), e um habitat **🦘 Austrália/Fazenda** (aí o
+  canguru — hoje na Savana — migra pra lá; a arte já tem canguru/coala na Austrália).
 - **Animais que ficaram de fora** (domésticos: gato, cachorro, vaca…; insetos: formiga, abelha…)
   não cabem nos 5 habitats da imagem. Criar habitats **🚜 Fazenda** e **🐜 Insetos** (nova imagem
   ou células extras) pra readmiti-los.

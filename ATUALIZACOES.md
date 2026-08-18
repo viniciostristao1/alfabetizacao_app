@@ -2,8 +2,14 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
-## v0.6.1 (2026-08-18)
-- **Novo bicho:** 🦘 **canguru** entrou na lista de animais (no habitat Savana).
+## v0.7.0 (2026-08-18)
+- **Mapa-múndi lindo! 🌍** Agora é uma **ilustração de verdade** — relevo, montanhas, sombras,
+  oceano brilhante e **bichos em cada continente** (urso polar no gelo, leão/elefante/girafa na
+  África, onça/arara na América do Sul, panda/tigre na Ásia, baleias no mar, aves no céu…).
+- **Fases como num jogo:** os discos ficaram **achatados** e, ao concluir todas as palavras de
+  uma categoria, o disco **acende** com um brilho neon "fumacinha" e o **caminho** até a próxima
+  fase ilumina. Cada fase fica no continente do bicho.
+- **Novo bicho:** 🦘 **canguru** na lista de animais (habitat Savana).
 
 ## v0.6.0 (2026-08-18)
 - **Mapa-múndi novo, desenhado! 🌍** Saiu a imagem antiga (meio borrada) e entrou um mapa-múndi

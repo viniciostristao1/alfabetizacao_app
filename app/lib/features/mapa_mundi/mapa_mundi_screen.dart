@@ -5,7 +5,6 @@ import '../../models/habitat.dart';
 import '../../services/banco_palavras.dart';
 import '../../services/progresso_fases.dart';
 import '../estudo/estudo_screen.dart';
-import 'mapa_mundi_arte.dart';
 
 /// Cor neon dos círculos/caminho das fases.
 const _neon = Color(0xFF3DF5E4);
@@ -101,34 +100,21 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
                 final w = c.maxWidth;
                 final boxH = (w / kMapaDisplayAspect).clamp(0.0, c.maxHeight);
                 final d = (w * 0.11).clamp(52.0, 104.0); // largura do disco
-                final dh = d * 0.78; // achatado (dá a sensação 3D)
+                final dh = d * 0.66; // bem achatado (impressão de "fase" 3D)
                 return Center(
                   child: SizedBox(
                     width: w,
                     height: boxH,
                     child: Stack(
                       children: [
-                        // mapa-múndi desenhado (vetorial, nítido em qualquer tela)
-                        const Positioned.fill(
-                          child: CustomPaint(
-                            painter: MapaMundiArtePainter(),
-                          ),
-                        ),
-                        // vinheta: escurece as bordas → sensação de profundidade
+                        // mapa-múndi (arte com relevo/sombra/bichos), tela cheia
                         Positioned.fill(
-                          child: IgnorePointer(
-                            child: DecoratedBox(
-                              decoration: BoxDecoration(
-                                gradient: RadialGradient(
-                                  radius: 0.95,
-                                  colors: [
-                                    Colors.transparent,
-                                    Colors.black.withValues(alpha: 0.35),
-                                  ],
-                                  stops: const [0.65, 1.0],
-                                ),
-                              ),
-                            ),
+                          child: Image.asset(
+                            'assets/habitats/mapa_mundi.jpg',
+                            fit: BoxFit.fill,
+                            filterQuality: FilterQuality.high,
+                            errorBuilder: (_, _, _) =>
+                                const ColoredBox(color: kAgua),
                           ),
                         ),
                         // caminho entre as fases (acende conforme conclui)
@@ -270,20 +256,35 @@ class _DiscoFase extends StatelessWidget {
                 : const [Color(0xFF3C5C65), Color(0xFF1B3138), Color(0xFF0B171C)],
             stops: const [0.0, 0.55, 1.0],
           ),
-          border: Border.all(color: _neon, width: concluida ? 3 : 2.5),
+          border: Border.all(
+            color: concluida ? _neon : _neon.withValues(alpha: 0.55),
+            width: concluida ? 3 : 2,
+          ),
           boxShadow: [
             // sombra de profundidade (embaixo)
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.5),
-              blurRadius: 8,
+              color: Colors.black.withValues(alpha: 0.55),
+              blurRadius: 10,
               offset: const Offset(0, 5),
             ),
-            // brilho neon ao redor (mais forte quando aceso)
-            BoxShadow(
-              color: _neon.withValues(alpha: concluida ? 0.9 : 0.4),
-              blurRadius: concluida ? 22 : 11,
-              spreadRadius: concluida ? 1 : 0,
-            ),
+            // brilho "fumacinha" no contorno — largo e difuso quando ACESO
+            if (concluida) ...[
+              BoxShadow(
+                color: _neon.withValues(alpha: 0.55),
+                blurRadius: 34,
+                spreadRadius: 7,
+              ),
+              BoxShadow(
+                color: _neon.withValues(alpha: 0.95),
+                blurRadius: 16,
+                spreadRadius: 1,
+              ),
+            ] else
+              // apagado: só um contorno neon bem sutil
+              BoxShadow(
+                color: _neon.withValues(alpha: 0.28),
+                blurRadius: 8,
+              ),
           ],
         ),
         child: Stack(

@@ -2,6 +2,27 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-18 — v0.7.0 (mapa-múndi = ARTE ilustrada + discos achatados c/ glow + canguru)
+- **Reversão do vetorial (v0.6.0):** o `CustomPaint` "infográfico simples" NÃO atingiu o estilo que
+  o usuário queria (ilustração rica c/ relevo/sombra/bichos, igual `mapa_animais.jpg`). Conclusão
+  reforçada: **arte rica = raster gerado por IA**, não código. O usuário gerou a imagem no ChatGPT.
+- **Integração da imagem:** usuário subiu `1787076988417.png` (1376×768, ≈16:9) na raiz do repo.
+  Convertida p/ `assets/habitats/mapa_mundi.jpg` via PIL (quality 88 → ~350KB), png da raiz removida.
+  `MapaMundiScreen` voltou a `Image.asset(... BoxFit.fill, filterQuality.high)`; **deletado**
+  `mapa_mundi_arte.dart`; vinheta removida (a arte já tem profundidade). `kMapaMundiAspect` = 1376/768.
+- **Círculos nos continentes certos** (`habitat.dart` fx/fy, conferidos no preview PNG): ártico
+  0.44,0.15 (gelo/urso) · aves 0.85,0.15 (aves no céu, dir.sup) · savana 0.59,0.60 (África) · selva
+  0.34,0.72 (Am.S/onça) · aquático 0.12,0.66 (mar/baleias). **A imagem já veio em paisagem** — não
+  precisou girar ("deitar"). ⚠️ Reposicionar fx/fy SE trocar a arte do mapa.
+- **Discos "fase de jogo":** `_DiscoFase` mais achatado (`dh = d*0.66`) e glow tipo **fumacinha**:
+  quando concluído, 2 `BoxShadow` neon (largo difuso alpha .55 blur 34 spread 7 + concentrado alpha
+  .95 blur 16); apagado = contorno neon sutil (alpha .28). Acende só ao concluir toda a categoria.
+- **canguru** no banco (`['can','gu','ru']`, média, sub terrestre, habitat savana — melhor encaixe
+  entre os 5; migra p/ Austrália/Fazenda se criar o habitat). NÃO gerou release próprio (v0.6.1
+  ficou só no git); entrou junto na v0.7.0.
+- **Preview validado** com o truque headless-PNG (`precacheImage` do asset dentro de `runAsync` antes
+  do `toImage`, senão a imagem não decodifica no teste). Ver [[feedback-flutter-preview-png-headless]].
+
 ## 2026-08-18 — v0.6.0 (mapa-múndi VETORIAL desenhado em CustomPaint)
 - **Por quê:** o `mapa_mundi.jpg` (1024², baixa qualidade) borrava ao esticar. Claude no CLI **não
   gera imagem** → o usuário aprovou desenhar **vetorial** (nítido em qualquer tela, sem asset).
