@@ -2,6 +2,12 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.2.2 (2026-08-18)
+- **Correção de instalação.** As versões anteriores eram assinadas com uma chave diferente a
+  cada build, o que fazia o Android recusar a instalação por cima ("conflito com pacote
+  existente"). Agora a assinatura é fixa. ⚠️ **Só desta vez**: desinstale a versão antiga e
+  instale esta v0.2.2. Da próxima em diante, as atualizações instalam por cima normalmente.
+
 ## v0.2.1 (2026-08-18)
 - **Ícone do app!** Agora tem logo próprio (livro aberto com urso, carro e melancia, fundo
   âmbar) — aparece na tela inicial do celular.

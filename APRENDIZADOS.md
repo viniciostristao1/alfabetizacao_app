@@ -2,6 +2,21 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-18 — v0.2.2 (BUG: assinatura instável → "conflito com pacote existente")
+- **Sintoma:** usuário não conseguia instalar por cima de uma versão já instalada — Android:
+  *"um pacote tem conflito com um pacote já existente"*.
+- **Causa:** o CI assinava com a chave de **debug**, mas o `~/.android/debug.keystore` é gerado
+  **aleatoriamente em cada runner** → cada release tinha uma **assinatura diferente** → o Android
+  recusa update com assinatura diferente. (`flutter build apk --release` sem keystore cai no debug.)
+- **Fix:** keystore de debug **estável versionado** em `app/android/app/debug.keystore` (credenciais
+  padrão: storepass/keypass `android`, alias `androiddebugkey` — NÃO são segredo) + `signingConfigs.debug`
+  no `build.gradle.kts` apontando pra ele (`storeFile = file("debug.keystore")`). Foi preciso **negar**
+  o `**/*.keystore` em DOIS `.gitignore` (raiz e o gerado `app/android/.gitignore`, mais específico
+  vence) com `!app/debug.keystore`. SHA-256 fixo: `71:2D:DC:54:...:30:E0`.
+- **Ação do usuário (1x):** desinstalar a versão antiga (assinatura aleatória) e instalar a v0.2.2.
+  Daí em diante, updates instalam por cima. **Nunca trocar/perder este keystore** (senão o problema
+  volta e, se um dia for pra Play Store, aí sim usar keystore de upload própria via secrets).
+
 ## 2026-08-18 — v0.2.1 (ícone do app)
 - Usuário subiu a arte (1254×1254, badge âmbar arredondado com cantos BRANCOS). Pedido: fundo
   todo âmbar, sem os recortes. **PIL** (venv do calistenia, sem numbers): âmbar = `(253,164,16)`

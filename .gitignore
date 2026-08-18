@@ -11,6 +11,10 @@ app/.flutter-plugins-dependencies
 app/android/key.properties
 app/android/app/*.jks
 app/android/app/*.keystore
+# EXCEÇÃO: o debug.keystore é versionado DE PROPÓSITO (credenciais padrão do
+# Android debug, não são segredo) para a assinatura ser estável no CI. Ver
+# build.gradle.kts (signingConfigs.debug) e APRENDIZADOS.
+!app/android/app/debug.keystore
 
 # APK/AAB soltos (o build sai na nuvem; não versionar binários)
 *.apk

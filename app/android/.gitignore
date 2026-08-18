@@ -12,3 +12,7 @@ GeneratedPluginRegistrant.java
 key.properties
 **/*.keystore
 **/*.jks
+# EXCEÇÃO: debug.keystore versionado de propósito (credenciais padrão do Android
+# debug, não são segredo) → assinatura ESTÁVEL no CI (evita "conflito com pacote
+# existente" na atualização). NÃO é a keystore de upload da Play Store.
+!app/debug.keystore

@@ -15,7 +15,6 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.vinyapps.alfabetizacao"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
@@ -25,10 +24,25 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        // Keystore de debug ESTÁVEL, versionado (`app/android/app/debug.keystore`),
+        // com as credenciais padrão do Android debug (não são segredo). É o que
+        // torna a assinatura IGUAL em todo build do CI — sem isso, cada runner gera
+        // uma chave de debug aleatória e o Android recusa a atualização ("conflito
+        // com pacote existente"). Para a Play Store, no futuro, trocar por uma
+        // keystore de upload via secrets (ver AGENTS/IDEIAS).
+        getByName("debug") {
+            storeFile = file("debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+            // Assina o release com a MESMA chave (debug estável) → instala e
+            // atualiza sem conflito de assinatura.
             signingConfig = signingConfigs.getByName("debug")
         }
     }
