@@ -101,40 +101,55 @@ class _HabitatMapScreenState extends State<HabitatMapScreen> {
       backgroundColor: kAgua,
       body: Stack(
         children: [
-          // imagem INTEIRA (nada cortado), água preenchendo o resto da tela
-          Center(
-            child: AspectRatio(
-              aspectRatio: kMapaAnimaisAspect,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Image.asset(
-                    'assets/habitats/mapa_animais.jpg',
-                    fit: BoxFit.fill,
-                    errorBuilder: (_, _, _) =>
-                        const ColoredBox(color: kAgua),
-                  ),
-                  Column(
-                    children: [
-                      for (int row = 0; row < kHabitatLinhas; row++)
-                        Expanded(
-                          child: Row(
-                            children: [
-                              for (int col = 0; col < kHabitatColunas; col++)
-                                Expanded(
-                                  child: _Celula(
-                                    habitat: _habitatEm(col, row),
-                                    onHabitat: _abrirHabitat,
-                                    onMapaMundi: _abrirMapaMundi,
-                                  ),
-                                ),
-                            ],
-                          ),
+          // imagem enche a LARGURA (encosta nas laterais, sem ficar quadrada) e
+          // é esticada de leve (BoxFit.fill = nada cortado); água (kAgua)
+          // preenche o que sobra em cima/embaixo. Grade 3×2 divide a MESMA box,
+          // então segue alinhada à imagem em qualquer tela.
+          Positioned.fill(
+            child: LayoutBuilder(
+              builder: (context, c) {
+                final w = c.maxWidth;
+                final boxH = (w / kMapaDisplayAspect).clamp(0.0, c.maxHeight);
+                return Center(
+                  child: SizedBox(
+                    width: w,
+                    height: boxH,
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        Image.asset(
+                          'assets/habitats/mapa_animais.jpg',
+                          fit: BoxFit.fill,
+                          filterQuality: FilterQuality.medium,
+                          errorBuilder: (_, _, _) =>
+                              const ColoredBox(color: kAgua),
                         ),
-                    ],
+                        Column(
+                          children: [
+                            for (int row = 0; row < kHabitatLinhas; row++)
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    for (int col = 0;
+                                        col < kHabitatColunas;
+                                        col++)
+                                      Expanded(
+                                        child: _Celula(
+                                          habitat: _habitatEm(col, row),
+                                          onHabitat: _abrirHabitat,
+                                          onMapaMundi: _abrirMapaMundi,
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
+                );
+              },
             ),
           ),
           // voltar (canto superior esquerdo)

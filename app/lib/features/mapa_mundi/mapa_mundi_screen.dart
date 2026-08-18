@@ -9,11 +9,14 @@ import '../estudo/estudo_screen.dart';
 /// Cor neon dos círculos/caminho das fases.
 const _neon = Color(0xFF3DF5E4);
 
-/// Mapa-múndi de FASES (PAISAGEM, tela cheia). Sobre `mapa_mundi.jpg`, cada
-/// habitat é um **círculo com contorno neon** (uma "fase"). Toque num círculo →
-/// abre as palavras daquele habitat; ao terminar (chegar na última palavra),
-/// a fase é marcada como concluída: o círculo **acende** e o **caminho** até a
-/// próxima fase brilha. O progresso fica salvo (ProgressoFases).
+/// Mapa-múndi de FASES (PAISAGEM, tela cheia). O mapa é esticado pra encostar
+/// nas laterais (`kMapaDisplayAspect`), com uma vinheta pra dar profundidade.
+/// Cada habitat é um **disco 3D achatado com contorno neon** (uma "fase"):
+/// toque num disco → abre as palavras daquele habitat; ao terminar (chegar na
+/// última palavra), a fase é marcada como concluída — o disco **acende** e o
+/// **caminho** até a próxima fase brilha. O progresso fica salvo
+/// (`ProgressoFases`) — por isso os botões inferiores: **Voltar habitat** (volta
+/// à lista/mapa de habitats) e **Reiniciar aventura** (apaga as luzes).
 class MapaMundiScreen extends StatefulWidget {
   const MapaMundiScreen({super.key});
 
@@ -59,75 +62,126 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
     _recarregar(); // acende o que foi concluído
   }
 
+  Future<void> _reiniciarAventura() async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Reiniciar aventura?'),
+        content: const Text(
+          'Apaga o progresso das fases — as luzes voltam a apagar. '
+          'As palavras continuam todas lá.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancelar'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Reiniciar'),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    await ProgressoFases.reiniciar();
+    if (mounted) setState(() => _concluidas = {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kAgua,
       body: Stack(
         children: [
-          Center(
-            child: AspectRatio(
-              aspectRatio: kMapaMundiAspect,
-              child: LayoutBuilder(
-                builder: (context, c) {
-                  final w = c.maxWidth;
-                  final h = c.maxHeight;
-                  final d = (w * 0.13).clamp(44.0, 88.0);
-                  return Stack(
-                    children: [
-                      Positioned.fill(
-                        child: Image.asset(
-                          'assets/habitats/mapa_mundi.jpg',
-                          fit: BoxFit.fill,
-                          errorBuilder: (_, _, _) =>
-                              const ColoredBox(color: kAgua),
-                        ),
-                      ),
-                      // caminho entre as fases (acende conforme conclui)
-                      Positioned.fill(
-                        child: IgnorePointer(
-                          child: CustomPaint(
-                            painter: _CaminhoPainter(_concluidas),
+          Positioned.fill(
+            child: LayoutBuilder(
+              builder: (context, c) {
+                final w = c.maxWidth;
+                final boxH = (w / kMapaDisplayAspect).clamp(0.0, c.maxHeight);
+                final d = (w * 0.11).clamp(52.0, 104.0); // largura do disco
+                final dh = d * 0.78; // achatado (dá a sensação 3D)
+                return Center(
+                  child: SizedBox(
+                    width: w,
+                    height: boxH,
+                    child: Stack(
+                      children: [
+                        Positioned.fill(
+                          child: Image.asset(
+                            'assets/habitats/mapa_mundi.jpg',
+                            fit: BoxFit.fill,
+                            filterQuality: FilterQuality.high,
+                            errorBuilder: (_, _, _) =>
+                                const ColoredBox(color: kAgua),
                           ),
                         ),
-                      ),
-                      // círculos das fases
-                      for (final fase in Habitat.fases)
-                        Positioned(
-                          left: fase.fx * w - d / 2,
-                          top: fase.fy * h - d / 2,
-                          width: d,
-                          height: d,
-                          child: _CirculoFase(
-                            emoji: fase.emoji,
-                            numero: fase.ordem,
-                            concluida: _concluidas.contains(fase.chave),
-                            onTap: () => _abrirFase(fase),
+                        // vinheta: escurece as bordas → sensação de profundidade
+                        Positioned.fill(
+                          child: IgnorePointer(
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                gradient: RadialGradient(
+                                  radius: 0.95,
+                                  colors: [
+                                    Colors.transparent,
+                                    Colors.black.withValues(alpha: 0.42),
+                                  ],
+                                  stops: const [0.62, 1.0],
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                    ],
-                  );
-                },
-              ),
+                        // caminho entre as fases (acende conforme conclui)
+                        Positioned.fill(
+                          child: IgnorePointer(
+                            child: CustomPaint(
+                              painter: _CaminhoPainter(_concluidas),
+                            ),
+                          ),
+                        ),
+                        // discos das fases
+                        for (final fase in Habitat.fases)
+                          Positioned(
+                            left: fase.fx * w - d / 2,
+                            top: fase.fy * boxH - dh / 2,
+                            width: d,
+                            height: dh,
+                            child: _DiscoFase(
+                              emoji: fase.emoji,
+                              concluida: _concluidas.contains(fase.chave),
+                              onTap: () => _abrirFase(fase),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                );
+              },
             ),
           ),
-          // voltar
+          // botões inferiores translúcidos
           SafeArea(
             child: Align(
-              alignment: Alignment.topLeft,
+              alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Material(
-                  color: Colors.black.withValues(alpha: 0.5),
-                  shape: const CircleBorder(
-                    side: BorderSide(color: Colors.white24),
-                  ),
-                  child: IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(Icons.arrow_back_rounded),
-                    color: Colors.white,
-                    tooltip: 'Voltar',
-                  ),
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _BotaoTransparente(
+                      icon: Icons.arrow_back_rounded,
+                      texto: 'VOLTAR HABITAT',
+                      onTap: () => Navigator.of(context).pop(),
+                    ),
+                    const SizedBox(width: 10),
+                    _BotaoTransparente(
+                      icon: Icons.refresh_rounded,
+                      texto: 'REINICIAR AVENTURA',
+                      onTap: _reiniciarAventura,
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -187,57 +241,144 @@ class _CaminhoPainter extends CustomPainter {
   bool shouldRepaint(_CaminhoPainter old) => old.concluidas != concluidas;
 }
 
-/// Um círculo de fase, com contorno neon e brilho. Concluída = preenchido e
-/// brilhando mais (com uma estrelinha).
-class _CirculoFase extends StatelessWidget {
-  const _CirculoFase({
+/// Disco de fase 3D **achatado** (elipse): gradiente radial pra dar volume,
+/// brilho no topo (glossy), contorno neon e sombra embaixo (profundidade).
+/// Concluída = aceso (neon) + estrelinha; pendente = escuro/apagado.
+class _DiscoFase extends StatelessWidget {
+  const _DiscoFase({
     required this.emoji,
-    required this.numero,
     required this.concluida,
     required this.onTap,
   });
 
   final String emoji;
-  final int numero;
   final bool concluida;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
+    // borderRadius grande num retângulo achatado => ELIPSE (disco achatado).
+    const forma = BorderRadius.all(Radius.elliptical(200, 160));
     return GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: concluida
-              ? _neon.withValues(alpha: 0.30)
-              : Colors.black.withValues(alpha: 0.42),
-          border: Border.all(color: _neon, width: concluida ? 4 : 3),
+          borderRadius: forma,
+          gradient: RadialGradient(
+            center: const Alignment(-0.25, -0.6),
+            radius: 1.15,
+            colors: concluida
+                ? const [Color(0xFFCAFFFB), _neon, Color(0xFF0B9488)]
+                : const [Color(0xFF3C5C65), Color(0xFF1B3138), Color(0xFF0B171C)],
+            stops: const [0.0, 0.55, 1.0],
+          ),
+          border: Border.all(color: _neon, width: concluida ? 3 : 2.5),
           boxShadow: [
+            // sombra de profundidade (embaixo)
             BoxShadow(
-              color: _neon.withValues(alpha: concluida ? 0.95 : 0.6),
-              blurRadius: concluida ? 20 : 11,
-              spreadRadius: concluida ? 2 : 1,
+              color: Colors.black.withValues(alpha: 0.5),
+              blurRadius: 8,
+              offset: const Offset(0, 5),
+            ),
+            // brilho neon ao redor (mais forte quando aceso)
+            BoxShadow(
+              color: _neon.withValues(alpha: concluida ? 0.9 : 0.4),
+              blurRadius: concluida ? 22 : 11,
+              spreadRadius: concluida ? 1 : 0,
             ),
           ],
         ),
         child: Stack(
           alignment: Alignment.center,
           children: [
+            // reflexo/glossy no topo
+            Align(
+              alignment: const Alignment(0, -0.55),
+              child: FractionallySizedBox(
+                widthFactor: 0.72,
+                heightFactor: 0.4,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(
+                      Radius.elliptical(200, 140),
+                    ),
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.white.withValues(alpha: 0.55),
+                        Colors.white.withValues(alpha: 0.0),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
             FittedBox(
               fit: BoxFit.scaleDown,
               child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Text(emoji, style: const TextStyle(fontSize: 34)),
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                child: Text(emoji, style: const TextStyle(fontSize: 30)),
               ),
             ),
             if (concluida)
               const Align(
                 alignment: Alignment.topRight,
-                child: Icon(Icons.star_rounded,
-                    color: Color(0xFFFFD54A), size: 18),
+                child: Padding(
+                  padding: EdgeInsets.only(top: 1, right: 1),
+                  child: Icon(Icons.star_rounded,
+                      color: Color(0xFFFFD54A), size: 16),
+                ),
               ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Botão translúcido (mesmo estilo dos nomes/habitats) — os botões inferiores.
+class _BotaoTransparente extends StatelessWidget {
+  const _BotaoTransparente({
+    required this.icon,
+    required this.texto,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String texto;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.black.withValues(alpha: 0.55),
+      borderRadius: BorderRadius.circular(22),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(22),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(color: Colors.white24),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: Colors.white, size: 18),
+              const SizedBox(width: 8),
+              Text(
+                texto,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 0.3,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

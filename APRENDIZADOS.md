@@ -2,6 +2,32 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-18 — v0.5.0 (mapas esticados + discos 3D + botões reiniciar/voltar no mapa-múndi)
+- **Esticar os mapas ("não ficar quadrado"):** trocado `AspectRatio(nativo)` por `LayoutBuilder`
+  + `SizedBox(width: w, height: (w/kMapaDisplayAspect).clamp(0, h))` centrado, com a imagem em
+  `BoxFit.fill`. `kMapaDisplayAspect = 2.0` (em `habitat.dart`) é mais largo que o nativo (animais
+  1.5, mundi 1.0) → a imagem **enche a largura** (encosta nas laterais) e sobra água em cima/embaixo;
+  em telas bem largas toma a tela toda. A grade 3×2 do habitat e os círculos do mundi dividem a MESMA
+  box (frações `fx`/`fy`) → **seguem alinhados** mesmo esticando. Ajustar `kMapaDisplayAspect` se quiser
+  mais/menos stretch. `filterQuality: medium/high` nas imagens pra suavizar o reescalonamento.
+- **Qualidade do mapa-múndi:** o `mapa_mundi.jpg` atual é 1024² e de baixa qualidade — esticado
+  fica pior. Paliativos por código: `filterQuality.high` + **vinheta** (`RadialGradient` transparente→
+  preto nas bordas) que dá profundidade e disfarça. Solução real = **imagem nova** (relevo/infográfico,
+  de preferência em paisagem ~1536×1024 pra esticar menos). **Não há tool de geração de imagem no
+  ambiente CLI** → depende de arte externa dropada em `assets/habitats/mapa_mundi.jpg` (aí re-tunar
+  `fx`/`fy` se o layout mudar) OU um mapa vetorial em `CustomPaint` (custoso). Ver IDEIAS.
+- **Discos de fase 3D achatados:** `_DiscoFase` (era `_CirculoFase`) = retângulo `dh = d*0.78`
+  (achatado) com `borderRadius: Radius.elliptical(200,160)` grande → vira **elipse**. Volume por
+  `RadialGradient` (centro claro deslocado p/ cima-esq), **glossy** (LinearGradient branco→transparente
+  no topo via `FractionallySizedBox`), `Border` neon e 2 `BoxShadow` (preta com offset = profundidade +
+  neon = brilho). NÃO usei `MaskFilter.blur` (pesa/flaky no raster). Posicionamento usa `w`/`boxH` da box.
+- **Botões inferiores + reset:** `MapaMundiScreen` ganhou Row inferior com `_BotaoTransparente`
+  (mesmo estilo dos nomes) — **VOLTAR HABITAT** (`Navigator.pop`, substitui a setinha do canto, que
+  removi) e **REINICIAR AVENTURA** (`showDialog` de confirmação → `ProgressoFases.reiniciar()` que faz
+  `prefs.remove(_chave)` → `setState(_concluidas={})`). Responde ao "fica aceso pra sempre?": **sim,
+  persiste** (shared_preferences) até reiniciar. Teste novo `test/progresso_fases_test.dart`
+  (marca idempotente / carrega / reinicia, com `SharedPreferences.setMockInitialValues`).
+
 ## 2026-08-18 — v0.4.0 (fix dimensão do mapa + selecionar animais + mapa-múndi de fases)
 - **Fix "imagem cortada" do mapa (o pedido):** o v0.3.1 usava `BoxFit.cover` em `Stack(expand)`,
   que recortava as bordas. Agora `HabitatMapScreen` volta ao `Center(AspectRatio(kMapaAnimaisAspect))`

@@ -25,11 +25,19 @@ A criança **fala** a palavra; o app reconhece se **acertou**.
 - Já existe: Home → mapa de habitats (paisagem, na dimensão certa + água ao redor) → 5 botões
   (Ártico/Savana/Selva/Aquático/Aves); cada um roda do mais fácil ao mais difícil.
 - **Selecionar animais** (v0.4.0): botão no mapa → busca com lupa + "+" por animal → Confirmar.
-- **Mapa-múndi de FASES** (v0.4.0): círculos neon por habitat; concluir acende o círculo + o
-  caminho até a próxima fase (progresso salvo em `progresso_fases.dart`). **A evoluir:** o
-  progresso hoje é global (não por perfil de criança); pensar em resetar/escolher perfil quando
-  entrar a gamificação. As fases seguem a ordem fixa de `Habitat.ordem` (não bloqueia jogar
-  fora de ordem — é livre; se quiser "trancar" fase futura até concluir a anterior, dá pra fazer).
+- **Mapa-múndi de FASES** (v0.4.0 → v0.5.0): discos 3D neon por habitat; concluir acende o disco + o
+  caminho até a próxima fase (progresso salvo em `progresso_fases.dart`). Botões **Voltar habitat** e
+  **Reiniciar aventura** (v0.5.0). **A evoluir:** o progresso hoje é global (não por perfil de
+  criança); pensar em escolher perfil quando entrar a gamificação. As fases seguem a ordem fixa de
+  `Habitat.ordem` mas não bloqueiam jogar fora de ordem — se quiser "trancar" fase futura até
+  concluir a anterior, dá pra fazer.
+- **⭐ Arte nova do mapa-múndi (pendente):** o `mapa_mundi.jpg` atual (1024², baixa qualidade) precisa
+  virar um mapa **relevo/profundidade, estilo infográfico**, de preferência em **paisagem** (~1536×1024
+  ou mais largo, pra esticar menos). Claude no CLI **não gera imagem** → duas vias: (a) o usuário gera
+  a arte (prompt sugerido: *"stylized infographic world map, top-down, subtle relief/bathymetry,
+  soft depth shadows, warm kid-friendly palette, no labels, landscape 3:2"*) e solta em
+  `app/assets/habitats/mapa_mundi.jpg` (aí re-tunar `fx`/`fy` dos habitats se o desenho mudar);
+  ou (b) desenhar um mapa vetorial em `CustomPaint` (crisp em qualquer resolução, porém trabalhoso).
 - **Animais que ficaram de fora** (domésticos: gato, cachorro, vaca…; insetos: formiga, abelha…)
   não cabem nos 5 habitats da imagem. Criar habitats **🚜 Fazenda** e **🐜 Insetos** (nova imagem
   ou células extras) pra readmiti-los.

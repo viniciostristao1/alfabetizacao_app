@@ -2,6 +2,15 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.5.0 (2026-08-18)
+- **Mapas mais largos.** O mapa de habitats e o mapa-múndi agora **encostam nas laterais**
+  (esticados de leve) — não ficam mais "quadrados". A água azul preenche o que sobra.
+- **Fases em 3D!** No mapa-múndi, cada habitat virou um **disco brilhante** (achatado, com brilho
+  em cima e sombrinha embaixo) e contorno **neon**. Ao concluir, o disco **acende** e o **caminho**
+  até a próxima fase brilha — e o mapa ganhou uma leve **profundidade** (bordas mais escuras).
+- **Botões no mapa-múndi:** **Voltar habitat** (volta pra lista/mapa de habitats) e **Reiniciar
+  aventura** (apaga as luzes das fases pra começar de novo — as palavras continuam todas lá).
+
 ## v0.4.0 (2026-08-18)
 - **Mapa dos habitats na medida certa.** A imagem agora aparece **inteira** (nada cortado),
   na proporção correta, e o resto da tela fica preenchido com **água** — continua ocupando a

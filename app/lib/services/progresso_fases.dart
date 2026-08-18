@@ -20,4 +20,10 @@ class ProgressoFases {
       await prefs.setStringList(_chave, atuais.toList());
     }
   }
+
+  /// Zera o progresso — "Reiniciar aventura": as luzes das fases voltam a apagar.
+  static Future<void> reiniciar() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_chave);
+  }
 }

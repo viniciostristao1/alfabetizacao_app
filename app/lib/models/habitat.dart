@@ -48,6 +48,12 @@ const int kHabitatLinhas = 2;
 const double kMapaAnimaisAspect = 1536 / 1024;
 const double kMapaMundiAspect = 1;
 
+/// Aspecto de EXIBIÇÃO dos mapas em paisagem — um pouco mais largo que o nativo,
+/// pra imagem **encostar nas laterais** (não ficar "quadrada"). A imagem enche a
+/// largura da tela (esticada de leve, `BoxFit.fill`, sem cortar) e a sobra em
+/// cima/embaixo vira água (`kAgua`). Em telas bem largas ela toma a tela inteira.
+const double kMapaDisplayAspect = 2.0;
+
 /// Azul do oceano — usado para "inventar água" ao redor da imagem, preenchendo a
 /// tela sem cortar nada (a imagem aparece inteira, na proporção certa).
 const Color kAgua = Color(0xFF013A66);
