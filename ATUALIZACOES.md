@@ -2,6 +2,12 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.10.2 (2026-08-18)
+- **▶️ Iniciar jogo (ajuste):** agora o botão fica **centralizado embaixo**, no
+  mesmo tamanho/estilo dos demais (Voltar habitat, Reiniciar aventura, Voltar
+  início) — só que com **fundo branco**. Continua começando a aventura pela
+  **primeira fase** da ordem da engrenagem ⚙️.
+
 ## v0.10.1 (2026-08-18)
 - **▶️ Iniciar jogo!** Botão **branco, centralizado** no mapa-múndi: toque pra
   começar a aventura pela **primeira fase** da ordem que você escolheu na

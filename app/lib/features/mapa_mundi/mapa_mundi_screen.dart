@@ -202,13 +202,6 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
               },
             ),
           ),
-          // INICIAR JOGO (centralizado, fundo branco) — começa a aventura na
-          // primeira fase da ordem configurada.
-          SafeArea(
-            child: Center(
-              child: _BotaoIniciar(onTap: _iniciarJogo),
-            ),
-          ),
           // seta de voltar (topo-esq)
           SafeArea(
             child: Align(
@@ -251,6 +244,24 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
                       onTap: _reiniciarAventura,
                     ),
                   ],
+                ),
+              ),
+            ),
+          ),
+          // INICIAR JOGO (inferior-CENTRO, fundo BRANCO — mesma forma/tamanho
+          // dos demais botões) — começa a aventura na 1ª fase da ordem
+          // configurada.
+          SafeArea(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: _BotaoTransparente(
+                  icon: Icons.play_arrow_rounded,
+                  texto: 'INICIAR JOGO',
+                  fundo: Colors.white,
+                  letra: AppColors.bg,
+                  onTap: _iniciarJogo,
                 ),
               ),
             ),
@@ -449,59 +460,32 @@ class _AnelFase extends StatelessWidget {
   }
 }
 
-/// Botão "INICIAR JOGO" — pílula branca centralizada sobre o mapa-múndi.
-class _BotaoIniciar extends StatelessWidget {
-  const _BotaoIniciar({required this.onTap});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.white,
-      elevation: 6,
-      shadowColor: Colors.black45,
-      borderRadius: BorderRadius.circular(30),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(30),
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 13),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30),
-            border: Border.all(color: Colors.white, width: 2),
-          ),
-          child: const Text(
-            'INICIAR JOGO',
-            style: TextStyle(
-              color: AppColors.bg,
-              fontSize: 17,
-              fontWeight: FontWeight.w900,
-              letterSpacing: 0.5,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Botão translúcido (mesmo estilo dos nomes/habitats) — os botões do mapa.
+/// Botão dos mapas (mesmo estilo dos nomes/habitats) — os botões do mapa.
+/// Padrão: fundo escuro translúcido e texto/ícone brancos. O "INICIAR JOGO"
+/// passa `fundo: Colors.white` (pedido do usuário) com texto escuro.
 class _BotaoTransparente extends StatelessWidget {
   const _BotaoTransparente({
     required this.icon,
     required this.texto,
     required this.onTap,
+    this.fundo = const Color(0x8C000000),
+    this.letra = Colors.white,
   });
 
   final IconData icon;
   final String texto;
   final VoidCallback onTap;
 
+  /// Cor do fundo (padrão: preto translúcido).
+  final Color fundo;
+
+  /// Cor de texto/ícone (padrão: branco; no fundo branco fica escura).
+  final Color letra;
+
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.black.withValues(alpha: 0.55),
+      color: fundo,
       borderRadius: BorderRadius.circular(22),
       child: InkWell(
         borderRadius: BorderRadius.circular(22),
@@ -515,12 +499,12 @@ class _BotaoTransparente extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon, color: Colors.white, size: 18),
+              Icon(icon, color: letra, size: 18),
               const SizedBox(width: 8),
               Text(
                 texto,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: letra,
                   fontSize: 13,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 0.3,

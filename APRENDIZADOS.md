@@ -2,6 +2,16 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-18 — v0.10.2 (Iniciar jogo: reposicionado p/ inferior-centro, branco)
+- Usuário pediu ajuste: o botão NÃO fica mais centralizado no mapa (tampava a
+  arte); agora é `Align(bottomCenter)` no mesmo molde `_BotaoTransparente` dos
+  demais botões de baixo. `_BotaoTransparente` ganhou `fundo` (padrão preto
+  translúcido `0x8C000000`, que substitui `Colors.black.withValues(alpha:0.55)`
+  — mesmo visual, const-friendly) e `letra` (padrão branco); o Iniciar passa
+  `fundo: Colors.white, letra: AppColors.bg` + ícone play. `_BotaoIniciar`
+  (pílula grande) DELETADO. Testes seguem iguais (texto 'INICIAR JOGO' +
+  toque abre Fase 1). 29 testes, analyze limpo.
+
 ## 2026-08-18 — v0.10.1 (botão "Iniciar jogo" no mapa-múndi)
 - **`_BotaoIniciar`** (pílula branca, texto `INICIAR JOGO` em `AppColors.bg`,
   `Material elevation 6`) centralizado via `SafeArea(Center(...))` — fica por
