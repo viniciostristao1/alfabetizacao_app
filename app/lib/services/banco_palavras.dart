@@ -35,6 +35,7 @@ const List<Palavra> bancoPalavras = [
   Palavra(['ga', 'ze', 'la'], Categoria.animais, sub: 'terrestre', habitat: 'savana'),
   Palavra(['hi', 'e', 'na'], Categoria.animais, sub: 'terrestre', habitat: 'savana'),
   Palavra(['a', 'ves', 'truz'], Categoria.animais, sub: 'terrestre', habitat: 'savana'),
+  Palavra(['can', 'gu', 'ru'], Categoria.animais, sub: 'terrestre', habitat: 'savana'),
   Palavra(['e', 'le', 'fan', 'te'], Categoria.animais, sub: 'terrestre', habitat: 'savana'),
   Palavra(['su', 'ri', 'ca', 'to'], Categoria.animais, sub: 'terrestre', habitat: 'savana'),
   Palavra(['an', 'tí', 'lo', 'pe'], Categoria.animais, sub: 'terrestre', habitat: 'savana'),

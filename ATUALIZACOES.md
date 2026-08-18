@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.6.1 (2026-08-18)
+- **Novo bicho:** 🦘 **canguru** entrou na lista de animais (no habitat Savana).
+
 ## v0.6.0 (2026-08-18)
 - **Mapa-múndi novo, desenhado! 🌍** Saiu a imagem antiga (meio borrada) e entrou um mapa-múndi
   **desenhado no próprio app** — nítido em qualquer tela, estilo infográfico, com **oceano fundo**,
