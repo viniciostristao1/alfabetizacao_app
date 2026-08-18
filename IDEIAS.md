@@ -23,10 +23,13 @@ A criança **fala** a palavra; o app reconhece se **acertou**.
   internet; um fallback offline é item aberto.
 
 ## 🪙 Gamificação — moedas e troféus
-- Ganhar **moedas** ao ler/acertar palavras; **troféus** por marcos (terminar um nível, uma
-  categoria, sequência de acertos).
-- Guardar em `shared_preferences` (Riverpod) — 1º uso real da persistência. Molde em ARQUITETURA.
-- Ideias: barrinha de progresso por nível, "vitrine" de troféus, som/animação de recompensa.
+- ✅ **v0.10.0:** XP (nunca cai) + nível + **moedas** (saldo com floor 0) no
+  V/X da EstudoScreen; **baú** (+10) e **medalha** (🥇🥈🥉) por precisão ao
+  concluir fase no mapa-múndi. `services/progresso_repository.dart`.
+- **A decidir:** o que as moedas **compram** — sugestão: tela de **Prêmios
+  reais** (o pai cadastra "10 moedas = 1 figurinha", a criança troca com ele).
+- Ideias: barrinha de progresso por nível, "vitrine" de troféus, som/animação de
+  recompensa, sequência de acertos (streak), cosmetéticos (canetas/fundos) por nível.
 
 ## 🗺️ Mapa de habitats (Animais) — FEITO (v0.3.0 → v0.4.0), com pontas a evoluir
 - Já existe: Home → mapa de habitats (paisagem, na dimensão certa + água ao redor) → 5 botões
@@ -72,7 +75,9 @@ A criança **fala** a palavra; o app reconhece se **acertou**.
 ## 👶 Personalização
 - **Nomes personalizados:** deixar o pai adicionar o nome do filho, da família e dos amigos
   (a categoria "Nomes" fica muito mais significativa). Guardar local.
-- Adicionar **palavras próprias** em qualquer categoria.
+- ✅ **Palavras próprias** (categoria "Escrever", v0.9.0): o usuário digita
+  qualquer palavra e monta a lista. Falta poder adicionar em **qualquer**
+  categoria/lista existente.
 - Nome/ícone do app e **tema claro** (hoje só escuro).
 
 ## ☁️ Distribuição

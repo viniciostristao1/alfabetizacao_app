@@ -2,6 +2,67 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-18 — v0.10.0 (gamificação: XP + moedas + V/X + medalhas)
+- **`services/progresso_repository.dart`** (molde do ARQUITETURA, sem Riverpod —
+  segui o padrão estático de ProgressoFases/ConfigOrdem): chaves
+  `xp_total_v1` (nunca cai), `moedas_v1` (saldo, floor 0), `acertos_<habitat>` /
+  `erros_<habitat>`. `nivelDe(xp) = 1 + xp ~/ 25`. `registrarErro` devolve a
+  perda REAL (clampada) p/ o feedback; na UI mostro `-$pontos` (a regra), não a
+  perda clampada.
+- **Pontos da palavra = 2 × (sílabas − 1)**, clamp mínimo 1 (palavras do
+  usuário têm `nivelSilabas = 1` → dão 1 pt).
+- **EstudoScreen:** V (`_acertou`) soma XP+moedas, limpa o desenho, avança e, se
+  for a última palavra de fase (`habitatConcluivel`), abre o **baú** (`_BauDialog`
+  com `Curves.elasticOut` + bônus `bonusFase=10` + medalha). X (`_errou`) só
+  desconta moedas e **repete a palavra** (pedagógico: erro vira aprendizado).
+  Botões V/X = `_BotaoAcertoErro` (círculo 34px, letra dentro).
+- **Feedback flutuante `_PontosFeedback`:** `AnimationController` 950ms (sobe +
+  fade), `ValueKey(_feedbackSeq)` reinicia a animação em cliques repetidos;
+  `onFim` (status listener) limpa no pai. ⚠️ No teste, `pumpAndSettle` espera a
+  animação TERMINAR → o "+1" some; verifique com `pump(100ms)` e depois
+  `pumpAndSettle` p/ confirmar que sumiu.
+- **Topo da EstudoScreen estourava em telas estreitas** (portrait 360 / teste):
+  o bloco progresso+moedas+Nv+V/X entrou num **`Wrap`** (`alignment: end`) dentro
+  de `Flexible` → quebra linha em vez de overflow; em paisagem (uso real) fica
+  numa linha só.
+- **Medalhas no mapa-múndi:** `_AnelFase` ganhou `medalha` (ouro/prata/bronze ou
+  null → estrela). `_carregarMedalhas()` lê por habitat no `_carregar` e no
+  `_recarregarProgresso` (após voltar de uma fase). `AppColors.acerto`
+  (verde 2ECC71) criado p/ o V.
+- Testes: `progresso_repository_test.dart` (6: soma, erro floor, nível, bônus,
+  medalha por precisão 100/67/80/50%, isolamento entre habitats) + widget_test
+  "estudo: V dá pontos e X tira". 28 testes, analyze limpo.
+- **A definir (usuário):** o que as moedas compram (sugestão = Prêmios reais
+  cadastrados pelo pai). Decisões fechadas: moedas+nível, erro perde os pontos da
+  palavra, V/X no topo direito ao lado do contador.
+
+## 2026-08-18 — v0.9.0 (categoria "Escrever" — palavras do usuário)
+- **`Categoria.escrever`** (5º enum, emoji ✏️, cor rosa `F472B6`): categoria DO
+  USUÁRIO — **não tem banco** (`bancoPalavras`). HomeScreen roteia com `switch`
+  (animais→mapa, escrever→EscreverScreen, resto→Nivel). Grid da home vira 5
+  cards (última linha sozinha). Teste de banco "card não fica vazio" **skipa**
+  `Categoria.escrever`; o teste de duplicatas passa (lista vazia) sem tocar.
+- **`EscreverScreen`** (`features/escrever/`, RETRATO): mesma estrutura da
+  "Selecionar animais" (campo no topo + lista + FAB "Confirmar (n)"). Adição
+  = TextField + **`IconButton.filled`** "+" (e `onSubmitted` do teclado);
+  remove por linha com `remove_circle_outline` (danger). Valida vazio e
+  duplicata via `semAcento` (busca amigável, ex.: "Água" vs "agua").
+- **Palavra do usuário = `Palavra([texto], Categoria.escrever)`** → uma única
+  "sílaba", `nivelSilabas = 1`. OK: a EstudoScreen só usa `texto`, e o teste do
+  banco não cobre palavras em runtime. Ordem = da lista (inserção).
+- **Persistência:** `services/escrever_palavras.dart` (shared_preferences,
+  chave `escrever_palavras_v1`), mesmo molde de ProgressoFases/ConfigOrdem —
+  carrega no `initState`, salva a cada mudança. A lista sobrevive ao app.
+- Estudo abre com `manterPaisagemAoSair` padrão (`false`) → ao voltar, retrato
+  (a EscreverScreen é retrato e a home também — sem código de orientação).
+- Testes: widget_test ganhou "home mostra as 5 categorias", "tocar em Escrever"
+  e "adicionar gato → Confirmar (1) → Estudo mostra GATO". ⚠️ Testes que abrem
+  a EscreverScreen precisam de `SharedPreferences.setMockInitialValues({})`.
+- **Fix overflow do card de nível** (`nivel_screen.dart`): com viewport de
+  celular real (360×800) o `Row` do `_NivelCard` estourava 53–67px (rótulo +
+  contagem + chevron sem flex). Troquei o `Spacer` por `Expanded` no `Column`
+  do rótulo — o overflow NÃO era visível no viewport padrão de teste (800×600).
+
 ## 2026-08-18 — v0.8.0 (Fazenda + anéis de fase + botões/undo + ordem configurável)
 - **Habitat Fazenda:** `Habitat.fazenda` (`col/row = -1` — NÃO tem célula na grade do mapa_animais).
   14 bichos domésticos no banco (habitat 'fazenda', sub terrestre). No mapa-múndi = fase na

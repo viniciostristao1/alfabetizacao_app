@@ -17,5 +17,6 @@ abstract final class AppColors {
 
   static const accent = Color(0xFF4F8CFF); // ação principal (azul amigável)
   static const onAccent = Color(0xFF06122B);
-  static const danger = Color(0xFFFF6B6B);
+  static const danger = Color(0xFFFF6B6B); // erro / X
+  static const acerto = Color(0xFF2ECC71); // acerto / V
 }

@@ -83,24 +83,25 @@ class _NivelCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 14),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    nivel.rotulo,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w800,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      nivel.rotulo,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    nivel.descricao,
-                    style: const TextStyle(color: AppColors.dim),
-                  ),
-                ],
+                    const SizedBox(height: 2),
+                    Text(
+                      nivel.descricao,
+                      style: const TextStyle(color: AppColors.dim),
+                    ),
+                  ],
+                ),
               ),
-              const Spacer(),
               Text(
                 '$total ${total == 1 ? 'palavra' : 'palavras'}',
                 style: const TextStyle(color: AppColors.dim, fontSize: 14),

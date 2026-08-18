@@ -2,6 +2,26 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.10.0 (2026-08-18)
+- **Gamificação! 🪙** Agora dá pra pontuar o quanto a criança acerta:
+  - **Botões V e X** no canto superior direito da tela de palavras, ao lado do
+    contador: **V verde** = acertou (ganha pontos e passa pra próxima) ·
+    **X vermelho** = errou (perde os pontos da palavra, que **repete** até
+    acertar). Por enquanto o adulto aperta — depois o microfone pode fazer isso.
+  - **Pontos pela dificuldade:** 2 sílabas = 2, 3 sílabas = 4, 4 sílabas = 6.
+  - **🪙 Moedas e Nível (Nv)** no topo: as moedas são o saldo (cai quando erra,
+    nunca fica negativo); o nível sobe conforme o XP acumulado (que nunca cai).
+  - **Baú no fim de fase:** ao concluir um habitat no mapa-múndi, abre um baú
+    com **+10 moedas** e uma **medalha** pela precisão (🥇 ouro = acertou tudo,
+    🥈 prata ≥ 80%, 🥉 bronze ≥ 60%) — a medalha fica no anel da fase.
+
+## v0.9.0 (2026-08-18)
+- **Escrever! ✏️** Nova categoria na tela inicial (abaixo de Alimentos e Nomes):
+  digite **qualquer palavra** que quiser, toque no **+** e monte a sua lista.
+  A lista fica **salva** — na próxima vez que abrir, as palavras já estão lá.
+  Depois é só tocar em **Confirmar** e elas passam na tela como as demais
+  (grande, pra ler e escrever por cima).
+
 ## v0.8.0 (2026-08-18)
 - **Fazenda! 🐮** Nova turma de bichos domésticos (vaca, cavalo, porco, ovelha, gato, cachorro,
   coelho…). No mapa-múndi eles viram uma **fase na América do Norte**; na tela de habitats entram

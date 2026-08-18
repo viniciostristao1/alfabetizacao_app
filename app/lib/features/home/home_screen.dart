@@ -4,10 +4,11 @@ import '../../models/categoria.dart';
 import '../../theme/app_colors.dart';
 import '../../util/versao.dart';
 import '../config/config_screen.dart';
+import '../escrever/escrever_screen.dart';
 import '../habitat/habitat_map_screen.dart';
 import '../nivel/nivel_screen.dart';
 
-/// Tela principal (retrato): as 4 modalidades de palavras.
+/// Tela principal (retrato): as modalidades de palavras.
 /// O emoji/cor de cada card é só apoio visual — a criança que ainda não lê
 /// reconhece a categoria pelo ícone.
 class HomeScreen extends StatelessWidget {
@@ -92,11 +93,14 @@ class _CategoriaCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (_) => categoria == Categoria.animais
-                // Animais viram um JOGO: mapa de habitats (paisagem), sem escolher
-                // nível — cada habitat roda do mais fácil ao mais difícil.
-                ? const HabitatMapScreen()
-                : NivelScreen(categoria: categoria),
+            builder: (_) => switch (categoria) {
+              // Animais viram um JOGO: mapa de habitats (paisagem), sem escolher
+              // nível — cada habitat roda do mais fácil ao mais difícil.
+              Categoria.animais => const HabitatMapScreen(),
+              // Escrever = palavras do próprio usuário (digitadas na tela).
+              Categoria.escrever => const EscreverScreen(),
+              _ => NivelScreen(categoria: categoria),
+            },
           ),
         ),
         child: Container(

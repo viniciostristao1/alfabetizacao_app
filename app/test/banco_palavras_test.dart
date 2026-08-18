@@ -34,6 +34,9 @@ void main() {
     test('cada categoria+nível tem pelo menos 1 palavra (card não fica vazio)',
         () {
       for (final c in Categoria.values) {
+        // "Escrever" é a categoria DO USUÁRIO (palavras digitadas na tela) —
+        // não tem banco próprio.
+        if (c == Categoria.escrever) continue;
         for (final n in Nivel.values) {
           expect(
             contarPalavras(c, n),

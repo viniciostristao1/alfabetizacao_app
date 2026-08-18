@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../../models/estudo_opcoes.dart';
 import '../../models/palavra.dart';
 import '../../services/progresso_fases.dart';
+import '../../services/progresso_repository.dart';
 import '../../theme/app_colors.dart';
 
 /// Tela de estudo (PAISAGEM): mostra uma palavra grande de cada vez, com:
@@ -47,6 +48,12 @@ class _EstudoScreenState extends State<EstudoScreen> {
   CorCaneta _caneta = CorCaneta.azul;
   final List<_Traco> _tracos = [];
 
+  // ── gamificação (XP/moedas): carregados no initState e atualizados no V/X ──
+  int _moedas = 0;
+  int _xp = 0;
+  String? _feedback; // "+4" / "-4" flutuando sobre a palavra
+  int _feedbackSeq = 0; // key nova a cada feedback (reinicia a animação)
+
   @override
   void initState() {
     super.initState();
@@ -54,7 +61,79 @@ class _EstudoScreenState extends State<EstudoScreen> {
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
+    _carregarGamificacao();
     _talvezConcluir(); // caso o habitat tenha 1 palavra só
+  }
+
+  Future<void> _carregarGamificacao() async {
+    final moedas = await ProgressoRepository.moedas();
+    final xp = await ProgressoRepository.xp();
+    if (mounted) {
+      setState(() {
+        _moedas = moedas;
+        _xp = xp;
+      });
+    }
+  }
+
+  /// Pontos da palavra atual: 2 × (sílabas − 1) → 2 sílabas = 2, 3 = 4, 4 = 6.
+  /// Palavras do usuário (1 sílaba) dão 1 ponto.
+  int get _pontosPalavra =>
+      (2 * (widget.palavras[_i].nivelSilabas - 1)).clamp(1, 999);
+
+  void _mostrarFeedback(String texto) {
+    _feedback = texto;
+    _feedbackSeq++;
+  }
+
+  /// V verde: acertou → soma pontos (XP + moedas) e avança. Se for a última
+  /// palavra de uma fase do mapa-múndi, abre o baú (bônus + medalha).
+  Future<void> _acertou() async {
+    final pontos = _pontosPalavra;
+    final habitat = widget.habitatConcluivel;
+    await ProgressoRepository.registrarAcerto(pontos, habitat: habitat);
+    if (!mounted) return;
+    setState(() {
+      _moedas += pontos;
+      _xp += pontos;
+      _tracos.clear();
+      _mostrarFeedback('+$pontos');
+    });
+    final ultima = _i == widget.palavras.length - 1;
+    if (ultima && habitat != null) {
+      await _concluirFase();
+    } else if (_temProximo) {
+      setState(() => _i++);
+    }
+  }
+
+  /// X vermelho: errou → perde os pontos da palavra (nunca abaixo de zero) e a
+  /// palavra REPETE até acertar (erro vira aprendizado, não frustração).
+  Future<void> _errou() async {
+    final pontos = _pontosPalavra;
+    final habitat = widget.habitatConcluivel;
+    await ProgressoRepository.registrarErro(pontos, habitat: habitat);
+    if (!mounted) return;
+    setState(() {
+      _moedas = (_moedas - pontos).clamp(0, 99999);
+      _tracos.clear();
+      _mostrarFeedback('-$pontos');
+    });
+  }
+
+  /// Fim de fase no mapa-múndi: baú com bônus de moedas + medalha pela
+  /// precisão (ouro/prata/bronze).
+  Future<void> _concluirFase() async {
+    final medalha = await ProgressoRepository.medalhaDe(
+      widget.habitatConcluivel!,
+    );
+    await ProgressoRepository.registrarBonusFase();
+    if (!mounted) return;
+    setState(() => _moedas += ProgressoRepository.bonusFase);
+    await showDialog<void>(
+      context: context,
+      builder: (_) => _BauDialog(medalha: medalha),
+    );
   }
 
   /// Marca a fase concluída quando a criança chega na última palavra do habitat.
@@ -138,7 +217,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // ── topo: título + bolinhas de FUNDO (horizontais) + progresso ──
+            // ── topo: título + bolinhas de FUNDO + progresso + moedas + V/X ──
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
               child: Row(
@@ -166,12 +245,55 @@ class _EstudoScreenState extends State<EstudoScreen> {
                       ),
                     ),
                   const Spacer(),
-                  Text(
-                    '${_i + 1} / ${widget.palavras.length}',
-                    style: TextStyle(
-                      color: ui.withValues(alpha: 0.7),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
+                  // Bloco da direita (progresso + moedas + nível + V/X) — vira
+                  // Wrap em telas estreitas p/ nunca estourar.
+                  Flexible(
+                    child: Wrap(
+                      alignment: WrapAlignment.end,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      spacing: 8,
+                      runSpacing: 4,
+                      children: [
+                        Text(
+                          '${_i + 1} / ${widget.palavras.length}',
+                          style: TextStyle(
+                            color: ui.withValues(alpha: 0.7),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        // moedas + nível (gamificação)
+                        Text(
+                          '🪙 $_moedas',
+                          style: TextStyle(
+                            color: ui,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        Text(
+                          'Nv ${ProgressoRepository.nivelDe(_xp)}',
+                          style: TextStyle(
+                            color: ui.withValues(alpha: 0.7),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        // V/X — o adulto diz se a criança acertou ou errou.
+                        _BotaoAcertoErro(
+                          cor: AppColors.acerto,
+                          letra: 'V',
+                          tooltip:
+                              'Acertou! Ganha os pontos e passa pra próxima',
+                          onTap: _acertou,
+                        ),
+                        _BotaoAcertoErro(
+                          cor: AppColors.danger,
+                          letra: 'X',
+                          tooltip: 'Errou. Perde os pontos e repete a palavra',
+                          onTap: _errou,
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -252,6 +374,18 @@ class _EstudoScreenState extends State<EstudoScreen> {
                               ),
                             ),
                           ),
+                          // feedback "+4" / "-4" (acerto/erro)
+                          if (_feedback != null)
+                            Positioned(
+                              top: 6,
+                              right: 18,
+                              child: _PontosFeedback(
+                                key: ValueKey(_feedbackSeq),
+                                texto: _feedback!,
+                                onFim: () =>
+                                    setState(() => _feedback = null),
+                              ),
+                            ),
                         ],
                       ),
                     ),
@@ -304,6 +438,191 @@ class _Traco {
   _Traco(this.cor);
   final Color cor;
   final List<Offset> pontos = [];
+}
+
+/// Baú do fim de fase (mapa-múndi): presente animado + bônus de moedas +
+/// medalha pela precisão da fase.
+class _BauDialog extends StatefulWidget {
+  const _BauDialog({required this.medalha});
+
+  final String? medalha; // 'ouro' | 'prata' | 'bronze' | null
+
+  @override
+  State<_BauDialog> createState() => _BauDialogState();
+}
+
+class _BauDialogState extends State<_BauDialog>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 800),
+  )..forward();
+
+  late final Animation<double> _escala = CurvedAnimation(
+    parent: _c,
+    curve: Curves.elasticOut,
+  );
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  String get _medalhaTexto => switch (widget.medalha) {
+        'ouro' => '🥇 Medalha de OURO!',
+        'prata' => '🥈 Medalha de PRATA!',
+        'bronze' => '🥉 Medalha de BRONZE!',
+        _ => 'Sem medalha ainda — tente acertar todas!',
+      };
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('FASE CONCLUÍDA!'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ScaleTransition(
+            scale: _escala,
+            child: const Text('🎁', style: TextStyle(fontSize: 76)),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            '+${ProgressoRepository.bonusFase} moedas!',
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w800,
+              color: AppColors.accent,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            _medalhaTexto,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 15),
+          ),
+        ],
+      ),
+      actions: [
+        FilledButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Continuar'),
+        ),
+      ],
+    );
+  }
+}
+
+/// "+4" / "-4" flutuando (sobe e some) — feedback rápido do V/X.
+class _PontosFeedback extends StatefulWidget {
+  const _PontosFeedback({super.key, required this.texto, required this.onFim});
+
+  final String texto;
+  final VoidCallback onFim;
+
+  @override
+  State<_PontosFeedback> createState() => _PontosFeedbackState();
+}
+
+class _PontosFeedbackState extends State<_PontosFeedback>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 950),
+  )..forward();
+
+  @override
+  void initState() {
+    super.initState();
+    _c.addStatusListener((s) {
+      if (s == AnimationStatus.completed) widget.onFim();
+    });
+  }
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final positivo = widget.texto.startsWith('+');
+    return AnimatedBuilder(
+      animation: _c,
+      builder: (_, _) {
+        final t = _c.value;
+        return Opacity(
+          opacity: (1 - t).clamp(0.0, 1.0),
+          child: Transform.translate(
+            offset: Offset(0, -22 * t),
+            child: Text(
+              widget.texto,
+              style: TextStyle(
+                fontSize: 26,
+                fontWeight: FontWeight.w900,
+                color: positivo ? AppColors.acerto : AppColors.danger,
+                shadows: const [
+                  Shadow(color: Colors.black54, blurRadius: 4),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// Botão redondo V (verde, acertou) / X (vermelho, errou) do topo direito.
+class _BotaoAcertoErro extends StatelessWidget {
+  const _BotaoAcertoErro({
+    required this.cor,
+    required this.letra,
+    required this.tooltip,
+    required this.onTap,
+  });
+
+  final Color cor;
+  final String letra;
+  final String tooltip;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: tooltip,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: 34,
+          height: 34,
+          decoration: BoxDecoration(
+            color: cor,
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white, width: 2),
+            boxShadow: [
+              BoxShadow(
+                color: cor.withValues(alpha: 0.6),
+                blurRadius: 8,
+              ),
+            ],
+          ),
+          child: Center(
+            child: Text(
+              letra,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 19,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class _DesenhoPainter extends CustomPainter {
