@@ -218,8 +218,9 @@ class _EstudoScreenState extends State<EstudoScreen> {
         child: Column(
           children: [
             // ── topo: título + bolinhas de FUNDO + progresso + moedas + V/X ──
+            // Sem padding direito: o V/X encosta BEM no canto superior direito.
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
+              padding: const EdgeInsets.fromLTRB(16, 10, 0, 0),
               child: Row(
                 children: [
                   Flexible(
@@ -575,7 +576,8 @@ class _PontosFeedbackState extends State<_PontosFeedback>
   }
 }
 
-/// Botão redondo V (verde, acertou) / X (vermelho, errou) do topo direito.
+/// Botão V (verde, acertou) / X (vermelho, errou) do topo direito — QUADRADO
+/// com cantos arredondados (mesmo clima dos botões de baixo, não redondo).
 class _BotaoAcertoErro extends StatelessWidget {
   const _BotaoAcertoErro({
     required this.cor,
@@ -596,11 +598,11 @@ class _BotaoAcertoErro extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          width: 34,
-          height: 34,
+          width: 40,
+          height: 40,
           decoration: BoxDecoration(
             color: cor,
-            shape: BoxShape.circle,
+            borderRadius: BorderRadius.circular(12),
             border: Border.all(color: Colors.white, width: 2),
             boxShadow: [
               BoxShadow(
@@ -614,7 +616,7 @@ class _BotaoAcertoErro extends StatelessWidget {
               letra,
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 19,
+                fontSize: 20,
                 fontWeight: FontWeight.w900,
               ),
             ),

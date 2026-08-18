@@ -2,6 +2,15 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-18 — v0.10.3 (V/X no canto + quadrados arredondados)
+- Usuário pediu: V/X **bem no canto superior direito** e **quadrados com
+  cantos arredondados** (não círculos). Feito: padding do topo mudou de
+  `fromLTRB(16,10,16,0)` p/ `fromLTRB(16,10,0,0)` (sem margem direita → o X
+  encosta na borda; `SafeArea` ainda protege em telas com notch) e
+  `_BotaoAcertoErro` trocou `BoxShape.circle` por `BorderRadius.circular(12)`
+  em 40×40 (raio proporcional ao dos botões de baixo). Testes inalterados
+  (29 verdes, analyze limpo).
+
 ## 2026-08-18 — v0.10.2 (Iniciar jogo: reposicionado p/ inferior-centro, branco)
 - Usuário pediu ajuste: o botão NÃO fica mais centralizado no mapa (tampava a
   arte); agora é `Align(bottomCenter)` no mesmo molde `_BotaoTransparente` dos

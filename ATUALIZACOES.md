@@ -2,6 +2,11 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.10.3 (2026-08-18)
+- **Botões V/X (ajuste):** agora ficam **bem no canto superior direito**
+  (sem espaço até a margem) e viraram **quadrados com cantos arredondados**,
+  no mesmo clima dos botões de baixo — não são mais redondos.
+
 ## v0.10.2 (2026-08-18)
 - **▶️ Iniciar jogo (ajuste):** agora o botão fica **centralizado embaixo**, no
   mesmo tamanho/estilo dos demais (Voltar habitat, Reiniciar aventura, Voltar
