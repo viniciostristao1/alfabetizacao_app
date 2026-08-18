@@ -8,11 +8,13 @@ import 'package:flutter/material.dart';
 ///   é a sequência das fases (1→5); `fx`/`fy` são a posição do círculo da fase
 ///   sobre o mapa-múndi, como fração 0..1 (x=coluna, y=linha).
 enum Habitat {
-  artico('artico', 'Ártico', '❄️', 0, 0, 1, 0.30, 0.12),
-  savana('savana', 'Savana', '🦁', 1, 0, 2, 0.52, 0.52),
-  selva('selva', 'Selva', '🌴', 2, 0, 3, 0.19, 0.61),
-  aquatico('aquatico', 'Aquático', '🐠', 0, 1, 4, 0.52, 0.86),
-  aves('aves', 'Aves', '🦅', 1, 1, 5, 0.85, 0.14);
+  // fx/fy = sobre o mapa-múndi VETORIAL (mapa_mundi_arte.dart): cada bicho no
+  // seu continente. ordem = caminho das fases (flui suave pelo mapa).
+  artico('artico', 'Ártico', '❄️', 0, 0, 1, 0.38, 0.10), // calota de gelo (topo)
+  aves('aves', 'Aves', '🦅', 1, 1, 2, 0.74, 0.22), //         Ásia
+  savana('savana', 'Savana', '🦁', 1, 0, 3, 0.53, 0.46), //   África
+  selva('selva', 'Selva', '🌴', 2, 0, 4, 0.25, 0.68), //      América do Sul
+  aquatico('aquatico', 'Aquático', '🐠', 0, 1, 5, 0.42, 0.83); // mar aberto
 
   const Habitat(
     this.chave,

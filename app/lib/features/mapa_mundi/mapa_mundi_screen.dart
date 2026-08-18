@@ -5,6 +5,7 @@ import '../../models/habitat.dart';
 import '../../services/banco_palavras.dart';
 import '../../services/progresso_fases.dart';
 import '../estudo/estudo_screen.dart';
+import 'mapa_mundi_arte.dart';
 
 /// Cor neon dos círculos/caminho das fases.
 const _neon = Color(0xFF3DF5E4);
@@ -107,13 +108,10 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
                     height: boxH,
                     child: Stack(
                       children: [
-                        Positioned.fill(
-                          child: Image.asset(
-                            'assets/habitats/mapa_mundi.jpg',
-                            fit: BoxFit.fill,
-                            filterQuality: FilterQuality.high,
-                            errorBuilder: (_, _, _) =>
-                                const ColoredBox(color: kAgua),
+                        // mapa-múndi desenhado (vetorial, nítido em qualquer tela)
+                        const Positioned.fill(
+                          child: CustomPaint(
+                            painter: MapaMundiArtePainter(),
                           ),
                         ),
                         // vinheta: escurece as bordas → sensação de profundidade
@@ -125,9 +123,9 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
                                   radius: 0.95,
                                   colors: [
                                     Colors.transparent,
-                                    Colors.black.withValues(alpha: 0.42),
+                                    Colors.black.withValues(alpha: 0.35),
                                   ],
-                                  stops: const [0.62, 1.0],
+                                  stops: const [0.65, 1.0],
                                 ),
                               ),
                             ),

@@ -2,6 +2,29 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-18 — v0.6.0 (mapa-múndi VETORIAL desenhado em CustomPaint)
+- **Por quê:** o `mapa_mundi.jpg` (1024², baixa qualidade) borrava ao esticar. Claude no CLI **não
+  gera imagem** → o usuário aprovou desenhar **vetorial** (nítido em qualquer tela, sem asset).
+- **`mapa_mundi_arte.dart` (`MapaMundiArtePainter`):** oceano = `LinearGradient` vertical (profundidade);
+  continentes = polígonos em **frações 0..1** suavizados por quadráticas (`_suave`: quadraticBezier
+  pelos vértices → costas arredondadas "de desenho"); cada terra leva plataforma rasa (stroke azul-claro
+  largo) + `canvas.drawShadow` (relevo, SEM MaskFilter) + fill com gradiente claro→escuro (volume) +
+  contorno. Montanhas = 2 triângulos (face clara/escura) + neve. `shouldRepaint=false` (arte estática).
+  7 continentes desenhados (Am.N, Am.S, Europa, África, Ásia, Austrália, gelo).
+- **Substituição:** na `MapaMundiScreen` o `Image.asset` virou `const CustomPaint(painter:
+  MapaMundiArtePainter())`; removi `mapa_mundi.jpg` do pubspec e do git (não é mais usado). Vinheta
+  mantida (leve). Discos/caminho/botões da v0.5.0 seguem iguais.
+- **Fases nos continentes certos** (`habitat.dart`, campos `fx`/`fy` + `ordem`): ártico 0.38,0.10 (gelo) ·
+  aves 0.74,0.22 (Ásia) · savana 0.53,0.46 (África) · selva 0.25,0.68 (Am.S) · aquático 0.42,0.83 (mar).
+  **`ordem` reordenada** p/ o caminho fluir: ártico(1)→aves(2)→savana(3)→selva(4)→aquático(5). Se mexer
+  nos polígonos do painter, re-conferir esses `fx`/`fy`. (col/row NÃO mudam — são da grade do
+  mapa_animais.jpg.)
+- **Verificação visual sem emulador:** dá pra renderizar a tela num PNG via teste headless
+  (`RepaintBoundary` + `boundary.toImage` dentro de `tester.runAsync`, com `tester.view.physicalSize`)
+  e abrir o PNG. ⚠️ No teste, **texto e emoji viram quadradinhos** (sem fonte carregada) — é artefato
+  de teste, no app renderiza normal. Teste de fumaça: `test/mapa_mundi_test.dart` (painter não estoura
+  + botões presentes).
+
 ## 2026-08-18 — v0.5.0 (mapas esticados + discos 3D + botões reiniciar/voltar no mapa-múndi)
 - **Esticar os mapas ("não ficar quadrado"):** trocado `AspectRatio(nativo)` por `LayoutBuilder`
   + `SizedBox(width: w, height: (w/kMapaDisplayAspect).clamp(0, h))` centrado, com a imagem em

@@ -31,13 +31,10 @@ A criança **fala** a palavra; o app reconhece se **acertou**.
   criança); pensar em escolher perfil quando entrar a gamificação. As fases seguem a ordem fixa de
   `Habitat.ordem` mas não bloqueiam jogar fora de ordem — se quiser "trancar" fase futura até
   concluir a anterior, dá pra fazer.
-- **⭐ Arte nova do mapa-múndi (pendente):** o `mapa_mundi.jpg` atual (1024², baixa qualidade) precisa
-  virar um mapa **relevo/profundidade, estilo infográfico**, de preferência em **paisagem** (~1536×1024
-  ou mais largo, pra esticar menos). Claude no CLI **não gera imagem** → duas vias: (a) o usuário gera
-  a arte (prompt sugerido: *"stylized infographic world map, top-down, subtle relief/bathymetry,
-  soft depth shadows, warm kid-friendly palette, no labels, landscape 3:2"*) e solta em
-  `app/assets/habitats/mapa_mundi.jpg` (aí re-tunar `fx`/`fy` dos habitats se o desenho mudar);
-  ou (b) desenhar um mapa vetorial em `CustomPaint` (crisp em qualquer resolução, porém trabalhoso).
+- **Arte do mapa-múndi — FEITO (v0.6.0):** virou **vetorial** (`mapa_mundi_arte.dart`, `CustomPaint`),
+  nítido em qualquer tela, estilo infográfico com relevo/profundidade. **A evoluir se quiser:** nomes
+  dos continentes/habitats (com o TTS), animar o brilho do caminho, ou trocar por arte gerada externa
+  (raster) se um dia quiser um visual mais fotográfico — hoje o vetorial atende bem.
 - **Animais que ficaram de fora** (domésticos: gato, cachorro, vaca…; insetos: formiga, abelha…)
   não cabem nos 5 habitats da imagem. Criar habitats **🚜 Fazenda** e **🐜 Insetos** (nova imagem
   ou células extras) pra readmiti-los.

@@ -2,6 +2,14 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.6.0 (2026-08-18)
+- **Mapa-múndi novo, desenhado! 🌍** Saiu a imagem antiga (meio borrada) e entrou um mapa-múndi
+  **desenhado no próprio app** — nítido em qualquer tela, estilo infográfico, com **oceano fundo**,
+  **montanhas com relevo** e sombras dando **profundidade**.
+- **Cada bicho no seu continente:** ❄️ Ártico no gelo · 🦅 Aves na Ásia · 🦁 Savana na África ·
+  🌴 Selva na América do Sul · 🐠 Aquático no mar. O caminho das fases foi reordenado pra fluir
+  bonito pelo mapa.
+
 ## v0.5.0 (2026-08-18)
 - **Mapas mais largos.** O mapa de habitats e o mapa-múndi agora **encostam nas laterais**
   (esticados de leve) — não ficam mais "quadrados". A água azul preenche o que sobra.
