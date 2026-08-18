@@ -1,0 +1,17 @@
+# Build / caches do Flutter (não versionar)
+app/build/
+app/.dart_tool/
+app/.flutter-plugins-dependencies
+
+# IDE / OS
+.idea/
+.DS_Store
+
+# Segredos de assinatura (keystore de upload — quando formos à Play Store)
+app/android/key.properties
+app/android/app/*.jks
+app/android/app/*.keystore
+
+# APK/AAB soltos (o build sai na nuvem; não versionar binários)
+*.apk
+*.aab

@@ -1,0 +1,27 @@
+name: alfabetizacao
+description: "Primeiras Palavras — app para a criança aprender a ler (palavras por categoria e nível de sílabas)."
+publish_to: 'none'
+
+# versionName+versionCode. Ex.: 0.1.0+1 → versionName "0.1.0", versionCode 1.
+# O +N (versionCode) TEM de crescer a cada release.
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.12.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  flutter_riverpod: ^3.3.2       # estado (pronto p/ gamificação: moedas/troféus)
+  shared_preferences: ^2.3.2     # persistência local (sem login/nuvem por enquanto)
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

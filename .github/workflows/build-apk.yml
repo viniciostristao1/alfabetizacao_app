@@ -1,0 +1,58 @@
+name: Build APK
+
+# Compila o APK (release, UNIVERSAL — instala em qualquer aparelho) na nuvem a
+# cada push no app; a VPS é fraca p/ Android. Publica no release rolling
+# "ci-latest". O scripts/release.sh corta o release nomeado com asset de nome
+# fixo (primeiras-palavras.apk = link perene).
+#
+# Sem keystore: o build assina com as chaves de DEBUG (o template do Flutter já
+# faz isso no buildType release), então o APK instala mesmo assim. Para a Play
+# Store, no futuro, adicionar a keystore de upload via secrets (ver AGENTS/IDEIAS).
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'app/**'
+      - '.github/workflows/build-apk.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.44.7
+
+      - name: Dependências
+        working-directory: app
+        run: flutter pub get
+
+      - name: Build APK (release, universal)
+        working-directory: app
+        run: flutter build apk --release
+
+      - name: Nome amigável do asset
+        run: cp app/build/app/outputs/flutter-apk/app-release.apk primeiras-palavras.apk
+
+      - name: Publica APK no release ci-latest
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ci-latest
+          name: CI build (rolling — APK do último push)
+          prerelease: true
+          files: primeiras-palavras.apk
