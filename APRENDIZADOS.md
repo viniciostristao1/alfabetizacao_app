@@ -2,6 +2,14 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-18 — v0.10.1 (botão "Iniciar jogo" no mapa-múndi)
+- **`_BotaoIniciar`** (pílula branca, texto `INICIAR JOGO` em `AppColors.bg`,
+  `Material elevation 6`) centralizado via `SafeArea(Center(...))` — fica por
+  cima do mapa (último no Stack). `_iniciarJogo()` lê `ConfigOrdem.fases()` e
+  abre `_abrirFase(fases.first, 1)` — a **primeira fase da ordem da engrenagem**
+  (decisão do usuário), não a fase 1 fixa. Teste novo no mapa_mundi_test
+  (renderiza + toque abre "Fase 1 · Ártico"). 29 testes, analyze limpo.
+
 ## 2026-08-18 — v0.10.0 (gamificação: XP + moedas + V/X + medalhas)
 - **`services/progresso_repository.dart`** (molde do ARQUITETURA, sem Riverpod —
   segui o padrão estático de ProgressoFases/ConfigOrdem): chaves

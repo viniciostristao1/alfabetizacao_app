@@ -6,6 +6,7 @@ import '../../services/banco_palavras.dart';
 import '../../services/config_ordem.dart';
 import '../../services/progresso_fases.dart';
 import '../../services/progresso_repository.dart';
+import '../../theme/app_colors.dart';
 import '../estudo/estudo_screen.dart';
 
 /// Cor neon dos anéis/caminho das fases.
@@ -101,6 +102,14 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
     _recarregarProgresso();
   }
 
+  /// "INICIAR JOGO" (botão central branco): começa a aventura pela PRIMEIRA
+  /// fase da ordem configurada (a da engrenagem ⚙️).
+  Future<void> _iniciarJogo() async {
+    final fases = await ConfigOrdem.fases();
+    if (!mounted || fases.isEmpty) return;
+    await _abrirFase(fases.first, 1);
+  }
+
   /// "Voltar habitat" — desfaz a ÚLTIMA fase concluída (uma por toque).
   Future<void> _voltarHabitat() async {
     final restantes = await ProgressoFases.voltarUltima();
@@ -191,6 +200,13 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
                   ),
                 );
               },
+            ),
+          ),
+          // INICIAR JOGO (centralizado, fundo branco) — começa a aventura na
+          // primeira fase da ordem configurada.
+          SafeArea(
+            child: Center(
+              child: _BotaoIniciar(onTap: _iniciarJogo),
             ),
           ),
           // seta de voltar (topo-esq)
@@ -428,6 +444,43 @@ class _AnelFase extends StatelessWidget {
                     ),
             ),
         ],
+      ),
+    );
+  }
+}
+
+/// Botão "INICIAR JOGO" — pílula branca centralizada sobre o mapa-múndi.
+class _BotaoIniciar extends StatelessWidget {
+  const _BotaoIniciar({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.white,
+      elevation: 6,
+      shadowColor: Colors.black45,
+      borderRadius: BorderRadius.circular(30),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(30),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 13),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30),
+            border: Border.all(color: Colors.white, width: 2),
+          ),
+          child: const Text(
+            'INICIAR JOGO',
+            style: TextStyle(
+              color: AppColors.bg,
+              fontSize: 17,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 0.5,
+            ),
+          ),
+        ),
       ),
     );
   }

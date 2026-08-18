@@ -2,6 +2,11 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.10.1 (2026-08-18)
+- **▶️ Iniciar jogo!** Botão **branco, centralizado** no mapa-múndi: toque pra
+  começar a aventura pela **primeira fase** da ordem que você escolheu na
+  engrenagem ⚙️ (ou a padrão, se nunca mudou).
+
 ## v0.10.0 (2026-08-18)
 - **Gamificação! 🪙** Agora dá pra pontuar o quanto a criança acerta:
   - **Botões V e X** no canto superior direito da tela de palavras, ao lado do

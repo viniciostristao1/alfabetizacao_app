@@ -13,9 +13,25 @@ void main() {
     await tester.pumpWidget(const MaterialApp(home: MapaMundiScreen()));
     await tester.pump(); // resolve o carregar() do progresso
 
-    // pintou sem exceção e os dois botões inferiores estão lá
+    // pintou sem exceção e os botões estão lá
     expect(tester.takeException(), isNull);
     expect(find.text('VOLTAR HABITAT'), findsOneWidget);
     expect(find.text('REINICIAR AVENTURA'), findsOneWidget);
+    expect(find.text('INICIAR JOGO'), findsOneWidget);
+  });
+
+  testWidgets('INICIAR JOGO abre a primeira fase da ordem configurada',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({});
+
+    await tester.pumpWidget(const MaterialApp(home: MapaMundiScreen()));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('INICIAR JOGO'));
+    await tester.pumpAndSettle();
+
+    // 1ª fase da ordem PADRÃO = Ártico (fase 1), título montado pela EstudoScreen.
+    expect(find.textContaining('Fase 1'), findsOneWidget);
+    expect(find.textContaining('Ártico'), findsOneWidget);
   });
 }
