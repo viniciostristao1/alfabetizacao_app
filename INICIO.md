@@ -51,8 +51,11 @@ minimalista). Meta futura: Play Store, como os apps irmãos.
 2. **Gamificação**: moedas + troféus.
 3. **Subcategorias**: animais (aquático/terrestre/voador), nomes (menino/menina), objetos
    (casa/rua) — o campo `sub` do banco **já vem preenchido**.
-4. **Repo GitHub + CI** (compilar APK na nuvem) quando o usuário quiser distribuir — ainda
-   NÃO criado. Ver AGENTS §Release.
+4. **Repo GitHub + CI = LIVE** (público, `viniciostristao1/alfabetizacao_app`). Push em `app/**`
+   → CI compila APK universal (assinado em DEBUG) → `ci-latest`; `scripts/release.sh vX.Y.Z "nota"`
+   corta o release. **Link perene do APK:**
+   `https://github.com/viniciostristao1/alfabetizacao_app/releases/latest/download/primeiras-palavras.apk`
+   (repo PÚBLICO por causa da cota de Actions no plano grátis).
 
 ## Princípios (não violar)
 1. **Simples pra criança** — poucos toques, texto grande, tema escuro, nada de tela poluída.
