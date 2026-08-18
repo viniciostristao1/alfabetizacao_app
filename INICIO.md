@@ -23,7 +23,9 @@ minimalista). Meta futura: Play Store, como os apps irmãos.
 
 ## ⭐ ESTADO ATUAL (2026-08-18) — ler primeiro pós-/clear
 
-**v0.3.0 — + JOGO DE HABITATS (Animais)** (`flutter analyze` limpo, 10 testes passando).
+**v0.3.1 — JOGO DE HABITATS + polimentos** (`flutter analyze` limpo, 10 testes passando).
+Mapa em **tela cheia** (imersivo, `BoxFit.cover`); Estudo tem **desfazer** (além da vassoura) e
+mantém a paisagem ao voltar pro mapa (`manterPaisagemAoSair`). 71 animais nos 5 habitats.
 Assinatura estável desde v0.2.2 (`app/android/app/debug.keystore` versionado — NÃO apagar).
 Ícone do app em `app/assets/icon/` (gerado por `flutter_launcher_icons`).
 
@@ -44,8 +46,8 @@ Assinatura estável desde v0.2.2 (`app/android/app/debug.keystore` versionado �
     desenho some ao trocar de palavra.
   - Botões **baixos** embaixo: **Voltar** (volta ao menu + restaura retrato), **Anterior**,
     **Recomeçar**, **Próximo**. Progresso "3 / 12" no topo.
-- **Banco de palavras** curado em `app/lib/services/banco_palavras.dart` (**~181 palavras**:
-  animais 35 por habitat · objetos 59 · alimentos 57 · nomes 30), **offline**, guardando as
+- **Banco de palavras** curado em `app/lib/services/banco_palavras.dart` (**~217 palavras**:
+  animais 71 por habitat · objetos 59 · alimentos 57 · nomes 30), **offline**, guardando as
   **sílabas** (não só o texto) — já deixa pronto o "sílabas coloridas" e as subcategorias (`sub`).
 
 **Decisões de origem (2026-08-18):**

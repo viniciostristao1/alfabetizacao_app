@@ -19,11 +19,16 @@ class EstudoScreen extends StatefulWidget {
     super.key,
     required this.titulo,
     required this.palavras,
+    this.manterPaisagemAoSair = false,
   });
 
   /// Cabeçalho da tela, ex.: "🍎  Alimentos · Fácil" ou "🐶  Animais · Ártico".
   final String titulo;
   final List<Palavra> palavras;
+
+  /// Se `true`, ao sair volta para PAISAGEM (fluxo do mapa de habitats, que já é
+  /// deitado); se `false` (padrão, fluxo de Nível), volta para RETRATO.
+  final bool manterPaisagemAoSair;
 
   @override
   State<EstudoScreen> createState() => _EstudoScreenState();
@@ -46,10 +51,19 @@ class _EstudoScreenState extends State<EstudoScreen> {
 
   @override
   void dispose() {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
+    // Ao sair: volta ao retrato (fluxo de Nível) OU mantém a paisagem (fluxo do
+    // mapa de habitats, que já é deitado) — evita o mapa voltar "em pé".
+    SystemChrome.setPreferredOrientations(
+      widget.manterPaisagemAoSair
+          ? const [
+              DeviceOrientation.landscapeLeft,
+              DeviceOrientation.landscapeRight,
+            ]
+          : const [
+              DeviceOrientation.portraitUp,
+              DeviceOrientation.portraitDown,
+            ],
+    );
     super.dispose();
   }
 
@@ -57,6 +71,11 @@ class _EstudoScreenState extends State<EstudoScreen> {
   bool get _temProximo => _i < widget.palavras.length - 1;
 
   void _limparDesenho() => setState(_tracos.clear);
+
+  void _desfazer() {
+    if (_tracos.isEmpty) return;
+    setState(() => _tracos.removeLast());
+  }
 
   void _anterior() {
     if (!_temAnterior) return;
@@ -149,10 +168,11 @@ class _EstudoScreenState extends State<EstudoScreen> {
                   Padding(
                     padding: const EdgeInsets.only(left: 12, top: 8),
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         for (final c in CorCaneta.values)
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
+                            padding: const EdgeInsets.only(bottom: 9),
                             child: _Bolinha(
                               cor: c.cor,
                               selecionada: c == _caneta,
@@ -160,12 +180,22 @@ class _EstudoScreenState extends State<EstudoScreen> {
                               onTap: () => setState(() => _caneta = c),
                             ),
                           ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: 3),
+                        // Vassoura = limpa TUDO que foi desenhado.
                         _BotaoIcone(
                           icon: Icons.cleaning_services_rounded,
                           cor: ui,
                           onTap: _tracos.isEmpty ? null : _limparDesenho,
-                          tooltip: 'Limpar o desenho',
+                          tooltip: 'Limpar tudo',
+                        ),
+                        const SizedBox(height: 8),
+                        // Desfazer = apaga só o ÚLTIMO rabisco (clicando, apaga
+                        // um a um, até esvaziar).
+                        _BotaoIcone(
+                          icon: Icons.undo_rounded,
+                          cor: ui,
+                          onTap: _tracos.isEmpty ? null : _desfazer,
+                          tooltip: 'Apagar o último rabisco',
                         ),
                       ],
                     ),

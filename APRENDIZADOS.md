@@ -2,6 +2,22 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-18 — v0.3.1 (desfazer + mapa tela cheia + fix orientação + +animais)
+- **Desfazer rabisco:** `_desfazer()` faz `_tracos.removeLast()` (a vassoura `_limparDesenho()`
+  limpa tudo). Botão `undo_rounded` abaixo da vassoura, na coluna das canetas.
+- **Fix orientação (mapa voltava em pé):** a causa era o `EstudoScreen.dispose` forçar RETRATO
+  sempre — no fluxo do mapa (paisagem) ele revertia. Corrigido com o flag
+  `manterPaisagemAoSair` (o habitat passa `true`; o Nível usa o padrão `false`). O
+  `_abrirHabitat` ainda reforça paisagem/imersivo ao voltar (cinto e suspensório).
+- **Mapa em tela cheia:** `HabitatMapScreen` virou `Stack(StackFit.expand)` com
+  `Image.asset(fit: BoxFit.cover)` + `SystemUiMode.immersiveSticky` (restaura `edgeToEdge` no
+  dispose). Trade-off: `cover` recorta um pouco das BORDAS da imagem (não distorce). Como no
+  celular a tela é mais larga que a imagem (3:2), o recorte é vertical e as **colunas continuam
+  alinhadas** aos habitats; a divisa das linhas fica no centro (alinhada). Botão voltar virou
+  flutuante (top-left) sobre a imagem; título removido.
+- **+Animais:** 71 no total (ártico 10 · savana 13 · selva 14 · aquático 16 · aves 18). Novos
+  multi-palavra via `textoOverride`: "água-viva", "estrela-do-mar". Sílabas até 5.
+
 ## 2026-08-18 — v0.3.0 (jogo de habitats — Animais reestruturado)
 - **Fluxo novo p/ Animais:** Home → `HabitatMapScreen` (paisagem) → `EstudoScreen`. As outras
   categorias seguem no fluxo de Nível. Roteamento em `home_screen.dart` (`if categoria == animais`).

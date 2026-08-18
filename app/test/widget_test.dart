@@ -39,7 +39,6 @@ void main() {
     await tester.tap(find.text('Animais'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Animais — toque no habitat'), findsOneWidget);
     expect(find.textContaining('ÁRTICO'), findsOneWidget);
     expect(find.textContaining('SAVANA'), findsOneWidget);
     expect(find.textContaining('AVES'), findsOneWidget);

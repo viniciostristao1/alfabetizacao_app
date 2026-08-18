@@ -2,6 +2,16 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.3.1 (2026-08-18)
+- **Desfazer:** abaixo da vassoura (limpar tudo) tem um botão **↩︎ desfazer** — apaga só o
+  último rabisco; clicando várias vezes, vai apagando um a um.
+- **Mapa em tela cheia:** o mapa de habitats agora ocupa a **tela inteira** (sem bordas), em modo
+  imersivo.
+- **Correção de tela:** ao voltar das palavras pro mapa, ele **continua deitado** (não vira mais
+  pra vertical).
+- **Muito mais animais!** Agora são **71** bichos nos 5 habitats (ártico 10 · savana 13 · selva 14 ·
+  aquático 16 · aves 18) — de "foca" a "rinoceronte" e "estrela-do-mar".
+
 ## v0.3.0 (2026-08-18)
 - **Animais viraram um jogo! 🗺️** Ao tocar em "Animais", abre um **mapa de habitats** (deitado,
   clima de jogo). Toque num habitat pra brincar só com aqueles animais:

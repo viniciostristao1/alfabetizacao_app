@@ -5,13 +5,14 @@ import '../../models/habitat.dart';
 import '../../services/banco_palavras.dart';
 import '../estudo/estudo_screen.dart';
 
-/// Mapa de HABITATS dos animais (PAISAGEM, clima de jogo). Mostra a imagem
-/// `assets/habitats/mapa_animais.jpg` (grade 3×2) e sobrepõe **6 células**
-/// perfeitamente alinhadas: as 5 dos habitats são botões (abrem as palavras do
+/// Mapa de HABITATS dos animais (PAISAGEM, tela cheia, clima de jogo). Mostra a
+/// imagem `assets/habitats/mapa_animais.jpg` (grade 3×2) ocupando a tela inteira
+/// e sobrepõe **6 células**: as 5 dos habitats são botões (abrem as palavras do
 /// habitat, do mais fácil ao mais difícil); a 6ª (mapa-múndi) fica reservada.
 ///
-/// Força paisagem ao abrir e restaura o retrato ao sair. Ao voltar da tela de
-/// estudo (que restaura retrato no dispose), re-força a paisagem.
+/// Força paisagem + modo imersivo (sem barras) ao abrir e restaura ao sair. Ao
+/// voltar da tela de estudo, esta continua deitada (a EstudoScreen mantém a
+/// paisagem quando vem daqui — ver `manterPaisagemAoSair`).
 class HabitatMapScreen extends StatefulWidget {
   const HabitatMapScreen({super.key});
 
@@ -29,10 +30,13 @@ class _HabitatMapScreenState extends State<HabitatMapScreen> {
   void initState() {
     super.initState();
     SystemChrome.setPreferredOrientations(_paisagem);
+    // Tela cheia de verdade (esconde status/navegação) para o mapa.
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   }
 
   @override
   void dispose() {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -40,12 +44,11 @@ class _HabitatMapScreenState extends State<HabitatMapScreen> {
     super.dispose();
   }
 
-  /// Habitat naquela posição da grade (ou null = mapa-múndi, reservado).
   Habitat? _habitatEm(int col, int row) {
     for (final h in Habitat.values) {
       if (h.col == col && h.row == row) return h;
     }
-    return null;
+    return null; // mapa-múndi (reservado)
   }
 
   Future<void> _abrirHabitat(Habitat h) async {
@@ -54,11 +57,14 @@ class _HabitatMapScreenState extends State<HabitatMapScreen> {
         builder: (_) => EstudoScreen(
           titulo: '${h.emoji}  Animais · ${h.rotulo}',
           palavras: palavrasDoHabitat(h.chave),
+          manterPaisagemAoSair: true,
         ),
       ),
     );
-    // A tela de estudo restaura o retrato ao sair → aqui voltamos à paisagem.
-    if (mounted) SystemChrome.setPreferredOrientations(_paisagem);
+    // Reforça paisagem/imersivo ao voltar (o Estudo já mantém a paisagem).
+    if (!mounted) return;
+    SystemChrome.setPreferredOrientations(_paisagem);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   }
 
   void _mapaMundi() {
@@ -77,78 +83,65 @@ class _HabitatMapScreenState extends State<HabitatMapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // topo: voltar + título
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 4, 16, 4),
-              child: Row(
-                children: [
-                  IconButton(
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // imagem ocupando a TELA INTEIRA (recorta um pouco das bordas)
+          Image.asset(
+            'assets/habitats/mapa_animais.jpg',
+            fit: BoxFit.cover,
+            errorBuilder: (_, _, _) => const ColoredBox(
+              color: Color(0xFF13233B),
+              child: Center(
+                child: Text(
+                  'mapa dos habitats',
+                  style: TextStyle(color: Colors.white70),
+                ),
+              ),
+            ),
+          ),
+          // 6 células alinhadas à grade 3×2 (mesma proporção da tela)
+          Column(
+            children: [
+              for (int row = 0; row < kHabitatLinhas; row++)
+                Expanded(
+                  child: Row(
+                    children: [
+                      for (int col = 0; col < kHabitatColunas; col++)
+                        Expanded(
+                          child: _Celula(
+                            habitat: _habitatEm(col, row),
+                            onHabitat: _abrirHabitat,
+                            onReservada: _mapaMundi,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+          // botão voltar flutuante (sobre a imagem)
+          SafeArea(
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Material(
+                  color: Colors.black.withValues(alpha: 0.5),
+                  shape: const CircleBorder(
+                    side: BorderSide(color: Colors.white24),
+                  ),
+                  child: IconButton(
                     onPressed: () => Navigator.of(context).pop(),
                     icon: const Icon(Icons.arrow_back_rounded),
                     color: Colors.white,
                     tooltip: 'Voltar',
                   ),
-                  const Text(
-                    'Animais — toque no habitat',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // imagem + grade de 6 células alinhada
-            Expanded(
-              child: Center(
-                child: AspectRatio(
-                  aspectRatio: kMapaAnimaisAspect,
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      Image.asset(
-                        'assets/habitats/mapa_animais.jpg',
-                        fit: BoxFit.fill,
-                        errorBuilder: (_, _, _) => const ColoredBox(
-                          color: Color(0xFF13233B),
-                          child: Center(
-                            child: Text(
-                              'mapa dos habitats',
-                              style: TextStyle(color: Colors.white70),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Column(
-                        children: [
-                          for (int row = 0; row < kHabitatLinhas; row++)
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  for (int col = 0; col < kHabitatColunas; col++)
-                                    Expanded(
-                                      child: _Celula(
-                                        habitat: _habitatEm(col, row),
-                                        onHabitat: _abrirHabitat,
-                                        onReservada: _mapaMundi,
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            ),
-                        ],
-                      ),
-                    ],
-                  ),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -181,7 +174,7 @@ class _Celula extends StatelessWidget {
             : Align(
                 alignment: Alignment.topCenter,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 8),
+                  padding: const EdgeInsets.only(top: 10),
                   child: _Nome(emoji: h.emoji, rotulo: h.rotulo),
                 ),
               ),
@@ -200,7 +193,7 @@ class _Nome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
       decoration: BoxDecoration(
         color: Colors.black.withValues(alpha: 0.55),
         borderRadius: BorderRadius.circular(20),
