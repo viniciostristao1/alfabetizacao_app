@@ -2,6 +2,21 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.8.0 (2026-08-18)
+- **Fazenda! 🐮** Nova turma de bichos domésticos (vaca, cavalo, porco, ovelha, gato, cachorro,
+  coelho…). No mapa-múndi eles viram uma **fase na América do Norte**; na tela de habitats entram
+  junto das Aves — o botão agora é **"Aves e Fazenda"**.
+- **Anéis de fase estilo jogo:** os marcadores viraram **anéis/pódios** brilhantes no chão (o bicho
+  fica "em pé" em cima), como num joguinho. Acendem em neon quando você conclui a categoria.
+- **Botões do mapa-múndi:**
+  - **↩︎ (canto superior esquerdo):** volta pra tela anterior.
+  - **Voltar habitat:** desfaz a **última** fase concluída (some a última luz; clicando de novo,
+    some a anterior, e assim por diante).
+  - **Reiniciar aventura:** apaga **todas** as luzes.
+  - **🏠 Voltar início (canto inferior direito):** volta pra tela principal (Animais/Objetos/…).
+- **⚙️ Configurações:** botão de engrenagem na tela inicial. Por ora dá pra **escolher a ordem**
+  em que as categorias de animais aparecem no mapa-múndi (arrastar pra reordenar).
+
 ## v0.7.0 (2026-08-18)
 - **Mapa-múndi lindo! 🌍** Agora é uma **ilustração de verdade** — relevo, montanhas, sombras,
   oceano brilhante e **bichos em cada continente** (urso polar no gelo, leão/elefante/girafa na

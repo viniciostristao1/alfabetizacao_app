@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/categoria.dart';
 import '../../theme/app_colors.dart';
 import '../../util/versao.dart';
+import '../config/config_screen.dart';
 import '../habitat/habitat_map_screen.dart';
 import '../nivel/nivel_screen.dart';
 
@@ -37,6 +38,15 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
+        actions: [
+          IconButton(
+            tooltip: 'Configurações',
+            icon: const Icon(Icons.settings_rounded),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const ConfigScreen()),
+            ),
+          ),
+        ],
       ),
       body: SafeArea(
         child: Padding(

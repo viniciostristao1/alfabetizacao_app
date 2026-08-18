@@ -2,6 +2,33 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-18 — v0.8.0 (Fazenda + anéis de fase + botões/undo + ordem configurável)
+- **Habitat Fazenda:** `Habitat.fazenda` (`col/row = -1` — NÃO tem célula na grade do mapa_animais).
+  14 bichos domésticos no banco (habitat 'fazenda', sub terrestre). No mapa-múndi = fase na
+  **Am. do Norte** (`fx,fy = 0.17,0.33`). Na grade de habitats **não** tem botão próprio: a célula
+  das Aves virou **"Aves e Fazenda"** (`habitat_map_screen`) e abre `palavrasDosHabitats(['aves',
+  'fazenda'])`. Na aventura, `_abrirFase(aves)` também inclui a fazenda.
+- **ProgressoFases agora é LISTA ordenada** (não Set): guarda a ordem de conclusão p/ o "Voltar
+  habitat" desfazer só a última (`voltarUltima()` = remove o fim). `carregar` devolve `List<String>`;
+  telas usam `.contains`.
+- **Botões do mapa-múndi:** ↩︎ topo-esq (`pop`, voltar à tela anterior — reintroduzido); **Voltar
+  habitat** = `voltarUltima` (undo 1 fase, NÃO navega — o rótulo ficou por pedido do usuário);
+  **Reiniciar aventura** = apaga tudo; **Voltar início** (inferior-dir, casinha) =
+  `popUntil((r)=>r.isFirst)`.
+- **Ordem das fases configurável:** `services/config_ordem.dart` (shared_preferences, chave
+  `ordem_fases_v1`) — **sanitiza** (descarta chave inválida + acrescenta no fim habitat novo tipo
+  fazenda → nunca perde fase). `features/config/config_screen.dart` = `ReorderableListView.builder`
+  (use **`onReorderItem`**, não `onReorder` deprecado; newIndex já ajustado). Engrenagem na AppBar da
+  home. Mapa-múndi lê `ConfigOrdem.fases()` (nº da fase = índice+1) em vez de `Habitat.fases`.
+- **Anel/pódio de fase (estilo Brawl Stars):** `_AnelFase` (era `_DiscoFase`) = elipse bem achatada
+  (`Radius.elliptical(360,120)`, `anelH = d*0.34`) no "chão" com `RadialGradient` translúcido (claro
+  no miolo→tinta no rim), `Border` neon e `BoxShadow` de brilho difuso; o **emoji fica em cima** do
+  anel (`Positioned bottom`), tipo personagem no pódio. Aceso só quando concluído. Posicionamento
+  ancora o **centro do anel** em (fx,fy): `top = fy*boxH - (d - anelH/2)`.
+- **`?Habitat.porChave(c)`** (null-aware element) em vez de `if-case` (lint `use_null_aware_elements`).
+- Validado no preview-PNG (anéis + fase Fazenda na Am.N + brilho). +testes: voltarUltima, ConfigOrdem
+  (sanitização/fase-nova). 19 testes, analyze limpo.
+
 ## 2026-08-18 — v0.7.0 (mapa-múndi = ARTE ilustrada + discos achatados c/ glow + canguru)
 - **Reversão do vetorial (v0.6.0):** o `CustomPaint` "infográfico simples" NÃO atingiu o estilo que
   o usuário queria (ilustração rica c/ relevo/sombra/bichos, igual `mapa_animais.jpg`). Conclusão

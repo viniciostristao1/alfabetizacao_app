@@ -9,12 +9,16 @@ import 'package:flutter/material.dart';
 ///   sobre o mapa-múndi, como fração 0..1 (x=coluna, y=linha).
 enum Habitat {
   // fx/fy = posição do círculo sobre a arte `mapa_mundi.jpg` (1376×768), cada
-  // bicho no seu continente/região. ordem = caminho das fases (flui pelo mapa).
-  artico('artico', 'Ártico', '❄️', 0, 0, 1, 0.44, 0.15), //   gelo/urso polar (topo)
-  aves('aves', 'Aves', '🦅', 1, 1, 2, 0.85, 0.15), //          aves voando (dir. sup.)
-  savana('savana', 'Savana', '🦁', 1, 0, 3, 0.59, 0.60), //    África (leão)
-  selva('selva', 'Selva', '🌴', 2, 0, 4, 0.34, 0.72), //       Am. do Sul (onça)
-  aquatico('aquatico', 'Aquático', '🐠', 0, 1, 5, 0.12, 0.66); // mar (baleias, à esq.)
+  // bicho no seu continente/região. col/row = célula na grade do mapa_animais.jpg
+  // (Fazenda NÃO tem célula própria → col/row = -1; entra junto de Aves na grade).
+  // ordem = ordem PADRÃO das fases no mapa-múndi (o usuário reordena em
+  // Configurações; ver ConfigOrdem).
+  artico('artico', 'Ártico', '❄️', 0, 0, 1, 0.44, 0.15), //    gelo/urso polar (topo)
+  fazenda('fazenda', 'Fazenda', '🐮', -1, -1, 2, 0.17, 0.33), // Am. do Norte (fazenda)
+  aquatico('aquatico', 'Aquático', '🐠', 0, 1, 3, 0.12, 0.66), // mar (baleias, à esq.)
+  selva('selva', 'Selva', '🌴', 2, 0, 4, 0.34, 0.72), //        Am. do Sul (onça)
+  savana('savana', 'Savana', '🦁', 1, 0, 5, 0.59, 0.60), //     África (leão)
+  aves('aves', 'Aves', '🦅', 1, 1, 6, 0.85, 0.15); //           aves voando (dir. sup.)
 
   const Habitat(
     this.chave,
@@ -36,9 +40,18 @@ enum Habitat {
   final double fx;
   final double fy;
 
-  /// As fases na ordem do jogo (1→5).
+  /// As fases na ordem PADRÃO do jogo (por `ordem`). O mapa-múndi usa a ordem
+  /// configurável (ver ConfigOrdem), que por sua vez cai nesta como padrão.
   static List<Habitat> get fases =>
       Habitat.values.toList()..sort((a, b) => a.ordem.compareTo(b.ordem));
+
+  /// Habitat pela chave ('artico', 'fazenda', …) ou null se não existir.
+  static Habitat? porChave(String chave) {
+    for (final h in Habitat.values) {
+      if (h.chave == chave) return h;
+    }
+    return null;
+  }
 }
 
 /// Grade da imagem de habitats (mapa_animais.jpg).

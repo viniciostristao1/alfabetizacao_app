@@ -57,11 +57,20 @@ class _HabitatMapScreenState extends State<HabitatMapScreen> {
   }
 
   Future<void> _abrirHabitat(Habitat h) async {
+    // A célula das Aves abre Aves + Fazenda juntos (a Fazenda não tem célula
+    // própria na grade — vive só como fase no mapa-múndi).
+    final ehAvesFazenda = h == Habitat.aves;
+    final palavras = ehAvesFazenda
+        ? palavrasDosHabitats(['aves', 'fazenda'])
+        : palavrasDoHabitat(h.chave);
+    final titulo = ehAvesFazenda
+        ? '🦅🐮  Aves e Fazenda'
+        : '${h.emoji}  Animais · ${h.rotulo}';
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => EstudoScreen(
-          titulo: '${h.emoji}  Animais · ${h.rotulo}',
-          palavras: palavrasDoHabitat(h.chave),
+          titulo: titulo,
+          palavras: palavras,
           manterPaisagemAoSair: true,
         ),
       ),
@@ -221,7 +230,9 @@ class _Celula extends StatelessWidget {
             padding: const EdgeInsets.only(top: 10),
             child: _Nome(
               emoji: h?.emoji ?? '🗺️',
-              rotulo: h?.rotulo ?? 'Mapa-múndi',
+              rotulo: h == null
+                  ? 'Mapa-múndi'
+                  : (h == Habitat.aves ? 'Aves e Fazenda' : h.rotulo),
             ),
           ),
         ),

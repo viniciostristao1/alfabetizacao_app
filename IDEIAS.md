@@ -14,6 +14,13 @@ A criança **fala** a palavra; o app reconhece se **acertou**.
   e calibrar a tolerância. Ter um "não entendi, tenta de novo" e, se quiser, um override manual.
 - Vira um **modo/feature próprio** (`features/microfone/` + `services/voz.dart`); pede permissão
   de microfone no `AndroidManifest`.
+- **Nota (2026-08-18) — não precisa "treinar" antes:** o reconhecedor é o do **Android/Google**
+  (pré-treinado, sem modelo custom no app), então **não** precisamos gravar a voz do filho antes de
+  construir. A voz dele serve pra **calibrar a tolerância** no aparelho DEPOIS de pronto (voz
+  infantil erra mais). Complexidade = **média** (pacote + permissão + matching tolerante + TTS de
+  apoio); o gargalo real é **testar no celular** (a VPS não tem microfone/emulador). Plano: montar o
+  modo com toggle, publicar, e ajustar a tolerância com o filho. `speech_to_text` costuma exigir
+  internet; um fallback offline é item aberto.
 
 ## 🪙 Gamificação — moedas e troféus
 - Ganhar **moedas** ao ler/acertar palavras; **troféus** por marcos (terminar um nível, uma
@@ -36,9 +43,13 @@ A criança **fala** a palavra; o app reconhece se **acertou**.
   v0.6.0 foi aposentado. **A evoluir se quiser:** animar o brilho "fumacinha" das fases (pulsar),
   nomes dos continentes/habitats falados (com o TTS), e um habitat **🦘 Austrália/Fazenda** (aí o
   canguru — hoje na Savana — migra pra lá; a arte já tem canguru/coala na Austrália).
-- **Animais que ficaram de fora** (domésticos: gato, cachorro, vaca…; insetos: formiga, abelha…)
-  não cabem nos 5 habitats da imagem. Criar habitats **🚜 Fazenda** e **🐜 Insetos** (nova imagem
-  ou células extras) pra readmiti-los.
+- **Fazenda — FEITO (v0.8.0):** domésticos (vaca, cavalo, gato, cachorro…) viraram o habitat
+  `fazenda` = fase na Am. do Norte no mapa-múndi; na grade entram junto de Aves ("Aves e Fazenda").
+  Falta ainda **🐜 Insetos** (formiga, abelha…) — criar habitat/fase própria. E, se quiser, um
+  habitat **🦘 Austrália** (a arte já tem canguru/coala) pra mover o canguru pra lá.
+- **Configurações (v0.8.0):** engrenagem na home → reordenar as fases do mapa-múndi
+  (`ConfigOrdem`). A tela pode crescer: escolher quais categorias entram, tema claro, toggle
+  maiúsculas/minúsculas, etc.
 - Nomes/áudio: quando entrar o TTS, o mapa fica ótimo com o nome do habitat falado.
 
 ## 🗂️ Subcategorias das OUTRAS categorias (o campo `sub` do banco já vem preenchido)

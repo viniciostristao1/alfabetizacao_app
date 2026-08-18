@@ -97,6 +97,21 @@ const List<Palavra> bancoPalavras = [
   Palavra(['ca', 'ná', 'ri', 'o'], Categoria.animais, sub: 'voador', habitat: 'aves'),
   Palavra(['an', 'do', 'ri', 'nha'], Categoria.animais, sub: 'voador', habitat: 'aves'),
   Palavra(['pe', 'li', 'ca', 'no'], Categoria.animais, sub: 'voador', habitat: 'aves'),
+  // 🐮 Fazenda (bichos domésticos — no mapa-múndi ficam na América do Norte)
+  Palavra(['va', 'ca'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda'),
+  Palavra(['por', 'co'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda'),
+  Palavra(['bur', 'ro'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda'),
+  Palavra(['ca', 'bra'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda'),
+  Palavra(['bo', 'de'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda'),
+  Palavra(['gan', 'so'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda'),
+  Palavra(['ga', 'to'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda'),
+  Palavra(['pô', 'nei'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda'),
+  Palavra(['ca', 'va', 'lo'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda'),
+  Palavra(['o', 've', 'lha'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda'),
+  Palavra(['co', 'e', 'lho'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda'),
+  Palavra(['ca', 'chor', 'ro'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda'),
+  Palavra(['car', 'nei', 'ro'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda'),
+  Palavra(['be', 'zer', 'ro'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda'),
 
   // ─────────────────────────── OBJETOS ───────────────────────────
   // fácil (2 sílabas)
@@ -275,6 +290,18 @@ int contarPalavras(Categoria categoria, Nivel nivel) =>
 List<Palavra> palavrasDoHabitat(String habitatChave) {
   final lista = bancoPalavras
       .where((p) => p.categoria == Categoria.animais && p.habitat == habitatChave)
+      .toList();
+  lista.sort((a, b) => a.nivelSilabas.compareTo(b.nivelSilabas));
+  return lista;
+}
+
+/// Animais de VÁRIOS habitats juntos, ordenados do menos ao mais sílabas.
+/// Usado pela célula "Aves e Fazenda" do mapa de habitats (a Fazenda não tem
+/// célula própria na grade, então entra junto das Aves).
+List<Palavra> palavrasDosHabitats(List<String> chaves) {
+  final lista = bancoPalavras
+      .where((p) =>
+          p.categoria == Categoria.animais && chaves.contains(p.habitat))
       .toList();
   lista.sort((a, b) => a.nivelSilabas.compareTo(b.nivelSilabas));
   return lista;
