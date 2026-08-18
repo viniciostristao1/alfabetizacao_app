@@ -2,6 +2,10 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.2.1 (2026-08-18)
+- **Ícone do app!** Agora tem logo próprio (livro aberto com urso, carro e melancia, fundo
+  âmbar) — aparece na tela inicial do celular.
+
 ## v0.2.0 (2026-08-18)
 - **Escrever na tela!** Na tela da palavra dá pra escrever por cima (feito caderno), com o
   dedo ou caneta capacitiva. Cores da caneta (bolinhas verticais à esquerda): azul, vermelho,

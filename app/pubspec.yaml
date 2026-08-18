@@ -4,7 +4,7 @@ publish_to: 'none'
 
 # versionName+versionCode. Ex.: 0.1.0+1 → versionName "0.1.0", versionCode 1.
 # O +N (versionCode) TEM de crescer a cada release.
-version: 0.2.0+2
+version: 0.2.1+3
 
 environment:
   sdk: ^3.12.2
@@ -22,6 +22,20 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
 
 flutter:
   uses-material-design: true
+
+# Ícone do app (livro + cartas: urso/carro/melancia, fundo âmbar). Gera os
+# mipmaps após alterar a arte: `dart run flutter_launcher_icons`.
+# - image_path        = ícone legado (quadrado âmbar cheio);
+# - adaptive_*        = ícone adaptativo (Android 8+): fundo âmbar + arte com
+#   margem (logo_foreground) para o recorte não cortar os raios/livro.
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/icon/logo.png"
+  adaptive_icon_background: "#FDA410"
+  adaptive_icon_foreground: "assets/icon/logo_foreground.png"
+  min_sdk_android: 21

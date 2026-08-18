@@ -23,7 +23,9 @@ minimalista). Meta futura: Play Store, como os apps irmãos.
 
 ## ⭐ ESTADO ATUAL (2026-08-18) — ler primeiro pós-/clear
 
-**v0.2.0 — TEXTO + FUNDO + CANETA** (`flutter analyze` limpo, 7 testes passando).
+**v0.2.1 — TEXTO + FUNDO + CANETA + ÍCONE** (`flutter analyze` limpo, 7 testes passando).
+Ícone do app em `app/assets/icon/` (fonte `logo_fonte.png`, processado `logo.png` âmbar cheio +
+`logo_foreground.png`); gerado por `flutter_launcher_icons` (rodar `dart run flutter_launcher_icons`).
 
 **O que existe e funciona:**
 - **Home** (retrato) — 4 cards: **Animais 🐶 · Objetos 🧸 · Alimentos 🍎 · Nomes 🔤**
