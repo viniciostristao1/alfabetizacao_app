@@ -2,6 +2,18 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-19 — v0.14.2 (desenho + cor de fundo nas Contas; componentes compartilhados)
+- **Extraí `features/estudo/desenho.dart`** com os componentes de "caderno" que eram privados da
+  `EstudoScreen`: `Traco`, `DesenhoPainter`, `BolinhaCor` (era `_Bolinha`), `BotaoIconeDesenho` (era
+  `_BotaoIcone`). `EstudoScreen` foi refatorada pra usar os públicos (sed nos usos + deletei as
+  privadas) — **sem duplicação**. `FundoTela`/`CorCaneta` já eram compartilhados (`estudo_opcoes.dart`).
+- **`ContaEstudoScreen`** ganhou: estado `_fundo`/`_caneta`/`_tracos` + handlers de traço; a `Scaffold`
+  usa `backgroundColor: _fundo.cor` e o texto da conta usa `ui = _fundo.corLetra`; `_colunaCaneta(ui)`
+  à esquerda; o enunciado fica dentro de `Listener`+`Stack(…, CustomPaint(DesenhoPainter))` (rabisca por
+  cima); `_TopoContas` recebeu `ui`/`fundo`/`onFundo` e mostra as **bolinhas de cor de fundo**. Numpad
+  e `_NavBtn` mantêm suas próprias cores (botões com fundo próprio → visíveis em qualquer fundo).
+  `_tracos.clear()` ao trocar de conta (acerto/`_irPara`). analyze limpo, 54 testes; conferido no preview.
+
 ## 2026-08-19 — v0.14.1 (fix: canetas/desenho sumiram no modo "completar")
 - **Bug:** o `_meioIncompleto` (v0.14.0) substituía o **Row inteiro** do meio, que continha a coluna
   de canetas + a camada de desenho (`Listener`+`_DesenhoPainter`) — então no modo completar sumiram

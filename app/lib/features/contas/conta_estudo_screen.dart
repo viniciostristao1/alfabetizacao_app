@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../models/conta.dart';
+import '../../models/estudo_opcoes.dart';
 import '../../services/progresso_repository.dart';
 import '../../theme/app_colors.dart';
+import '../estudo/desenho.dart';
 
 /// Tela de estudo das CONTAS (PAISAGEM): mostra uma conta grande (ex.: "12 + 7 ="),
 /// a criança digita o resultado num teclado numérico e o app diz se acertou. Cada
@@ -30,6 +32,27 @@ class _ContaEstudoScreenState extends State<ContaEstudoScreen> {
 
   int _moedas = 0;
   int _xp = 0;
+
+  // ── cor de fundo + escrever/rabiscar (igual à tela de palavras) ──
+  FundoTela _fundo = FundoTela.preto;
+  CorCaneta _caneta = CorCaneta.azul;
+  final List<Traco> _tracos = [];
+
+  void _inicioTraco(PointerDownEvent e) {
+    setState(() => _tracos.add(Traco(_caneta.cor)..pontos.add(e.localPosition)));
+  }
+
+  void _moveTraco(PointerMoveEvent e) {
+    if (_tracos.isEmpty) return;
+    setState(() => _tracos.last.pontos.add(e.localPosition));
+  }
+
+  void _limparDesenho() => setState(_tracos.clear);
+
+  void _desfazer() {
+    if (_tracos.isEmpty) return;
+    setState(() => _tracos.removeLast());
+  }
 
   @override
   void initState() {
@@ -88,6 +111,7 @@ class _ContaEstudoScreenState extends State<ContaEstudoScreen> {
           _resposta = '';
           _certo = null;
           _travado = false;
+          _tracos.clear();
         });
       }
     } else {
@@ -110,6 +134,7 @@ class _ContaEstudoScreenState extends State<ContaEstudoScreen> {
       _resposta = '';
       _certo = null;
       _travado = false;
+      _tracos.clear();
     });
   }
 
@@ -135,13 +160,14 @@ class _ContaEstudoScreenState extends State<ContaEstudoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final ui = _fundo.corLetra; // cor do texto sobre o fundo atual
     final corResposta = switch (_certo) {
       true => AppColors.acerto,
       false => AppColors.danger,
-      _ => AppColors.text,
+      _ => ui,
     };
     return Scaffold(
-      backgroundColor: AppColors.bg,
+      backgroundColor: _fundo.cor,
       body: SafeArea(
         child: Column(
           children: [
@@ -150,50 +176,77 @@ class _ContaEstudoScreenState extends State<ContaEstudoScreen> {
               progresso: '${_i + 1} / ${widget.contas.length}',
               moedas: _moedas,
               nivel: ProgressoRepository.nivelDe(_xp),
+              ui: ui,
+              fundo: _fundo,
+              onFundo: (f) => setState(() => _fundo = f),
               onVoltar: () => Navigator.of(context).pop(),
               onInicio: () =>
                   Navigator.of(context).popUntil((route) => route.isFirst),
             ),
             Expanded(
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // conta grande à esquerda + navegação (anterior/próximo)
+                  _colunaCaneta(ui),
+                  // conta + navegação, com camada de desenho por cima (caderno)
                   Expanded(
                     child: Column(
                       children: [
                         Expanded(
-                          child: Center(
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                                  textBaseline: TextBaseline.alphabetic,
-                                  children: [
-                                    Text(
-                                      '${_conta.enunciado} =',
-                                      style: const TextStyle(
-                                        fontSize: 84,
-                                        fontWeight: FontWeight.w800,
-                                        color: AppColors.text,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 18),
-                                    SizedBox(
-                                      width: 150,
-                                      child: Text(
-                                        _resposta.isEmpty ? '?' : _resposta,
-                                        style: TextStyle(
-                                          fontSize: 84,
-                                          fontWeight: FontWeight.w900,
-                                          color: corResposta,
+                          child: Listener(
+                            behavior: HitTestBehavior.opaque,
+                            onPointerDown: _inicioTraco,
+                            onPointerMove: _moveTraco,
+                            child: Stack(
+                              children: [
+                                Positioned.fill(
+                                  child: Center(
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(16),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.baseline,
+                                          textBaseline:
+                                              TextBaseline.alphabetic,
+                                          children: [
+                                            Text(
+                                              '${_conta.enunciado} =',
+                                              style: TextStyle(
+                                                fontSize: 84,
+                                                fontWeight: FontWeight.w800,
+                                                color: ui,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 18),
+                                            SizedBox(
+                                              width: 150,
+                                              child: Text(
+                                                _resposta.isEmpty
+                                                    ? '?'
+                                                    : _resposta,
+                                                style: TextStyle(
+                                                  fontSize: 84,
+                                                  fontWeight: FontWeight.w900,
+                                                  color: corResposta,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
-                                  ],
+                                  ),
                                 ),
-                              ),
+                                Positioned.fill(
+                                  child: IgnorePointer(
+                                    child: CustomPaint(
+                                      painter: DesenhoPainter(_tracos),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -235,6 +288,42 @@ class _ContaEstudoScreenState extends State<ContaEstudoScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  /// Coluna de canetas à esquerda (cores + vassoura + desfazer).
+  Widget _colunaCaneta(Color ui) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 12, top: 8),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (final c in CorCaneta.values)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 9),
+              child: BolinhaCor(
+                cor: c.cor,
+                selecionada: c == _caneta,
+                contraste: ui,
+                onTap: () => setState(() => _caneta = c),
+              ),
+            ),
+          const SizedBox(height: 3),
+          BotaoIconeDesenho(
+            icon: Icons.cleaning_services_rounded,
+            cor: ui,
+            onTap: _tracos.isEmpty ? null : _limparDesenho,
+            tooltip: 'Limpar tudo',
+          ),
+          const SizedBox(height: 8),
+          BotaoIconeDesenho(
+            icon: Icons.undo_rounded,
+            cor: ui,
+            onTap: _tracos.isEmpty ? null : _desfazer,
+            tooltip: 'Apagar o último rabisco',
+          ),
+        ],
       ),
     );
   }
@@ -284,6 +373,9 @@ class _TopoContas extends StatelessWidget {
     required this.progresso,
     required this.moedas,
     required this.nivel,
+    required this.ui,
+    required this.fundo,
+    required this.onFundo,
     required this.onVoltar,
     required this.onInicio,
   });
@@ -292,6 +384,9 @@ class _TopoContas extends StatelessWidget {
   final String progresso;
   final int moedas;
   final int nivel;
+  final Color ui;
+  final FundoTela fundo;
+  final ValueChanged<FundoTela> onFundo;
   final VoidCallback onVoltar;
   final VoidCallback onInicio;
 
@@ -304,25 +399,45 @@ class _TopoContas extends StatelessWidget {
           IconButton(
             onPressed: onVoltar,
             icon: const Icon(Icons.arrow_back_rounded),
+            color: ui,
             tooltip: 'Voltar',
           ),
+          // título + bolinhas de COR DE FUNDO (trocar o fundo, como nas palavras)
           Expanded(
-            child: Text(
-              titulo,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
-                color: AppColors.dim,
-              ),
+            child: Row(
+              children: [
+                Flexible(
+                  child: Text(
+                    titulo,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: ui.withValues(alpha: 0.7),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                for (final f in FundoTela.values)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: BolinhaCor(
+                      cor: f.cor,
+                      selecionada: f == fundo,
+                      contraste: ui,
+                      onTap: () => onFundo(f),
+                    ),
+                  ),
+              ],
             ),
           ),
+          const SizedBox(width: 8),
           Text(
             progresso,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w700,
-              color: AppColors.dim,
+              color: ui.withValues(alpha: 0.7),
             ),
           ),
           const SizedBox(width: 10),
@@ -346,6 +461,7 @@ class _TopoContas extends StatelessWidget {
             onPressed: onInicio,
             icon: const Icon(Icons.home_rounded, size: 18),
             label: const Text('Início'),
+            style: TextButton.styleFrom(foregroundColor: ui),
           ),
         ],
       ),

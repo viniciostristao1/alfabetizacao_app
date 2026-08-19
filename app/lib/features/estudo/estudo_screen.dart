@@ -9,6 +9,7 @@ import '../../services/config_leitura.dart';
 import '../../services/progresso_fases.dart';
 import '../../services/progresso_repository.dart';
 import '../../theme/app_colors.dart';
+import 'desenho.dart';
 
 /// Tela de estudo (PAISAGEM): mostra uma palavra grande de cada vez, com:
 ///  - **bolinhas de fundo (horizontais)** no topo, ao lado do título — preto,
@@ -49,7 +50,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
   int _i = 0;
   FundoTela _fundo = FundoTela.preto;
   CorCaneta _caneta = CorCaneta.azul;
-  final List<_Traco> _tracos = [];
+  final List<Traco> _tracos = [];
 
   // ── gamificação (XP/moedas): carregados no initState e atualizados no V/X ──
   int _moedas = 0;
@@ -235,7 +236,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
 
   // ── desenho (caneta) ──
   void _inicioTraco(PointerDownEvent e) {
-    setState(() => _tracos.add(_Traco(_caneta.cor)..pontos.add(e.localPosition)));
+    setState(() => _tracos.add(Traco(_caneta.cor)..pontos.add(e.localPosition)));
   }
 
   void _moveTraco(PointerMoveEvent e) {
@@ -254,7 +255,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
           for (final c in CorCaneta.values)
             Padding(
               padding: const EdgeInsets.only(bottom: 9),
-              child: _Bolinha(
+              child: BolinhaCor(
                 cor: c.cor,
                 selecionada: c == _caneta,
                 contraste: ui,
@@ -263,7 +264,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
             ),
           const SizedBox(height: 3),
           // Vassoura = limpa TUDO que foi desenhado.
-          _BotaoIcone(
+          BotaoIconeDesenho(
             icon: Icons.cleaning_services_rounded,
             cor: ui,
             onTap: _tracos.isEmpty ? null : _limparDesenho,
@@ -271,7 +272,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
           ),
           const SizedBox(height: 8),
           // Desfazer = apaga só o ÚLTIMO rabisco.
-          _BotaoIcone(
+          BotaoIconeDesenho(
             icon: Icons.undo_rounded,
             cor: ui,
             onTap: _tracos.isEmpty ? null : _desfazer,
@@ -330,7 +331,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
                       ),
                       Positioned.fill(
                         child: IgnorePointer(
-                          child: CustomPaint(painter: _DesenhoPainter(_tracos)),
+                          child: CustomPaint(painter: DesenhoPainter(_tracos)),
                         ),
                       ),
                       if (_feedback != null)
@@ -430,7 +431,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
                             for (final f in FundoTela.values)
                               Padding(
                                 padding: const EdgeInsets.only(right: 8),
-                                child: _Bolinha(
+                                child: BolinhaCor(
                                   cor: f.cor,
                                   selecionada: f == _fundo,
                                   contraste: ui,
@@ -522,7 +523,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
                           Positioned.fill(
                             child: IgnorePointer(
                               child: CustomPaint(
-                                painter: _DesenhoPainter(_tracos),
+                                painter: DesenhoPainter(_tracos),
                               ),
                             ),
                           ),
@@ -655,13 +656,6 @@ class _EstudoScreenState extends State<EstudoScreen> {
       ),
     );
   }
-}
-
-/// Um traço desenhado (uma "canetada" contínua): pontos + cor.
-class _Traco {
-  _Traco(this.cor);
-  final Color cor;
-  final List<Offset> pontos = [];
 }
 
 /// Baú do fim de fase (mapa-múndi): presente animado + bônus de moedas +
@@ -843,114 +837,6 @@ class _BotaoAcertoErro extends StatelessWidget {
                 fontWeight: FontWeight.w900,
               ),
             ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _DesenhoPainter extends CustomPainter {
-  _DesenhoPainter(this.tracos);
-  final List<_Traco> tracos;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    for (final t in tracos) {
-      if (t.pontos.isEmpty) continue;
-      final paint = Paint()
-        ..color = t.cor
-        ..strokeWidth = 6
-        ..strokeCap = StrokeCap.round
-        ..strokeJoin = StrokeJoin.round
-        ..style = PaintingStyle.stroke;
-      if (t.pontos.length == 1) {
-        canvas.drawCircle(t.pontos.first, 3, paint..style = PaintingStyle.fill);
-        continue;
-      }
-      final path = Path()..moveTo(t.pontos.first.dx, t.pontos.first.dy);
-      for (final p in t.pontos.skip(1)) {
-        path.lineTo(p.dx, p.dy);
-      }
-      canvas.drawPath(path, paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(_DesenhoPainter old) => true;
-}
-
-/// Bolinha de seleção (cor de fundo ou de caneta). `contraste` = cor do texto
-/// atual, usada na borda para a bolinha aparecer em qualquer fundo.
-class _Bolinha extends StatelessWidget {
-  const _Bolinha({
-    required this.cor,
-    required this.selecionada,
-    required this.contraste,
-    required this.onTap,
-  });
-
-  final Color cor;
-  final bool selecionada;
-  final Color contraste;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 28,
-        height: 28,
-        decoration: BoxDecoration(
-          color: cor,
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: selecionada
-                ? contraste
-                : contraste.withValues(alpha: 0.35),
-            width: selecionada ? 3.5 : 1.5,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Botão de ícone só (o "limpar" da coluna de canetas).
-class _BotaoIcone extends StatelessWidget {
-  const _BotaoIcone({
-    required this.icon,
-    required this.cor,
-    required this.onTap,
-    required this.tooltip,
-  });
-
-  final IconData icon;
-  final Color cor;
-  final VoidCallback? onTap;
-  final String tooltip;
-
-  @override
-  Widget build(BuildContext context) {
-    final habilitado = onTap != null;
-    return Tooltip(
-      message: tooltip,
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          width: 30,
-          height: 30,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: cor.withValues(alpha: habilitado ? 0.5 : 0.2),
-            ),
-          ),
-          child: Icon(
-            icon,
-            size: 17,
-            color: cor.withValues(alpha: habilitado ? 0.85 : 0.3),
           ),
         ),
       ),

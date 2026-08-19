@@ -2,6 +2,12 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.14.2 (2026-08-19)
+- **Rabiscar e cor de fundo nas Contas:** a tela das contas ganhou as **canetas coloridas**
+  (azul/vermelho/amarelo/roxo) com **vassoura** e **desfazer** na lateral, e as bolinhas de
+  **cor de fundo** no topo — igual à tela de palavras. Dá pra **escrever/riscar por cima** da
+  conta enquanto resolve.
+
 ## v0.14.1 (2026-08-19)
 - **Escrever no modo "Completar":** voltaram as **canetas coloridas** (azul/vermelho/amarelo/roxo),
   a **vassoura** e o **desfazer** no modo de completar a sílaba — dá pra **escrever por cima** da
