@@ -2,6 +2,12 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.10.16 (2026-08-19)
+- **Pontuação GIGANTE:** o "+2 / +3 / +4" (verde) do acerto e o "−" (vermelho)
+  do erro agora aparecem com fonte **52px** — impossível não ver.
+- **Moedas e nível ao lado da engrenagem:** na tela inicial, o "🪙 moedas ·
+  Nv" fica na **barra do topo, ao lado do botão de configurações** ⚙️.
+
 ## v0.10.15 (2026-08-19)
 - **Pontuação BEM maior:** o "+2 / +3 / +4" (verde) do acerto ficou com fonte
   ainda maior (42px) — impossível não ver.

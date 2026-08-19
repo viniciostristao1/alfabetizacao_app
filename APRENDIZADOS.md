@@ -2,6 +2,13 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-19 — v0.10.16 (feedback 52px + pontuação na barra ao lado da engrenagem)
+- `_PontosFeedback` fontSize 42 → **52** (pedido "aumente ainda mais").
+- Home: o chip de pontuação voltou da linha "Escolha um tema" para a **AppBar
+  (actions), ao lado da engrenagem ⚙️** (era assim na v0.10.6; v0.10.7 pediu ao
+  lado do tema; agora voltou p/ o topo). Teste da home segue igual
+  ('🪙 0 · Nv 1' presente). 34 testes, analyze limpo.
+
 ## 2026-08-19 — v0.10.14 (feedback maior + botões do mapa-múndi redistribuídos)
 - `_PontosFeedback` fontSize 26 → **36**.
 - Mapa-múndi: saiu o Wrap único central; **INICIAR JOGO = `Align(bottomRight)`
@@ -14,6 +21,14 @@ Notas técnicas e decisões. Topo = mais recente.
   estreita (no celular real é Roboto). O grupo esquerdo legítimamente passa do
   meio da tela → asserções de lado: INICIAR > 600, VOLTAR HABITAT < 300 (não
   "meio da tela"). 34 testes, analyze limpo.
+
+## 2026-08-19 — v0.10.15 (reforço do pedido: usuário instalava build antigo)
+- Usuário relatou "não mudou nada" — o código JÁ tinha os dois ajustes
+  (v0.10.14); provável **cache de download** (link fixo `latest/download` com o
+  MESMO nome de arquivo → navegador/celular reutilizam o APK antigo). Ação:
+  informar o link **versionado**
+  (`releases/download/v0.10.15/primeiras-palavras-v0.10.15.apk` — nome único,
+  sem cache) e a fonte foi p/ **42**.
 
 ## 2026-08-19 — v0.10.13 (logo do menino de vez — sem chroma key)
 - ⚠️ **Causa raiz do logo "furado":** a "chroma key" que removia o âmbar

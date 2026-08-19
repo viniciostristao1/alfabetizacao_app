@@ -84,6 +84,20 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         actions: [
+          // Pontuação SEMPRE visível, ao lado da engrenagem (configurações).
+          Padding(
+            padding: const EdgeInsets.only(right: 4),
+            child: Center(
+              child: Text(
+                '🪙 $_moedas · Nv ${ProgressoRepository.nivelDe(_xp)}',
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.dim,
+                ),
+              ),
+            ),
+          ),
           IconButton(
             tooltip: 'Configurações',
             icon: const Icon(Icons.settings_rounded),
@@ -102,27 +116,9 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Pontuação SEMPRE visível, ao lado de "Escolha um tema".
-              Row(
-                children: [
-                  const Text(
-                    'Escolha um tema',
-                    style: TextStyle(fontSize: 16, color: AppColors.dim),
-                  ),
-                  const Spacer(),
-                  Flexible(
-                    child: Text(
-                      '🪙 $_moedas · Nv ${ProgressoRepository.nivelDe(_xp)}',
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.right,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.dim,
-                      ),
-                    ),
-                  ),
-                ],
+              const Text(
+                'Escolha um tema',
+                style: TextStyle(fontSize: 16, color: AppColors.dim),
               ),
               const SizedBox(height: 10),
               // Grade COMPACTA em paisagem: os 4 temas numa linha, "Escrever"
