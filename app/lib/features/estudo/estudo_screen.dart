@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../models/estudo_opcoes.dart';
+import '../../models/modo_leitura.dart';
 import '../../models/palavra.dart';
+import '../../services/config_leitura.dart';
 import '../../services/progresso_fases.dart';
 import '../../services/progresso_repository.dart';
 import '../../theme/app_colors.dart';
@@ -51,6 +53,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
   // ── gamificação (XP/moedas): carregados no initState e atualizados no V/X ──
   int _moedas = 0;
   int _xp = 0;
+  ModoLeitura _modo = ModoLeitura.maiuscula; // MAIÚSCULAS / minúsculas
   String? _feedback; // "+4" / "-4" flutuando sobre a palavra
   int _feedbackSeq = 0; // key nova a cada feedback (reinicia a animação)
 
@@ -68,10 +71,12 @@ class _EstudoScreenState extends State<EstudoScreen> {
   Future<void> _carregarGamificacao() async {
     final moedas = await ProgressoRepository.moedas();
     final xp = await ProgressoRepository.xp();
+    final modo = await ConfigLeitura.carregar();
     if (mounted) {
       setState(() {
         _moedas = moedas;
         _xp = xp;
+        _modo = modo;
       });
     }
   }
@@ -352,7 +357,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown,
                                   child: Text(
-                                    palavra.texto.toUpperCase(),
+                                    _modo.aplicar(palavra.texto),
                                     style: TextStyle(
                                       fontSize: 200,
                                       fontWeight: FontWeight.w800,

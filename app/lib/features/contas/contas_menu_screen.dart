@@ -6,34 +6,50 @@ import '../../theme/app_colors.dart';
 import 'conta_estudo_screen.dart';
 import 'escrever_contas_screen.dart';
 
-/// Menu do tema **Contas** (PAISAGEM): escolher soma/subtração/mistas × 1 ou 2
-/// dígitos, ou **escrever contas** próprias. Cada opção abre o estudo das contas.
+/// Menu do tema **Contas** (PAISAGEM, tela cheia): soma/subtração/mistas × 1 ou 2
+/// dígitos, **até 20**, ou **escrever contas**. Tudo cabe numa grade 4×2 (sem
+/// rolar — aproveita a tela deitada).
 class ContasMenuScreen extends StatelessWidget {
   const ContasMenuScreen({super.key});
 
-  static const _presets = <(OperacaoConta, int, String, String)>[
-    (OperacaoConta.soma, 1, '➕ Soma', '1 dígito'),
-    (OperacaoConta.soma, 2, '➕ Soma', '2 dígitos'),
-    (OperacaoConta.subtracao, 1, '➖ Subtração', '1 dígito'),
-    (OperacaoConta.subtracao, 2, '➖ Subtração', '2 dígitos'),
-    (OperacaoConta.mistas, 1, '➕➖ Mistas', '1 dígito'),
-    (OperacaoConta.mistas, 2, '➕➖ Mistas', '2 dígitos'),
-  ];
+  static const _verde = Color(0xFF54C08A);
+  static const _laranja = Color(0xFFFF8A5B);
+  static const _azul = Color(0xFF5B9CFF);
+  static const _teal = Color(0xFF2DD4BF);
+  static const _rosa = Color(0xFFF472B6);
 
-  void _abrir(BuildContext context, OperacaoConta op, int digitos, String rotulo,
-      String sub) {
+  void _estudo(BuildContext context, String titulo, List<Conta> contas) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => ContaEstudoScreen(
-          titulo: '🧮  $rotulo · $sub',
-          contas: gerarContas(operacao: op, digitos: digitos),
-        ),
+        builder: (_) => ContaEstudoScreen(titulo: titulo, contas: contas),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    // Cada item: (rótulo, sub, cor, ação).
+    final itens = <(String, String, Color, VoidCallback)>[
+      ('➕ Soma', '1 dígito', _verde, () => _estudo(context, '🧮  Soma · 1 dígito',
+          gerarContas(operacao: OperacaoConta.soma, digitos: 1))),
+      ('➕ Soma', '2 dígitos', _verde, () => _estudo(context, '🧮  Soma · 2 dígitos',
+          gerarContas(operacao: OperacaoConta.soma, digitos: 2))),
+      ('➖ Subtração', '1 dígito', _laranja, () => _estudo(
+          context, '🧮  Subtração · 1 dígito',
+          gerarContas(operacao: OperacaoConta.subtracao, digitos: 1))),
+      ('➖ Subtração', '2 dígitos', _laranja, () => _estudo(
+          context, '🧮  Subtração · 2 dígitos',
+          gerarContas(operacao: OperacaoConta.subtracao, digitos: 2))),
+      ('➕➖ Mistas', '1 dígito', _azul, () => _estudo(context, '🧮  Mistas · 1 dígito',
+          gerarContas(operacao: OperacaoConta.mistas, digitos: 1))),
+      ('➕➖ Mistas', '2 dígitos', _azul, () => _estudo(context, '🧮  Mistas · 2 dígitos',
+          gerarContas(operacao: OperacaoConta.mistas, digitos: 2))),
+      ('🔟 Até 20', 'soma até 20', _teal,
+          () => _estudo(context, '🧮  Até 20', gerarContasAte(20))),
+      ('✏️ Escrever', 'as suas contas', _rosa, () => Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => const EscreverContasScreen()))),
+    ];
+
     return Scaffold(
       appBar: AppBar(title: const Text('Contas 🧮')),
       body: SafeArea(
@@ -44,71 +60,20 @@ class ContasMenuScreen extends StatelessWidget {
             children: [
               const Text(
                 'Escolha o tipo de conta (você seleciona 1 ou 2 dígitos)',
-                style: TextStyle(fontSize: 15, color: AppColors.dim),
+                style: TextStyle(fontSize: 14, color: AppColors.dim),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
               Expanded(
                 child: GridView.count(
-                  crossAxisCount: 3,
+                  crossAxisCount: 4,
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 10,
                   childAspectRatio: 2.3,
                   children: [
-                    for (final (op, dig, rotulo, sub) in _presets)
+                    for (final (rotulo, sub, cor, onTap) in itens)
                       _ContaCard(
-                        titulo: rotulo,
-                        sub: sub,
-                        cor: op == OperacaoConta.soma
-                            ? const Color(0xFF54C08A)
-                            : op == OperacaoConta.subtracao
-                                ? const Color(0xFFFF8A5B)
-                                : const Color(0xFF5B9CFF),
-                        onTap: () => _abrir(context, op, dig, rotulo, sub),
-                      ),
+                          titulo: rotulo, sub: sub, cor: cor, onTap: onTap),
                   ],
-                ),
-              ),
-              const SizedBox(height: 8),
-              // Escrever contas (o pai/mãe sugere contas próprias).
-              SizedBox(
-                width: double.infinity,
-                child: Material(
-                  color: AppColors.surface,
-                  borderRadius: BorderRadius.circular(16),
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(16),
-                    onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => const EscreverContasScreen(),
-                      ),
-                    ),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 12),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: const Color(0xFFF472B6).withValues(alpha: 0.55),
-                          width: 1.5,
-                        ),
-                      ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('✏️', style: TextStyle(fontSize: 22)),
-                          SizedBox(width: 10),
-                          Text(
-                            'Escrever contas (sugerir as suas)',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w800,
-                              color: AppColors.text,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
                 ),
               ),
             ],
@@ -136,13 +101,13 @@ class _ContaCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: AppColors.surface,
-      borderRadius: BorderRadius.circular(18),
+      borderRadius: BorderRadius.circular(16),
       child: InkWell(
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(16),
         onTap: onTap,
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(16),
             border: Border.all(color: cor.withValues(alpha: 0.55), width: 1.5),
           ),
           child: Column(
@@ -150,8 +115,9 @@ class _ContaCard extends StatelessWidget {
             children: [
               Text(
                 titulo,
+                textAlign: TextAlign.center,
                 style: const TextStyle(
-                  fontSize: 17,
+                  fontSize: 15,
                   fontWeight: FontWeight.w800,
                   color: AppColors.text,
                 ),
@@ -159,7 +125,7 @@ class _ContaCard extends StatelessWidget {
               const SizedBox(height: 2),
               Text(
                 sub,
-                style: const TextStyle(fontSize: 13, color: AppColors.dim),
+                style: const TextStyle(fontSize: 12, color: AppColors.dim),
               ),
             ],
           ),

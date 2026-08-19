@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../models/modo_leitura.dart';
 import '../../models/regiao.dart';
+import '../../services/config_leitura.dart';
 import '../../services/config_ordem.dart';
 import '../../services/progresso_repository.dart';
 import '../../theme/app_colors.dart';
@@ -22,6 +24,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
   List<Regiao>? _fases;
   int _moedas = 0;
   int _xp = 0;
+  ModoLeitura _modo = ModoLeitura.maiuscula;
 
   @override
   void initState() {
@@ -33,13 +36,20 @@ class _ConfigScreenState extends State<ConfigScreen> {
     final fases = await ConfigOrdem.fases();
     final moedas = await ProgressoRepository.moedas();
     final xp = await ProgressoRepository.xp();
+    final modo = await ConfigLeitura.carregar();
     if (mounted) {
       setState(() {
         _fases = fases;
         _moedas = moedas;
         _xp = xp;
+        _modo = modo;
       });
     }
+  }
+
+  void _mudarModo(ModoLeitura modo) {
+    setState(() => _modo = modo);
+    ConfigLeitura.salvar(modo);
   }
 
   void _reordenar(int velho, int novo) {
@@ -152,6 +162,27 @@ class _ConfigScreenState extends State<ConfigScreen> {
                 ),
               ],
             ),
+          ),
+          const SizedBox(height: 14),
+          const Text(
+            'Como mostrar as palavras',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+          ),
+          const SizedBox(height: 4),
+          const Text(
+            'MAIÚSCULAS (mais fácil de começar) ou minúsculas. '
+            '(Em breve: completar a sílaba que falta.)',
+            style: TextStyle(color: AppColors.dim),
+          ),
+          const SizedBox(height: 8),
+          SegmentedButton<ModoLeitura>(
+            segments: [
+              for (final m in ModoLeitura.values)
+                ButtonSegment(value: m, label: Text(m.rotulo)),
+            ],
+            selected: {_modo},
+            showSelectedIcon: false,
+            onSelectionChanged: (s) => _mudarModo(s.first),
           ),
           const SizedBox(height: 14),
           const Text(

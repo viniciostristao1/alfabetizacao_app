@@ -2,6 +2,27 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-19 — v0.13.0 (tela cheia global + minúsculas + Contas Até 20/menu + logo na home)
+- **Tela cheia (imersivo) em TODAS as telas:** só habitat/mapa setavam `immersiveSticky`; os demais
+  mostravam a barra de status. **Fix:** `main()` agora seta `immersiveSticky` global; troquei os
+  `SystemUiMode.edgeToEdge` restantes (habitat dispose + selecao init) por `immersiveSticky` (sed).
+  MaterialApp title → 'Jogo do Davi'.
+- **Nome Android:** `android:label="Jogo do Davi"` (J maiúsculo). **Logo na home:** `assets/icon/logo.png`
+  adicionado aos `assets` do pubspec; `Image.asset` 34px arredondado ANTES do título na AppBar.
+- **Modo de leitura (MAIÚSCULAS/minúsculas):** `models/modo_leitura.dart` (enum `ModoLeitura` +
+  `aplicar(texto)`), `services/config_leitura.dart` (chave `modo_leitura_v1`, padrão maiúscula).
+  Seletor `SegmentedButton` na engrenagem (seção "Como mostrar as palavras", em `config_screen`).
+  `EstudoScreen` lê no initState e usa `_modo.aplicar(palavra.texto)` no lugar de `.toUpperCase()`.
+  **Decisão de local:** o seletor mora na engrenagem (preferência global do pai). O **3º modo
+  "completar sílaba que falta"** (múltipla escolha, MAIÚSCULAS, nunca a 1ª sílaba) fica p/ a próxima
+  leva — será tela própria, aí o enum/seletor ganham a 3ª opção.
+- **Contas:** `gerarContasAte(limite)` (soma com os dois números ≤ limite; "Até 20"). Menu reescrito:
+  8 opções (6 op×dígitos + Até 20 + Escrever) numa **grade 4×2** (`crossAxisCount:4`,
+  `childAspectRatio:2.3`) → cabe sem rolar na paisagem (era 3 col e rolava). Botões Anterior/Próximo
+  já existiam (v0.12.1).
+- Testes: `gerarContasAte`, `config_leitura` (aplica caixa + salva/carrega). 50 testes, analyze limpo;
+  menu/home conferidos no preview-PNG.
+
 ## 2026-08-19 — v0.12.1 (logo maior + nome "jogo do Davi" + Anterior/Próximo nas contas)
 - **Logo maior sem cortar:** `logo.png` e `logo_foreground.png` são o menino sobre âmbar (RGB, 1024²;
   âmbar real = #FDB405 = `adaptive_icon_background`). Script PIL: detecta o bbox do menino (pixels

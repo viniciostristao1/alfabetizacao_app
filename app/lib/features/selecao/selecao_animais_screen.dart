@@ -25,7 +25,7 @@ class _SelecaoAnimaisScreenState extends State<SelecaoAnimaisScreen> {
     super.initState();
     // App todo em PAISAGEM — esta tela também fica deitada, só com as barras
     // do sistema visíveis (é tela de digitação).
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   }
 
   List<Palavra> get _filtrados {

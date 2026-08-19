@@ -2,6 +2,18 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.13.0 (2026-08-19)
+- **Tela cheia em TODAS as telas:** objetos, alimentos, nomes, contas etc. agora também ficam
+  **sem a barra do sistema** (rede/bateria/horário) — igual aos animais. Clima de jogo em tudo.
+- **Palavras em minúsculas:** na engrenagem ⚙️ (**Como mostrar as palavras**) dá pra escolher
+  **MAIÚSCULAS** ou **minúsculas** — a palavra completa, só muda o caixa. (Em breve: completar a
+  sílaba que falta.)
+- **Contas "Até 20":** nova opção com **soma de números até 20** (ex.: 5+19, 15+15, 7+10).
+- **Menu de Contas sem rolar:** os botões ficaram **menores** e cabem todos numa tela só (a tela
+  deitada é bem aproveitada) — não precisa mais rolar.
+- **Logo ao lado do título** na tela inicial (antes do "JOGO DO DAVI") e **nome do app com maiúscula:
+  "Jogo do Davi"**.
+
 ## v0.12.1 (2026-08-19)
 - **Logo maior:** o menino no ícone do app ficou **bem maior** (menos espaço em volta) — e
   continua **inteiro**, sem cortar cabeça/pés, mesmo no ícone redondo do Android.

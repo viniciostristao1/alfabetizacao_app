@@ -7,11 +7,13 @@ import 'theme/app_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // O app TODO vive em PAISAGEM (deitado) — todas as telas.
+  // O app TODO vive em PAISAGEM (deitado) e em TELA CHEIA (imersivo) — todas as
+  // telas escondem a barra de status/navegação do sistema (clima de jogo).
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.landscapeLeft,
     DeviceOrientation.landscapeRight,
   ]);
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   runApp(const ProviderScope(child: AppPrimeirasPalavras()));
 }
 
@@ -21,7 +23,7 @@ class AppPrimeirasPalavras extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Primeiras Palavras',
+      title: 'Jogo do Davi',
       debugShowCheckedModeBanner: false,
       theme: buildAppTheme(),
       home: const HomeScreen(),

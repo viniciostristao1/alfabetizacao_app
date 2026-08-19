@@ -58,6 +58,17 @@ void main() {
       expect(contas.any((c) => c.soma), isTrue);
       expect(contas.any((c) => !c.soma), isTrue);
     });
+
+    test('até 20: soma com os dois números ≤ 20', () {
+      final contas = gerarContasAte(20, quantidade: 80, rng: Random(5));
+      expect(contas.length, 80);
+      for (final c in contas) {
+        expect(c.soma, isTrue);
+        expect(c.a >= 0 && c.a <= 20, isTrue);
+        expect(c.b >= 0 && c.b <= 20, isTrue);
+        expect(c.resultado, c.a + c.b);
+      }
+    });
   });
 
   group('parseConta', () {

@@ -53,7 +53,7 @@ class _HabitatMapScreenState extends State<HabitatMapScreen> {
 
   @override
   void dispose() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     // App todo em PAISAGEM — garante ao sair (redundante, mas seguro).
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,

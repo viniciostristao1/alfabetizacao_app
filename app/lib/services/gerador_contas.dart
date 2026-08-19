@@ -39,6 +39,21 @@ List<Conta> gerarContas({
   return contas;
 }
 
+/// Contas de SOMA com os dois números **até [limite]** (ex.: "até 20": 5+19,
+/// 15+15, 7+10…). Pontos por conta = 2 se houver número ≥10, senão 1.
+List<Conta> gerarContasAte(int limite, {int quantidade = 10, Random? rng}) {
+  final r = rng ?? Random();
+  return [
+    for (var i = 0; i < quantidade; i++)
+      () {
+        final a = r.nextInt(limite + 1);
+        final b = r.nextInt(limite + 1);
+        final pontos = (a >= 10 || b >= 10 || a + b >= 10) ? 2 : 1;
+        return Conta(a, b, true, pontos);
+      }(),
+  ];
+}
+
 /// Interpreta uma conta escrita pelo usuário (ex.: "12 + 7", "20-8"). Aceita
 /// `+` ou `-`/`−`. Retorna null se for inválida (formato errado, número negativo
 /// ou subtração que daria resultado negativo). Pontos = 2 se houver número ≥ 10.
