@@ -12,106 +12,119 @@ import '../models/palavra.dart';
 /// ou 4 sílabas, sem vazios e sem duplicatas.
 const List<Palavra> bancoPalavras = [
   // ─────────────────────────── ANIMAIS ───────────────────────────
-  // Organizados por HABITAT (jogo do mapa). Dentro de cada habitat, a tela roda
-  // do MENOS para o MAIS sílabas (ver palavrasDoHabitat). Sílabas de 2 a 5.
-  // ❄️ Ártico
-  Palavra(['fo', 'ca'], Categoria.animais, sub: 'aquatico', habitat: 'artico'),
-  Palavra(['pin', 'guim'], Categoria.animais, sub: 'aquatico', habitat: 'artico'),
-  Palavra(['mor', 'sa'], Categoria.animais, sub: 'aquatico', habitat: 'artico'),
-  Palavra(['nar', 'val'], Categoria.animais, sub: 'aquatico', habitat: 'artico'),
-  Palavra(['lo', 'bo'], Categoria.animais, sub: 'terrestre', habitat: 'artico'),
-  Palavra(['re', 'na'], Categoria.animais, sub: 'terrestre', habitat: 'artico'),
-  Palavra(['le', 'bre'], Categoria.animais, sub: 'terrestre', habitat: 'artico'),
-  Palavra(['al', 'ce'], Categoria.animais, sub: 'terrestre', habitat: 'artico'),
-  Palavra(['ra', 'po', 'sa'], Categoria.animais, sub: 'terrestre', habitat: 'artico'),
+  // DUAS classificações independentes por bicho:
+  //  • habitat = jogo do mapa de habitats (artico/savana/selva/aquatico/aves/fazenda);
+  //  • regiao  = mapa-múndi por CONTINENTE — onde o bicho vive (norte/sul/africa/
+  //    asia/australia/artico/oceano/ceu). Ex.: tigre habitat 'selva' mas regiao 'asia';
+  //    alce habitat 'artico' mas regiao 'norte' (EUA). Ver palavrasDoHabitat/palavrasDaRegiao.
+  // Dentro de cada grupo a tela roda do MENOS ao MAIS sílabas. Sílabas de 2 a 5.
+  // ❄️ Ártico (habitat) → Ártico/América do Norte (região)
+  Palavra(['fo', 'ca'], Categoria.animais, sub: 'aquatico', habitat: 'artico', regiao: 'artico'),
+  Palavra(['pin', 'guim'], Categoria.animais, sub: 'aquatico', habitat: 'artico', regiao: 'artico'),
+  Palavra(['mor', 'sa'], Categoria.animais, sub: 'aquatico', habitat: 'artico', regiao: 'artico'),
+  Palavra(['nar', 'val'], Categoria.animais, sub: 'aquatico', habitat: 'artico', regiao: 'artico'),
+  Palavra(['lo', 'bo'], Categoria.animais, sub: 'terrestre', habitat: 'artico', regiao: 'norte'),
+  Palavra(['re', 'na'], Categoria.animais, sub: 'terrestre', habitat: 'artico', regiao: 'artico'),
+  Palavra(['le', 'bre'], Categoria.animais, sub: 'terrestre', habitat: 'artico', regiao: 'norte'),
+  Palavra(['al', 'ce'], Categoria.animais, sub: 'terrestre', habitat: 'artico', regiao: 'norte'),
+  Palavra(['ra', 'po', 'sa'], Categoria.animais, sub: 'terrestre', habitat: 'artico', regiao: 'norte'),
   Palavra(['ur', 'so', 'po', 'lar'], Categoria.animais,
-      sub: 'terrestre', habitat: 'artico', texto: 'urso polar'),
-  // 🦁 Savana
-  Palavra(['le', 'ão'], Categoria.animais, sub: 'terrestre', habitat: 'savana'),
-  Palavra(['ze', 'bra'], Categoria.animais, sub: 'terrestre', habitat: 'savana'),
-  Palavra(['chi', 'ta'], Categoria.animais, sub: 'terrestre', habitat: 'savana'),
-  Palavra(['gi', 'ra', 'fa'], Categoria.animais, sub: 'terrestre', habitat: 'savana'),
-  Palavra(['bú', 'fa', 'lo'], Categoria.animais, sub: 'terrestre', habitat: 'savana'),
-  Palavra(['ga', 'ze', 'la'], Categoria.animais, sub: 'terrestre', habitat: 'savana'),
-  Palavra(['hi', 'e', 'na'], Categoria.animais, sub: 'terrestre', habitat: 'savana'),
-  Palavra(['a', 'ves', 'truz'], Categoria.animais, sub: 'terrestre', habitat: 'savana'),
-  Palavra(['can', 'gu', 'ru'], Categoria.animais, sub: 'terrestre', habitat: 'savana'),
-  Palavra(['e', 'le', 'fan', 'te'], Categoria.animais, sub: 'terrestre', habitat: 'savana'),
-  Palavra(['su', 'ri', 'ca', 'to'], Categoria.animais, sub: 'terrestre', habitat: 'savana'),
-  Palavra(['an', 'tí', 'lo', 'pe'], Categoria.animais, sub: 'terrestre', habitat: 'savana'),
+      sub: 'terrestre', habitat: 'artico', regiao: 'artico', texto: 'urso polar'),
+  // 🦁 Savana (habitat) → África (região); canguru vai pra Austrália
+  Palavra(['le', 'ão'], Categoria.animais, sub: 'terrestre', habitat: 'savana', regiao: 'africa'),
+  Palavra(['ze', 'bra'], Categoria.animais, sub: 'terrestre', habitat: 'savana', regiao: 'africa'),
+  Palavra(['chi', 'ta'], Categoria.animais, sub: 'terrestre', habitat: 'savana', regiao: 'africa'),
+  Palavra(['gi', 'ra', 'fa'], Categoria.animais, sub: 'terrestre', habitat: 'savana', regiao: 'africa'),
+  Palavra(['bú', 'fa', 'lo'], Categoria.animais, sub: 'terrestre', habitat: 'savana', regiao: 'africa'),
+  Palavra(['ga', 'ze', 'la'], Categoria.animais, sub: 'terrestre', habitat: 'savana', regiao: 'africa'),
+  Palavra(['hi', 'e', 'na'], Categoria.animais, sub: 'terrestre', habitat: 'savana', regiao: 'africa'),
+  Palavra(['a', 'ves', 'truz'], Categoria.animais, sub: 'terrestre', habitat: 'savana', regiao: 'africa'),
+  Palavra(['can', 'gu', 'ru'], Categoria.animais, sub: 'terrestre', habitat: 'savana', regiao: 'australia'),
+  Palavra(['e', 'le', 'fan', 'te'], Categoria.animais, sub: 'terrestre', habitat: 'savana', regiao: 'africa'),
+  Palavra(['su', 'ri', 'ca', 'to'], Categoria.animais, sub: 'terrestre', habitat: 'savana', regiao: 'africa'),
+  Palavra(['an', 'tí', 'lo', 'pe'], Categoria.animais, sub: 'terrestre', habitat: 'savana', regiao: 'africa'),
   Palavra(['hi', 'po', 'pó', 'ta', 'mo'], Categoria.animais,
-      sub: 'terrestre', habitat: 'savana'),
+      sub: 'terrestre', habitat: 'savana', regiao: 'africa'),
   Palavra(['ri', 'no', 'ce', 'ron', 'te'], Categoria.animais,
-      sub: 'terrestre', habitat: 'savana'),
-  // 🌴 Selva
-  Palavra(['on', 'ça'], Categoria.animais, sub: 'terrestre', habitat: 'selva'),
-  Palavra(['co', 'bra'], Categoria.animais, sub: 'terrestre', habitat: 'selva'),
-  Palavra(['ti', 'gre'], Categoria.animais, sub: 'terrestre', habitat: 'selva'),
-  Palavra(['pan', 'da'], Categoria.animais, sub: 'terrestre', habitat: 'selva'),
-  Palavra(['ma', 'ca', 'co'], Categoria.animais, sub: 'terrestre', habitat: 'selva'),
-  Palavra(['tu', 'ca', 'no'], Categoria.animais, sub: 'voador', habitat: 'selva'),
-  Palavra(['go', 'ri', 'la'], Categoria.animais, sub: 'terrestre', habitat: 'selva'),
-  Palavra(['pre', 'gui', 'ça'], Categoria.animais, sub: 'terrestre', habitat: 'selva'),
-  Palavra(['ja', 'ca', 'ré'], Categoria.animais, sub: 'aquatico', habitat: 'selva'),
-  Palavra(['i', 'gua', 'na'], Categoria.animais, sub: 'terrestre', habitat: 'selva'),
-  Palavra(['le', 'o', 'par', 'do'], Categoria.animais, sub: 'terrestre', habitat: 'selva'),
-  Palavra(['ta', 'man', 'du', 'á'], Categoria.animais, sub: 'terrestre', habitat: 'selva'),
-  Palavra(['ca', 'ma', 'le', 'ão'], Categoria.animais, sub: 'terrestre', habitat: 'selva'),
-  Palavra(['bor', 'bo', 'le', 'ta'], Categoria.animais, sub: 'voador', habitat: 'selva'),
-  // 🐠 Aquático
-  Palavra(['pei', 'xe'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico'),
-  Palavra(['pol', 'vo'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico'),
-  Palavra(['rai', 'a'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico'),
-  Palavra(['or', 'ca'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico'),
-  Palavra(['lu', 'la'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico'),
-  Palavra(['os', 'tra'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico'),
-  Palavra(['sal', 'mão'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico'),
-  Palavra(['ba', 'lei', 'a'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico'),
-  Palavra(['gol', 'fi', 'nho'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico'),
-  Palavra(['tu', 'ba', 'rão'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico'),
-  Palavra(['ca', 'ma', 'rão'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico'),
-  Palavra(['tar', 'ta', 'ru', 'ga'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico'),
-  Palavra(['ca', 'ran', 'gue', 'jo'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico'),
-  Palavra(['cro', 'co', 'di', 'lo'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico'),
+      sub: 'terrestre', habitat: 'savana', regiao: 'africa'),
+  // 🌴 Selva (habitat) → dividida por continente real (região)
+  Palavra(['on', 'ça'], Categoria.animais, sub: 'terrestre', habitat: 'selva', regiao: 'sul'),
+  Palavra(['co', 'bra'], Categoria.animais, sub: 'terrestre', habitat: 'selva', regiao: 'sul'),
+  Palavra(['ti', 'gre'], Categoria.animais, sub: 'terrestre', habitat: 'selva', regiao: 'asia'),
+  Palavra(['pan', 'da'], Categoria.animais, sub: 'terrestre', habitat: 'selva', regiao: 'asia'),
+  Palavra(['ma', 'ca', 'co'], Categoria.animais, sub: 'terrestre', habitat: 'selva', regiao: 'sul'),
+  Palavra(['tu', 'ca', 'no'], Categoria.animais, sub: 'voador', habitat: 'selva', regiao: 'ceu'),
+  Palavra(['go', 'ri', 'la'], Categoria.animais, sub: 'terrestre', habitat: 'selva', regiao: 'africa'),
+  Palavra(['pre', 'gui', 'ça'], Categoria.animais, sub: 'terrestre', habitat: 'selva', regiao: 'sul'),
+  Palavra(['ja', 'ca', 'ré'], Categoria.animais, sub: 'aquatico', habitat: 'selva', regiao: 'sul'),
+  Palavra(['i', 'gua', 'na'], Categoria.animais, sub: 'terrestre', habitat: 'selva', regiao: 'sul'),
+  Palavra(['le', 'o', 'par', 'do'], Categoria.animais, sub: 'terrestre', habitat: 'selva', regiao: 'asia'),
+  Palavra(['ta', 'man', 'du', 'á'], Categoria.animais, sub: 'terrestre', habitat: 'selva', regiao: 'sul'),
+  Palavra(['ca', 'ma', 'le', 'ão'], Categoria.animais, sub: 'terrestre', habitat: 'selva', regiao: 'africa'),
+  Palavra(['bor', 'bo', 'le', 'ta'], Categoria.animais, sub: 'voador', habitat: 'selva', regiao: 'sul'),
+  // 🐠 Aquático (habitat) → Oceano (região)
+  Palavra(['pei', 'xe'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico', regiao: 'oceano'),
+  Palavra(['pol', 'vo'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico', regiao: 'oceano'),
+  Palavra(['rai', 'a'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico', regiao: 'oceano'),
+  Palavra(['or', 'ca'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico', regiao: 'oceano'),
+  Palavra(['lu', 'la'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico', regiao: 'oceano'),
+  Palavra(['os', 'tra'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico', regiao: 'oceano'),
+  Palavra(['sal', 'mão'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico', regiao: 'oceano'),
+  Palavra(['ba', 'lei', 'a'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico', regiao: 'oceano'),
+  Palavra(['gol', 'fi', 'nho'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico', regiao: 'oceano'),
+  Palavra(['tu', 'ba', 'rão'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico', regiao: 'oceano'),
+  Palavra(['ca', 'ma', 'rão'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico', regiao: 'oceano'),
+  Palavra(['tar', 'ta', 'ru', 'ga'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico', regiao: 'oceano'),
+  Palavra(['ca', 'ran', 'gue', 'jo'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico', regiao: 'oceano'),
+  Palavra(['cro', 'co', 'di', 'lo'], Categoria.animais, sub: 'aquatico', habitat: 'aquatico', regiao: 'oceano'),
   Palavra(['á', 'gua', 'vi', 'va'], Categoria.animais,
-      sub: 'aquatico', habitat: 'aquatico', texto: 'água-viva'),
+      sub: 'aquatico', habitat: 'aquatico', regiao: 'oceano', texto: 'água-viva'),
   Palavra(['es', 'tre', 'la', 'do', 'mar'], Categoria.animais,
-      sub: 'aquatico', habitat: 'aquatico', texto: 'estrela-do-mar'),
-  // 🦅 Aves
-  Palavra(['pom', 'ba'], Categoria.animais, sub: 'voador', habitat: 'aves'),
-  Palavra(['pa', 'to'], Categoria.animais, sub: 'voador', habitat: 'aves'),
-  Palavra(['ga', 'lo'], Categoria.animais, sub: 'voador', habitat: 'aves'),
-  Palavra(['pa', 'vão'], Categoria.animais, sub: 'voador', habitat: 'aves'),
-  Palavra(['par', 'dal'], Categoria.animais, sub: 'voador', habitat: 'aves'),
-  Palavra(['á', 'gui', 'a'], Categoria.animais, sub: 'voador', habitat: 'aves'),
-  Palavra(['a', 'ra', 'ra'], Categoria.animais, sub: 'voador', habitat: 'aves'),
-  Palavra(['co', 'ru', 'ja'], Categoria.animais, sub: 'voador', habitat: 'aves'),
-  Palavra(['gai', 'vo', 'ta'], Categoria.animais, sub: 'voador', habitat: 'aves'),
-  Palavra(['fla', 'min', 'go'], Categoria.animais, sub: 'voador', habitat: 'aves'),
-  Palavra(['ce', 'go', 'nha'], Categoria.animais, sub: 'voador', habitat: 'aves'),
-  Palavra(['ga', 'li', 'nha'], Categoria.animais, sub: 'voador', habitat: 'aves'),
-  Palavra(['u', 'ru', 'bu'], Categoria.animais, sub: 'voador', habitat: 'aves'),
+      sub: 'aquatico', habitat: 'aquatico', regiao: 'oceano', texto: 'estrela-do-mar'),
+  // 🦅 Aves (habitat) → Céu (região)
+  Palavra(['pom', 'ba'], Categoria.animais, sub: 'voador', habitat: 'aves', regiao: 'ceu'),
+  Palavra(['pa', 'to'], Categoria.animais, sub: 'voador', habitat: 'aves', regiao: 'ceu'),
+  Palavra(['ga', 'lo'], Categoria.animais, sub: 'voador', habitat: 'aves', regiao: 'ceu'),
+  Palavra(['pa', 'vão'], Categoria.animais, sub: 'voador', habitat: 'aves', regiao: 'ceu'),
+  Palavra(['par', 'dal'], Categoria.animais, sub: 'voador', habitat: 'aves', regiao: 'ceu'),
+  Palavra(['á', 'gui', 'a'], Categoria.animais, sub: 'voador', habitat: 'aves', regiao: 'ceu'),
+  Palavra(['a', 'ra', 'ra'], Categoria.animais, sub: 'voador', habitat: 'aves', regiao: 'ceu'),
+  Palavra(['co', 'ru', 'ja'], Categoria.animais, sub: 'voador', habitat: 'aves', regiao: 'ceu'),
+  Palavra(['gai', 'vo', 'ta'], Categoria.animais, sub: 'voador', habitat: 'aves', regiao: 'ceu'),
+  Palavra(['fla', 'min', 'go'], Categoria.animais, sub: 'voador', habitat: 'aves', regiao: 'ceu'),
+  Palavra(['ce', 'go', 'nha'], Categoria.animais, sub: 'voador', habitat: 'aves', regiao: 'ceu'),
+  Palavra(['ga', 'li', 'nha'], Categoria.animais, sub: 'voador', habitat: 'aves', regiao: 'ceu'),
+  Palavra(['u', 'ru', 'bu'], Categoria.animais, sub: 'voador', habitat: 'aves', regiao: 'ceu'),
   Palavra(['bei', 'ja', 'flor'], Categoria.animais,
-      sub: 'voador', habitat: 'aves', texto: 'beija-flor'),
-  Palavra(['pa', 'pa', 'gai', 'o'], Categoria.animais, sub: 'voador', habitat: 'aves'),
-  Palavra(['ca', 'ná', 'ri', 'o'], Categoria.animais, sub: 'voador', habitat: 'aves'),
-  Palavra(['an', 'do', 'ri', 'nha'], Categoria.animais, sub: 'voador', habitat: 'aves'),
-  Palavra(['pe', 'li', 'ca', 'no'], Categoria.animais, sub: 'voador', habitat: 'aves'),
-  // 🐮 Fazenda (bichos domésticos — no mapa-múndi ficam na América do Norte)
-  Palavra(['va', 'ca'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda'),
-  Palavra(['por', 'co'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda'),
-  Palavra(['bur', 'ro'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda'),
-  Palavra(['ca', 'bra'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda'),
-  Palavra(['bo', 'de'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda'),
-  Palavra(['gan', 'so'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda'),
-  Palavra(['ga', 'to'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda'),
-  Palavra(['pô', 'nei'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda'),
-  Palavra(['ca', 'va', 'lo'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda'),
-  Palavra(['o', 've', 'lha'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda'),
-  Palavra(['co', 'e', 'lho'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda'),
-  Palavra(['ca', 'chor', 'ro'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda'),
-  Palavra(['car', 'nei', 'ro'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda'),
-  Palavra(['be', 'zer', 'ro'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda'),
+      sub: 'voador', habitat: 'aves', regiao: 'ceu', texto: 'beija-flor'),
+  Palavra(['pa', 'pa', 'gai', 'o'], Categoria.animais, sub: 'voador', habitat: 'aves', regiao: 'ceu'),
+  Palavra(['ca', 'ná', 'ri', 'o'], Categoria.animais, sub: 'voador', habitat: 'aves', regiao: 'ceu'),
+  Palavra(['an', 'do', 'ri', 'nha'], Categoria.animais, sub: 'voador', habitat: 'aves', regiao: 'ceu'),
+  Palavra(['pe', 'li', 'ca', 'no'], Categoria.animais, sub: 'voador', habitat: 'aves', regiao: 'ceu'),
+  // 🐮 Fazenda (habitat) → América do Norte (região)
+  Palavra(['va', 'ca'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda', regiao: 'norte'),
+  Palavra(['por', 'co'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda', regiao: 'norte'),
+  Palavra(['bur', 'ro'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda', regiao: 'norte'),
+  Palavra(['ca', 'bra'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda', regiao: 'norte'),
+  Palavra(['bo', 'de'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda', regiao: 'norte'),
+  Palavra(['gan', 'so'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda', regiao: 'norte'),
+  Palavra(['ga', 'to'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda', regiao: 'norte'),
+  Palavra(['pô', 'nei'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda', regiao: 'norte'),
+  Palavra(['ca', 'va', 'lo'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda', regiao: 'norte'),
+  Palavra(['o', 've', 'lha'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda', regiao: 'norte'),
+  Palavra(['co', 'e', 'lho'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda', regiao: 'norte'),
+  Palavra(['ca', 'chor', 'ro'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda', regiao: 'norte'),
+  Palavra(['car', 'nei', 'ro'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda', regiao: 'norte'),
+  Palavra(['be', 'zer', 'ro'], Categoria.animais, sub: 'terrestre', habitat: 'fazenda', regiao: 'norte'),
+  // ✨ Só-região (sem célula de habitat) — enchem Ásia e Austrália no mapa-múndi
+  // 🐼 Ásia
+  Palavra(['ca', 'me', 'lo'], Categoria.animais, sub: 'terrestre', regiao: 'asia'),
+  Palavra(['o', 'ran', 'go', 'tan', 'go'], Categoria.animais, sub: 'terrestre', regiao: 'asia'),
+  // 🦘 Austrália
+  Palavra(['co', 'a', 'la'], Categoria.animais, sub: 'terrestre', regiao: 'australia'),
+  Palavra(['e', 'mu'], Categoria.animais, sub: 'terrestre', regiao: 'australia'),
+  Palavra(['din', 'go'], Categoria.animais, sub: 'terrestre', regiao: 'australia'),
+  Palavra(['or', 'ni', 'to', 'rrin', 'co'], Categoria.animais, sub: 'aquatico', regiao: 'australia'),
 
   // ─────────────────────────── OBJETOS ───────────────────────────
   // fácil (2 sílabas)
@@ -302,6 +315,17 @@ List<Palavra> palavrasDosHabitats(List<String> chaves) {
   final lista = bancoPalavras
       .where((p) =>
           p.categoria == Categoria.animais && chaves.contains(p.habitat))
+      .toList();
+  lista.sort((a, b) => a.nivelSilabas.compareTo(b.nivelSilabas));
+  return lista;
+}
+
+/// Animais de uma REGIÃO do mapa-múndi (onde o bicho vive: 'africa', 'asia'…),
+/// ordenados do menos ao mais sílabas. É a classificação geográfica, diferente
+/// do habitat (ver palavrasDoHabitat).
+List<Palavra> palavrasDaRegiao(String regiaoChave) {
+  final lista = bancoPalavras
+      .where((p) => p.categoria == Categoria.animais && p.regiao == regiaoChave)
       .toList();
   lista.sort((a, b) => a.nivelSilabas.compareTo(b.nivelSilabas));
   return lista;

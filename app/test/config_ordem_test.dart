@@ -1,4 +1,4 @@
-import 'package:alfabetizacao/models/habitat.dart';
+import 'package:alfabetizacao/models/regiao.dart';
 import 'package:alfabetizacao/services/config_ordem.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,34 +8,33 @@ void main() {
 
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  final todas = Habitat.values.map((h) => h.chave).toSet();
+  final todas = Regiao.values.map((r) => r.chave).toSet();
 
-  group('ordem das fases (ConfigOrdem)', () {
-    test('sem nada salvo → ordem padrão (todas as fases)', () async {
+  group('ordem das regiões (ConfigOrdem)', () {
+    test('sem nada salvo → ordem padrão (todas as regiões)', () async {
       final ordem = await ConfigOrdem.carregar();
       expect(ordem.toSet(), equals(todas));
       expect(ordem.length, todas.length);
     });
 
     test('salvar e carregar mantém a ordem escolhida', () async {
-      await ConfigOrdem.salvar(['aves', 'artico', 'savana']);
+      await ConfigOrdem.salvar(['sul', 'africa', 'norte']);
       final ordem = await ConfigOrdem.carregar();
-      // as 3 primeiras respeitam o salvo…
-      expect(ordem.take(3).toList(), equals(['aves', 'artico', 'savana']));
-      // …e nenhuma fase some (as não-salvas entram no fim).
-      expect(ordem.toSet(), equals(todas));
+      expect(ordem.take(3).toList(), equals(['sul', 'africa', 'norte']));
+      expect(ordem.toSet(), equals(todas)); // nenhuma some
     });
 
-    test('fase nova (não salva) é acrescentada, não perdida', () async {
-      // Simula um usuário antigo cuja ordem salva não tinha "fazenda".
-      await ConfigOrdem.salvar(['artico', 'aves', 'savana', 'selva', 'aquatico']);
+    test('região nova (não salva) é acrescentada, não perdida', () async {
+      // ordem salva sem "australia"
+      await ConfigOrdem.salvar(
+          ['norte', 'artico', 'ceu', 'asia', 'africa', 'oceano', 'sul']);
       final ordem = await ConfigOrdem.carregar();
-      expect(ordem, contains('fazenda'));
+      expect(ordem, contains('australia'));
       expect(ordem.toSet(), equals(todas));
     });
 
     test('chave inválida salva é descartada', () async {
-      await ConfigOrdem.salvar(['artico', 'inexistente', 'aves']);
+      await ConfigOrdem.salvar(['africa', 'inexistente', 'asia']);
       final ordem = await ConfigOrdem.carregar();
       expect(ordem, isNot(contains('inexistente')));
       expect(ordem.toSet(), equals(todas));

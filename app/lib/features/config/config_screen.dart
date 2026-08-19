@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../models/habitat.dart';
+import '../../models/regiao.dart';
 import '../../services/config_ordem.dart';
 import '../../services/progresso_repository.dart';
 import '../../theme/app_colors.dart';
@@ -19,7 +19,7 @@ class ConfigScreen extends StatefulWidget {
 }
 
 class _ConfigScreenState extends State<ConfigScreen> {
-  List<Habitat>? _fases;
+  List<Regiao>? _fases;
   int _moedas = 0;
   int _xp = 0;
 
@@ -160,8 +160,8 @@ class _ConfigScreenState extends State<ConfigScreen> {
           ),
           const SizedBox(height: 4),
           const Text(
-            'Arraste pelas alças ⠿ para mudar a sequência em que as '
-            'categorias de animais aparecem na aventura.',
+            'Arraste pelas alças ⠿ para mudar a sequência dos continentes '
+            '(África, Ásia, Oceano, Céu…) na aventura do mapa-múndi.',
             style: TextStyle(color: AppColors.dim),
           ),
           const SizedBox(height: 4),

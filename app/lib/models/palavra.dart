@@ -12,7 +12,13 @@ import 'categoria.dart';
 ///  - objetos:  'casa'     | 'rua'
 ///
 /// [habitat] = habitat do jogo de ANIMAIS (mapa de habitats): 'artico' |
-/// 'savana' | 'selva' | 'aquatico' | 'aves'. Só os animais do jogo têm.
+/// 'savana' | 'selva' | 'aquatico' | 'aves' | 'fazenda'. Só os animais do jogo
+/// têm (alguns animais só de região podem ter habitat nulo).
+///
+/// [regiao] = **onde o animal vive no planeta** (mapa-múndi por continente):
+/// 'norte' | 'sul' | 'africa' | 'asia' | 'australia' | 'artico' | 'oceano' |
+/// 'ceu'. É uma classificação GEOGRÁFICA, independente do [habitat] (ex.: o tigre
+/// tem habitat 'selva' mas região 'asia'). Ver [Regiao] e o mapa-múndi.
 ///
 /// [textoOverride] permite palavras com **espaço/hífen** (ex.: "urso polar",
 /// "beija-flor") — nesses casos `silabas` ainda conta as sílabas p/ ordenar por
@@ -23,6 +29,7 @@ class Palavra {
     this.categoria, {
     this.sub,
     this.habitat,
+    this.regiao,
     String? texto,
   }) : textoOverride = texto;
 
@@ -32,6 +39,7 @@ class Palavra {
   final Categoria categoria;
   final String? sub;
   final String? habitat;
+  final String? regiao;
   final String? textoOverride;
 
   /// A palavra inteira exibida (ex.: 'cavalo', 'urso polar', 'beija-flor').

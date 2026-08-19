@@ -46,10 +46,13 @@ A criança **fala** a palavra; o app reconhece se **acertou**.
   v0.6.0 foi aposentado. **A evoluir se quiser:** animar o brilho "fumacinha" das fases (pulsar),
   nomes dos continentes/habitats falados (com o TTS), e um habitat **🦘 Austrália/Fazenda** (aí o
   canguru — hoje na Savana — migra pra lá; a arte já tem canguru/coala na Austrália).
-- **Fazenda — FEITO (v0.8.0):** domésticos (vaca, cavalo, gato, cachorro…) viraram o habitat
-  `fazenda` = fase na Am. do Norte no mapa-múndi; na grade entram junto de Aves ("Aves e Fazenda").
-  Falta ainda **🐜 Insetos** (formiga, abelha…) — criar habitat/fase própria. E, se quiser, um
-  habitat **🦘 Austrália** (a arte já tem canguru/coala) pra mover o canguru pra lá.
+- **Mapa-múndi por CONTINENTE — FEITO (v0.11.0):** o mapa-múndi virou geografia (`Palavra.regiao` +
+  `models/regiao.dart`): 8 fases = Am. do Norte, Am. do Sul, África, Ásia, Austrália, Ártico, Oceano,
+  Céu. **Separado do habitat** (que segue igual na tela anterior). **A evoluir:** dá pra "trancar"
+  fase até concluir a anterior; mostrar o nome do continente falado (TTS); e **🐜 Insetos** ainda não
+  existe (nem habitat nem região) — criar se quiser (formiga, abelha, aranha…).
+- **Fazenda — FEITO (v0.8.0):** domésticos viraram habitat `fazenda`; no mapa-múndi entram na região
+  Am. do Norte. Na grade de habitats entram junto de Aves ("Aves e Fazenda").
 - **Configurações (v0.8.0):** engrenagem na home → reordenar as fases do mapa-múndi
   (`ConfigOrdem`). A tela pode crescer: escolher quais categorias entram, tema claro, toggle
   maiúsculas/minúsculas, etc.

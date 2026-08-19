@@ -2,6 +2,31 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-19 — v0.11.0 (mapa-múndi por REGIÃO/continente, separado do habitat)
+- **Decisão:** o mapa-múndi deixou de reusar `Habitat` e passou a agrupar por **geografia**. O
+  habitat (tela mapa_animais) continua igual; só o mapa-múndi mudou. São **classificações
+  independentes** por animal.
+- **`Palavra.regiao`** (novo campo, nullable): 'norte'|'sul'|'africa'|'asia'|'australia'|'artico'|
+  'oceano'|'ceu'. Todo animal tem uma (teste garante). Independe do `habitat` (ex.: tigre habitat
+  'selva' + regiao 'asia'; alce habitat 'artico' + regiao 'norte' — "alce nos EUA", pedido do
+  usuário). Selva foi **dividida** por continente real; savana→africa (canguru→australia);
+  aquatico→oceano; aves→ceu; fazenda→norte; ártico→artico (mas lobo/lebre/alce/raposa→norte).
+- **`models/regiao.dart`** (enum `Regiao`): chave/rotulo/emoji/ordem/fx/fy (8 fases). fx/fy
+  posicionam o anel no continente da arte `mapa_mundi.jpg` (conferido no preview-PNG): norte
+  0.17,0.33 · artico 0.44,0.14 · ceu 0.85,0.13 · asia 0.80,0.31 · australia 0.87,0.66 · africa
+  0.59,0.60 · oceano 0.46,0.47 (no golfinho do Atlântico) · sul 0.34,0.72.
+- **Novos animais só-região** (habitat null, não poluem a tela de habitats): Ásia (camelo,
+  orangotango) e Austrália (coala, emu, dingo, ornitorrinco). Leopardo/tigre/panda → região asia.
+- **Refatoração de uso:** `ConfigOrdem` agora ordena `Regiao` (chave nova `ordem_regioes_v1`);
+  `config_screen` e `mapa_mundi_screen` trocaram `Habitat`→`Regiao`; `_abrirFase` usa
+  `palavrasDaRegiao(r.chave)` (sumiu o caso especial aves+fazenda — região 'ceu' já tem todas as
+  aves, 'norte' já tem a fazenda). `ProgressoFases`/`ProgressoRepository` inalterados (chaves de
+  região; progresso antigo por habitat simplesmente não casa e é ignorado). `habitat.dart` fica
+  como fonte de `kAgua`/`kMapaDisplayAspect` + habitats da outra tela.
+- Testes: `banco` (todo animal tem região válida; cada região tem palavras ordenadas; exemplos no
+  continente certo), `config_ordem` reescrito p/ regiões, `mapa_mundi` 1ª fase = América do Norte.
+  37 testes, analyze limpo. Posições validadas no preview-PNG headless [[feedback-flutter-preview-png-headless]].
+
 ## 2026-08-19 — v0.10.17 (moedas ao lado da engrenagem — de novo)
 - Chip da home virou **pílula com fundo** (`surface2`, raio 16) — o texto "dim"
   solto era fácil de não notar. Teste novo trava a posição:

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../models/habitat.dart';
+import '../../models/habitat.dart'; // kAgua, kMapaDisplayAspect
+import '../../models/regiao.dart';
 import '../../services/banco_palavras.dart';
 import '../../services/config_ordem.dart';
 import '../../services/progresso_fases.dart';
@@ -35,7 +36,7 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
   ];
 
   List<String> _concluidas = const [];
-  List<Habitat> _fases = Habitat.fases;
+  List<Regiao> _fases = Regiao.regioes;
 
   // Pontuação (moedas/nível) — sempre visível no canto superior direito.
   int _moedas = 0;
@@ -82,18 +83,15 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
     await _carregarPontuacao(); // moedas mudaram com acertos/erros
   }
 
-  Future<void> _abrirFase(Habitat h, int numero) async {
-    // "Aves" na aventura inclui a Fazenda (que não tem célula própria).
-    final palavras = h == Habitat.aves
-        ? palavrasDosHabitats(['aves', 'fazenda'])
-        : palavrasDoHabitat(h.chave);
+  Future<void> _abrirFase(Regiao r, int numero) async {
+    final palavras = palavrasDaRegiao(r.chave);
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => EstudoScreen(
-          titulo: '${h.emoji}  Fase $numero · ${h.rotulo}',
+          titulo: '${r.emoji}  Fase $numero · ${r.rotulo}',
           palavras: palavras,
           manterPaisagemAoSair: true,
-          habitatConcluivel: h.chave,
+          habitatConcluivel: r.chave,
         ),
       ),
     );
@@ -313,12 +311,12 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
 /// fase[i]→fase[i+1] "acende" (neon) quando a fase[i] está concluída.
 class _CaminhoPainter extends CustomPainter {
   _CaminhoPainter(this.fases, this.concluidas);
-  final List<Habitat> fases;
+  final List<Regiao> fases;
   final List<String> concluidas;
 
   @override
   void paint(Canvas canvas, Size size) {
-    Offset centro(Habitat f) => Offset(f.fx * size.width, f.fy * size.height);
+    Offset centro(Regiao f) => Offset(f.fx * size.width, f.fy * size.height);
     for (var i = 0; i < fases.length - 1; i++) {
       final a = centro(fases[i]);
       final b = centro(fases[i + 1]);

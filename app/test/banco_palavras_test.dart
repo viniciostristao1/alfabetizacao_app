@@ -1,5 +1,6 @@
 import 'package:alfabetizacao/models/categoria.dart';
 import 'package:alfabetizacao/models/habitat.dart';
+import 'package:alfabetizacao/models/regiao.dart';
 import 'package:alfabetizacao/services/banco_palavras.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -132,6 +133,42 @@ void main() {
       // buscar sem acento acha a palavra acentuada (substring)
       expect(semAcento('onça'), equals('onca'));
       expect(semAcento('Águia').contains('gui'), isTrue);
+    });
+  });
+
+  group('mapa-múndi por região (continente)', () {
+    test('todo animal tem uma região válida', () {
+      final validas = Regiao.values.map((r) => r.chave).toSet();
+      for (final p in bancoPalavras) {
+        if (p.categoria != Categoria.animais) continue;
+        expect(p.regiao, isNotNull, reason: '"${p.texto}" sem região');
+        expect(validas.contains(p.regiao), isTrue,
+            reason: '"${p.texto}" tem região="${p.regiao}" inválida');
+      }
+    });
+
+    test('cada região tem palavras, ordenadas do menos ao mais sílabas', () {
+      for (final r in Regiao.values) {
+        final lista = palavrasDaRegiao(r.chave);
+        expect(lista, isNotEmpty, reason: 'região ${r.rotulo} sem palavras');
+        for (var i = 1; i < lista.length; i++) {
+          expect(lista[i].nivelSilabas >= lista[i - 1].nivelSilabas, isTrue,
+              reason: 'região ${r.rotulo} fora de ordem');
+        }
+      }
+    });
+
+    test('exemplos ficam no continente certo', () {
+      String regiaoDe(String texto) => bancoPalavras
+          .firstWhere((p) => p.texto == texto)
+          .regiao!;
+      expect(regiaoDe('leão'), 'africa');
+      expect(regiaoDe('macaco'), 'sul');
+      expect(regiaoDe('canguru'), 'australia');
+      expect(regiaoDe('panda'), 'asia');
+      expect(regiaoDe('alce'), 'norte'); // alce nos EUA (pedido do usuário)
+      expect(regiaoDe('golfinho'), 'oceano');
+      expect(regiaoDe('águia'), 'ceu');
     });
   });
 }

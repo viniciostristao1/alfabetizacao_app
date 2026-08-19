@@ -1,24 +1,23 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../models/habitat.dart';
+import '../models/regiao.dart';
 
-/// Ordem (configurável pelo usuário) em que as **fases/categorias de animais**
-/// aparecem no mapa-múndi. Local (shared_preferences). Guarda a lista de
-/// `Habitat.chave` na ordem escolhida; cai na ordem padrão (`Habitat.fases`).
+/// Ordem (configurável pelo usuário) em que as **regiões/continentes** aparecem
+/// no mapa-múndi. Local (shared_preferences). Guarda a lista de `Regiao.chave` na
+/// ordem escolhida; cai na ordem padrão (`Regiao.regioes`).
 class ConfigOrdem {
-  static const _chave = 'ordem_fases_v1';
+  static const _chave = 'ordem_regioes_v1';
 
   static List<String> get _padrao =>
-      Habitat.fases.map((h) => h.chave).toList();
+      Regiao.regioes.map((r) => r.chave).toList();
 
   /// Ordem atual (chaves). **Sanitiza:** descarta chaves inválidas e acrescenta
-  /// no fim habitats que ainda não estejam salvos (ex.: Fazenda entrou depois) —
-  /// assim nunca some uma fase pra quem já tinha uma ordem salva.
+  /// no fim regiões que ainda não estejam salvas — assim nunca some uma fase.
   static Future<List<String>> carregar() async {
     final prefs = await SharedPreferences.getInstance();
     final salvo = prefs.getStringList(_chave);
     if (salvo == null) return _padrao;
-    final validas = Habitat.values.map((h) => h.chave).toSet();
+    final validas = Regiao.values.map((r) => r.chave).toSet();
     final ordem = salvo.where(validas.contains).toList();
     for (final chave in _padrao) {
       if (!ordem.contains(chave)) ordem.add(chave);
@@ -32,11 +31,11 @@ class ConfigOrdem {
     await prefs.setStringList(_chave, chaves);
   }
 
-  /// As fases (Habitat) já na ordem configurada.
-  static Future<List<Habitat>> fases() async {
+  /// As regiões já na ordem configurada.
+  static Future<List<Regiao>> fases() async {
     final chaves = await carregar();
     return [
-      for (final c in chaves) ?Habitat.porChave(c),
+      for (final c in chaves) ?Regiao.porChave(c),
     ];
   }
 }

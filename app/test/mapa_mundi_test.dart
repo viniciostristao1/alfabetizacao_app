@@ -34,8 +34,8 @@ void main() {
     await tester.tap(find.text('INICIAR JOGO'));
     await tester.pumpAndSettle();
 
-    // 1ª fase da ordem PADRÃO = Ártico (fase 1), título montado pela EstudoScreen.
+    // 1ª fase da ordem PADRÃO por região = América do Norte (fase 1).
     expect(find.textContaining('Fase 1'), findsOneWidget);
-    expect(find.textContaining('Ártico'), findsOneWidget);
+    expect(find.textContaining('América do Norte'), findsOneWidget);
   });
 }

@@ -2,6 +2,15 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.11.0 (2026-08-19)
+- **Mapa-múndi por CONTINENTE! 🌍** As fases do mapa-múndi não repetem mais os habitats — agora
+  são organizadas por **onde cada bicho vive de verdade**: 🦌 América do Norte · 🐒 América do
+  Sul · 🦁 África · 🐼 Ásia · 🦘 Austrália · ❄️ Ártico · 🐬 Oceano · 🦅 Céu. Assim o Davi aprende
+  em que parte do planeta cada animal mora (leão na África, macaco no Brasil, panda na Ásia, alce
+  nos EUA…). A tela de **habitats** (savana, selva, aves…) continua igual — muda só o mapa-múndi.
+- **Bichos novos:** entraram 🐫 camelo e 🦧 orangotango (Ásia) e 🐨 coala, emu, dingo e
+  ornitorrinco (Austrália), pra essas regiões ficarem bem cheias.
+
 ## v0.10.20 (2026-08-19)
 - **Botão "Início" bem visível:** na tela das palavras, o botão **🏠 Início**
   ficou **flutuante no canto superior esquerdo** (casinha + nome) — dá pra
