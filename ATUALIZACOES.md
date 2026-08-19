@@ -2,6 +2,11 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.10.12 (2026-08-19)
+- **Logo ajustado:** a figura da criança aparece **inteira** no ícone do app
+  (antes o recorte quadrado cortava a cabeça). O fundo âmbar preenche os
+  lados.
+
 ## v0.10.11 (2026-08-19)
 - **Editar pontuação na engrenagem ⚙️:** na tela de Configurações agora tem a
   seção **Pontuação** — o pai/mãe pode **ajustar as moedas 🪙 e o nível ⭐** do

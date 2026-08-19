@@ -2,7 +2,17 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
-## 2026-08-19 — v0.11.0 → v0.10.11 (editar pontuação nas Configurações)
+## 2026-08-19 — v0.10.12 (logo SEM corte: arte em pé inteira no quadrado)
+- ⚠️ **Lição:** o recorte central QUADRADO da arte (1086×1448) cortou a
+  cabeça/pés da criança. Solução: **contain** em vez de crop —
+  `logo.png` = canvas 1024² âmbar + arte inteira com 92% da altura (706×942),
+  centrada (os lados viram âmbar, que é o fundo da própria arte → invisível);
+  `logo_foreground.png` = arte inteira a **68%** (safe zone do recorte
+  adaptativo) sobre transparente, com o âmbar removido (tolerância 42).
+  `dart run flutter_launcher_icons` regenerou os 5 mipmaps + foregrounds
+  (commitados). 34 testes, analyze limpo.
+
+## 2026-08-19 — v0.10.11 (editar pontuação nas Configurações)
 - `ProgressoRepository` ganhou `salvarMoedas(int)` e `salvarXp(int)` (floor 0).
 - **ConfigScreen** virou uma `ReorderableListView.builder` única com itemCount
   = fases + 1: o **item 0 = seção "Pontuação"** (não arrastável — guard
