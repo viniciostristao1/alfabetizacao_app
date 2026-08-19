@@ -2,6 +2,18 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-18 — v0.10.9 (Selva fora da caixinha de moedas + home mais compacta)
+- **Selva × moedas:** a célula sup. direita do mapa de habitats (Selva) ficava
+  com o rótulo por baixo do chip de moedas. Fix: `Transform.translate(offset:
+  Offset(-26, 0))` no `_Nome` da célula quando `habitat == Habitat.selva` (só
+  ela) — o toque/InkWell continua na célula inteira.
+- **Home ainda "grande" p/ o usuário** (disse que não tinha ficado correto —
+  provável que estivesse na v0.10.7, que tinha 2 colunas): grade agora
+  `crossAxisCount: 4, childAspectRatio: 2.6` (4 temas numa linha + Escrever
+  embaixo), emoji 30 + rótulo 14 nos cards. Cabe em qualquer paisagem (até
+  640×320) sem rolar: 2 linhas ≈ 124–190px vs ~210–290px disponíveis.
+- 32 testes, analyze limpo.
+
 ## 2026-08-18 — v0.10.8 (moedas nos dois mapas + home compacta em paisagem)
 - **Moedas no mapa de habitats já existiam (v0.10.7)** — usuário estava na
   v0.10.6. Teste agora garante: `tocar em Animais → find.textContaining('🪙')`.

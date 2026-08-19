@@ -124,15 +124,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 14),
-              // Grade COMPACTA em paisagem (4 colunas, cartões menores):
-              // cabe tudo na tela sem rolar.
+              const SizedBox(height: 10),
+              // Grade COMPACTA em paisagem: os 4 temas numa linha, "Escrever"
+              // embaixo — cartões baixos, tudo visível sem rolar.
               Expanded(
                 child: GridView.count(
                   crossAxisCount: 4,
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  childAspectRatio: 1.9,
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10,
+                  childAspectRatio: 2.6,
                   children: [
                     for (final c in Categoria.values)
                       _CategoriaCard(
@@ -175,12 +175,12 @@ class _CategoriaCard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(categoria.emoji, style: const TextStyle(fontSize: 40)),
-              const SizedBox(height: 6),
+              Text(categoria.emoji, style: const TextStyle(fontSize: 30)),
+              const SizedBox(height: 4),
               Text(
                 categoria.rotulo,
                 style: const TextStyle(
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: FontWeight.w800,
                   color: AppColors.text,
                 ),

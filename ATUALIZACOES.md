@@ -2,6 +2,14 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.10.9 (2026-08-18)
+- **"Selva" sem conflito:** o título da categoria Selva no mapa de animais
+  saiu um pouquinho para a esquerda — não fica mais por baixo da caixinha de
+  moedas (que segue no canto superior direito).
+- **Tela inicial bem compacta:** os 4 temas (Animais, Objetos, Alimentos,
+  Nomes) ficam **um ao lado do outro numa linha só**, com "Escrever" embaixo —
+  cartões baixinhos, tudo visível sem rolar.
+
 ## v0.10.8 (2026-08-18)
 - **Moedas no mapa de animais e no mapa-múndi:** as moedas 🪙 (e o nível)
   aparecem no **canto superior direito** dos dois mapas — ao lado da "Selva"

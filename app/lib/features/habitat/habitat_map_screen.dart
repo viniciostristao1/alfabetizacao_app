@@ -282,11 +282,16 @@ class _Celula extends StatelessWidget {
           alignment: Alignment.topCenter,
           child: Padding(
             padding: const EdgeInsets.only(top: 10),
-            child: _Nome(
-              emoji: h?.emoji ?? '🗺️',
-              rotulo: h == null
-                  ? 'Mapa-múndi'
-                  : (h == Habitat.aves ? 'Aves e Fazenda' : h.rotulo),
+            // "Selva" (célula sup. direita) sai um pouco para a esquerda:
+            // senão fica por baixo da caixinha de moedas (canto sup. direito).
+            child: Transform.translate(
+              offset: h == Habitat.selva ? const Offset(-26, 0) : Offset.zero,
+              child: _Nome(
+                emoji: h?.emoji ?? '🗺️',
+                rotulo: h == null
+                    ? 'Mapa-múndi'
+                    : (h == Habitat.aves ? 'Aves e Fazenda' : h.rotulo),
+              ),
             ),
           ),
         ),
