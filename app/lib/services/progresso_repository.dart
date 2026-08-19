@@ -76,6 +76,20 @@ class ProgressoRepository {
         _chaveMoedas, (prefs.getInt(_chaveMoedas) ?? 0) + bonusFase);
   }
 
+  /// Define o saldo de moedas manualmente (pai/mãe, nas Configurações).
+  /// Nunca fica negativo.
+  static Future<void> salvarMoedas(int valor) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_chaveMoedas, valor < 0 ? 0 : valor);
+  }
+
+  /// Define o XP total manualmente (pai/mãe, nas Configurações — o nível é
+  /// derivado dele: nível = 1 + xp ~/ xpPorNivel). Nunca fica negativo.
+  static Future<void> salvarXp(int valor) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_chaveXp, valor < 0 ? 0 : valor);
+  }
+
   /// Medalha do habitat pela precisão: 'ouro' (100%), 'prata' (≥80%),
   /// 'bronze' (≥60%), `null` se a fase nunca foi jogada (ou < 60%).
   static Future<String?> medalhaDe(String habitat) async {

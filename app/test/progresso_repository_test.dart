@@ -56,6 +56,19 @@ void main() {
     expect(await ProgressoRepository.medalhaDe('artico'), isNull);
   });
 
+  test('salvarMoedas/salvarXp definem valores (nunca negativos)', () async {
+    await ProgressoRepository.salvarMoedas(120);
+    expect(await ProgressoRepository.moedas(), 120);
+    await ProgressoRepository.salvarMoedas(-5);
+    expect(await ProgressoRepository.moedas(), 0);
+
+    await ProgressoRepository.salvarXp(60);
+    expect(await ProgressoRepository.xp(), 60);
+    expect(ProgressoRepository.nivelDe(60), 3);
+    await ProgressoRepository.salvarXp(-10);
+    expect(await ProgressoRepository.xp(), 0);
+  });
+
   test('estatísticas de um habitat não vazam para outro', () async {
     await ProgressoRepository.registrarAcerto(2, habitat: 'aves');
     expect(await ProgressoRepository.medalhaDe('selva'), isNull);

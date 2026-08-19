@@ -2,6 +2,13 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.10.11 (2026-08-19)
+- **Editar pontuação na engrenagem ⚙️:** na tela de Configurações agora tem a
+  seção **Pontuação** — o pai/mãe pode **ajustar as moedas 🪙 e o nível ⭐** do
+  Davi com botões −/+ (toque muda 1; segurar pressionado muda 10 nas moedas).
+  Útil pra recomeçar a contagem ou corrigir. As moedas e o nível atualizam em
+  todas as telas na hora.
+
 ## v0.10.10 (2026-08-19)
 - **Novo nome:** a tela inicial agora se chama **"JOGO DO DAVI"** 🎮
 - **Novo logo do aplicativo:** a imagem que você enviou virou o ícone do app

@@ -2,6 +2,20 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-19 — v0.11.0 → v0.10.11 (editar pontuação nas Configurações)
+- `ProgressoRepository` ganhou `salvarMoedas(int)` e `salvarXp(int)` (floor 0).
+- **ConfigScreen** virou uma `ReorderableListView.builder` única com itemCount
+  = fases + 1: o **item 0 = seção "Pontuação"** (não arrastável — guard
+  `velho == 0 || novo == 0` no onReorderItem; índices das fases ajustados
+  `-1`). Motivo: com a seção fixa em cima + Expanded, a lista de fases ficava
+  com ~40px na paisagem (tela baixa) — agora tudo rola junto.
+- Steppers: `_BotaoMaisMenos` (38px circulares); toque = ±1, **long press =
+  ±10 nas moedas** (nível só ±1; nível é derivado do XP, então editar nível
+  escreve `xp = (nivel-1)*25`).
+- Testes: +2 (salvarMoedas/salvarXp com floor; config com +moedas→1 e
+  +nível→Nv 2 via ícones `add_rounded` `.first`/`.last`). 34 testes, analyze
+  limpo.
+
 ## 2026-08-19 — v0.10.10 (JOGO DO DAVI + logo novo + Selva + feedback central)
 - **Título da home = "JOGO DO DAVI"** (AppBar). MaterialApp.title continua
   "Primeiras Palavras" (nome interno do projeto — inofensivo).

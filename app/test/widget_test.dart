@@ -1,4 +1,6 @@
+import 'package:alfabetizacao/features/config/config_screen.dart';
 import 'package:alfabetizacao/main.dart';
+import 'package:alfabetizacao/services/progresso_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -136,5 +138,28 @@ void main() {
     expect(find.text('🪙 0'), findsOneWidget);
     expect(find.text('-1'), findsOneWidget);
     expect(find.text('GATO'), findsOneWidget);
+  });
+
+  testWidgets('config: ajustar moedas e nível na engrenagem', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    await tester.pumpWidget(
+      const ProviderScope(child: MaterialApp(home: ConfigScreen())),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Pontuação'), findsOneWidget);
+    expect(find.text('Moedas'), findsOneWidget);
+    expect(find.text('Nível'), findsOneWidget);
+
+    // + nas moedas → saldo 1
+    await tester.tap(find.byIcon(Icons.add_rounded).first);
+    await tester.pumpAndSettle();
+    expect(await ProgressoRepository.moedas(), 1);
+
+    // + no nível → XP 25 → Nv 2
+    await tester.tap(find.byIcon(Icons.add_rounded).last);
+    await tester.pumpAndSettle();
+    expect(await ProgressoRepository.xp(), 25);
+    expect(find.text('Nv 2'), findsOneWidget);
   });
 }
