@@ -86,14 +86,22 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           // Pontuação SEMPRE visível, ao lado da engrenagem (configurações).
           Padding(
-            padding: const EdgeInsets.only(right: 4),
+            padding: const EdgeInsets.only(right: 6),
             child: Center(
-              child: Text(
-                '🪙 $_moedas · Nv ${ProgressoRepository.nivelDe(_xp)}',
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.dim,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: AppColors.surface2,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Text(
+                  '🪙 $_moedas · Nv ${ProgressoRepository.nivelDe(_xp)}',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.text,
+                  ),
                 ),
               ),
             ),

@@ -32,6 +32,12 @@ void main() {
 
     // pontuação sempre visível na home (moedas + nível)
     expect(find.text('🪙 0 · Nv 1'), findsOneWidget);
+
+    // ...e colada ao lado ESQUERDO da engrenagem (configurações)
+    final chip = tester.getRect(find.text('🪙 0 · Nv 1'));
+    final engrenagem = tester.getRect(find.byIcon(Icons.settings_rounded));
+    expect(chip.right, lessThan(engrenagem.left));
+    expect(engrenagem.right, greaterThan(780)); // engrenagem na ponta direita
   });
 
   testWidgets('tocar em Objetos abre a tela de níveis', (tester) async {

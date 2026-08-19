@@ -2,6 +2,13 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-19 — v0.10.17 (moedas ao lado da engrenagem — de novo)
+- Chip da home virou **pílula com fundo** (`surface2`, raio 16) — o texto "dim"
+  solto era fácil de não notar. Teste novo trava a posição:
+  `chip.right < engrenagem.left` e `engrenagem.right > 780` (AppBar 800 de
+  largura) — se alguém mover, o teste quebra. O relato "ainda não está ao lado"
+  quase certamente é build antigo (cache) — orientar link versionado.
+
 ## 2026-08-19 — v0.10.16 (feedback 52px + pontuação na barra ao lado da engrenagem)
 - `_PontosFeedback` fontSize 42 → **52** (pedido "aumente ainda mais").
 - Home: o chip de pontuação voltou da linha "Escolha um tema" para a **AppBar

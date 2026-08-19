@@ -2,6 +2,11 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.10.17 (2026-08-19)
+- **Moedas ao lado da engrenagem (garantido):** a pontuação virou uma
+  **caixinha com fundo** 🪙 moedas · Nv, na barra do topo, **colada à esquerda
+  do botão de configurações ⚙️**. (Teste automático confere a posição.)
+
 ## v0.10.16 (2026-08-19)
 - **Pontuação GIGANTE:** o "+2 / +3 / +4" (verde) do acerto e o "−" (vermelho)
   do erro agora aparecem com fonte **52px** — impossível não ver.
