@@ -243,8 +243,48 @@ class _EstudoScreenState extends State<EstudoScreen> {
     setState(() => _tracos.last.pontos.add(e.localPosition));
   }
 
-  /// Corpo do modo "completar a sílaba que falta": a palavra com uma **lacuna**
-  /// e 4 opções (ou, se a palavra não tem sílaba pra faltar, só "Continuar").
+  /// Coluna de CANETAS à esquerda (cores + vassoura + desfazer) — usada tanto no
+  /// modo normal quanto no "completar" (a criança pode escrever por cima).
+  Widget _colunaCaneta(Color ui) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 12, top: 8),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (final c in CorCaneta.values)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 9),
+              child: _Bolinha(
+                cor: c.cor,
+                selecionada: c == _caneta,
+                contraste: ui,
+                onTap: () => setState(() => _caneta = c),
+              ),
+            ),
+          const SizedBox(height: 3),
+          // Vassoura = limpa TUDO que foi desenhado.
+          _BotaoIcone(
+            icon: Icons.cleaning_services_rounded,
+            cor: ui,
+            onTap: _tracos.isEmpty ? null : _limparDesenho,
+            tooltip: 'Limpar tudo',
+          ),
+          const SizedBox(height: 8),
+          // Desfazer = apaga só o ÚLTIMO rabisco.
+          _BotaoIcone(
+            icon: Icons.undo_rounded,
+            cor: ui,
+            onTap: _tracos.isEmpty ? null : _desfazer,
+            tooltip: 'Apagar o último rabisco',
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Corpo do modo "completar a sílaba que falta": mantém a **coluna de canetas**
+  /// e a **camada de desenho** (dá pra escrever por cima) — mostra a palavra com
+  /// uma **lacuna** e, embaixo, as 4 opções (ou "Continuar" se não há desafio).
   Widget _meioIncompleto(Color ui) {
     final palavra = widget.palavras[_i];
     final temDesafio = _blankIdx >= 0 && _opcoes.isNotEmpty;
@@ -254,70 +294,92 @@ class _EstudoScreenState extends State<EstudoScreen> {
               i == _blankIdx ? '＿＿' : palavra.silabas[i].toUpperCase(),
           ].join()
         : palavra.texto.toUpperCase();
-    return Column(
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        _colunaCaneta(ui),
         Expanded(
-          child: Stack(
+          child: Column(
             children: [
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      display,
-                      style: TextStyle(
-                        fontSize: 160,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 2,
-                        color: ui,
+              // palavra com a lacuna + camada de desenho (o "caderno")
+              Expanded(
+                child: Listener(
+                  behavior: HitTestBehavior.opaque,
+                  onPointerDown: _inicioTraco,
+                  onPointerMove: _moveTraco,
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(8, 4, 12, 4),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                display,
+                                style: TextStyle(
+                                  fontSize: 150,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: 2,
+                                  color: ui,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                      Positioned.fill(
+                        child: IgnorePointer(
+                          child: CustomPaint(painter: _DesenhoPainter(_tracos)),
+                        ),
+                      ),
+                      if (_feedback != null)
+                        Positioned(
+                          top: 4,
+                          left: 0,
+                          right: 0,
+                          child: Center(
+                            child: _PontosFeedback(
+                              key: ValueKey(_feedbackSeq),
+                              texto: _feedback!,
+                              onFim: () => setState(() => _feedback = null),
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                 ),
               ),
-              if (_feedback != null)
-                Positioned(
-                  top: 4,
-                  left: 0,
-                  right: 0,
-                  child: Center(
-                    child: _PontosFeedback(
-                      key: ValueKey(_feedbackSeq),
-                      texto: _feedback!,
-                      onFim: () => setState(() => _feedback = null),
-                    ),
-                  ),
-                ),
+              // opções (ou "Continuar" quando a palavra não tem sílaba pra faltar)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8, 0, 12, 10),
+                child: temDesafio
+                    ? Wrap(
+                        spacing: 12,
+                        runSpacing: 8,
+                        alignment: WrapAlignment.center,
+                        children: [
+                          for (final op in _opcoes)
+                            _OpcaoSilaba(
+                              texto: op,
+                              errada: op == _erradaSel,
+                              ui: ui,
+                              onTap: () => _escolheuIncompleta(op),
+                            ),
+                        ],
+                      )
+                    : SizedBox(
+                        width: 220,
+                        height: 46,
+                        child: FilledButton.icon(
+                          onPressed: () => _escolheuIncompleta(''),
+                          icon: const Icon(Icons.check_rounded),
+                          label: const Text('Continuar'),
+                        ),
+                      ),
+              ),
             ],
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-          child: temDesafio
-              ? Wrap(
-                  spacing: 12,
-                  runSpacing: 10,
-                  alignment: WrapAlignment.center,
-                  children: [
-                    for (final op in _opcoes)
-                      _OpcaoSilaba(
-                        texto: op,
-                        errada: op == _erradaSel,
-                        ui: ui,
-                        onTap: () => _escolheuIncompleta(op),
-                      ),
-                  ],
-                )
-              : SizedBox(
-                  width: 220,
-                  height: 48,
-                  child: FilledButton.icon(
-                    onPressed: () => _escolheuIncompleta(''),
-                    icon: const Icon(Icons.check_rounded),
-                    label: const Text('Continuar'),
-                  ),
-                ),
         ),
       ],
     );
@@ -428,41 +490,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
                   : Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12, top: 8),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        for (final c in CorCaneta.values)
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 9),
-                            child: _Bolinha(
-                              cor: c.cor,
-                              selecionada: c == _caneta,
-                              contraste: ui,
-                              onTap: () => setState(() => _caneta = c),
-                            ),
-                          ),
-                        const SizedBox(height: 3),
-                        // Vassoura = limpa TUDO que foi desenhado.
-                        _BotaoIcone(
-                          icon: Icons.cleaning_services_rounded,
-                          cor: ui,
-                          onTap: _tracos.isEmpty ? null : _limparDesenho,
-                          tooltip: 'Limpar tudo',
-                        ),
-                        const SizedBox(height: 8),
-                        // Desfazer = apaga só o ÚLTIMO rabisco (clicando, apaga
-                        // um a um, até esvaziar).
-                        _BotaoIcone(
-                          icon: Icons.undo_rounded,
-                          cor: ui,
-                          onTap: _tracos.isEmpty ? null : _desfazer,
-                          tooltip: 'Apagar o último rabisco',
-                        ),
-                      ],
-                    ),
-                  ),
+                  _colunaCaneta(ui),
                   // área da palavra + camada de desenho (o "caderno")
                   Expanded(
                     child: Listener(

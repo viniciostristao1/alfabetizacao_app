@@ -2,6 +2,11 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.14.1 (2026-08-19)
+- **Escrever no modo "Completar":** voltaram as **canetas coloridas** (azul/vermelho/amarelo/roxo),
+  a **vassoura** e o **desfazer** no modo de completar a sílaba — dá pra **escrever por cima** da
+  palavra normalmente, como nos outros modos. (Tinham sumido por engano na versão anterior.)
+
 ## v0.14.0 (2026-08-19)
 - **Completar a sílaba que falta! 🧩** Novo modo (na engrenagem ⚙️ → "Como mostrar as palavras"):
   a palavra aparece em MAIÚSCULAS com **uma sílaba faltando** (nunca a primeira) e a criança escolhe

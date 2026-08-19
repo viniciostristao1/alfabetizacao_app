@@ -2,6 +2,14 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-19 — v0.14.1 (fix: canetas/desenho sumiram no modo "completar")
+- **Bug:** o `_meioIncompleto` (v0.14.0) substituía o **Row inteiro** do meio, que continha a coluna
+  de canetas + a camada de desenho (`Listener`+`_DesenhoPainter`) — então no modo completar sumiram
+  as canetas, vassoura, desfazer e o desenho. **Fix:** extraí `_colunaCaneta(ui)` (reusada no corpo
+  normal e no completar) e o `_meioIncompleto` virou `Row[_colunaCaneta, Expanded(Column[área de
+  desenho com a lacuna, opções])]` — dá pra escrever por cima como nos outros modos. As opções ficam
+  FORA do `Listener` (num Column irmão), então toque nas opções e desenho na palavra não conflitam.
+
 ## 2026-08-19 — v0.14.0 (modo "completar sílaba" + ordenação por letras→sílabas)
 - **Ordenação por dificuldade:** `Palavra.nivelLetras` (letras de `texto`, ignora espaço/hífen) +
   `Palavra.porDificuldade` (**letras primeiro, sílabas depois** — pedido do usuário: rena 4L antes de
