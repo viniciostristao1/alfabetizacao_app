@@ -74,7 +74,11 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     tester.view.physicalSize = const Size(800, 360);
     tester.view.devicePixelRatio = 1.0;
+    // Texto menor (a fonte de teste é "quadrada" — sem isso os botões ficam
+    // largos demais e encostam; no celular real a fonte é mais estreita).
+    tester.platformDispatcher.textScaleFactorTestValue = 0.5;
     addTearDown(tester.view.reset);
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
 
     await tester.pumpWidget(const MaterialApp(home: MapaMundiScreen()));
     await tester.pumpAndSettle();
@@ -101,13 +105,17 @@ void main() {
     expect(reiniciar.overlaps(iniciar), isFalse);
     expect(iniciar.overlaps(inicio), isFalse);
 
-    // TODOS lado a lado na MESMA linha (mesmo top) e na metade de baixo
+    // TODOS na mesma linha (mesmo top) e na metade de baixo
     expect(iniciar.top, voltar.top);
     expect(inicio.top, voltar.top);
     expect(reiniciar.top, voltar.top);
     expect(voltar.bottom, lessThanOrEqualTo(360));
     expect(iniciar.bottom, lessThanOrEqualTo(360));
     expect(inicio.bottom, lessThanOrEqualTo(360));
+
+    // INICIAR JOGO no canto direito; os demais começam no canto esquerdo
+    expect(iniciar.center.dx, greaterThan(600));
+    expect(voltar.center.dx, lessThan(300));
   });
 
   testWidgets('mapa: fases sem emoji de bicho (só os anéis)', (tester) async {

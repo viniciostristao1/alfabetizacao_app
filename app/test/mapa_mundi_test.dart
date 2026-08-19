@@ -23,6 +23,10 @@ void main() {
   testWidgets('INICIAR JOGO abre a primeira fase da ordem configurada',
       (tester) async {
     SharedPreferences.setMockInitialValues({});
+    // Texto menor (fonte de teste é "quadrada" — botões largos encostariam;
+    // no celular real a fonte é mais estreita).
+    tester.platformDispatcher.textScaleFactorTestValue = 0.5;
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
 
     await tester.pumpWidget(const MaterialApp(home: MapaMundiScreen()));
     await tester.pumpAndSettle();

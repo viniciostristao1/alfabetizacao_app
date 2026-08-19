@@ -2,6 +2,13 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.10.14 (2026-08-19)
+- **Pontuação maior:** o "+2 / +3 / +4" (verde) e o "−" (vermelho) do acerto/
+  erro na tela das palavras ficaram com a **fonte maior**.
+- **Mapa-múndi — botões redistribuídos:** **INICIAR JOGO** agora fica no
+  **canto inferior direito** (branco) e os demais (Voltar habitat, Reiniciar
+  aventura, Voltar início) no **canto inferior esquerdo**.
+
 ## v0.10.13 (2026-08-19)
 - **Logo do menino corrigido de vez:** o ícone do app agora mostra o **menino
   sentado na cadeira inteiro** (cabeça e pés aparecem), no fundo âmbar. O

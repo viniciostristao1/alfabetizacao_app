@@ -248,11 +248,30 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
               ),
             ),
           ),
-          // botões de baixo: TODOS numa ÚNICA linha lado a lado (FittedBox
-          // encolhe se a tela for estreita — nunca empilha nem sobrepõe).
+          // INICIAR JOGO (inferior-DIREITO, fundo branco) — começa a aventura
+          // na 1ª fase da ordem configurada.
           SafeArea(
             child: Align(
-              alignment: Alignment.bottomCenter,
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: _BotaoTransparente(
+                    icon: Icons.play_arrow_rounded,
+                    texto: 'INICIAR JOGO',
+                    fundo: Colors.white,
+                    letra: AppColors.bg,
+                    onTap: _iniciarJogo,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          // demais botões (inferior-ESQUERDO): desfazer / reiniciar / início.
+          SafeArea(
+            child: Align(
+              alignment: Alignment.bottomLeft,
               child: Padding(
                 padding: const EdgeInsets.all(10),
                 child: FittedBox(
@@ -270,14 +289,6 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
                         icon: Icons.refresh_rounded,
                         texto: 'REINICIAR AVENTURA',
                         onTap: _reiniciarAventura,
-                      ),
-                      const SizedBox(width: 10),
-                      _BotaoTransparente(
-                        icon: Icons.play_arrow_rounded,
-                        texto: 'INICIAR JOGO',
-                        fundo: Colors.white,
-                        letra: AppColors.bg,
-                        onTap: _iniciarJogo,
                       ),
                       const SizedBox(width: 10),
                       _BotaoTransparente(

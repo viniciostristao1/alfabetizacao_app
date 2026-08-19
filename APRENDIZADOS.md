@@ -2,6 +2,19 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-19 — v0.10.14 (feedback maior + botões do mapa-múndi redistribuídos)
+- `_PontosFeedback` fontSize 26 → **36**.
+- Mapa-múndi: saiu o Wrap único central; **INICIAR JOGO = `Align(bottomRight)`
+  (FittedBox scaleDown)**, e VOLTAR HABITAT + REINICIAR AVENTURA + VOLTAR
+  INÍCIO = `Align(bottomLeft)` num `FittedBox(Row(min))`.
+- ⚠️ **Testes × fonte Ahem:** a fonte de teste é "quadrada" (cada glifo =
+  fontSize), então botões ficam ~1,6x mais largos e o grupo esquerdo (3 botões)
+  encostava no INICIAR — nos testes do mapa usei
+  `tester.platformDispatcher.textScaleFactorTestValue = 0.5` p/ simular fonte
+  estreita (no celular real é Roboto). O grupo esquerdo legítimamente passa do
+  meio da tela → asserções de lado: INICIAR > 600, VOLTAR HABITAT < 300 (não
+  "meio da tela"). 34 testes, analyze limpo.
+
 ## 2026-08-19 — v0.10.13 (logo do menino de vez — sem chroma key)
 - ⚠️ **Causa raiz do logo "furado":** a "chroma key" que removia o âmbar
   (tolerância 42) comeu a **pele alaranjada do menino** — amostras da arte:

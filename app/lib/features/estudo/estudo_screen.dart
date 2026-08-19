@@ -589,7 +589,7 @@ class _PontosFeedbackState extends State<_PontosFeedback>
             child: Text(
               widget.texto,
               style: TextStyle(
-                fontSize: 26,
+                fontSize: 36,
                 fontWeight: FontWeight.w900,
                 color: positivo ? AppColors.acerto : AppColors.danger,
                 shadows: const [
