@@ -2,6 +2,15 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.10.15 (2026-08-19)
+- **Pontuação BEM maior:** o "+2 / +3 / +4" (verde) do acerto ficou com fonte
+  ainda maior (42px) — impossível não ver.
+- **Mapa-múndi (confirmado):** **INICIAR JOGO** (branco) está no **canto
+  inferior direito**; **Voltar habitat, Reiniciar aventura e Voltar início**
+  no canto inferior esquerdo.
+- ⚠️ Se a versão na tela inicial não for **v0.10.15**, o APK instalado é antigo
+  (cache do navegador). Baixe pelo link novo abaixo.
+
 ## v0.10.14 (2026-08-19)
 - **Pontuação maior:** o "+2 / +3 / +4" (verde) e o "−" (vermelho) do acerto/
   erro na tela das palavras ficaram com a **fonte maior**.
