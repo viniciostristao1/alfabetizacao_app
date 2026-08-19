@@ -182,12 +182,14 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
                         // SEM emoji de bicho (pedido do usuário)
                         for (var i = 0; i < _fases.length; i++)
                           Positioned(
+                            // caixa = SÓ o anel (centrado em fx,fy) — antes era
+                            // d×d e a parte de cima vazia sobrepunha a fase
+                            // vizinha (tocar no Céu abria a Ásia). Ver bug fix.
                             left: _fases[i].fx * w - d / 2,
-                            top: _fases[i].fy * boxH - (d - anelH / 2),
+                            top: _fases[i].fy * boxH - anelH / 2,
                             width: d,
-                            height: d,
+                            height: anelH,
                             child: _AnelFase(
-                              anelAltura: anelH,
                               concluida: _concluidas.contains(_fases[i].chave),
                               onTap: () => _abrirFase(_fases[i], i + 1),
                             ),
@@ -361,78 +363,61 @@ class _CaminhoPainter extends CustomPainter {
 /// — sem emoji nenhum (pedido do usuário). Concluída = anel ACESO.
 class _AnelFase extends StatelessWidget {
   const _AnelFase({
-    required this.anelAltura,
     required this.concluida,
     required this.onTap,
   });
 
-  final double anelAltura;
   final bool concluida;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
+    // O anel PREENCHE a caixa que recebe (largura d × altura anelH) — a área de
+    // toque é exatamente o anel, sem "sobra" clicável por cima.
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
-      child: Stack(
-        clipBehavior: Clip.none,
-        alignment: Alignment.bottomCenter,
-        children: [
-          // ANEL (pódio no chão)
-          FractionallySizedBox(
-            widthFactor: 0.94,
-            child: SizedBox(
-              height: anelAltura,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  borderRadius:
-                      const BorderRadius.all(Radius.elliptical(360, 120)),
-                  gradient: RadialGradient(
-                    radius: 0.95,
-                    colors: concluida
-                        ? [
-                            _neon.withValues(alpha: 0.05),
-                            _neon.withValues(alpha: 0.45),
-                          ]
-                        : [
-                            Colors.white.withValues(alpha: 0.02),
-                            Colors.black.withValues(alpha: 0.30),
-                          ],
-                    stops: const [0.35, 1.0],
-                  ),
-                  border: Border.all(
-                    color: concluida
-                        ? _neon
-                        : Colors.white.withValues(alpha: 0.5),
-                    width: concluida ? 3.5 : 2,
-                  ),
-                  boxShadow: concluida
-                      ? [
-                          BoxShadow(
-                            color: _neon.withValues(alpha: 0.6),
-                            blurRadius: 26,
-                            spreadRadius: 4,
-                          ),
-                          BoxShadow(
-                            color: _neon.withValues(alpha: 0.9),
-                            blurRadius: 12,
-                            spreadRadius: 1,
-                          ),
-                        ]
-                      : [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.4),
-                            blurRadius: 8,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                ),
-              ),
-            ),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.elliptical(360, 120)),
+          gradient: RadialGradient(
+            radius: 0.95,
+            colors: concluida
+                ? [
+                    _neon.withValues(alpha: 0.05),
+                    _neon.withValues(alpha: 0.45),
+                  ]
+                : [
+                    Colors.white.withValues(alpha: 0.02),
+                    Colors.black.withValues(alpha: 0.30),
+                  ],
+            stops: const [0.35, 1.0],
           ),
-          // SEM emoji nenhum (pedido do usuário) — só o anel/pódio.
-        ],
+          border: Border.all(
+            color: concluida ? _neon : Colors.white.withValues(alpha: 0.5),
+            width: concluida ? 3.5 : 2,
+          ),
+          boxShadow: concluida
+              ? [
+                  BoxShadow(
+                    color: _neon.withValues(alpha: 0.6),
+                    blurRadius: 26,
+                    spreadRadius: 4,
+                  ),
+                  BoxShadow(
+                    color: _neon.withValues(alpha: 0.9),
+                    blurRadius: 12,
+                    spreadRadius: 1,
+                  ),
+                ]
+              : [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.4),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+        ),
       ),
     );
   }

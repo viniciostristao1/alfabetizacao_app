@@ -5,6 +5,7 @@ import '../../services/progresso_repository.dart';
 import '../../theme/app_colors.dart';
 import '../../util/versao.dart';
 import '../config/config_screen.dart';
+import '../contas/contas_menu_screen.dart';
 import '../escrever/escrever_screen.dart';
 import '../habitat/habitat_map_screen.dart';
 import '../nivel/nivel_screen.dart';
@@ -50,6 +51,8 @@ class _HomeScreenState extends State<HomeScreen> {
           Categoria.animais => const HabitatMapScreen(),
           // Escrever = palavras do próprio usuário (digitadas na tela).
           Categoria.escrever => const EscreverScreen(),
+          // Contas = matemática (soma/subtração), tela própria.
+          Categoria.contas => const ContasMenuScreen(),
           _ => NivelScreen(categoria: categoria),
         },
       ),

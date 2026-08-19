@@ -2,6 +2,26 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-19 — v0.12.0 (tema Contas + fix toque do anel + botão Início)
+- **Fix "Céu abria tigre/panda" (mapa-múndi):** o anel de fase ficava numa caixa `Positioned`
+  **d×d** com o anel só na base — a parte de cima (vazia mas `HitTestBehavior.opaque`) sobrepunha a
+  fase de fy menor. Como a Ásia é desenhada depois do Céu (fica por cima), tocar no céu abria a Ásia.
+  **Fix:** a caixa virou **só o anel** (`height: anelH`, `top: fy*boxH - anelH/2`); `_AnelFase`
+  preenche a caixa (sem Stack/emoji). Área de toque = o anel.
+- **Botão Início (estudo_screen):** `top 10→6`, `left 8→12`, padding vertical `8→6` — sobe/vai à
+  direita e encolhe, pra alinhar ao topo e não encostar na 1ª bolinha de caneta (azul).
+- **Tema Contas (matemática):** `Categoria.contas` (especial, sem banco — igual `escrever`; testes do
+  banco pulam as duas). Rota na home → `features/contas/contas_menu_screen.dart`.
+  - `models/conta.dart` (`Conta` a/b/soma/pontos + `enunciado`/`resultado`; `OperacaoConta`).
+  - `services/gerador_contas.dart`: `gerarContas(op, digitos)` (1díg 0-9 / 2díg 10-99; subtração a≥b
+    sem negativo; soma 2díg mantém resultado ≤99) + `parseConta("12 + 7")` (aceita +/−, rejeita
+    negativo/inválido; pontos=2 se algum número ≥10). `services/contas_escritas.dart` (persistência).
+  - `conta_estudo_screen.dart`: enunciado grande + **teclado numérico próprio** (1-9/⌫/0/✓ — melhor
+    que teclado do sistema em paisagem); acerto → `ProgressoRepository.registrarAcerto(pontos)` (+1/+2)
+    e avança; erro → vermelho + limpa, repete. `escrever_contas_screen.dart` espelha `EscreverScreen`.
+  - Testes: `contas_test` (gerador ranges/subtração/mistas + parser) e `conta_estudo_test` (acerto dá
+    moeda e avança; erro não pontua). 47 testes, analyze limpo; telas validadas no preview-PNG.
+
 ## 2026-08-19 — v0.11.0 (mapa-múndi por REGIÃO/continente, separado do habitat)
 - **Decisão:** o mapa-múndi deixou de reusar `Habitat` e passou a agrupar por **geografia**. O
   habitat (tela mapa_animais) continua igual; só o mapa-múndi mudou. São **classificações

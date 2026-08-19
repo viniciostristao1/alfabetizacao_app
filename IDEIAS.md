@@ -56,6 +56,10 @@ A criança **fala** a palavra; o app reconhece se **acertou**.
 - **Configurações (v0.8.0):** engrenagem na home → reordenar as fases do mapa-múndi
   (`ConfigOrdem`). A tela pode crescer: escolher quais categorias entram, tema claro, toggle
   maiúsculas/minúsculas, etc.
+- **Contas / matemática — FEITO (v0.12.0):** tema Contas (soma/subtração, 1-2 dígitos, teclado
+  numérico, +1/+2 moedas, escrever contas). **A evoluir:** multiplicação/divisão; "conta em pé"
+  (armar a conta); contas ilustradas (🍎🍎🍎); dificuldade progressiva; e ler o resultado por voz
+  quando o TTS entrar.
 - Nomes/áudio: quando entrar o TTS, o mapa fica ótimo com o nome do habitat falado.
 
 ## 🗂️ Subcategorias das OUTRAS categorias (o campo `sub` do banco já vem preenchido)

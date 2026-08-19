@@ -2,6 +2,17 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.12.0 (2026-08-19)
+- **Novo tema: Contas 🧮** Na tela inicial entrou o tema **Contas** (calculadora): **soma e
+  subtração**, com **1 ou 2 dígitos** (você escolhe). A conta aparece grande (ex.: "12 + 7 =") e a
+  criança digita o resultado num **teclado numérico**; o app diz se acertou e dá **+1 moeda** (1
+  dígito) ou **+2** (2 dígitos). Tem também **"Escrever contas"** pra você sugerir as suas próprias
+  (ex.: "12 + 7").
+- **Correção do mapa-múndi:** tocar no **Céu** estava abrindo os bichos da Ásia (tigre, panda) —
+  agora abre certinho as **aves**. (A área de toque de um anel estava invadindo a fase de cima.)
+- **Botão Início na tela das palavras:** subiu e foi um tico pra direita — fica **alinhado** com o
+  topo e não encosta mais na primeira cor de caneta (azul).
+
 ## v0.11.0 (2026-08-19)
 - **Mapa-múndi por CONTINENTE! 🌍** As fases do mapa-múndi não repetem mais os habitats — agora
   são organizadas por **onde cada bicho vive de verdade**: 🦌 América do Norte · 🐒 América do

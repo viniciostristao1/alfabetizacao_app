@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-/// As modalidades de palavras da tela principal. `escrever` é especial: as
-/// palavras são digitadas pelo usuário (não têm banco — ver EscreverScreen).
+/// As modalidades da tela principal. `escrever` e `contas` são especiais: NÃO
+/// têm banco de palavras (escrever = palavras digitadas; contas = matemática) e
+/// têm rota própria na home — os testes do banco as ignoram.
 ///
 /// `emoji`/`cor` são só apoio VISUAL de navegação (a criança ainda não lê, então
 /// reconhece a categoria pelo ícone/cor). A palavra em si é mostrada só em texto,
@@ -11,6 +12,7 @@ enum Categoria {
   objetos('Objetos', '🧸', Color(0xFF5B9CFF)),
   alimentos('Alimentos', '🍎', Color(0xFFFF8A5B)),
   nomes('Nomes', '🔤', Color(0xFFB98BFF)),
+  contas('Contas', '🧮', Color(0xFF2DD4BF)),
   escrever('Escrever', '✏️', Color(0xFFF472B6));
 
   const Categoria(this.rotulo, this.emoji, this.cor);

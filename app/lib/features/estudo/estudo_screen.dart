@@ -436,8 +436,8 @@ class _EstudoScreenState extends State<EstudoScreen> {
           // INÍCIO (flutuante, topo-esq): casinha + nome — impossível de não
           // achar; volta direto pra página inicial.
           Positioned(
-            top: 10,
-            left: 8,
+            top: 6,
+            left: 12,
             child: Material(
               color: Colors.black.withValues(alpha: 0.45),
               borderRadius: BorderRadius.circular(22),
@@ -447,7 +447,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
                     .popUntil((route) => route.isFirst),
                 child: Container(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(22),
                     border: Border.all(color: Colors.white24),
