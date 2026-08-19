@@ -2,6 +2,11 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.10.20 (2026-08-19)
+- **Botão "Início" bem visível:** na tela das palavras, o botão **🏠 Início**
+  ficou **flutuante no canto superior esquerdo** (casinha + nome) — dá pra
+  voltar à página inicial de qualquer lugar.
+
 ## v0.10.19 (2026-08-19)
 - **Botão Início 🏠:** na tela das palavras, ao lado do "Voltar", entrou o
   botão **"Início"** com casinha — toque e vá **direto pra página inicial**,

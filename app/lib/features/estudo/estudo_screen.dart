@@ -218,7 +218,9 @@ class _EstudoScreenState extends State<EstudoScreen> {
                 removeLeft: true,
                 removeRight: true,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 10, 104, 0),
+                  // 132 à esquerda = reserva o botão flutuante "Início"
+                  // (casinha) no canto superior esquerdo.
+                  padding: const EdgeInsets.fromLTRB(132, 10, 104, 0),
                   child: Row(
                     children: [
                       // Grupo esquerdo (título + bolinhas de fundo) absorve o
@@ -404,13 +406,6 @@ class _EstudoScreenState extends State<EstudoScreen> {
                     onTap: _sair,
                   ),
                   _Botao(
-                    icon: Icons.home_rounded,
-                    label: 'Início',
-                    ui: ui,
-                    onTap: () => Navigator.of(context)
-                        .popUntil((route) => route.isFirst),
-                  ),
-                  _Botao(
                     icon: Icons.chevron_left_rounded,
                     label: 'Anterior',
                     ui: ui,
@@ -437,6 +432,44 @@ class _EstudoScreenState extends State<EstudoScreen> {
             ),
           ),
             ],
+          ),
+          // INÍCIO (flutuante, topo-esq): casinha + nome — impossível de não
+          // achar; volta direto pra página inicial.
+          Positioned(
+            top: 10,
+            left: 8,
+            child: Material(
+              color: Colors.black.withValues(alpha: 0.45),
+              borderRadius: BorderRadius.circular(22),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(22),
+                onTap: () => Navigator.of(context)
+                    .popUntil((route) => route.isFirst),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(22),
+                    border: Border.all(color: Colors.white24),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.home_rounded, color: Colors.white, size: 18),
+                      SizedBox(width: 6),
+                      Text(
+                        'Início',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ),
           // V/X FLUTUANTES: no canto superior direito da TELA, lado a lado.
           // right: 12 → com folga da borda (a borda branca/sombra não é
