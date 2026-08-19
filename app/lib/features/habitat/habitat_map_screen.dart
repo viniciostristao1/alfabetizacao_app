@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../../models/habitat.dart';
 import '../../models/palavra.dart';
 import '../../services/banco_palavras.dart';
+import '../../services/progresso_repository.dart';
 import '../estudo/estudo_screen.dart';
 import '../mapa_mundi/mapa_mundi_screen.dart';
 import '../selecao/selecao_animais_screen.dart';
@@ -27,11 +28,27 @@ class _HabitatMapScreenState extends State<HabitatMapScreen> {
     DeviceOrientation.landscapeRight,
   ];
 
+  // Pontuação (moedas/nível) — sempre visível no canto superior direito.
+  int _moedas = 0;
+  int _xp = 0;
+
   @override
   void initState() {
     super.initState();
     SystemChrome.setPreferredOrientations(_paisagem);
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    _carregarPontuacao();
+  }
+
+  Future<void> _carregarPontuacao() async {
+    final moedas = await ProgressoRepository.moedas();
+    final xp = await ProgressoRepository.xp();
+    if (mounted) {
+      setState(() {
+        _moedas = moedas;
+        _xp = xp;
+      });
+    }
   }
 
   @override
@@ -76,14 +93,20 @@ class _HabitatMapScreenState extends State<HabitatMapScreen> {
         ),
       ),
     );
-    if (mounted) _reaplicarTela();
+    if (mounted) {
+      _reaplicarTela();
+      _carregarPontuacao(); // moedas mudaram com acertos/erros
+    }
   }
 
   Future<void> _abrirMapaMundi() async {
     await Navigator.of(context).push(
       MaterialPageRoute(builder: (_) => const MapaMundiScreen()),
     );
-    if (mounted) _reaplicarTela();
+    if (mounted) {
+      _reaplicarTela();
+      _carregarPontuacao();
+    }
   }
 
   Future<void> _selecionarAnimais() async {
@@ -102,7 +125,10 @@ class _HabitatMapScreenState extends State<HabitatMapScreen> {
         ),
       ),
     );
-    if (mounted) _reaplicarTela();
+    if (mounted) {
+      _reaplicarTela();
+      _carregarPontuacao();
+    }
   }
 
   @override
@@ -160,6 +186,33 @@ class _HabitatMapScreenState extends State<HabitatMapScreen> {
                   ),
                 );
               },
+            ),
+          ),
+          // pontuação (moedas · nível) — canto superior direito, ao lado da
+          // célula "Selva" (o usuário pediu).
+          SafeArea(
+            child: Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.55),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.white24),
+                  ),
+                  child: Text(
+                    '🪙 $_moedas · Nv ${ProgressoRepository.nivelDe(_xp)}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
           // voltar (canto superior esquerdo)

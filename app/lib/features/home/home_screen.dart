@@ -84,20 +84,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         actions: [
-          // Pontuação SEMPRE visível (moedas + nível da criança).
-          Padding(
-            padding: const EdgeInsets.only(right: 6),
-            child: Center(
-              child: Text(
-                '🪙 $_moedas · Nv ${ProgressoRepository.nivelDe(_xp)}',
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.dim,
-                ),
-              ),
-            ),
-          ),
           IconButton(
             tooltip: 'Configurações',
             icon: const Icon(Icons.settings_rounded),
@@ -116,9 +102,27 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Escolha um tema',
-                style: TextStyle(fontSize: 16, color: AppColors.dim),
+              // Pontuação SEMPRE visível, ao lado de "Escolha um tema".
+              Row(
+                children: [
+                  const Text(
+                    'Escolha um tema',
+                    style: TextStyle(fontSize: 16, color: AppColors.dim),
+                  ),
+                  const Spacer(),
+                  Flexible(
+                    child: Text(
+                      '🪙 $_moedas · Nv ${ProgressoRepository.nivelDe(_xp)}',
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.right,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.dim,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 14),
               Expanded(

@@ -2,6 +2,18 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.10.7 (2026-08-18)
+- **V/X mais para dentro:** o botão de errar (X) ganhou mais folga da borda —
+  a borda branca não sai mais da tela.
+- **Moedas em mais telas:**
+  - Na tela inicial, ao lado de **"Escolha um tema"** (canto direito).
+  - No mapa de habitats dos animais, no **canto superior direito** (perto da
+    "Selva").
+  - Na tela das palavras já apareciam (topo direito).
+- **App inteiro deitado (paisagem):** já vale pra TODAS as telas — início,
+  categorias, Escrever, seleção de animais (o aplicativo inteiro vira deitado
+  pra dar sensação de jogo).
+
 ## v0.10.6 (2026-08-18)
 - **App todo DEITADO (paisagem)!** Não é só mais a parte dos animais: todas as
   telas (início, categorias, Escrever, seleção de animais) agora ficam deitadas.

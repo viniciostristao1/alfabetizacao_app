@@ -43,9 +43,9 @@ void main() {
       }),
     );
 
-    // colado no canto superior direito (com um pequeno respiro de 8px para a
-    // borda branca não ser cortada) e no topo
-    expect(xBotao.right, 792); // 800 - 8
+    // no canto superior direito da TELA com folga (a borda/sombra não é
+    // cortada): right 12 → 800 - 12 = 788
+    expect(xBotao.right, 788); // 800 - 12
     expect(xBotao.top, 10);
 
     // quadrados de 40×40

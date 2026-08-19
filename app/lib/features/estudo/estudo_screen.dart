@@ -427,13 +427,12 @@ class _EstudoScreenState extends State<EstudoScreen> {
           ),
             ],
           ),
-          // V/X FLUTUANTES: colados no canto superior direito da TELA,
-          // lado a lado, sempre (independente do layout da linha do topo).
-          // right: 8 → um pouquinho afastados da borda (a borda branca do botão
-          // não fica cortada).
+          // V/X FLUTUANTES: no canto superior direito da TELA, lado a lado.
+          // right: 12 → com folga da borda (a borda branca/sombra não é
+          // cortada pela tela).
           Positioned(
             top: 10,
-            right: 8,
+            right: 12,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [

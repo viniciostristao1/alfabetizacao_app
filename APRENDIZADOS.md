@@ -2,6 +2,19 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-18 — v0.10.7 (V/X +folga; moedas ao lado de "Escolha um tema" e no mapa de habitats)
+- Usuário insistiu 3x no V/X: `Positioned right: 8` → `right: 12` (layout test
+  espera `X.right == 788`). O relato "borda fora da tela" também bate com builds
+  antigos (v0.10.4 tinha o cluster sem folga); orientar a instalar a versão nova.
+- **Home:** chip de pontuação saiu da AppBar → `Row` do cabeçalho ao lado de
+  "Escolha um tema" (com `Flexible` + ellipsis — o teste em viewport 360
+  estourava 78px sem ele).
+- **HabitatMapScreen:** chip `🪙 n · Nv x` no `Stack` (top-right, mesmo estilo
+  dos rótulos translúcidos) + `_carregarPontuacao()` no initState e após voltar
+  de Estudo/mapa-múndi/seleção. Import de AppColors removido (não usado).
+- App inteiro em paisagem: conferido com `grep portraitUp lib/` — sobrou ZERO
+  chamada de retrato (main + 4 telas todas paisagem). 32 testes, analyze limpo.
+
 ## 2026-08-18 — v0.10.6 (app todo paisagem + pontuação na home + V/X com respiro + anéis puros)
 - **App TODO deitado**: `main.dart` trava PAISAGEM (era retrato com exceções).
   Removidas TODAS as chamadas de orientação que brigavam: EstudoScreen.dispose
