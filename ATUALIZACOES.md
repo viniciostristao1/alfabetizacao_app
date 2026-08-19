@@ -2,6 +2,13 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.12.1 (2026-08-19)
+- **Logo maior:** o menino no ícone do app ficou **bem maior** (menos espaço em volta) — e
+  continua **inteiro**, sem cortar cabeça/pés, mesmo no ícone redondo do Android.
+- **Nome do app:** embaixo do ícone no Android agora aparece **"jogo do Davi"**.
+- **Contas com Anterior/Próximo:** na tela das contas dá pra **passar** ou **voltar** de conta
+  sem precisar responder.
+
 ## v0.12.0 (2026-08-19)
 - **Novo tema: Contas 🧮** Na tela inicial entrou o tema **Contas** (calculadora): **soma e
   subtração**, com **1 ou 2 dígitos** (você escolhe). A conta aparece grande (ex.: "12 + 7 =") e a

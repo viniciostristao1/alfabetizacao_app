@@ -74,6 +74,15 @@ A criança **fala** a palavra; o app reconhece se **acertou**.
   pequena a associar palavra↔coisa.
 
 ## ✍️ Melhorias na leitura
+- **⭐ 2 níveis de dificuldade nas palavras (proposta do usuário 2026-08-19 — "pensar depois"):**
+  1. **Minúsculas:** um nível/toggle que mostra a palavra em **minúsculas** (hoje é fixo em CAIXA
+     ALTA). Fácil (reusa o `texto`; só remover o `.toUpperCase()` condicionalmente).
+  2. **Completar a sílaba que falta:** mostra a palavra com uma **sílaba faltando** e a criança
+     escolhe a certa entre **4 opções**. Regra: **nunca faltar a 1ª sílaba** (difícil demais) —
+     faltar a **2ª ou 3ª**. Os dados de sílaba **já existem** (`Palavra.silabas`). Precisa de:
+     tela nova de múltipla escolha; gerar 3 distratores plausíveis (sílabas de outras palavras do
+     mesmo banco/nível); pontuar como as demais (V/X ou direto). É uma feature média (tela +
+     gerador de distratores + seleção de nível). **Decidir escopo antes de construir.**
 - **Sílabas coloridas** (BO·LA em cores alternadas) — os dados de sílaba **já existem**.
 - Toggle **MAIÚSCULAS / minúsculas** (hoje é fixo em caixa alta).
 - **Embaralhar** a ordem das palavras (botão "misturar").

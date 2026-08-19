@@ -2,6 +2,19 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-19 — v0.12.1 (logo maior + nome "jogo do Davi" + Anterior/Próximo nas contas)
+- **Logo maior sem cortar:** `logo.png` e `logo_foreground.png` são o menino sobre âmbar (RGB, 1024²;
+  âmbar real = #FDB405 = `adaptive_icon_background`). Script PIL: detecta o bbox do menino (pixels
+  distantes do âmbar), reescala pra altura-alvo e recentraliza em canvas âmbar novo. Alvos: `logo.png`
+  90% da altura, `logo_foreground.png` **84%** (era 65% — a foreground é a que o Android moderno usa,
+  por isso parecia pequena). Menino é **estreito e centralizado** → mesmo grande, cabeça/pés ficam no
+  eixo central (máscaras circulares/squircle vão até a borda no centro) = não corta. **Validei** com
+  máscara circular no PIL antes de gerar. Depois: `dart run flutter_launcher_icons` regenera
+  mipmaps/drawables (NÃO toca no debug.keystore — assinatura segue estável).
+- **Nome Android:** `android:label="jogo do Davi"` no AndroidManifest (era "Primeiras Palavras").
+- **Contas Anterior/Próximo:** `_irPara(i)` navega sem responder (limpa resposta/trava). Botões
+  `_NavBtn` no rodapé da coluna esquerda (desabilitam nas pontas). 47 testes, analyze limpo.
+
 ## 2026-08-19 — v0.12.0 (tema Contas + fix toque do anel + botão Início)
 - **Fix "Céu abria tigre/panda" (mapa-múndi):** o anel de fase ficava numa caixa `Positioned`
   **d×d** com o anel só na base — a parte de cima (vazia mas `HitTestBehavior.opaque`) sobrepunha a

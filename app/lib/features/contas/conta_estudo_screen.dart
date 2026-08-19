@@ -102,6 +102,17 @@ class _ContaEstudoScreenState extends State<ContaEstudoScreen> {
     }
   }
 
+  /// Navega entre contas SEM responder (passar/voltar). Limpa a resposta.
+  void _irPara(int novo) {
+    if (novo < 0 || novo >= widget.contas.length) return;
+    setState(() {
+      _i = novo;
+      _resposta = '';
+      _certo = null;
+      _travado = false;
+    });
+  }
+
   Future<void> _fim() async {
     await showDialog<void>(
       context: context,
@@ -146,41 +157,68 @@ class _ContaEstudoScreenState extends State<ContaEstudoScreen> {
             Expanded(
               child: Row(
                 children: [
-                  // conta grande à esquerda
+                  // conta grande à esquerda + navegação (anterior/próximo)
                   Expanded(
-                    child: Center(
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.baseline,
-                            textBaseline: TextBaseline.alphabetic,
-                            children: [
-                              Text(
-                                '${_conta.enunciado} =',
-                                style: const TextStyle(
-                                  fontSize: 84,
-                                  fontWeight: FontWeight.w800,
-                                  color: AppColors.text,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: Center(
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                                  textBaseline: TextBaseline.alphabetic,
+                                  children: [
+                                    Text(
+                                      '${_conta.enunciado} =',
+                                      style: const TextStyle(
+                                        fontSize: 84,
+                                        fontWeight: FontWeight.w800,
+                                        color: AppColors.text,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 18),
+                                    SizedBox(
+                                      width: 150,
+                                      child: Text(
+                                        _resposta.isEmpty ? '?' : _resposta,
+                                        style: TextStyle(
+                                          fontSize: 84,
+                                          fontWeight: FontWeight.w900,
+                                          color: corResposta,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              const SizedBox(width: 18),
-                              SizedBox(
-                                width: 150,
-                                child: Text(
-                                  _resposta.isEmpty ? '?' : _resposta,
-                                  style: TextStyle(
-                                    fontSize: 84,
-                                    fontWeight: FontWeight.w900,
-                                    color: corResposta,
-                                  ),
-                                ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              _NavBtn(
+                                icon: Icons.chevron_left_rounded,
+                                label: 'Anterior',
+                                onTap: _i > 0 ? () => _irPara(_i - 1) : null,
+                              ),
+                              const SizedBox(width: 12),
+                              _NavBtn(
+                                icon: Icons.chevron_right_rounded,
+                                label: 'Próximo',
+                                onTap: _i < widget.contas.length - 1
+                                    ? () => _irPara(_i + 1)
+                                    : null,
                               ),
                             ],
                           ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
                   // teclado numérico à direita
@@ -196,6 +234,44 @@ class _ContaEstudoScreenState extends State<ContaEstudoScreen> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Botão de navegação (Anterior/Próximo) — passar/voltar conta sem responder.
+class _NavBtn extends StatelessWidget {
+  const _NavBtn({required this.icon, required this.label, required this.onTap});
+
+  final IconData icon;
+  final String label;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final on = onTap != null;
+    final cor = on ? AppColors.text : AppColors.dim2;
+    return Material(
+      color: on ? AppColors.surface2 : AppColors.surface,
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 20, color: cor),
+              const SizedBox(width: 4),
+              Text(
+                label,
+                style: TextStyle(
+                    color: cor, fontWeight: FontWeight.w700, fontSize: 14),
+              ),
+            ],
+          ),
         ),
       ),
     );
