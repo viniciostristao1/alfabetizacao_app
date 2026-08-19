@@ -5,6 +5,7 @@ import '../../models/habitat.dart';
 import '../../services/banco_palavras.dart';
 import '../../services/config_ordem.dart';
 import '../../services/progresso_fases.dart';
+import '../../services/progresso_repository.dart';
 import '../../theme/app_colors.dart';
 import '../estudo/estudo_screen.dart';
 
@@ -36,16 +37,32 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
   List<String> _concluidas = const [];
   List<Habitat> _fases = Habitat.fases;
 
+  // Pontuação (moedas/nível) — sempre visível no canto superior direito.
+  int _moedas = 0;
+  int _xp = 0;
+
   @override
   void initState() {
     super.initState();
     _aplicarTela();
     _carregar();
+    _carregarPontuacao();
   }
 
   void _aplicarTela() {
     SystemChrome.setPreferredOrientations(_paisagem);
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+  }
+
+  Future<void> _carregarPontuacao() async {
+    final moedas = await ProgressoRepository.moedas();
+    final xp = await ProgressoRepository.xp();
+    if (mounted) {
+      setState(() {
+        _moedas = moedas;
+        _xp = xp;
+      });
+    }
   }
 
   Future<void> _carregar() async {
@@ -62,6 +79,7 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
   Future<void> _recarregarProgresso() async {
     final c = await ProgressoFases.carregar();
     if (mounted) setState(() => _concluidas = c);
+    await _carregarPontuacao(); // moedas mudaram com acertos/erros
   }
 
   Future<void> _abrirFase(Habitat h, int numero) async {
@@ -181,6 +199,32 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
                   ),
                 );
               },
+            ),
+          ),
+          // pontuação (moedas · nível) — canto superior direito.
+          SafeArea(
+            child: Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.55),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.white24),
+                  ),
+                  child: Text(
+                    '🪙 $_moedas · Nv ${ProgressoRepository.nivelDe(_xp)}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
           // seta de voltar (topo-esq)

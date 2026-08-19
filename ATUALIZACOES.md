@@ -2,6 +2,13 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.10.8 (2026-08-18)
+- **Moedas no mapa de animais e no mapa-múndi:** as moedas 🪙 (e o nível)
+  aparecem no **canto superior direito** dos dois mapas — ao lado da "Selva"
+  no mapa de habitats e no topo do mapa-múndi — sempre atualizadas.
+- **Tela inicial mais compacta:** os temas agora ficam em **4 colunas** com
+  cartões menores — tudo cabe na tela deitada **sem precisar rolar**.
+
 ## v0.10.7 (2026-08-18)
 - **V/X mais para dentro:** o botão de errar (X) ganhou mais folga da borda —
   a borda branca não sai mais da tela.

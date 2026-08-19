@@ -79,6 +79,9 @@ void main() {
     await tester.pumpWidget(const MaterialApp(home: MapaMundiScreen()));
     await tester.pumpAndSettle();
 
+    // moedas sempre visíveis no mapa-múndi (canto superior direito)
+    expect(find.textContaining('🪙'), findsOneWidget);
+
     Rect botao(String texto) => tester.getRect(
           find
               .ancestor(

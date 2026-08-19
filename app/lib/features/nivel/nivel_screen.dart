@@ -19,19 +19,22 @@ class NivelScreen extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Escolha o nível',
-                style: TextStyle(fontSize: 16, color: AppColors.dim),
-              ),
-              const SizedBox(height: 14),
-              for (final n in Nivel.values) ...[
-                _NivelCard(categoria: categoria, nivel: n),
-                const SizedBox(height: 14),
+          // Compacto para a tela deitada; rola se faltar espaço (nunca estoura).
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Escolha o nível',
+                  style: TextStyle(fontSize: 16, color: AppColors.dim),
+                ),
+                const SizedBox(height: 12),
+                for (final n in Nivel.values) ...[
+                  _NivelCard(categoria: categoria, nivel: n),
+                  const SizedBox(height: 10),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),
@@ -67,7 +70,7 @@ class _NivelCard extends StatelessWidget {
                 )
             : null,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(18),
             border: Border.all(color: AppColors.line),

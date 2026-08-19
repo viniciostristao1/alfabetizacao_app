@@ -4,12 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Abre o app num viewport de CELULAR (360×800 lógicos) — a home tem 5 cards
-/// (3 linhas) e no viewport padrão de teste o último card nem é construído.
-/// Também zera as prefs (a home mostra a pontuação, lida do shared_preferences).
+/// Abre o app num viewport de CELULAR em PAISAGEM (800×360 lógicos — o app
+/// inteiro é deitado). Também zera as prefs (a home mostra a pontuação, lida
+/// do shared_preferences).
 Future<void> _pumpApp(WidgetTester tester) async {
   SharedPreferences.setMockInitialValues({});
-  tester.view.physicalSize = const Size(1080, 2400);
+  tester.view.physicalSize = const Size(2400, 1080);
   tester.view.devicePixelRatio = 3.0;
   addTearDown(tester.view.reset);
   await tester.pumpWidget(
@@ -53,6 +53,8 @@ void main() {
     expect(find.textContaining('ÁRTICO'), findsOneWidget);
     expect(find.textContaining('SAVANA'), findsOneWidget);
     expect(find.textContaining('AVES'), findsOneWidget);
+    // moedas sempre visíveis no mapa de habitats (canto superior direito)
+    expect(find.textContaining('🪙'), findsOneWidget);
   });
 
   testWidgets('tocar em Escrever abre a tela de palavras próprias',

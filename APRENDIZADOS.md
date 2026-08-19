@@ -2,6 +2,20 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-18 — v0.10.8 (moedas nos dois mapas + home compacta em paisagem)
+- **Moedas no mapa de habitats já existiam (v0.10.7)** — usuário estava na
+  v0.10.6. Teste agora garante: `tocar em Animais → find.textContaining('🪙')`.
+- **Mapa-múndi ganhou o mesmo chip** (top-right, estilo translúcido) +
+  `_carregarPontuacao()` no initState e no `_recarregarProgresso` (após fase).
+  Import de progresso_repository voltou (tinha sido removido no v0.10.6).
+- **Home compacta:** grade 4 colunas (`childAspectRatio: 1.9`) + emoji 40 e
+  rótulo 16 — 2 linhas de cartões cabem em paisagem sem rolar. ⚠️ Os testes da
+  home usavam viewport RETRATO (360×800) → células minúsculas estouravam;
+  `_pumpApp` agora usa PAISAGEM (2400×1080@3 → 800×360), como o app real.
+- **NivelScreen estourava em paisagem** (3 cards ~346px > ~272px): cards
+  compactados (padding 18→12, gaps 14→10) + `SingleChildScrollView` (nunca
+  estoura; rola só se faltar). 32 testes, analyze limpo.
+
 ## 2026-08-18 — v0.10.7 (V/X +folga; moedas ao lado de "Escolha um tema" e no mapa de habitats)
 - Usuário insistiu 3x no V/X: `Positioned right: 8` → `right: 12` (layout test
   espera `X.right == 788`). O relato "borda fora da tela" também bate com builds
