@@ -2,6 +2,25 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-19 — v0.10.10 (JOGO DO DAVI + logo novo + Selva + feedback central)
+- **Título da home = "JOGO DO DAVI"** (AppBar). MaterialApp.title continua
+  "Primeiras Palavras" (nome interno do projeto — inofensivo).
+- **Logo novo:** usuário subiu `file_000000004144820e94ddaeb50c60d7d2.png`
+  (1086×1448, fundo âmbar ~#FDB405) no GitHub — commit do usuário, PUXADO com
+  `git pull` antes de qualquer trabalho. Processo (mesmo da v0.2.1): recorte
+  central quadrado → 1024² `assets/icon/logo.png` (legado); `logo_foreground.png`
+  = mesmo quadrado com o âmbar virado transparente (tolerância 42 na soma das
+  difs RGB — "chroma key") p/ o adaptativo; `adaptive_icon_background:
+  #FDB405`; original movido p/ `assets/icon/logo_fonte.png`; `dart run
+  flutter_launcher_icons` regenera os mipmaps (commitados).
+- **Selva:** deslocamento -26 → **-38px** (ainda "pouca coisa" por pedido).
+- **Feedback de pontos:** saiu de `Positioned(top:6, right:18)` (topo direito
+  da área da palavra) p/ `Positioned(top:4, left:0, right:0, Center)` — topo
+  CENTRALIZADO da área da palavra (não cobre a palavra, que é central).
+- **Explicado ao usuário o que é "Nível":** nível = 1 + XP acumulado ÷ 25;
+  XP = total de pontos JÁ ganhos (nunca cai); moedas = saldo (caem no erro).
+- 32 testes, analyze limpo.
+
 ## 2026-08-18 — v0.10.9 (Selva fora da caixinha de moedas + home mais compacta)
 - **Selva × moedas:** a célula sup. direita do mapa de habitats (Selva) ficava
   com o rótulo por baixo do chip de moedas. Fix: `Transform.translate(offset:

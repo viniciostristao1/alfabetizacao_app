@@ -2,6 +2,15 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.10.10 (2026-08-19)
+- **Novo nome:** a tela inicial agora se chama **"JOGO DO DAVI"** 🎮
+- **Novo logo do aplicativo:** a imagem que você enviou virou o ícone do app
+  (na tela do celular).
+- **"Selva" mais para a esquerda:** saiu mais um pouquinho — agora fica
+  totalmente fora da caixinha de moedas do mapa de animais.
+- **Pontuação no meio do topo:** o "+2 / +3 / +4" do acerto (e o "−" do erro)
+  agora aparece **no topo, centralizado** — não fica mais por cima da palavra.
+
 ## v0.10.9 (2026-08-18)
 - **"Selva" sem conflito:** o título da categoria Selva no mapa de animais
   saiu um pouquinho para a esquerda — não fica mais por baixo da caixinha de

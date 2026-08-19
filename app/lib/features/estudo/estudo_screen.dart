@@ -369,16 +369,20 @@ class _EstudoScreenState extends State<EstudoScreen> {
                               ),
                             ),
                           ),
-                          // feedback "+4" / "-4" (acerto/erro)
+                          // feedback "+4" / "-4" (acerto/erro) — no topo,
+                          // CENTRALIZADO (não fica sobre a palavra).
                           if (_feedback != null)
                             Positioned(
-                              top: 6,
-                              right: 18,
-                              child: _PontosFeedback(
-                                key: ValueKey(_feedbackSeq),
-                                texto: _feedback!,
-                                onFim: () =>
-                                    setState(() => _feedback = null),
+                              top: 4,
+                              left: 0,
+                              right: 0,
+                              child: Center(
+                                child: _PontosFeedback(
+                                  key: ValueKey(_feedbackSeq),
+                                  texto: _feedback!,
+                                  onFim: () =>
+                                      setState(() => _feedback = null),
+                                ),
                               ),
                             ),
                         ],

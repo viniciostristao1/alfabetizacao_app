@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Flexible(
-              child: Text('Primeiras Palavras', overflow: TextOverflow.ellipsis),
+              child: Text('JOGO DO DAVI', overflow: TextOverflow.ellipsis),
             ),
             const SizedBox(width: 8),
             Padding(
