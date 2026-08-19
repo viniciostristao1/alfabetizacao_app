@@ -404,6 +404,13 @@ class _EstudoScreenState extends State<EstudoScreen> {
                     onTap: _sair,
                   ),
                   _Botao(
+                    icon: Icons.home_rounded,
+                    label: 'Início',
+                    ui: ui,
+                    onTap: () => Navigator.of(context)
+                        .popUntil((route) => route.isFirst),
+                  ),
+                  _Botao(
                     icon: Icons.chevron_left_rounded,
                     label: 'Anterior',
                     ui: ui,

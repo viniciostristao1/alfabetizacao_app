@@ -105,6 +105,12 @@ void main() {
     // EstudoScreen: palavra em caixa alta + título da lista do usuário.
     expect(find.text('GATO'), findsOneWidget);
     expect(find.text('✏️  Minhas palavras'), findsOneWidget);
+
+    // "Início" (casinha) leva direto pra página inicial
+    await tester.tap(find.text('Início'));
+    await tester.pumpAndSettle();
+    expect(find.text('JOGO DO DAVI'), findsOneWidget);
+    expect(find.text('🪙 0 · Nv 1'), findsOneWidget);
   });
 
   testWidgets('estudo: V dá pontos e X tira (contador de moedas)', (tester) async {

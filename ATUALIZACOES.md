@@ -2,6 +2,11 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.10.19 (2026-08-19)
+- **Botão Início 🏠:** na tela das palavras, ao lado do "Voltar", entrou o
+  botão **"Início"** com casinha — toque e vá **direto pra página inicial**,
+  de qualquer lugar.
+
 ## v0.10.18 (2026-08-19)
 - **Botão Voltar com flecha:** na tela das palavras, o botão "Voltar" trocou o
   símbolo de casinha 🏠 por uma **seta para a esquerda** ← (volta pra página
