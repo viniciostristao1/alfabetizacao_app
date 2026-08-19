@@ -398,7 +398,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
               child: Row(
                 children: [
                   _Botao(
-                    icon: Icons.home_rounded,
+                    icon: Icons.arrow_back_rounded,
                     label: 'Voltar',
                     ui: ui,
                     onTap: _sair,

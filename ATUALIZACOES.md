@@ -2,6 +2,11 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.10.18 (2026-08-19)
+- **Botão Voltar com flecha:** na tela das palavras, o botão "Voltar" trocou o
+  símbolo de casinha 🏠 por uma **seta para a esquerda** ← (volta pra página
+  anterior).
+
 ## v0.10.17 (2026-08-19)
 - **Moedas ao lado da engrenagem (garantido):** a pontuação virou uma
   **caixinha com fundo** 🪙 moedas · Nv, na barra do topo, **colada à esquerda
