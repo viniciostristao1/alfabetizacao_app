@@ -288,10 +288,27 @@ const List<Palavra> bancoPalavras = [
   Palavra(['Ce', 'cí', 'li', 'a'], Categoria.nomes, sub: 'menina'),
 ];
 
-/// Palavras de uma categoria + nível (na ordem do banco).
-List<Palavra> palavrasDe(Categoria categoria, Nivel nivel) => bancoPalavras
-    .where((p) => p.categoria == categoria && p.nivelSilabas == nivel.silabas)
-    .toList(growable: false);
+/// Todas as sílabas do banco em CAIXA ALTA (pool de distratores do modo
+/// "completar a sílaba que falta").
+List<String> poolSilabasMaiusculas() {
+  final set = <String>{};
+  for (final p in bancoPalavras) {
+    for (final s in p.silabas) {
+      set.add(s.toUpperCase());
+    }
+  }
+  return set.toList();
+}
+
+/// Palavras de uma categoria + nível, ordenadas por dificuldade (menos letras
+/// primeiro; ver [Palavra.porDificuldade]).
+List<Palavra> palavrasDe(Categoria categoria, Nivel nivel) {
+  final lista = bancoPalavras
+      .where((p) => p.categoria == categoria && p.nivelSilabas == nivel.silabas)
+      .toList();
+  lista.sort(Palavra.porDificuldade);
+  return lista;
+}
 
 /// Quantas palavras existem numa categoria + nível (para mostrar no card).
 int contarPalavras(Categoria categoria, Nivel nivel) =>
@@ -304,7 +321,7 @@ List<Palavra> palavrasDoHabitat(String habitatChave) {
   final lista = bancoPalavras
       .where((p) => p.categoria == Categoria.animais && p.habitat == habitatChave)
       .toList();
-  lista.sort((a, b) => a.nivelSilabas.compareTo(b.nivelSilabas));
+  lista.sort(Palavra.porDificuldade);
   return lista;
 }
 
@@ -316,7 +333,7 @@ List<Palavra> palavrasDosHabitats(List<String> chaves) {
       .where((p) =>
           p.categoria == Categoria.animais && chaves.contains(p.habitat))
       .toList();
-  lista.sort((a, b) => a.nivelSilabas.compareTo(b.nivelSilabas));
+  lista.sort(Palavra.porDificuldade);
   return lista;
 }
 
@@ -327,7 +344,7 @@ List<Palavra> palavrasDaRegiao(String regiaoChave) {
   final lista = bancoPalavras
       .where((p) => p.categoria == Categoria.animais && p.regiao == regiaoChave)
       .toList();
-  lista.sort((a, b) => a.nivelSilabas.compareTo(b.nivelSilabas));
+  lista.sort(Palavra.porDificuldade);
   return lista;
 }
 

@@ -45,6 +45,17 @@ class Palavra {
   /// A palavra inteira exibida (ex.: 'cavalo', 'urso polar', 'beija-flor').
   String get texto => textoOverride ?? silabas.join();
 
-  /// Número de sílabas = a dificuldade da palavra (usado para ordenar).
+  /// Número de sílabas da palavra.
   int get nivelSilabas => silabas.length;
+
+  /// Número de LETRAS (ignora espaço/hífen de "urso polar", "beija-flor").
+  int get nivelLetras => texto.replaceAll(' ', '').replaceAll('-', '').length;
+
+  /// Ordem de DIFICULDADE (fácil → difícil): **primeiro menos letras, depois
+  /// menos sílabas** — ex.: "rena" (4 letras) vem antes de "pinguim" (7), mesmo
+  /// ambas com 2 sílabas. Pedido do usuário.
+  static int porDificuldade(Palavra a, Palavra b) {
+    final letras = a.nivelLetras.compareTo(b.nivelLetras);
+    return letras != 0 ? letras : a.nivelSilabas.compareTo(b.nivelSilabas);
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:alfabetizacao/models/categoria.dart';
 import 'package:alfabetizacao/models/habitat.dart';
+import 'package:alfabetizacao/models/palavra.dart';
 import 'package:alfabetizacao/models/regiao.dart';
 import 'package:alfabetizacao/services/banco_palavras.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -78,19 +79,29 @@ void main() {
   });
 
   group('jogo de habitats', () {
-    test('cada habitat tem palavras, ordenadas do menos ao mais sílabas', () {
+    test('cada habitat tem palavras, ordenadas por dificuldade (letras→sílabas)',
+        () {
       for (final h in Habitat.values) {
         final lista = palavrasDoHabitat(h.chave);
         expect(lista, isNotEmpty, reason: 'habitat ${h.rotulo} sem palavras');
         for (var i = 1; i < lista.length; i++) {
           expect(
-            lista[i].nivelSilabas >= lista[i - 1].nivelSilabas,
+            Palavra.porDificuldade(lista[i - 1], lista[i]) <= 0,
             isTrue,
             reason: 'habitat ${h.rotulo} fora de ordem: '
-                '${lista.map((p) => "${p.texto}(${p.nivelSilabas})").toList()}',
+                '${lista.map((p) => "${p.texto}(${p.nivelLetras}L/${p.nivelSilabas}s)").toList()}',
           );
         }
       }
+    });
+
+    test('menos letras vem primeiro (rena antes de pinguim)', () {
+      final artico = palavrasDoHabitat('artico');
+      final iRena = artico.indexWhere((p) => p.texto == 'rena'); // 4 letras
+      final iPin = artico.indexWhere((p) => p.texto == 'pinguim'); // 7 letras
+      expect(iRena, greaterThanOrEqualTo(0));
+      expect(iPin, greaterThan(iRena),
+          reason: 'rena (4L) deve vir antes de pinguim (7L), ambas 2 sílabas');
     });
 
     test('todo animal com habitat usa uma chave de habitat válida', () {
@@ -147,12 +158,13 @@ void main() {
       }
     });
 
-    test('cada região tem palavras, ordenadas do menos ao mais sílabas', () {
+    test('cada região tem palavras, ordenadas por dificuldade (letras→sílabas)',
+        () {
       for (final r in Regiao.values) {
         final lista = palavrasDaRegiao(r.chave);
         expect(lista, isNotEmpty, reason: 'região ${r.rotulo} sem palavras');
         for (var i = 1; i < lista.length; i++) {
-          expect(lista[i].nivelSilabas >= lista[i - 1].nivelSilabas, isTrue,
+          expect(Palavra.porDificuldade(lista[i - 1], lista[i]) <= 0, isTrue,
               reason: 'região ${r.rotulo} fora de ordem');
         }
       }

@@ -4,15 +4,17 @@
 /// (múltipla escolha, em MAIÚSCULAS) — entra depois como tela própria.
 enum ModoLeitura {
   maiuscula('MAIÚSCULAS'),
-  minuscula('minúsculas');
+  minuscula('minúsculas'),
+  incompleta('Completar'); // MAIÚSCULAS com uma sílaba faltando (múltipla escolha)
 
   const ModoLeitura(this.rotulo);
 
   final String rotulo;
 
-  /// Aplica o caixa da palavra conforme o modo.
+  /// Aplica o caixa da palavra conforme o modo (no modo "incompleta" a palavra
+  /// aparece em MAIÚSCULAS; a montagem do desafio é feita à parte).
   String aplicar(String texto) => switch (this) {
-        ModoLeitura.maiuscula => texto.toUpperCase(),
         ModoLeitura.minuscula => texto.toLowerCase(),
+        _ => texto.toUpperCase(),
       };
 }

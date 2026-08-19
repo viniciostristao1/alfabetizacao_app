@@ -77,7 +77,10 @@ A criança **fala** a palavra; o app reconhece se **acertou**.
 - **⭐ 2 níveis de dificuldade nas palavras:**
   1. **Minúsculas — FEITO (v0.13.0):** seletor MAIÚSCULAS/minúsculas na engrenagem
      (`ModoLeitura`/`ConfigLeitura`); a `EstudoScreen` aplica o caixa.
-  2. **Completar a sílaba que falta (PENDENTE):** mostra a palavra com uma **sílaba faltando** e a criança
+  2. **Completar a sílaba que falta — FEITO (v0.14.0):** `ModoLeitura.incompleta` +
+     `completar_silaba.dart`; palavra MAIÚSCULA com uma sílaba faltando (nunca a 1ª) + 4 opções, na
+     `EstudoScreen`. **A evoluir:** distratores mais "difíceis" (parecidos), ou faltar 2 sílabas.
+     _(spec original abaixo, mantida como referência)_ mostra a palavra com uma **sílaba faltando** e a criança
      escolhe a certa entre **4 opções**. Regra: **nunca faltar a 1ª sílaba** (difícil demais) —
      faltar a **2ª ou 3ª**. Os dados de sílaba **já existem** (`Palavra.silabas`). Precisa de:
      tela nova de múltipla escolha; gerar 3 distratores plausíveis (sílabas de outras palavras do

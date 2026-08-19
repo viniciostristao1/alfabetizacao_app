@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../../models/estudo_opcoes.dart';
 import '../../models/modo_leitura.dart';
 import '../../models/palavra.dart';
+import '../../services/completar_silaba.dart';
 import '../../services/config_leitura.dart';
 import '../../services/progresso_fases.dart';
 import '../../services/progresso_repository.dart';
@@ -53,7 +54,12 @@ class _EstudoScreenState extends State<EstudoScreen> {
   // ── gamificação (XP/moedas): carregados no initState e atualizados no V/X ──
   int _moedas = 0;
   int _xp = 0;
-  ModoLeitura _modo = ModoLeitura.maiuscula; // MAIÚSCULAS / minúsculas
+  ModoLeitura _modo = ModoLeitura.maiuscula; // MAIÚSCULAS / minúsculas / completar
+
+  // ── modo "completar a sílaba que falta" (múltipla escolha) ──
+  int _blankIdx = -1; // sílaba que falta (-1 = palavra sem desafio: <2 sílabas)
+  List<String> _opcoes = const []; // 4 opções embaralhadas (MAIÚSCULAS)
+  String? _erradaSel; // opção errada tocada (fica vermelha até tentar de novo)
   String? _feedback; // "+4" / "-4" flutuando sobre a palavra
   int _feedbackSeq = 0; // key nova a cada feedback (reinicia a animação)
 
@@ -78,6 +84,34 @@ class _EstudoScreenState extends State<EstudoScreen> {
         _xp = xp;
         _modo = modo;
       });
+      _prepararIncompleta();
+    }
+  }
+
+  /// Monta o desafio "completar a sílaba" da palavra atual (se o modo for esse).
+  void _prepararIncompleta() {
+    if (_modo != ModoLeitura.incompleta) return;
+    final d = montarDesafio(widget.palavras[_i]);
+    setState(() {
+      _blankIdx = d?.blankIndex ?? -1;
+      _opcoes = d?.opcoes ?? const [];
+      _erradaSel = null;
+    });
+  }
+
+  /// Toque numa opção do modo "completar": certa → acerta e avança; errada →
+  /// fica vermelha e deixa tentar de novo (não penaliza).
+  Future<void> _escolheuIncompleta(String opcao) async {
+    if (_blankIdx < 0) {
+      await _acertou(); // palavra sem sílaba pra faltar: só avança
+      return;
+    }
+    final correta = widget.palavras[_i].silabas[_blankIdx].toUpperCase();
+    if (opcao == correta) {
+      setState(() => _erradaSel = null);
+      await _acertou();
+    } else {
+      setState(() => _erradaSel = opcao);
     }
   }
 
@@ -110,6 +144,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
     } else if (_temProximo) {
       setState(() => _i++);
     }
+    _prepararIncompleta();
   }
 
   /// X vermelho: errou → perde os pontos da palavra (nunca abaixo de zero) e a
@@ -175,6 +210,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
       _i--;
       _tracos.clear();
     });
+    _prepararIncompleta();
   }
 
   void _proximo() {
@@ -184,12 +220,16 @@ class _EstudoScreenState extends State<EstudoScreen> {
       _tracos.clear();
     });
     _talvezConcluir();
+    _prepararIncompleta();
   }
 
-  void _recomecar() => setState(() {
-        _i = 0;
-        _tracos.clear();
-      });
+  void _recomecar() {
+    setState(() {
+      _i = 0;
+      _tracos.clear();
+    });
+    _prepararIncompleta();
+  }
 
   void _sair() => Navigator.of(context).pop();
 
@@ -201,6 +241,86 @@ class _EstudoScreenState extends State<EstudoScreen> {
   void _moveTraco(PointerMoveEvent e) {
     if (_tracos.isEmpty) return;
     setState(() => _tracos.last.pontos.add(e.localPosition));
+  }
+
+  /// Corpo do modo "completar a sílaba que falta": a palavra com uma **lacuna**
+  /// e 4 opções (ou, se a palavra não tem sílaba pra faltar, só "Continuar").
+  Widget _meioIncompleto(Color ui) {
+    final palavra = widget.palavras[_i];
+    final temDesafio = _blankIdx >= 0 && _opcoes.isNotEmpty;
+    final display = temDesafio
+        ? [
+            for (var i = 0; i < palavra.silabas.length; i++)
+              i == _blankIdx ? '＿＿' : palavra.silabas[i].toUpperCase(),
+          ].join()
+        : palavra.texto.toUpperCase();
+    return Column(
+      children: [
+        Expanded(
+          child: Stack(
+            children: [
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      display,
+                      style: TextStyle(
+                        fontSize: 160,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 2,
+                        color: ui,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              if (_feedback != null)
+                Positioned(
+                  top: 4,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: _PontosFeedback(
+                      key: ValueKey(_feedbackSeq),
+                      texto: _feedback!,
+                      onFim: () => setState(() => _feedback = null),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+          child: temDesafio
+              ? Wrap(
+                  spacing: 12,
+                  runSpacing: 10,
+                  alignment: WrapAlignment.center,
+                  children: [
+                    for (final op in _opcoes)
+                      _OpcaoSilaba(
+                        texto: op,
+                        errada: op == _erradaSel,
+                        ui: ui,
+                        onTap: () => _escolheuIncompleta(op),
+                      ),
+                  ],
+                )
+              : SizedBox(
+                  width: 220,
+                  height: 48,
+                  child: FilledButton.icon(
+                    onPressed: () => _escolheuIncompleta(''),
+                    icon: const Icon(Icons.check_rounded),
+                    label: const Text('Continuar'),
+                  ),
+                ),
+        ),
+      ],
+    );
   }
 
   @override
@@ -303,7 +423,9 @@ class _EstudoScreenState extends State<EstudoScreen> {
                 children: [
             // ── meio: bolinhas de CANETA (verticais) + palavra + desenho ──
             Expanded(
-              child: Row(
+              child: _modo == ModoLeitura.incompleta
+                  ? _meioIncompleto(ui)
+                  : Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
@@ -476,10 +598,10 @@ class _EstudoScreenState extends State<EstudoScreen> {
               ),
             ),
           ),
-          // V/X FLUTUANTES: no canto superior direito da TELA, lado a lado.
-          // right: 12 → com folga da borda (a borda branca/sombra não é
-          // cortada pela tela).
-          Positioned(
+          // V/X FLUTUANTES (só nos modos de escrita — no "completar" a criança
+          // toca nas opções). Canto superior direito da TELA, lado a lado.
+          if (_modo != ModoLeitura.incompleta)
+            Positioned(
             top: 10,
             right: 12,
             child: Row(
@@ -801,6 +923,53 @@ class _BotaoIcone extends StatelessWidget {
             icon,
             size: 17,
             color: cor.withValues(alpha: habilitado ? 0.85 : 0.3),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Opção de sílaba (modo "completar"): botão grande com a sílaba. `errada` =
+/// pinta de vermelho quando a criança toca na errada.
+class _OpcaoSilaba extends StatelessWidget {
+  const _OpcaoSilaba({
+    required this.texto,
+    required this.errada,
+    required this.ui,
+    required this.onTap,
+  });
+
+  final String texto;
+  final bool errada;
+  final Color ui;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final borda = errada ? AppColors.danger : ui.withValues(alpha: 0.4);
+    return Material(
+      color: errada ? AppColors.danger : ui.withValues(alpha: 0.12),
+      borderRadius: BorderRadius.circular(14),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: onTap,
+        child: Container(
+          constraints: const BoxConstraints(minWidth: 92),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: borda, width: 2),
+          ),
+          child: Text(
+            texto,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 1,
+              color: errada ? Colors.white : ui,
+            ),
           ),
         ),
       ),

@@ -2,6 +2,23 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-19 — v0.14.0 (modo "completar sílaba" + ordenação por letras→sílabas)
+- **Ordenação por dificuldade:** `Palavra.nivelLetras` (letras de `texto`, ignora espaço/hífen) +
+  `Palavra.porDificuldade` (**letras primeiro, sílabas depois** — pedido do usuário: rena 4L antes de
+  pinguim 7L). Trocado nos sorts do banco (`palavrasDoHabitat/DosHabitats/DaRegiao/palavrasDe`).
+  Testes de ordenação atualizados (checam `porDificuldade`) + exemplo rena<pinguim.
+- **3º modo de leitura "completar a sílaba" (`ModoLeitura.incompleta`):** palavra em MAIÚSCULAS com
+  UMA sílaba escondida (nunca a 1ª) + 4 opções. `services/completar_silaba.dart` (`montarDesafio`:
+  sorteia blank ≥1, monta 4 opções = correta + 3 distratores de `poolSilabasMaiusculas()`, embaralha;
+  null se <2 sílabas). Integrado NA `EstudoScreen` (não tela nova → todos os pontos de entrada valem):
+  `_prepararIncompleta()` monta ao carregar e a cada avanço (proximo/anterior/recomeçar/acertou);
+  `_meioIncompleto(ui)` substitui o corpo do meio (lacuna "＿＿" + `Wrap` de `_OpcaoSilaba`); V/X
+  escondidos (`if _modo != incompleta`); acerto reusa `_acertou()` (+moedas, avança, conclui fase);
+  erro pinta a opção de vermelho (`_erradaSel`, sem penalizar). Palavra de 1 sílaba (escrever) → sem
+  desafio → mostra full + "Continuar". Seletor da engrenagem já itera `ModoLeitura.values` (virou 3).
+- Testes: `completar_silaba` (blank nunca 0, 4 opções únicas c/ a certa, null p/ 1 sílaba). 54 testes,
+  analyze limpo; modo conferido no preview-PNG. **Feature de dificuldade das palavras COMPLETA.**
+
 ## 2026-08-19 — v0.13.0 (tela cheia global + minúsculas + Contas Até 20/menu + logo na home)
 - **Tela cheia (imersivo) em TODAS as telas:** só habitat/mapa setavam `immersiveSticky`; os demais
   mostravam a barra de status. **Fix:** `main()` agora seta `immersiveSticky` global; troquei os

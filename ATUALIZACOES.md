@@ -2,6 +2,15 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.14.0 (2026-08-19)
+- **Completar a sílaba que falta! 🧩** Novo modo (na engrenagem ⚙️ → "Como mostrar as palavras"):
+  a palavra aparece em MAIÚSCULAS com **uma sílaba faltando** (nunca a primeira) e a criança escolhe
+  a certa entre **4 opções**. Acertou → ganha moedas e passa; errou → a opção fica **vermelha** e
+  pode tentar de novo. (Agora são 3 modos: **MAIÚSCULAS · minúsculas · Completar**.)
+- **Ordem mais justa das palavras:** dentro de cada tema, as palavras agora vêm **das que têm menos
+  letras para as com mais** (e depois por sílabas). Ex.: **RENA** (4 letras) vem antes de **PINGUIM**
+  (7), mesmo as duas tendo 2 sílabas — as mais curtinhas primeiro.
+
 ## v0.13.0 (2026-08-19)
 - **Tela cheia em TODAS as telas:** objetos, alimentos, nomes, contas etc. agora também ficam
   **sem a barra do sistema** (rede/bateria/horário) — igual aos animais. Clima de jogo em tudo.
