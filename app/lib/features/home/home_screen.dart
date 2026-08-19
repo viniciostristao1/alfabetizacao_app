@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../models/categoria.dart';
+import '../../services/progresso_repository.dart';
 import '../../theme/app_colors.dart';
 import '../../util/versao.dart';
 import '../config/config_screen.dart';
@@ -8,11 +9,54 @@ import '../escrever/escrever_screen.dart';
 import '../habitat/habitat_map_screen.dart';
 import '../nivel/nivel_screen.dart';
 
-/// Tela principal (retrato): as modalidades de palavras.
+/// Tela principal (PAISAGEM): as modalidades de palavras.
 /// O emoji/cor de cada card é só apoio visual — a criança que ainda não lê
-/// reconhece a categoria pelo ícone.
-class HomeScreen extends StatelessWidget {
+/// reconhece a categoria pelo ícone. No topo, a pontuação (🪙 moedas · Nv)
+/// fica SEMPRE visível e recarrega ao voltar de qualquer tela.
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _moedas = 0;
+  int _xp = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _carregarPontuacao();
+  }
+
+  Future<void> _carregarPontuacao() async {
+    final moedas = await ProgressoRepository.moedas();
+    final xp = await ProgressoRepository.xp();
+    if (mounted) {
+      setState(() {
+        _moedas = moedas;
+        _xp = xp;
+      });
+    }
+  }
+
+  Future<void> _abrirCategoria(Categoria categoria) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => switch (categoria) {
+          // Animais viram um JOGO: mapa de habitats (paisagem), sem escolher
+          // nível — cada habitat roda do mais fácil ao mais difícil.
+          Categoria.animais => const HabitatMapScreen(),
+          // Escrever = palavras do próprio usuário (digitadas na tela).
+          Categoria.escrever => const EscreverScreen(),
+          _ => NivelScreen(categoria: categoria),
+        },
+      ),
+    );
+    // Ao voltar, a pontuação pode ter mudado (acertos/erros nas palavras).
+    if (mounted) _carregarPontuacao();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,12 +84,29 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
         actions: [
+          // Pontuação SEMPRE visível (moedas + nível da criança).
+          Padding(
+            padding: const EdgeInsets.only(right: 6),
+            child: Center(
+              child: Text(
+                '🪙 $_moedas · Nv ${ProgressoRepository.nivelDe(_xp)}',
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.dim,
+                ),
+              ),
+            ),
+          ),
           IconButton(
             tooltip: 'Configurações',
             icon: const Icon(Icons.settings_rounded),
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const ConfigScreen()),
-            ),
+            onPressed: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const ConfigScreen()),
+              );
+              if (mounted) _carregarPontuacao();
+            },
           ),
         ],
       ),
@@ -67,7 +128,10 @@ class HomeScreen extends StatelessWidget {
                   crossAxisSpacing: 14,
                   children: [
                     for (final c in Categoria.values)
-                      _CategoriaCard(categoria: c),
+                      _CategoriaCard(
+                        categoria: c,
+                        onTap: () => _abrirCategoria(c),
+                      ),
                   ],
                 ),
               ),
@@ -80,9 +144,10 @@ class HomeScreen extends StatelessWidget {
 }
 
 class _CategoriaCard extends StatelessWidget {
-  const _CategoriaCard({required this.categoria});
+  const _CategoriaCard({required this.categoria, required this.onTap});
 
   final Categoria categoria;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -91,18 +156,7 @@ class _CategoriaCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(20),
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => switch (categoria) {
-              // Animais viram um JOGO: mapa de habitats (paisagem), sem escolher
-              // nível — cada habitat roda do mais fácil ao mais difícil.
-              Categoria.animais => const HabitatMapScreen(),
-              // Escrever = palavras do próprio usuário (digitadas na tela).
-              Categoria.escrever => const EscreverScreen(),
-              _ => NivelScreen(categoria: categoria),
-            },
-          ),
-        ),
+        onTap: onTap,
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),

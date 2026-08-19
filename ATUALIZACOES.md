@@ -2,6 +2,16 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.10.6 (2026-08-18)
+- **App todo DEITADO (paisagem)!** Não é só mais a parte dos animais: todas as
+  telas (início, categorias, Escrever, seleção de animais) agora ficam deitadas.
+- **V/X com respiro:** os botões de acertar/errar ficaram um pouquinho para a
+  esquerda (a borda branca não é mais cortada pela tela).
+- **Pontuação sempre na tela:** na tela inicial aparece o **🪙 (moedas) e o
+  nível (Nv)** o tempo todo — atualiza sozinho ao voltar de qualquer tela.
+- **Mapa-múndi só com os círculos:** confirmado — os anéis das fases agora são
+  **apenas círculos**, sem nenhum emoji (nem dos bichos, nem medalhinha).
+
 ## v0.10.5 (2026-08-18)
 - **V/X no canto (garantido):** os botões agora são **flutuantes**, colados no
   canto superior direito da tela, sempre **um ao lado do outro** — nada de

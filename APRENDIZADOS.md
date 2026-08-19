@@ -2,6 +2,26 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-18 — v0.10.6 (app todo paisagem + pontuação na home + V/X com respiro + anéis puros)
+- **App TODO deitado**: `main.dart` trava PAISAGEM (era retrato com exceções).
+  Removidas TODAS as chamadas de orientação que brigavam: EstudoScreen.dispose
+  agora seta paisagem (o parâmetro `manterPaisagemAoSair` virou morto — mantido
+  p/ compat de chamadas), HabitatMapScreen.dispose seta paisagem,
+  SelecaoAnimaisScreen perdeu o initState que forçava RETRATO (era tela de
+  digitação). EscreverScreen/Home/Nivel/Config não mexiam em orientação — OK.
+- **V/X com respiro de 8px** (`Positioned right: 8`): a borda branca de 2px e a
+  sombra eram cortadas no `right: 0`. Layout test agora espera `X.right == 792`.
+- **Pontuação SEMPRE visível**: HomeScreen virou StatefulWidget — chip
+  `🪙 n · Nv x` na AppBar, `_carregarPontuacao()` no initState e APÓS cada
+  `Navigator.push` retornar (incluindo Config). ⚠️ Os testes da home agora
+  precisam de prefs mock → movido `SharedPreferences.setMockInitialValues({})`
+  p/ dentro do `_pumpApp`.
+- **Anéis do mapa-múndi 100% sem emoji** (pedido duplo do usuário): removi até a
+  medalha/estrelinha do anel — só o círculo (aceso quando concluído). A lógica
+  de medalha continua no `ProgressoRepository` (o baú ainda mostra ao concluir);
+  o `_AnelFase` perdeu o parâmetro `medalha` e o mapa perdeu o import de
+  progresso_repository. 32 testes, analyze limpo.
+
 ## 2026-08-18 — v0.10.5 (V/X flutuantes no canto + botões do mapa numa linha + sem emojis)
 - Usuário via o comportamento da v0.10.3 (V/X empilhados = o Wrap quebrava;
   INICIAR JOGO cobria o Reiniciar = os 3 Aligns). Mesmo com o v0.10.4 já

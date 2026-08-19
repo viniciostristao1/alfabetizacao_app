@@ -5,7 +5,6 @@ import '../../models/habitat.dart';
 import '../../services/banco_palavras.dart';
 import '../../services/config_ordem.dart';
 import '../../services/progresso_fases.dart';
-import '../../services/progresso_repository.dart';
 import '../../theme/app_colors.dart';
 import '../estudo/estudo_screen.dart';
 
@@ -36,7 +35,6 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
 
   List<String> _concluidas = const [];
   List<Habitat> _fases = Habitat.fases;
-  Map<String, String?> _medalhas = {}; // chave do habitat → 'ouro'|'prata'|'bronze'
 
   @override
   void initState() {
@@ -50,36 +48,20 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   }
 
-  Future<Map<String, String?>> _carregarMedalhas() async {
-    final mapa = <String, String?>{};
-    for (final h in Habitat.values) {
-      mapa[h.chave] = await ProgressoRepository.medalhaDe(h.chave);
-    }
-    return mapa;
-  }
-
   Future<void> _carregar() async {
     final fases = await ConfigOrdem.fases();
     final concluidas = await ProgressoFases.carregar();
-    final medalhas = await _carregarMedalhas();
     if (mounted) {
       setState(() {
         _fases = fases;
         _concluidas = concluidas;
-        _medalhas = medalhas;
       });
     }
   }
 
   Future<void> _recarregarProgresso() async {
     final c = await ProgressoFases.carregar();
-    final m = await _carregarMedalhas();
-    if (mounted) {
-      setState(() {
-        _concluidas = c;
-        _medalhas = m;
-      });
-    }
+    if (mounted) setState(() => _concluidas = c);
   }
 
   Future<void> _abrirFase(Habitat h, int numero) async {
@@ -191,7 +173,6 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
                             child: _AnelFase(
                               anelAltura: anelH,
                               concluida: _concluidas.contains(_fases[i].chave),
-                              medalha: _medalhas[_fases[i].chave],
                               onTap: () => _abrirFase(_fases[i], i + 1),
                             ),
                           ),
@@ -323,29 +304,18 @@ class _CaminhoPainter extends CustomPainter {
 }
 
 /// Anel/pódio de fase (estilo "anel embaixo do personagem"): elipse bem achatada
-/// no "chão" com contorno neon e brilho difuso ("fumacinha"). SEM emoji de bicho
-/// (pedido do usuário — só o anel). Concluída = anel ACESO + medalha/estrelinha.
+/// no "chão" com contorno neon e brilho difuso ("fumacinha"). SÓ o anel/círculo
+/// — sem emoji nenhum (pedido do usuário). Concluída = anel ACESO.
 class _AnelFase extends StatelessWidget {
   const _AnelFase({
     required this.anelAltura,
     required this.concluida,
-    required this.medalha,
     required this.onTap,
   });
 
   final double anelAltura;
   final bool concluida;
-
-  /// Medalha da fase ('ouro'|'prata'|'bronze' ou null) — gamificação.
-  final String? medalha;
   final VoidCallback onTap;
-
-  static String _emojiMedalha(String? medalha) => switch (medalha) {
-        'ouro' => '🥇',
-        'prata' => '🥈',
-        'bronze' => '🥉',
-        _ => '⭐',
-      };
 
   @override
   Widget build(BuildContext context) {
@@ -408,20 +378,7 @@ class _AnelFase extends StatelessWidget {
               ),
             ),
           ),
-          // EMOJI removido (pedido do usuário) — fica só o anel/pódio.
-          // medalha da fase (ou estrelinha quando só concluída)
-          if (concluida)
-            Positioned(
-              top: 0,
-              right: anelAltura * 0.6,
-              child: medalha == null
-                  ? const Icon(Icons.star_rounded,
-                      color: Color(0xFFFFD54A), size: 18)
-                  : Text(
-                      _emojiMedalha(medalha),
-                      style: const TextStyle(fontSize: 18),
-                    ),
-            ),
+          // SEM emoji nenhum (pedido do usuário) — só o anel/pódio.
         ],
       ),
     );

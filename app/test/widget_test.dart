@@ -6,7 +6,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// Abre o app num viewport de CELULAR (360×800 lógicos) — a home tem 5 cards
 /// (3 linhas) e no viewport padrão de teste o último card nem é construído.
+/// Também zera as prefs (a home mostra a pontuação, lida do shared_preferences).
 Future<void> _pumpApp(WidgetTester tester) async {
+  SharedPreferences.setMockInitialValues({});
   tester.view.physicalSize = const Size(1080, 2400);
   tester.view.devicePixelRatio = 3.0;
   addTearDown(tester.view.reset);
@@ -25,6 +27,9 @@ void main() {
     expect(find.text('Alimentos'), findsOneWidget);
     expect(find.text('Nomes'), findsOneWidget);
     expect(find.text('Escrever'), findsOneWidget);
+
+    // pontuação sempre visível na home (moedas + nível)
+    expect(find.text('🪙 0 · Nv 1'), findsOneWidget);
   });
 
   testWidgets('tocar em Objetos abre a tela de níveis', (tester) async {

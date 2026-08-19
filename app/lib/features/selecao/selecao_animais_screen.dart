@@ -23,22 +23,9 @@ class _SelecaoAnimaisScreenState extends State<SelecaoAnimaisScreen> {
   @override
   void initState() {
     super.initState();
-    // Tela de digitação = retrato + barras do sistema visíveis.
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
+    // App todo em PAISAGEM — esta tela também fica deitada, só com as barras
+    // do sistema visíveis (é tela de digitação).
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-  }
-
-  @override
-  void dispose() {
-    // Volta à paisagem do mapa (o mapa reaplica o modo imersivo ao retornar).
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-    ]);
-    super.dispose();
   }
 
   List<Palavra> get _filtrados {

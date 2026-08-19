@@ -146,19 +146,11 @@ class _EstudoScreenState extends State<EstudoScreen> {
 
   @override
   void dispose() {
-    // Ao sair: volta ao retrato (fluxo de Nível) OU mantém a paisagem (fluxo do
-    // mapa de habitats, que já é deitado) — evita o mapa voltar "em pé".
-    SystemChrome.setPreferredOrientations(
-      widget.manterPaisagemAoSair
-          ? const [
-              DeviceOrientation.landscapeLeft,
-              DeviceOrientation.landscapeRight,
-            ]
-          : const [
-              DeviceOrientation.portraitUp,
-              DeviceOrientation.portraitDown,
-            ],
-    );
+    // O app é todo PAISAGEM — garante ao sair (redundante, mas seguro).
+    SystemChrome.setPreferredOrientations(const [
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
     super.dispose();
   }
 
@@ -437,9 +429,11 @@ class _EstudoScreenState extends State<EstudoScreen> {
           ),
           // V/X FLUTUANTES: colados no canto superior direito da TELA,
           // lado a lado, sempre (independente do layout da linha do topo).
+          // right: 8 → um pouquinho afastados da borda (a borda branca do botão
+          // não fica cortada).
           Positioned(
             top: 10,
-            right: 0,
+            right: 8,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [

@@ -7,11 +7,10 @@ import 'theme/app_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // O app vive em RETRATO; só a tela de estudo gira para PAISAGEM (e restaura
-  // o retrato ao sair). Ver EstudoScreen.
+  // O app TODO vive em PAISAGEM (deitado) — todas as telas.
   await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
   ]);
   runApp(const ProviderScope(child: AppPrimeirasPalavras()));
 }

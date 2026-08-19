@@ -43,8 +43,9 @@ void main() {
       }),
     );
 
-    // bem no canto superior direito da TELA (ignora o inset do notch)
-    expect(xBotao.right, 800);
+    // colado no canto superior direito (com um pequeno respiro de 8px para a
+    // borda branca não ser cortada) e no topo
+    expect(xBotao.right, 792); // 800 - 8
     expect(xBotao.top, 10);
 
     // quadrados de 40×40
