@@ -2,6 +2,21 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-19 — v0.10.13 (logo do menino de vez — sem chroma key)
+- ⚠️ **Causa raiz do logo "furado":** a "chroma key" que removia o âmbar
+  (tolerância 42) comeu a **pele alaranjada do menino** — amostras da arte:
+  pele/cadeira em (254,179,6) e (254,184,70), distância do âmbar (253,180,5) =
+  3..66 → removida. O foreground ficou com buracos (15,7% opaco) e o ícone
+  parecia o antigo.
+- **Fix:** foreground adaptativo = quadrado ÂMBAR cheio + menino inteiro a 70%
+  (537×716, centrado) **SEM nenhuma remoção de cor** — o âmbar da própria arte
+  se mistura com `adaptive_icon_background: #FDB405` (mesmo tom) e o recorte do
+  Android corta só o âmbar puro → costura invisível. Legado: âmbar + menino a
+  92% (706×942). Cabeça a ~62px do topo do ícone, pés a ~957px — tudo visível.
+- **Lição:** com fundo monocromático, usar **contain + fundo igual no
+  foreground** em vez de chroma key; só usar chroma key se a arte não tiver
+  tons próximos do fundo. 34 testes, analyze limpo.
+
 ## 2026-08-19 — v0.10.12 (logo SEM corte: arte em pé inteira no quadrado)
 - ⚠️ **Lição:** o recorte central QUADRADO da arte (1086×1448) cortou a
   cabeça/pés da criança. Solução: **contain** em vez de crop —

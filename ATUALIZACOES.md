@@ -2,6 +2,12 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.10.13 (2026-08-19)
+- **Logo do menino corrigido de vez:** o ícone do app agora mostra o **menino
+  sentado na cadeira inteiro** (cabeça e pés aparecem), no fundo âmbar. O
+  problema anterior era a pele alaranjada do menino sendo confundida com o
+  fundo e "furada".
+
 ## v0.10.12 (2026-08-19)
 - **Logo ajustado:** a figura da criança aparece **inteira** no ícone do app
   (antes o recorte quadrado cortava a cabeça). O fundo âmbar preenche os
