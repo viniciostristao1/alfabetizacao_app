@@ -5,6 +5,7 @@ import '../../models/estudo_opcoes.dart';
 import '../../services/progresso_repository.dart';
 import '../../theme/app_colors.dart';
 import '../estudo/desenho.dart';
+import '../estudo/feedback_pontos.dart';
 
 /// Tela de estudo das CONTAS (PAISAGEM): mostra uma conta grande (ex.: "12 + 7 ="),
 /// a criança digita o resultado num teclado numérico e o app diz se acertou. Cada
@@ -32,6 +33,8 @@ class _ContaEstudoScreenState extends State<ContaEstudoScreen> {
 
   int _moedas = 0;
   int _xp = 0;
+  String? _feedback; // "+1" / "+2" flutuando sobre a conta (acerto)
+  int _feedbackSeq = 0; // key nova a cada feedback (reinicia a animação)
 
   // ── cor de fundo + escrever/rabiscar (igual à tela de palavras) ──
   FundoTela _fundo = FundoTela.preto;
@@ -97,6 +100,8 @@ class _ContaEstudoScreenState extends State<ContaEstudoScreen> {
       setState(() {
         _certo = true;
         _travado = true;
+        _feedback = '+${_conta.pontos}';
+        _feedbackSeq++;
       });
       await ProgressoRepository.registrarAcerto(_conta.pontos);
       _acertos++;
@@ -111,6 +116,7 @@ class _ContaEstudoScreenState extends State<ContaEstudoScreen> {
           _resposta = '';
           _certo = null;
           _travado = false;
+          _feedback = null;
           _tracos.clear();
         });
       }
@@ -134,6 +140,7 @@ class _ContaEstudoScreenState extends State<ContaEstudoScreen> {
       _resposta = '';
       _certo = null;
       _travado = false;
+      _feedback = null;
       _tracos.clear();
     });
   }
@@ -246,6 +253,22 @@ class _ContaEstudoScreenState extends State<ContaEstudoScreen> {
                                     ),
                                   ),
                                 ),
+                                // feedback "+1" / "+2" (acerto) — no topo,
+                                // CENTRALIZADO (não fica sobre a conta).
+                                if (_feedback != null)
+                                  Positioned(
+                                    top: 4,
+                                    left: 0,
+                                    right: 0,
+                                    child: Center(
+                                      child: PontosFeedback(
+                                        key: ValueKey(_feedbackSeq),
+                                        texto: _feedback!,
+                                        onFim: () =>
+                                            setState(() => _feedback = null),
+                                      ),
+                                    ),
+                                  ),
                               ],
                             ),
                           ),

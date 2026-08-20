@@ -2,6 +2,16 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-20 — v0.14.3 (zerar pontuação nas Configurações; feedback "+1/+2" nas Contas)
+- **`_PontosFeedback` virou `PontosFeedback`** em `features/estudo/feedback_pontos.dart` (público,
+  reusado pela `ContaEstudoScreen` — mesmo padrão de `desenho.dart`; `EstudoScreen` segue usando com
+  o mesmo `ValueKey(_feedbackSeq)` + `onFim`). A `ContaEstudoScreen` ganhou `_feedback`/`_feedbackSeq`,
+  mostra `'+${_conta.pontos}'` no `Stack` da conta no acerto e limpa ao avançar/`_irPara` (a animação
+  de 950ms roda antes do delay de 700ms que troca a conta; `onFim` zera o `_feedback`).
+- **Configurações:** `_zerarPontuacao()` zera moedas+XP com `showDialog` de confirmação (destrutivo);
+  botão ↺ (restart) à esquerda do − das moedas reusa `_BotaoMaisMenos` que ganhou `tooltip` opcional
+  (envelopa com `Tooltip` se preenchido). `salvarMoedas(0)`/`salvarXp(0)` já existiam no repo.
+
 ## 2026-08-19 — v0.14.2 (desenho + cor de fundo nas Contas; componentes compartilhados)
 - **Extraí `features/estudo/desenho.dart`** com os componentes de "caderno" que eram privados da
   `EstudoScreen`: `Traco`, `DesenhoPainter`, `BolinhaCor` (era `_Bolinha`), `BotaoIconeDesenho` (era

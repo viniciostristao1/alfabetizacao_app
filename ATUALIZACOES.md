@@ -2,6 +2,12 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.14.3 (2026-08-20)
+- **Zerar pontuação nas Configurações:** na engrenagem ⚙️, ao lado do − das moedas, um
+  botão **↺** zera as moedas **e** o nível do Davi (com confirmação antes).
+- **Moedas subindo nas Contas:** ao acertar uma conta, aparece o **+1 / +2** subindo na
+  tela (como nas palavras) — a criança vê as moedas chegando.
+
 ## v0.14.2 (2026-08-19)
 - **Rabiscar e cor de fundo nas Contas:** a tela das contas ganhou as **canetas coloridas**
   (azul/vermelho/amarelo/roxo) com **vassoura** e **desfazer** na lateral, e as bolinhas de

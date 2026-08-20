@@ -10,6 +10,7 @@ import '../../services/progresso_fases.dart';
 import '../../services/progresso_repository.dart';
 import '../../theme/app_colors.dart';
 import 'desenho.dart';
+import 'feedback_pontos.dart';
 
 /// Tela de estudo (PAISAGEM): mostra uma palavra grande de cada vez, com:
 ///  - **bolinhas de fundo (horizontais)** no topo, ao lado do título — preto,
@@ -340,7 +341,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
                           left: 0,
                           right: 0,
                           child: Center(
-                            child: _PontosFeedback(
+                            child: PontosFeedback(
                               key: ValueKey(_feedbackSeq),
                               texto: _feedback!,
                               onFim: () => setState(() => _feedback = null),
@@ -535,7 +536,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
                               left: 0,
                               right: 0,
                               child: Center(
-                                child: _PontosFeedback(
+                                child: PontosFeedback(
                                   key: ValueKey(_feedbackSeq),
                                   texto: _feedback!,
                                   onFim: () =>
@@ -728,67 +729,6 @@ class _BauDialogState extends State<_BauDialog>
           child: const Text('Continuar'),
         ),
       ],
-    );
-  }
-}
-
-/// "+4" / "-4" flutuando (sobe e some) — feedback rápido do V/X.
-class _PontosFeedback extends StatefulWidget {
-  const _PontosFeedback({super.key, required this.texto, required this.onFim});
-
-  final String texto;
-  final VoidCallback onFim;
-
-  @override
-  State<_PontosFeedback> createState() => _PontosFeedbackState();
-}
-
-class _PontosFeedbackState extends State<_PontosFeedback>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _c = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 950),
-  )..forward();
-
-  @override
-  void initState() {
-    super.initState();
-    _c.addStatusListener((s) {
-      if (s == AnimationStatus.completed) widget.onFim();
-    });
-  }
-
-  @override
-  void dispose() {
-    _c.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final positivo = widget.texto.startsWith('+');
-    return AnimatedBuilder(
-      animation: _c,
-      builder: (_, _) {
-        final t = _c.value;
-        return Opacity(
-          opacity: (1 - t).clamp(0.0, 1.0),
-          child: Transform.translate(
-            offset: Offset(0, -22 * t),
-            child: Text(
-              widget.texto,
-              style: TextStyle(
-                fontSize: 52,
-                fontWeight: FontWeight.w900,
-                color: positivo ? AppColors.acerto : AppColors.danger,
-                shadows: const [
-                  Shadow(color: Colors.black54, blurRadius: 6),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
     );
   }
 }

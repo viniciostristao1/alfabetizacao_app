@@ -78,6 +78,40 @@ class _ConfigScreenState extends State<ConfigScreen> {
     ProgressoRepository.salvarXp(novoXp);
   }
 
+  /// Zera as moedas e o nível (XP) — "começar do zero". Pede confirmação.
+  Future<void> _zerarPontuacao() async {
+    final zerar = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Zerar tudo?'),
+        content: const Text(
+          'As moedas e o nível do Davi voltam a zero.',
+          style: TextStyle(fontSize: 16),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancelar'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: FilledButton.styleFrom(
+              backgroundColor: AppColors.danger,
+            ),
+            child: const Text('Zerar'),
+          ),
+        ],
+      ),
+    );
+    if (zerar != true || !mounted) return;
+    setState(() {
+      _moedas = 0;
+      _xp = 0;
+    });
+    await ProgressoRepository.salvarMoedas(0);
+    await ProgressoRepository.salvarXp(0);
+  }
+
   /// A seção de pontuação é o ITEM 0 da lista (não é arrastável).
   Widget _secaoPontuacao() {
     return Padding(
@@ -110,6 +144,12 @@ class _ConfigScreenState extends State<ConfigScreen> {
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      _BotaoMaisMenos(
+                        icon: Icons.restart_alt_rounded,
+                        tooltip: 'Zerar moedas e nível',
+                        onTap: _zerarPontuacao,
+                      ),
+                      const SizedBox(width: 8),
                       _BotaoMaisMenos(
                         icon: Icons.remove_rounded,
                         onTap: () => _mudarMoedas(-1),
@@ -252,15 +292,17 @@ class _BotaoMaisMenos extends StatelessWidget {
     required this.icon,
     required this.onTap,
     this.onLongPress,
+    this.tooltip,
   });
 
   final IconData icon;
   final VoidCallback onTap;
   final VoidCallback? onLongPress;
+  final String? tooltip;
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    final botao = InkWell(
       onTap: onTap,
       onLongPress: onLongPress,
       customBorder: const CircleBorder(),
@@ -275,5 +317,6 @@ class _BotaoMaisMenos extends StatelessWidget {
         child: Icon(icon, color: AppColors.text, size: 22),
       ),
     );
+    return tooltip == null ? botao : Tooltip(message: tooltip!, child: botao);
   }
 }
