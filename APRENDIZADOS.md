@@ -2,6 +2,21 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-22 — v0.18.0 (continua de onde parou ▶️ + parabéns de categoria 🎉 + layout do anúncio)
+- **`_iniciarJogo` retoma:** carrega `ProgressoFases.carregar()` e abre a 1ª fase NÃO concluída da
+  ordem (`fases.indexWhere(!concluida)`, cai pra 0 se todas concluídas). Rótulo dinâmico
+  `_rotuloIniciar`: nenhuma concluída = INICIAR JOGO; no meio = CONTINUAR JOGO; todas = REINICIAR
+  JOGO. Novo teste `mapa_mundi_test` com `fases_concluidas_v1: ['norte']` confirma que abre a Fase 2.
+- **`_fimDeCategoria`:** quando a ÚLTIMA palavra é acertada e `habitatConcluivel == null` (fora do
+  mapa-múndi), abre `_FimCategoriaDialog` (PARABÉNS 🏆 + `ConfeteBurst(muito:true)` + fala). "Jogar
+  de novo" = `_i=0` + limpa traços + zera sequência; "Sair" = só fecha. **Aviso:** isso MUDOU o teste
+  `widget_test` "V dá pontos e X tira" (a 1ª categoria de 1 palavra agora dispara o diálogo — o teste
+  fecha com "Sair" antes de testar o X).
+- **Diálogos compactos:** `_ProximaFaseDialog` e `_FimCategoriaDialog` usam `insetPadding`
+  vertical 16 + `titlePadding`/`contentPadding`/`actionsPadding` apertados e emoji menor (52) —
+  em tela 800×360 (paisagem) o conteúdo NÃO estoura nem encosta nos botões (AlertDialog sem
+  scroll + Column → overflow sobrepunha os actions).
+
 ## 2026-08-22 — v0.17.0 (app fala as palavras 🗣️ + vibração 📳)
 - **TTS:** dependência nova `flutter_tts` (^4.2.5, precisa minSdk 21 — já OK no gradle).
   `services/fala.dart` = singleton `Fala.instance` com `falar(texto)` — configura `pt-BR`,

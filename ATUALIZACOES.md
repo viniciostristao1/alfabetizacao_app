@@ -3,6 +3,17 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.18.0 (2026-08-22)
+- **Jogo continua de onde parou ▶️:** o botão do mapa-múndi virou **CONTINUAR JOGO**
+  quando já existe progresso — volta exatamente na próxima fase não concluída
+  (e **REINICIAR JOGO** quando todas já foram feitas). Não recomeça mais do zero.
+- **Parabéns ao terminar qualquer categoria 🎉:** acabou as palavras de um tema
+  (habitat, nível, meus animais…) sem passar pelo mapa-múndi → festa de
+  **PARABÉNS! 🏆** com confetes, e o Davi escolhe **"Jogar de novo"** ou **"Sair"**.
+- **Anúncio de fase nova sem sobreposição 🔧:** o texto "Pronto para conhecer os
+  animais dele?" foi ajustado pra caber junto com o botão ▶ JOGAR AGORA, sem
+  rolar nem ficar um por cima do outro.
+
 ## v0.17.0 (2026-08-22)
 - **O app FALA as palavras 🗣️:** a voz do celular lê cada palavra em voz alta
   (português, ritmo devagar) quando ela aparece na tela — e anuncia "Fase

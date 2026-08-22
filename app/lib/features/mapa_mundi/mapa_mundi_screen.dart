@@ -110,12 +110,24 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
     _recarregarProgresso();
   }
 
-  /// "INICIAR JOGO" (botão central branco): começa a aventura pela PRIMEIRA
-  /// fase da ordem configurada (a da engrenagem ⚙️).
+  /// "INICIAR/CONTINUAR JOGO" (botão central branco): começa a aventura pela
+  /// PRIMEIRA fase ainda não concluída da ordem configurada (a da engrenagem
+  /// ⚙️) — se todas já foram concluídas, recomeça pela primeira.
   Future<void> _iniciarJogo() async {
     final fases = await ConfigOrdem.fases();
     if (!mounted || fases.isEmpty) return;
-    await _abrirFase(fases.first, 1);
+    final concluidas = await ProgressoFases.carregar();
+    final idx = fases.indexWhere((r) => !concluidas.contains(r.chave));
+    final inicio = idx < 0 ? 0 : idx;
+    await _abrirFase(fases[inicio], inicio + 1);
+  }
+
+  /// Rótulo do botão principal: nenhuma fase → "INICIAR JOGO"; no meio da
+  /// aventura → "CONTINUAR JOGO"; tudo concluído → "REINICIAR JOGO".
+  String get _rotuloIniciar {
+    if (_concluidas.isEmpty) return 'INICIAR JOGO';
+    if (_proximaChave != null) return 'CONTINUAR JOGO';
+    return 'REINICIAR JOGO';
   }
 
   /// "Voltar habitat" — desfaz a ÚLTIMA fase concluída (uma por toque).
@@ -260,7 +272,7 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
             ),
           ),
           // INICIAR JOGO (inferior-DIREITO, fundo branco) — começa a aventura
-          // na 1ª fase da ordem configurada.
+          // na 1ª fase da ordem configurada (ou CONTINUA de onde parou).
           SafeArea(
             child: Align(
               alignment: Alignment.bottomRight,
@@ -270,7 +282,7 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
                   fit: BoxFit.scaleDown,
                   child: _BotaoTransparente(
                     icon: Icons.play_arrow_rounded,
-                    texto: 'INICIAR JOGO',
+                    texto: _rotuloIniciar,
                     fundo: Colors.white,
                     letra: AppColors.bg,
                     onTap: _iniciarJogo,

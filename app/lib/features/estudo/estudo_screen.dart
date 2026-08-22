@@ -178,6 +178,8 @@ class _EstudoScreenState extends State<EstudoScreen> {
     final ultima = _i == widget.palavras.length - 1;
     if (ultima && habitat != null) {
       await _concluirFase();
+    } else if (ultima) {
+      await _fimDeCategoria();
     } else if (_temProximo) {
       setState(() => _i++);
       _falarPalavraAtual();
@@ -220,6 +222,23 @@ class _EstudoScreenState extends State<EstudoScreen> {
     );
     if (!mounted) return;
     await _avancarParaProximaFase();
+  }
+
+  /// Última palavra de uma categoria FORA do mapa-múndi (habitats, níveis,
+  /// meus animais…): parabéns com "Jogar de novo" / "Sair".
+  Future<void> _fimDeCategoria() async {
+    final deNovo = await showDialog<bool>(
+      context: context,
+      builder: (_) => _FimCategoriaDialog(titulo: widget.titulo),
+    );
+    if (deNovo != true || !mounted) return;
+    setState(() {
+      _i = 0;
+      _tracos.clear();
+      _sequencia = 0;
+    });
+    _prepararIncompleta();
+    _falarPalavraAtual();
   }
 
   /// Depois do baú: anuncia a próxima fase (ou o fim da aventura, se for a
@@ -917,7 +936,16 @@ class _ProximaFaseDialogState extends State<_ProximaFaseDialog>
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('NOVA FASE! 🔓'),
+      // Compacto: a tela é deitada (360 de altura) — sem espaço pra sobrar,
+      // senão o texto encosta/fica atrás dos botões.
+      insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+      titlePadding: const EdgeInsets.fromLTRB(24, 16, 24, 4),
+      contentPadding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
+      title: Text(
+        'NOVA FASE! 🔓',
+        textAlign: TextAlign.center,
+        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
+      ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -925,27 +953,28 @@ class _ProximaFaseDialogState extends State<_ProximaFaseDialog>
           AnimatedBuilder(
             animation: _pulo,
             builder: (_, _) => Transform.translate(
-              offset: Offset(0, -8 * _pulo.value),
+              offset: Offset(0, -6 * _pulo.value),
               child: Text(
                 widget.regiao.emoji,
-                style: const TextStyle(fontSize: 76),
+                style: const TextStyle(fontSize: 52),
               ),
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 6),
           Text(
             'Você desbloqueou o cenário\n${widget.regiao.rotulo}!',
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 4),
           const Text(
             'Pronto para conhecer os animais dele?',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14),
+            style: TextStyle(fontSize: 13),
           ),
         ],
       ),
+      actionsPadding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context, false),
@@ -1016,6 +1045,96 @@ class _FimDaAventuraDialogState extends State<_FimDaAventuraDialog>
         FilledButton(
           onPressed: () => Navigator.pop(context),
           child: const Text('Voltar ao mapa'),
+        ),
+      ],
+    );
+  }
+}
+
+/// Parabéns por terminar uma CATEGORIA (fora do mapa-múndi): festa com
+/// confetes + "Jogar de novo" ou "Sair".
+class _FimCategoriaDialog extends StatefulWidget {
+  const _FimCategoriaDialog({required this.titulo});
+
+  /// Título da categoria concluída, ex.: "🍎  Alimentos · Fácil".
+  final String titulo;
+
+  @override
+  State<_FimCategoriaDialog> createState() => _FimCategoriaDialogState();
+}
+
+class _FimCategoriaDialogState extends State<_FimCategoriaDialog>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 900),
+  )..forward();
+
+  late final Animation<double> _escala = CurvedAnimation(
+    parent: _c,
+    curve: Curves.elasticOut,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    unawaited(Fala.instance.falar('Parabéns! Você terminou!'));
+  }
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+      titlePadding: const EdgeInsets.fromLTRB(24, 16, 24, 4),
+      contentPadding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
+      title: Text(
+        'PARABÉNS! 🎉',
+        textAlign: TextAlign.center,
+        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
+      ),
+      content: SizedBox(
+        width: double.maxFinite,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            const Positioned.fill(child: ConfeteBurst(muito: true)),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ScaleTransition(
+                  scale: _escala,
+                  child: const Text('🏆', style: TextStyle(fontSize: 52)),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Você terminou:\n${widget.titulo}',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      actionsPadding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          child: const Text('Sair'),
+        ),
+        FilledButton.icon(
+          onPressed: () => Navigator.pop(context, true),
+          icon: const Icon(Icons.restart_alt_rounded),
+          label: const Text('Jogar de novo'),
         ),
       ],
     );

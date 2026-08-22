@@ -41,4 +41,29 @@ void main() {
     expect(find.textContaining('Fase 1'), findsOneWidget);
     expect(find.textContaining('América do Norte'), findsOneWidget);
   });
+
+  testWidgets('CONTINUAR JOGO abre a próxima fase não concluída (de onde parou)',
+      (tester) async {
+    // América do Norte (1ª fase) já concluída → o jogo deve CONTINUAR no
+    // Ártico (2ª fase), não voltar do zero.
+    SharedPreferences.setMockInitialValues({
+      'fases_concluidas_v1': <String>['norte'],
+    });
+    tester.platformDispatcher.textScaleFactorTestValue = 0.5;
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+
+    await tester.pumpWidget(const MaterialApp(home: MapaMundiScreen()));
+    await tester.pump(const Duration(milliseconds: 400)); // carrega progresso
+
+    // com progresso, o botão vira CONTINUAR JOGO (não INICIAR)
+    expect(find.text('CONTINUAR JOGO'), findsOneWidget);
+
+    await tester.tap(find.text('CONTINUAR JOGO'));
+    await tester.pump(); // processa o toque (carrega a ordem e abre a fase)
+    await tester.pump(const Duration(milliseconds: 400)); // transição da fase
+
+    // 2ª fase da ordem PADRÃO = Ártico (fase 2) — de onde parou.
+    expect(find.textContaining('Fase 2'), findsOneWidget);
+    expect(find.textContaining('Ártico'), findsOneWidget);
+  });
 }
