@@ -36,7 +36,8 @@ class _PontosFeedbackState extends State<PontosFeedback>
 
   @override
   Widget build(BuildContext context) {
-    final positivo = widget.texto.startsWith('+');
+    final positivo =
+        widget.texto.startsWith('+') || widget.texto.startsWith('🔥');
     return AnimatedBuilder(
       animation: _c,
       builder: (_, _) {

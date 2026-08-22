@@ -2,6 +2,24 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+
+## v0.16.0 (2026-08-22)
+- **Sequência de acertos 🔥:** acertou **3 palavras seguidas sem errar** → "🔥 3 seguidas! +2" e bônus
+  de moedas que cresce a cada 3 (6 seguidas = +4, 9 = +6…). A chama aparece no topo da tela. Errou,
+  zerou. E o **baú** do fim de fase agora também mostra **qual animal entrou na coleção**.
+- **Confetes 🎉:** estrelinhas coloridas voam a cada acerto de palavra e no baú do fim de fase.
+- **Anel pulsando no mapa ✨:** no mapa-múndi, o **próximo habitat a jogar** fica pulsando com brilho
+  neon — a criança vê para onde a aventura continua sem precisar adivinhar.
+- **Coleção de animais 🐾:** novo botão (patinha 🐾) na tela inicial — cada fase concluída no
+  mapa-múndi **ganha o animal da região** (8 no total: 🦌 🐻❄️ 🦅 🐼 🦘 🦁 🐬 🐒). Ainda não ganhou =
+  ❓ "Fase pendente".
+
+## v0.15.0 (2026-08-22)
+- **Aventura CONTÍNUA no mapa-múndi! 🌍** Ao concluir uma fase, depois do baú 🎁, aparece o anúncio
+  **"Você desbloqueou o cenário …!"** com o bicho da próxima região pulando — e o botão **▶ JOGAR AGORA**
+  leva direto para a próxima fase, sem precisar voltar ao mapa. Na última fase, um **parabéns pela
+  aventura completa** 🏆🎉.
+
 ## v0.14.3 (2026-08-20)
 - **Zerar pontuação nas Configurações:** na engrenagem ⚙️, ao lado do − das moedas, um
   botão **↺** zera as moedas **e** o nível do Davi (com confirmação antes).

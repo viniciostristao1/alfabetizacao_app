@@ -2,7 +2,38 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-22 — v0.16.0 (sequência 🔥, confetes 🎉, anel pulsando ✨, coleção 🐾)
+- **Sequência de acertos:** `_sequencia` na `EstudoScreen` (zera no `_errou`); a cada `_sequenciaAlvo=3`
+  seguidas, bônus `(_sequencia ~/ 3) * 2` via **`ProgressoRepository.registrarBonus(int)`** novo (soma
+  XP+moedas, NÃO conta acerto/erro → medalha mede só precisão). Feedback 🔥 entra no slot único
+  `_feedback` (substitui o "+pontos" da vez) e o `PontosFeedback` passou a tratar `startsWith('🔥')`
+  como positivo (verde). Indicador 🔥 no topo quando `_sequencia >= 2`.
+- **`ConfeteBurst`** (`features/estudo/confete.dart`): partículas (rects girando) com origem aleatória,
+  ângulo 360°, gravidade e fade, animação ÚNICA de 1.1s via `AnimatedBuilder`+`CustomPaint`
+  (`IgnorePointer`). `muito: true` = 70 partículas (baú). Reuso com `ValueKey(_confeteSeq)` — cada
+  acerto incrementa e o widget recomeça. Cores da paleta nova **`AppColors.confete`** (regra: nada de
+  `Color(0x…)` solto em tela). No `_BauDialog`, o content virou `SizedBox(width: double.maxFinite)`
+  com `Stack` (confete atrás + coluna do texto).
+- **Anel pulsando:** `_AnelFase` virou StatefulWidget com `AnimationController.repeat(reverse:true)`
+  (900ms) SÓ quando `proximo` (1ª fase ainda não concluída da ordem = getter `_proximaChave` no
+  estado do mapa). **Gotcha de teste:** animação infinita → `pumpAndSettle` TRAVA (timeout). Os
+  testes do mapa (`mapa_mundi_test`, `layout_test`) trocaram `pumpAndSettle` por pumps de duração
+  fixa (`pump()` pra processar microtasks + `pump(400ms)` pra transição).
+- **Coleção:** `features/colecao/colecao_screen.dart` (grade 4×2 com `Regiao.regioes`, ganho =
+  `ProgressoFases.carregar()`); botão `Icons.pets_rounded` na AppBar da home (antes da engrenagem).
+  `_BauDialog` ganhou `regiao` (via `Regiao.porChave`) e avisa "Novo animal da coleção".
+
+## 2026-08-22 — v0.15.0 (aventura contínua entre as fases do mapa-múndi)
+- **`_concluirFase` agora continua o jogo:** após o `_BauDialog`, chama `_avancarParaProximaFase()` —
+  carrega `ConfigOrdem.fases()`, acha o índice da fase atual (`habitatConcluivel`) e: se houver próxima,
+  mostra `_ProximaFaseDialog` (bool: JOGAR AGORA=true) e **`Navigator.pushReplacement`** abre a próxima
+  `EstudoScreen` (título `Fase ${i+2}`, `palavrasDaRegiao`, `habitatConcluivel`) — o Voltar cai direto no
+  mapa, sem pilha acumulada; se for a última, `_FimDaAventuraDialog` só anuncia (devolve false → fica no
+  mapa). `_ProximaFaseDialog` = emoji pulando (`AnimationController.repeat(reverse:true)` + translate);
+  `_FimDaAventuraDialog` = 🎉 com `elasticOut` (mesmo padrão do `_BauDialog`).
+
 ## 2026-08-20 — v0.14.3 (zerar pontuação nas Configurações; feedback "+1/+2" nas Contas)
+
 - **`_PontosFeedback` virou `PontosFeedback`** em `features/estudo/feedback_pontos.dart` (público,
   reusado pela `ContaEstudoScreen` — mesmo padrão de `desenho.dart`; `EstudoScreen` segue usando com
   o mesmo `ValueKey(_feedbackSeq)` + `onFim`). A `ContaEstudoScreen` ganhou `_feedback`/`_feedbackSeq`,

@@ -19,4 +19,14 @@ abstract final class AppColors {
   static const onAccent = Color(0xFF06122B);
   static const danger = Color(0xFFFF6B6B); // erro / X
   static const acerto = Color(0xFF2ECC71); // acerto / V
+
+  /// Paleta viva dos confetes (acerto/baú) — cores de festa.
+  static const confete = <Color>[
+    Color(0xFFFDB405), // âmbar (a cor do logo)
+    accent,
+    acerto,
+    danger,
+    Color(0xFF9B59B6), // roxo
+    Color(0xFF1ABC9C), // turquesa
+  ];
 }

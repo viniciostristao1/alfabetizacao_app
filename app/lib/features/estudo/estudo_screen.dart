@@ -4,11 +4,15 @@ import 'package:flutter/services.dart';
 import '../../models/estudo_opcoes.dart';
 import '../../models/modo_leitura.dart';
 import '../../models/palavra.dart';
+import '../../models/regiao.dart';
+import '../../services/banco_palavras.dart';
 import '../../services/completar_silaba.dart';
 import '../../services/config_leitura.dart';
+import '../../services/config_ordem.dart';
 import '../../services/progresso_fases.dart';
 import '../../services/progresso_repository.dart';
 import '../../theme/app_colors.dart';
+import 'confete.dart';
 import 'desenho.dart';
 import 'feedback_pontos.dart';
 
@@ -64,6 +68,14 @@ class _EstudoScreenState extends State<EstudoScreen> {
   String? _erradaSel; // opção errada tocada (fica vermelha até tentar de novo)
   String? _feedback; // "+4" / "-4" flutuando sobre a palavra
   int _feedbackSeq = 0; // key nova a cada feedback (reinicia a animação)
+
+  // ── sequência de acertos 🔥 + confetes 🎉 ──
+  int _sequencia = 0; // acertos seguidos (zera no erro)
+  int _confeteSeq = 0; // key nova a cada acerto (reinicia o confete)
+
+  /// A cada [sequenciaAlvo] acertos seguidos, bônus crescente (2, 4, 6…).
+  static const _sequenciaAlvo = 3;
+  int get _bonusSequencia => (_sequencia ~/ _sequenciaAlvo) * 2;
 
   @override
   void initState() {
@@ -129,16 +141,28 @@ class _EstudoScreenState extends State<EstudoScreen> {
 
   /// V verde: acertou → soma pontos (XP + moedas) e avança. Se for a última
   /// palavra de uma fase do mapa-múndi, abre o baú (bônus + medalha).
+  /// Sequência de acertos 🔥: a cada 3 seguidas, bônus extra de moedas.
   Future<void> _acertou() async {
     final pontos = _pontosPalavra;
     final habitat = widget.habitatConcluivel;
     await ProgressoRepository.registrarAcerto(pontos, habitat: habitat);
     if (!mounted) return;
+    _sequencia++;
+    final bonus = _bonusSequencia;
+    if (bonus > 0) {
+      await ProgressoRepository.registrarBonus(bonus);
+    }
+    if (!mounted) return;
     setState(() {
-      _moedas += pontos;
-      _xp += pontos;
+      _moedas += pontos + bonus;
+      _xp += pontos + bonus;
       _tracos.clear();
-      _mostrarFeedback('+$pontos');
+      _confeteSeq++;
+      if (bonus > 0) {
+        _mostrarFeedback('🔥 $_sequencia seguidas! +$bonus');
+      } else {
+        _mostrarFeedback('+$pontos');
+      }
     });
     final ultima = _i == widget.palavras.length - 1;
     if (ultima && habitat != null) {
@@ -149,14 +173,16 @@ class _EstudoScreenState extends State<EstudoScreen> {
     _prepararIncompleta();
   }
 
-  /// X vermelho: errou → perde os pontos da palavra (nunca abaixo de zero) e a
-  /// palavra REPETE até acertar (erro vira aprendizado, não frustração).
+  /// X vermelho: errou → perde os pontos da palavra (nunca abaixo de zero),
+  /// ZERA a sequência de acertos 🔥 e a palavra REPETE até acertar (erro vira
+  /// aprendizado, não frustração).
   Future<void> _errou() async {
     final pontos = _pontosPalavra;
     final habitat = widget.habitatConcluivel;
     await ProgressoRepository.registrarErro(pontos, habitat: habitat);
     if (!mounted) return;
     setState(() {
+      _sequencia = 0;
       _moedas = (_moedas - pontos).clamp(0, 99999);
       _tracos.clear();
       _mostrarFeedback('-$pontos');
@@ -164,18 +190,70 @@ class _EstudoScreenState extends State<EstudoScreen> {
   }
 
   /// Fim de fase no mapa-múndi: baú com bônus de moedas + medalha pela
-  /// precisão (ouro/prata/bronze).
+  /// precisão. Depois do baú, o fluxo é CONTÍNUO: anuncia a próxima fase e
+  /// oferece "Jogar agora" (sem precisar voltar ao mapa e tocar de novo).
   Future<void> _concluirFase() async {
     final medalha = await ProgressoRepository.medalhaDe(
       widget.habitatConcluivel!,
     );
+    final regiao = Regiao.porChave(widget.habitatConcluivel!);
     await ProgressoRepository.registrarBonusFase();
     if (!mounted) return;
     setState(() => _moedas += ProgressoRepository.bonusFase);
     await showDialog<void>(
       context: context,
-      builder: (_) => _BauDialog(medalha: medalha),
+      builder: (_) => _BauDialog(medalha: medalha, regiao: regiao),
     );
+    if (!mounted) return;
+    await _avancarParaProximaFase();
+  }
+
+  /// Depois do baú: anuncia a próxima fase (ou o fim da aventura, se for a
+  /// última) e, se o Davi tocar em "Jogar agora", abre a fase seguinte aqui
+  /// mesmo (troca a tela atual pela próxima, mantendo a sessão contínua).
+  Future<void> _avancarParaProximaFase() async {
+    final chave = widget.habitatConcluivel;
+    if (chave == null) return;
+    final fases = await ConfigOrdem.fases();
+    if (!mounted) return;
+    final i = fases.indexWhere((r) => r.chave == chave);
+    if (i < 0) return;
+    final ehUltima = i == fases.length - 1;
+    final ir = ehUltima
+        ? await _mostrarFimDaAventura()
+        : await _mostrarProximaFase(fases[i + 1]);
+    if (ir != true || !mounted) return;
+    final proxima = fases[i + 1];
+    await Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (_) => EstudoScreen(
+          titulo: '${proxima.emoji}  Fase ${i + 2} · ${proxima.rotulo}',
+          palavras: palavrasDaRegiao(proxima.chave),
+          manterPaisagemAoSair: true,
+          habitatConcluivel: proxima.chave,
+        ),
+      ),
+    );
+  }
+
+  /// Anúncio animado da próxima fase: "Você desbloqueou o cenário Ártico!".
+  /// Devolve `true` se o Davi tocou em "Jogar agora".
+  Future<bool> _mostrarProximaFase(Regiao proxima) async {
+    return await showDialog<bool>(
+      context: context,
+      builder: (_) => _ProximaFaseDialog(regiao: proxima),
+    ) ??
+        false;
+  }
+
+  /// Última fase concluída: parabéns pela aventura completa (só avisa — volta
+  /// pro mapa).
+  Future<bool> _mostrarFimDaAventura() async {
+    await showDialog<void>(
+      context: context,
+      builder: (_) => _FimDaAventuraDialog(),
+    );
+    return false;
   }
 
   /// Marca a fase concluída quando a criança chega na última palavra do habitat.
@@ -474,6 +552,18 @@ class _EstudoScreenState extends State<EstudoScreen> {
                           fontWeight: FontWeight.w700,
                         ),
                       ),
+                      // sequência de acertos 🔥 (visível a partir de 2)
+                      if (_sequencia >= 2) ...[
+                        const SizedBox(width: 8),
+                        Text(
+                          '🔥 $_sequencia',
+                          style: TextStyle(
+                            color: ui,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ],
@@ -653,18 +743,27 @@ class _EstudoScreenState extends State<EstudoScreen> {
               ],
             ),
           ),
+          // confetes 🎉 a cada acerto (efeito visual por cima de tudo)
+          if (_confeteSeq > 0)
+            Positioned.fill(
+              child: ConfeteBurst(key: ValueKey(_confeteSeq)),
+            ),
         ],
       ),
     );
   }
 }
 
-/// Baú do fim de fase (mapa-múndi): presente animado + bônus de moedas +
-/// medalha pela precisão da fase.
+/// Baú do fim de fase (mapa-múndi): presente animado + confetes + bônus de
+/// moedas + medalha pela precisão + aviso do animal novo na coleção.
 class _BauDialog extends StatefulWidget {
-  const _BauDialog({required this.medalha});
+  const _BauDialog({required this.medalha, required this.regiao});
 
   final String? medalha; // 'ouro' | 'prata' | 'bronze' | null
+
+  /// Região concluída (o animal vai pra coleção) — pode ser null se a fase
+  /// não for uma região do mapa-múndi.
+  final Regiao? regiao;
 
   @override
   State<_BauDialog> createState() => _BauDialogState();
@@ -699,34 +798,185 @@ class _BauDialogState extends State<_BauDialog>
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text('FASE CONCLUÍDA!'),
+      content: SizedBox(
+        width: double.maxFinite,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // confetes 🎉 por cima do baú (efeito de festa)
+            const Positioned.fill(
+              child: ConfeteBurst(muito: true),
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ScaleTransition(
+                  scale: _escala,
+                  child: const Text('🎁', style: TextStyle(fontSize: 76)),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  '+${ProgressoRepository.bonusFase} moedas!',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.accent,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  _medalhaTexto,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 15),
+                ),
+                if (widget.regiao != null) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    '🐾 Novo animal da coleção:\n'
+                    '${widget.regiao!.emoji} ${widget.regiao!.rotulo}!',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        FilledButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Continuar'),
+        ),
+      ],
+    );
+  }
+}
+
+/// Anúncio de fase DESBLOQUEADA (fluxo contínuo do mapa-múndi): o emoji da
+/// próxima região pula animado + o nome do cenário em destaque. "Jogar agora"
+/// abre a fase seguinte na mesma sessão; "Mapa" volta pro mapa-múndi.
+class _ProximaFaseDialog extends StatefulWidget {
+  const _ProximaFaseDialog({required this.regiao});
+
+  final Regiao regiao;
+
+  @override
+  State<_ProximaFaseDialog> createState() => _ProximaFaseDialogState();
+}
+
+class _ProximaFaseDialogState extends State<_ProximaFaseDialog>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _pulo = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 700),
+  )..repeat(reverse: true);
+
+  @override
+  void dispose() {
+    _pulo.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('NOVA FASE! 🔓'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // emoji pulando (a "mascote" da próxima fase)
+          AnimatedBuilder(
+            animation: _pulo,
+            builder: (_, _) => Transform.translate(
+              offset: Offset(0, -8 * _pulo.value),
+              child: Text(
+                widget.regiao.emoji,
+                style: const TextStyle(fontSize: 76),
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Você desbloqueou o cenário\n${widget.regiao.rotulo}!',
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+          ),
+          const SizedBox(height: 6),
+          const Text(
+            'Pronto para conhecer os animais dele?',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 14),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          child: const Text('Mapa'),
+        ),
+        FilledButton.icon(
+          onPressed: () => Navigator.pop(context, true),
+          icon: const Icon(Icons.play_arrow_rounded),
+          label: const Text('JOGAR AGORA'),
+        ),
+      ],
+    );
+  }
+}
+
+/// Fim da aventura: todas as fases do mapa-múndi concluídas. 🎉
+class _FimDaAventuraDialog extends StatefulWidget {
+  const _FimDaAventuraDialog();
+
+  @override
+  State<_FimDaAventuraDialog> createState() => _FimDaAventuraDialogState();
+}
+
+class _FimDaAventuraDialogState extends State<_FimDaAventuraDialog>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 900),
+  )..forward();
+
+  late final Animation<double> _escala = CurvedAnimation(
+    parent: _c,
+    curve: Curves.elasticOut,
+  );
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('AVENTURA CONCLUÍDA! 🏆'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           ScaleTransition(
             scale: _escala,
-            child: const Text('🎁', style: TextStyle(fontSize: 76)),
+            child: const Text('🎉', style: TextStyle(fontSize: 76)),
           ),
           const SizedBox(height: 10),
-          Text(
-            '+${ProgressoRepository.bonusFase} moedas!',
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w800,
-              color: AppColors.accent,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            _medalhaTexto,
+          const Text(
+            'Você visitou TODAS as regiões do mapa-múndi!\nParabéns, Davi!',
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 15),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
           ),
         ],
       ),
       actions: [
         FilledButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Continuar'),
+          child: const Text('Voltar ao mapa'),
         ),
       ],
     );

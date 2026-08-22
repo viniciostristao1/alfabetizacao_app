@@ -29,10 +29,13 @@ void main() {
     addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
 
     await tester.pumpWidget(const MaterialApp(home: MapaMundiScreen()));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 400)); // carrega progresso
 
+    // SEM pumpAndSettle: o anel da próxima fase fica PULSANDO para sempre
+    // (animação contínua de guia visual) — pumps com duração fixa resolvem.
     await tester.tap(find.text('INICIAR JOGO'));
-    await tester.pumpAndSettle();
+    await tester.pump(); // processa o toque (carrega a ordem e abre a fase)
+    await tester.pump(const Duration(milliseconds: 400)); // transição da fase
 
     // 1ª fase da ordem PADRÃO por região = América do Norte (fase 1).
     expect(find.textContaining('Fase 1'), findsOneWidget);

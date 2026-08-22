@@ -6,6 +6,7 @@ import '../../theme/app_colors.dart';
 import '../../util/versao.dart';
 import '../config/config_screen.dart';
 import '../contas/contas_menu_screen.dart';
+import '../colecao/colecao_screen.dart';
 import '../escrever/escrever_screen.dart';
 import '../habitat/habitat_map_screen.dart';
 import '../nivel/nivel_screen.dart';
@@ -121,6 +122,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+          ),
+          IconButton(
+            tooltip: 'Coleção de animais',
+            icon: const Icon(Icons.pets_rounded),
+            onPressed: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const ColecaoScreen()),
+              );
+            },
           ),
           IconButton(
             tooltip: 'Configurações',

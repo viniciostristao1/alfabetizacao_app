@@ -76,6 +76,15 @@ class ProgressoRepository {
         _chaveMoedas, (prefs.getInt(_chaveMoedas) ?? 0) + bonusFase);
   }
 
+  /// Bônus extra qualquer (ex.: sequência de acertos 🔥): XP e moedas.
+  /// Não conta acerto/erro — a medalha do habitat mede só a precisão.
+  static Future<void> registrarBonus(int pontos) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_chaveXp, (prefs.getInt(_chaveXp) ?? 0) + pontos);
+    await prefs.setInt(
+        _chaveMoedas, (prefs.getInt(_chaveMoedas) ?? 0) + pontos);
+  }
+
   /// Define o saldo de moedas manualmente (pai/mãe, nas Configurações).
   /// Nunca fica negativo.
   static Future<void> salvarMoedas(int valor) async {

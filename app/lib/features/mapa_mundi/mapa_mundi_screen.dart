@@ -77,6 +77,16 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
     }
   }
 
+  /// A PRÓXIMA fase a jogar na ordem configurada (primeira ainda não
+  /// concluída) — o anel dela fica pulsando, guiando o olhar. `null` quando
+  /// todas já foram concluídas (aí todas acendem, sem pista de "próxima").
+  String? get _proximaChave {
+    for (final r in _fases) {
+      if (!_concluidas.contains(r.chave)) return r.chave;
+    }
+    return null;
+  }
+
   Future<void> _recarregarProgresso() async {
     final c = await ProgressoFases.carregar();
     if (mounted) setState(() => _concluidas = c);
@@ -191,6 +201,7 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
                             height: anelH,
                             child: _AnelFase(
                               concluida: _concluidas.contains(_fases[i].chave),
+                              proximo: _fases[i].chave == _proximaChave,
                               onTap: () => _abrirFase(_fases[i], i + 1),
                             ),
                           ),
@@ -360,64 +371,112 @@ class _CaminhoPainter extends CustomPainter {
 
 /// Anel/pódio de fase (estilo "anel embaixo do personagem"): elipse bem achatada
 /// no "chão" com contorno neon e brilho difuso ("fumacinha"). SÓ o anel/círculo
-/// — sem emoji nenhum (pedido do usuário). Concluída = anel ACESO.
-class _AnelFase extends StatelessWidget {
+/// — sem emoji nenhum (pedido do usuário). Concluída = anel ACESO; `proximo`
+/// (a próxima fase a jogar) = anel **pulsando**, guiando o olhar da criança.
+class _AnelFase extends StatefulWidget {
   const _AnelFase({
     required this.concluida,
+    required this.proximo,
     required this.onTap,
   });
 
   final bool concluida;
+
+  /// É a próxima fase da ordem (primeira ainda não concluída)?
+  final bool proximo;
+
   final VoidCallback onTap;
+
+  @override
+  State<_AnelFase> createState() => _AnelFaseState();
+}
+
+class _AnelFaseState extends State<_AnelFase>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _pulso = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 900),
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.proximo) _pulso.repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _pulso.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     // O anel PREENCHE a caixa que recebe (largura d × altura anelH) — a área de
     // toque é exatamente o anel, sem "sobra" clicável por cima.
     return GestureDetector(
-      onTap: onTap,
+      onTap: widget.onTap,
       behavior: HitTestBehavior.opaque,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.elliptical(360, 120)),
-          gradient: RadialGradient(
-            radius: 0.95,
-            colors: concluida
-                ? [
-                    _neon.withValues(alpha: 0.05),
-                    _neon.withValues(alpha: 0.45),
-                  ]
-                : [
-                    Colors.white.withValues(alpha: 0.02),
-                    Colors.black.withValues(alpha: 0.30),
-                  ],
-            stops: const [0.35, 1.0],
-          ),
-          border: Border.all(
-            color: concluida ? _neon : Colors.white.withValues(alpha: 0.5),
-            width: concluida ? 3.5 : 2,
-          ),
-          boxShadow: concluida
-              ? [
-                  BoxShadow(
-                    color: _neon.withValues(alpha: 0.6),
-                    blurRadius: 26,
-                    spreadRadius: 4,
-                  ),
-                  BoxShadow(
-                    color: _neon.withValues(alpha: 0.9),
-                    blurRadius: 12,
-                    spreadRadius: 1,
-                  ),
-                ]
-              : [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.4),
-                    blurRadius: 8,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-        ),
+      child: AnimatedBuilder(
+        animation: _pulso,
+        builder: (_, _) {
+          final pulso = widget.proximo ? (0.5 + 0.5 * _pulso.value) : 0.0;
+          final base = widget.concluida ? 3.5 : 2.0;
+          return DecoratedBox(
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.elliptical(360, 120)),
+              gradient: RadialGradient(
+                radius: 0.95,
+                colors: widget.concluida
+                    ? [
+                        _neon.withValues(alpha: 0.05),
+                        _neon.withValues(alpha: 0.45),
+                      ]
+                    : [
+                        Colors.white.withValues(alpha: 0.02),
+                        Colors.black.withValues(alpha: 0.30),
+                      ],
+                stops: const [0.35, 1.0],
+              ),
+              border: Border.all(
+                color: widget.proximo
+                    ? Color.lerp(Colors.white, _neon, pulso)!
+                    : widget.concluida
+                        ? _neon
+                        : Colors.white.withValues(alpha: 0.5),
+                width: base + (widget.proximo ? 1.6 * pulso : 0),
+              ),
+              boxShadow: widget.concluida
+                  ? [
+                      BoxShadow(
+                        color: _neon.withValues(alpha: 0.6),
+                        blurRadius: 26,
+                        spreadRadius: 4,
+                      ),
+                      BoxShadow(
+                        color: _neon.withValues(alpha: 0.9),
+                        blurRadius: 12,
+                        spreadRadius: 1,
+                      ),
+                      if (widget.proximo)
+                        BoxShadow(
+                          color: _neon.withValues(alpha: 0.25 + 0.65 * pulso),
+                          blurRadius: 14 + 22 * pulso,
+                          spreadRadius: 2 + 4 * pulso,
+                        ),
+                    ]
+                  : [
+                      BoxShadow(
+                        color: widget.proximo
+                            ? _neon.withValues(alpha: 0.15 + 0.5 * pulso)
+                            : Colors.black.withValues(alpha: 0.4),
+                        blurRadius: widget.proximo ? 6 + 20 * pulso : 8,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+            ),
+          );
+        },
       ),
     );
   }

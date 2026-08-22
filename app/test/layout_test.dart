@@ -81,7 +81,9 @@ void main() {
     addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
 
     await tester.pumpWidget(const MaterialApp(home: MapaMundiScreen()));
-    await tester.pumpAndSettle();
+    // SEM pumpAndSettle: o anel da próxima fase fica PULSANDO para sempre
+    // (animação contínua de guia visual) — pump com duração fixa resolve.
+    await tester.pump(const Duration(milliseconds: 500));
 
     // moedas sempre visíveis no mapa-múndi (canto superior direito)
     expect(find.textContaining('🪙'), findsOneWidget);
@@ -125,7 +127,9 @@ void main() {
     addTearDown(tester.view.reset);
 
     await tester.pumpWidget(const MaterialApp(home: MapaMundiScreen()));
-    await tester.pumpAndSettle();
+    // SEM pumpAndSettle: o anel da próxima fase fica PULSANDO para sempre
+    // (animação contínua de guia visual) — pump com duração fixa resolve.
+    await tester.pump(const Duration(milliseconds: 500));
 
     // nenhum emoji de categoria/animal na tela do mapa
     expect(find.text('❄️'), findsNothing);
