@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/modo_leitura.dart';
 import '../../models/regiao.dart';
+import '../../services/config_fala.dart';
 import '../../services/config_leitura.dart';
 import '../../services/config_ordem.dart';
 import '../../services/progresso_repository.dart';
@@ -10,9 +11,11 @@ import '../../theme/app_colors.dart';
 /// Configurações. Por enquanto:
 ///  - **Pontuação:** o pai/mãe ajusta as moedas 🪙 e o nível ⭐ do Davi
 ///    (ex.: começar de novo, acertar a contagem);
+///  - **Como mostrar as palavras** (MAIÚSCULAS / minúsculas) e se o app deve
+///    **falar** as palavras em voz alta;
 ///  - **Ordem das fases** do mapa-múndi — arrasta pra decidir em que sequência
 ///    as categorias de animais rodam (Ártico, Fazenda, Aves…).
-/// Salvo local (ConfigOrdem / ProgressoRepository).
+/// Salvo local (ConfigOrdem / ConfigLeitura / ConfigFala / ProgressoRepository).
 class ConfigScreen extends StatefulWidget {
   const ConfigScreen({super.key});
 
@@ -25,6 +28,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
   int _moedas = 0;
   int _xp = 0;
   ModoLeitura _modo = ModoLeitura.maiuscula;
+  bool _falar = true;
 
   @override
   void initState() {
@@ -37,12 +41,14 @@ class _ConfigScreenState extends State<ConfigScreen> {
     final moedas = await ProgressoRepository.moedas();
     final xp = await ProgressoRepository.xp();
     final modo = await ConfigLeitura.carregar();
+    final falar = await ConfigFala.ativado();
     if (mounted) {
       setState(() {
         _fases = fases;
         _moedas = moedas;
         _xp = xp;
         _modo = modo;
+        _falar = falar;
       });
     }
   }
@@ -50,6 +56,11 @@ class _ConfigScreenState extends State<ConfigScreen> {
   void _mudarModo(ModoLeitura modo) {
     setState(() => _modo = modo);
     ConfigLeitura.salvar(modo);
+  }
+
+  void _mudarFalar(bool valor) {
+    setState(() => _falar = valor);
+    ConfigFala.salvar(valor);
   }
 
   void _reordenar(int velho, int novo) {
@@ -223,6 +234,24 @@ class _ConfigScreenState extends State<ConfigScreen> {
             selected: {_modo},
             showSelectedIcon: false,
             onSelectionChanged: (s) => _mudarModo(s.first),
+          ),
+          const SizedBox(height: 4),
+          Card(
+            color: AppColors.surface,
+            margin: EdgeInsets.zero,
+            child: SwitchListTile(
+              secondary: const Text('🗣️', style: TextStyle(fontSize: 24)),
+              title: const Text(
+                'Falar a palavra',
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+              ),
+              subtitle: const Text(
+                'O celular lê a palavra em voz alta quando ela aparece.',
+                style: TextStyle(color: AppColors.dim),
+              ),
+              value: _falar,
+              onChanged: _mudarFalar,
+            ),
           ),
           const SizedBox(height: 14),
           const Text(

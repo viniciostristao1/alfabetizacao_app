@@ -3,6 +3,14 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.17.0 (2026-08-22)
+- **O app FALA as palavras 🗣️:** a voz do celular lê cada palavra em voz alta
+  (português, ritmo devagar) quando ela aparece na tela — e anuncia "Fase
+  concluída!", "Você desbloqueou o cenário Ártico!" e o parabéns da aventura.
+  Dá pra **desligar** na engrenagem ⚙️ → "Falar a palavra" (padrão: ligado).
+- **Vibração de toque 📳:** o celular vibra de leve no acerto, firme no erro e
+  mais forte no baú do fim de fase — resposta tátil do jogo.
+
 ## v0.16.0 (2026-08-22)
 - **Sequência de acertos 🔥:** acertou **3 palavras seguidas sem errar** → "🔥 3 seguidas! +2" e bônus
   de moedas que cresce a cada 3 (6 seguidas = +4, 9 = +6…). A chama aparece no topo da tela. Errou,

@@ -2,6 +2,21 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-22 — v0.17.0 (app fala as palavras 🗣️ + vibração 📳)
+- **TTS:** dependência nova `flutter_tts` (^4.2.5, precisa minSdk 21 — já OK no gradle).
+  `services/fala.dart` = singleton `Fala.instance` com `falar(texto)` — configura `pt-BR`,
+  `setSpeechRate(0.45)`, `awaitSpeakCompletion(true)`, `stop()` antes de falar; TUDO em
+  `try/catch` (emulador/sem voz → silencioso, nunca quebra). `services/config_fala.dart` =
+  `ConfigFala.ativado()/salvar()` (padrão LIGADO). Na `EstudoScreen`, `_falarPalavraAtual()`
+  (fire-and-forget com `unawaited` de `dart:async`) dispara em `_carregarGamificacao`,
+  `_acertou` (ao avançar), `_anterior`, `_proximo`, `_recomecar`; os diálogos `_BauDialog`,
+  `_ProximaFaseDialog` e `_FimDaAventuraDialog` falam no `initState`. Toggle `SwitchListTile`
+  "Falar a palavra" na ConfigScreen (seção "Como mostrar as palavras").
+- **Haptics:** `HapticFeedback.lightImpact()` no acerto, `heavyImpact()` no erro,
+  `mediumImpact()` no baú (do `flutter/services.dart`, já importado). Em testes de widget são
+  no-op (channel sem handler) — não quebra nada.
+- **Gotcha:** `unawaited` exige `import 'dart:async'` (evita lint `unawaited_futures`).
+
 ## 2026-08-22 — v0.16.0 (sequência 🔥, confetes 🎉, anel pulsando ✨, coleção 🐾)
 - **Sequência de acertos:** `_sequencia` na `EstudoScreen` (zera no `_errou`); a cada `_sequenciaAlvo=3`
   seguidas, bônus `(_sequencia ~/ 3) * 2` via **`ProgressoRepository.registrarBonus(int)`** novo (soma

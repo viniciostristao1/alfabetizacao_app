@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -9,6 +11,7 @@ import '../../services/banco_palavras.dart';
 import '../../services/completar_silaba.dart';
 import '../../services/config_leitura.dart';
 import '../../services/config_ordem.dart';
+import '../../services/fala.dart';
 import '../../services/progresso_fases.dart';
 import '../../services/progresso_repository.dart';
 import '../../theme/app_colors.dart';
@@ -99,7 +102,14 @@ class _EstudoScreenState extends State<EstudoScreen> {
         _modo = modo;
       });
       _prepararIncompleta();
+      _falarPalavraAtual();
     }
+  }
+
+  /// Fala a palavra atual em voz alta (voz do celular) — a criança ouve o som
+  /// enquanto vê a escrita. Disparada ao abrir e ao trocar de palavra.
+  void _falarPalavraAtual() {
+    unawaited(Fala.instance.falar(widget.palavras[_i].texto));
   }
 
   /// Monta o desafio "completar a sílaba" da palavra atual (se o modo for esse).
@@ -153,6 +163,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
       await ProgressoRepository.registrarBonus(bonus);
     }
     if (!mounted) return;
+    HapticFeedback.lightImpact(); // toque leve de "bom!"
     setState(() {
       _moedas += pontos + bonus;
       _xp += pontos + bonus;
@@ -169,6 +180,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
       await _concluirFase();
     } else if (_temProximo) {
       setState(() => _i++);
+      _falarPalavraAtual();
     }
     _prepararIncompleta();
   }
@@ -181,6 +193,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
     final habitat = widget.habitatConcluivel;
     await ProgressoRepository.registrarErro(pontos, habitat: habitat);
     if (!mounted) return;
+    HapticFeedback.heavyImpact(); // toque firme de "atenção!"
     setState(() {
       _sequencia = 0;
       _moedas = (_moedas - pontos).clamp(0, 99999);
@@ -199,6 +212,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
     final regiao = Regiao.porChave(widget.habitatConcluivel!);
     await ProgressoRepository.registrarBonusFase();
     if (!mounted) return;
+    HapticFeedback.mediumImpact(); // baú: toque mais forte
     setState(() => _moedas += ProgressoRepository.bonusFase);
     await showDialog<void>(
       context: context,
@@ -291,6 +305,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
       _tracos.clear();
     });
     _prepararIncompleta();
+    _falarPalavraAtual();
   }
 
   void _proximo() {
@@ -301,6 +316,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
     });
     _talvezConcluir();
     _prepararIncompleta();
+    _falarPalavraAtual();
   }
 
   void _recomecar() {
@@ -309,6 +325,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
       _tracos.clear();
     });
     _prepararIncompleta();
+    _falarPalavraAtual();
   }
 
   void _sair() => Navigator.of(context).pop();
@@ -782,6 +799,12 @@ class _BauDialogState extends State<_BauDialog>
   );
 
   @override
+  void initState() {
+    super.initState();
+    unawaited(Fala.instance.falar('Fase concluída!'));
+  }
+
+  @override
   void dispose() {
     _c.dispose();
     super.dispose();
@@ -876,6 +899,16 @@ class _ProximaFaseDialogState extends State<_ProximaFaseDialog>
   )..repeat(reverse: true);
 
   @override
+  void initState() {
+    super.initState();
+    unawaited(
+      Fala.instance.falar(
+        'Você desbloqueou o cenário ${widget.regiao.rotulo}!',
+      ),
+    );
+  }
+
+  @override
   void dispose() {
     _pulo.dispose();
     super.dispose();
@@ -947,6 +980,12 @@ class _FimDaAventuraDialogState extends State<_FimDaAventuraDialog>
     parent: _c,
     curve: Curves.elasticOut,
   );
+
+  @override
+  void initState() {
+    super.initState();
+    unawaited(Fala.instance.falar('Parabéns! Você completou a aventura!'));
+  }
 
   @override
   void dispose() {
