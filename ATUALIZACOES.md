@@ -3,6 +3,13 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.20.0 (2026-08-23)
+- **Baú muito mais caprichado 🧰✨:** novo desenho com **tábuas de madeira com
+  veios**, **faixas de ouro com rebites**, **cadeado com buraco de fechadura**,
+  tampa **abaulada com friso dourado e brasão**. E o **tesouro de dentro**:
+  quando a tampa abre, aparecem **moedas de ouro empilhadas com joias
+  (esmeralda e safira)** e brilhos — e moedas **escorrem pela frente** do baú!
+
 ## v0.19.0 (2026-08-23)
 - **"Sair" do parabéns agora VOLTA para os cenários ↩️:** ao terminar uma categoria
   fora do mapa-múndi, o "Sair" tem a mesma função do "Voltar" — sai da categoria

@@ -2,6 +2,27 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-23 — v0.20.0 (redesenho do baú: madeira, ouro e TESOURO)
+- **`_BauPainter` reescrito com detalhes:** tábuas (vinco vertical) + veios (onda `sin(x/w*3)`),
+  faixas de ouro com `_rebite` (3 por faixa no corpo, 2 na tampa), cadeado com placa + buraco
+  de fechadura (círculo+triângulo) + alça (`drawArc`), frisos dourados na boca/rodapé/tampa,
+  brasão (quadrado rotacionado 45°) e sombra no chão (`MaskFilter.blur`).
+- **TESOURO:** `_interiorETesouro` desenha a parede interna (`AppColors.bauInterior` nova) e
+  **fileiras de moedas que aparecem progressivamente** — fileira `i` (dy = -6-11i) só desenha
+  quando `aberto >= raio - dy` (a boca `p*lidH` "descobre" o tesouro). Moeda = sombra + gradiente
+  radial dourado + aresta + brilho; joias = losango com facetas (cores reusadas: `acerto`=esmeralda,
+  `accent`=safira); brilhos = cápsulas cruzadas. `_tesouroDerramado` (p>0.55): 3 moedas deslizam
+  pela frente do baú. Posições com `Random(7)` (seed fixa — não treme entre frames).
+- **FIX da tampa:** rotação pura (`rotate(-p*1.9)`) fazia a tampa balançar para o LADO e COBRIR o
+  tesouro (o braço de rotação saindo de cima do corpo nunca sobe). Troquei por **achatar+subir**
+  (`visivel = lidH*(1-0.72p)`, `sobe = -p*lidH*0.6`, leve `rotate(-p*0.3)`) — a tampa "levanta e
+  afunda para trás", revelando a boca com o tesouro.
+- **Inspeção visual sem olhos:** o modelo não lê imagens → usei capturas `matchesGoldenFile`
+  (`--update-goldens`) + script Python (PIL) que classifica pixels por cor e imprime "ASCII art"
+  da imagem para conferir a estrutura (verificado: interior escuro + clusters dourados de moedas
+  no aberto; tampa/frisos/cadeado no fechado). Teste de preview + goldens foram REMOVIDOS depois
+  (mantive só o teste funcional do baú com `Key('bau')`).
+
 ## 2026-08-23 — v0.19.0 (baú animado 🧰 + "Sair" volta aos cenários)
 - **`_BauDialog` virou o baú do tesouro:** fechado → toque (`_abrirBau`) → tampa gira
   (painter `_BauPainter` com `rotate(-p*1.9)` na dobradiça + brilho `RadialGradient`) →

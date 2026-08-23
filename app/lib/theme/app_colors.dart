@@ -35,4 +35,5 @@ abstract final class AppColors {
   static const bauMadeiraEscura = Color(0xFF6B4523); // madeira sombreada
   static const bauOuro = Color(0xFFF5C542); // ouro vivo
   static const bauOuroEscuro = Color(0xFFB8860B); // ouro escuro (faixas)
+  static const bauInterior = Color(0xFF2E1B0D); // dentro do baú (sombra)
 }
