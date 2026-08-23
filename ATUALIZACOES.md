@@ -3,6 +3,17 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.19.0 (2026-08-23)
+- **"Sair" do parabéns agora VOLTA para os cenários ↩️:** ao terminar uma categoria
+  fora do mapa-múndi, o "Sair" tem a mesma função do "Voltar" — sai da categoria
+  e volta para os mapas. ("Jogar de novo" continua recomeçando a categoria.)
+- **BAÚ do tesouro de verdade 🧰:** em vez da caixinha de presente, ao concluir
+  uma fase do mapa-múndi aparece um **baú de madeira fechado** com faixas e
+  cadeado de ouro. O Davi **toca no baú** → a tampa abre animada com brilho
+  dourado, estouram confetes 🎉 e **sai o card da nova fase** ("Você desbloqueou
+  o cenário Ártico!") com **▶ JOGAR AGORA**. Na última fase, o card mostra o
+  🏆 da aventura completa.
+
 ## v0.18.0 (2026-08-22)
 - **Jogo continua de onde parou ▶️:** o botão do mapa-múndi virou **CONTINUAR JOGO**
   quando já existe progresso — volta exatamente na próxima fase não concluída

@@ -2,6 +2,27 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-23 — v0.19.0 (baú animado 🧰 + "Sair" volta aos cenários)
+- **`_BauDialog` virou o baú do tesouro:** fechado → toque (`_abrirBau`) → tampa gira
+  (painter `_BauPainter` com `rotate(-p*1.9)` na dobradiça + brilho `RadialGradient`) →
+  confetes (`ConfeteBurst(muito:true)` monta SÓ com `_aberto`) → card `_CardNovaFase`
+  (escala `elasticOut` saindo de `bottom:74` do stack do baú, `clipBehavior: Clip.none`)
+  → botões JOGAR AGORA (`pop(true)`)/Mapa. Na última fase (`proxima == null`) o card
+  mostra 🏆. **Atenção:** o card/botões só aparecem quando `_abertura.isCompleted` —
+  precisa de `addStatusListener` que chama `setState` (senão o build externo não re-render).
+  O `_ProximaFaseDialog` e `_FimDaAventuraDialog` foram REMOVIDOS (o baú absorveu ambos;
+  `_concluirFase` agora calcula a próxima fase ANTES do showDialog e `pushReplacement`
+  direto). Identificadores Dart NÃO aceitam acento (`_Baú` → `_Bau`, `_BaúPainter` →
+  `_BauPainter`). Cores do baú em `AppColors.bau*` (madeira/ouro).
+- **`_fimDeCategoria`:** "Sair" agora faz `Navigator.pop()` (volta aos cenários, igual o
+  Voltar) — antes só fechava o diálogo. `_acertou` ganhou `if (!mounted) return;` antes
+  do `_prepararIncompleta()` final (a tela pode ter sido desmontada pelo pop).
+- **Gotcha de teste (fake async):** animações iniciadas por TAP (fora de frame) precisam
+  de `pump()` SEM duração antes do `pump(duration)` — o 1º frame só seta o `startTime`
+  do ticker (elapsed 0), e o 2º avança o relógio (p. ex. `tapAt(bau)` → `pump()` →
+  `pump(800ms)` → `pump()`). Teste novo cobre o baú de ponta a ponta (usa `Key('bau')`
+  no `GestureDetector` do baú p/ achar o alvo).
+
 ## 2026-08-22 — v0.18.0 (continua de onde parou ▶️ + parabéns de categoria 🎉 + layout do anúncio)
 - **`_iniciarJogo` retoma:** carrega `ProgressoFases.carregar()` e abre a 1ª fase NÃO concluída da
   ordem (`fases.indexWhere(!concluida)`, cai pra 0 se todas concluídas). Rótulo dinâmico

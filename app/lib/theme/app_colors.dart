@@ -29,4 +29,10 @@ abstract final class AppColors {
     Color(0xFF9B59B6), // roxo
     Color(0xFF1ABC9C), // turquesa
   ];
+
+  /// Baú do tesouro (fim de fase do mapa-múndi).
+  static const bauMadeira = Color(0xFF9C6B3C); // madeira clara
+  static const bauMadeiraEscura = Color(0xFF6B4523); // madeira sombreada
+  static const bauOuro = Color(0xFFF5C542); // ouro vivo
+  static const bauOuroEscuro = Color(0xFFB8860B); // ouro escuro (faixas)
 }

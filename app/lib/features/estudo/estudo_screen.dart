@@ -179,11 +179,12 @@ class _EstudoScreenState extends State<EstudoScreen> {
     if (ultima && habitat != null) {
       await _concluirFase();
     } else if (ultima) {
-      await _fimDeCategoria();
+      await _fimDeCategoria(); // pode ter SAÍDO da tela ("Sair")
     } else if (_temProximo) {
       setState(() => _i++);
       _falarPalavraAtual();
     }
+    if (!mounted) return;
     _prepararIncompleta();
   }
 
@@ -204,9 +205,10 @@ class _EstudoScreenState extends State<EstudoScreen> {
     });
   }
 
-  /// Fim de fase no mapa-múndi: baú com bônus de moedas + medalha pela
-  /// precisão. Depois do baú, o fluxo é CONTÍNUO: anuncia a próxima fase e
-  /// oferece "Jogar agora" (sem precisar voltar ao mapa e tocar de novo).
+  /// Fim de fase no mapa-múndi: o BAÚ (fechado) com bônus de moedas + medalha
+  /// pela precisão. O Davi TOCA no baú → ele abre animado e SAI o card da nova
+  /// fase ("Você desbloqueou o cenário Ártico!") com "JOGAR AGORA" — o jogo
+  /// continua sem voltar ao mapa. Na última fase, o card mostra 🏆.
   Future<void> _concluirFase() async {
     final medalha = await ProgressoRepository.medalhaDe(
       widget.habitatConcluivel!,
@@ -214,49 +216,25 @@ class _EstudoScreenState extends State<EstudoScreen> {
     final regiao = Regiao.porChave(widget.habitatConcluivel!);
     await ProgressoRepository.registrarBonusFase();
     if (!mounted) return;
-    HapticFeedback.mediumImpact(); // baú: toque mais forte
+    HapticFeedback.mediumImpact();
     setState(() => _moedas += ProgressoRepository.bonusFase);
-    await showDialog<void>(
-      context: context,
-      builder: (_) => _BauDialog(medalha: medalha, regiao: regiao),
-    );
-    if (!mounted) return;
-    await _avancarParaProximaFase();
-  }
 
-  /// Última palavra de uma categoria FORA do mapa-múndi (habitats, níveis,
-  /// meus animais…): parabéns com "Jogar de novo" / "Sair".
-  Future<void> _fimDeCategoria() async {
-    final deNovo = await showDialog<bool>(
-      context: context,
-      builder: (_) => _FimCategoriaDialog(titulo: widget.titulo),
-    );
-    if (deNovo != true || !mounted) return;
-    setState(() {
-      _i = 0;
-      _tracos.clear();
-      _sequencia = 0;
-    });
-    _prepararIncompleta();
-    _falarPalavraAtual();
-  }
-
-  /// Depois do baú: anuncia a próxima fase (ou o fim da aventura, se for a
-  /// última) e, se o Davi tocar em "Jogar agora", abre a fase seguinte aqui
-  /// mesmo (troca a tela atual pela próxima, mantendo a sessão contínua).
-  Future<void> _avancarParaProximaFase() async {
-    final chave = widget.habitatConcluivel;
-    if (chave == null) return;
+    // qual a próxima fase da ordem? (o baú revela o card dela)
     final fases = await ConfigOrdem.fases();
     if (!mounted) return;
-    final i = fases.indexWhere((r) => r.chave == chave);
-    if (i < 0) return;
-    final ehUltima = i == fases.length - 1;
-    final ir = ehUltima
-        ? await _mostrarFimDaAventura()
-        : await _mostrarProximaFase(fases[i + 1]);
-    if (ir != true || !mounted) return;
-    final proxima = fases[i + 1];
+    final i = fases.indexWhere((r) => r.chave == widget.habitatConcluivel);
+    final proxima =
+        (i >= 0 && i < fases.length - 1) ? fases[i + 1] : null;
+
+    final jogar = await showDialog<bool>(
+      context: context,
+      builder: (_) => _BauDialog(
+        medalha: medalha,
+        regiao: regiao,
+        proxima: proxima,
+      ),
+    );
+    if (jogar != true || !mounted || proxima == null) return;
     await Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (_) => EstudoScreen(
@@ -269,24 +247,26 @@ class _EstudoScreenState extends State<EstudoScreen> {
     );
   }
 
-  /// Anúncio animado da próxima fase: "Você desbloqueou o cenário Ártico!".
-  /// Devolve `true` se o Davi tocou em "Jogar agora".
-  Future<bool> _mostrarProximaFase(Regiao proxima) async {
-    return await showDialog<bool>(
+  /// Última palavra de uma categoria FORA do mapa-múndi (habitats, níveis,
+  /// meus animais…): parabéns com "Jogar de novo" / "Sair". O "Sair" tem a
+  /// MESMA função do Voltar — fecha a categoria e volta para os cenários.
+  Future<void> _fimDeCategoria() async {
+    final deNovo = await showDialog<bool>(
       context: context,
-      builder: (_) => _ProximaFaseDialog(regiao: proxima),
-    ) ??
-        false;
-  }
-
-  /// Última fase concluída: parabéns pela aventura completa (só avisa — volta
-  /// pro mapa).
-  Future<bool> _mostrarFimDaAventura() async {
-    await showDialog<void>(
-      context: context,
-      builder: (_) => _FimDaAventuraDialog(),
+      builder: (_) => _FimCategoriaDialog(titulo: widget.titulo),
     );
-    return false;
+    if (!mounted) return;
+    if (deNovo == true) {
+      setState(() {
+        _i = 0;
+        _tracos.clear();
+        _sequencia = 0;
+      });
+      _prepararIncompleta();
+      _falarPalavraAtual();
+    } else {
+      Navigator.of(context).pop(); // "Sair" = voltar aos cenários
+    }
   }
 
   /// Marca a fase concluída quando a criança chega na última palavra do habitat.
@@ -790,10 +770,17 @@ class _EstudoScreenState extends State<EstudoScreen> {
   }
 }
 
-/// Baú do fim de fase (mapa-múndi): presente animado + confetes + bônus de
-/// moedas + medalha pela precisão + aviso do animal novo na coleção.
+/// Baú do tesouro (fim de fase no mapa-múndi): começa FECHADO com o bônus de
+/// moedas + medalha pela precisão + aviso do animal novo na coleção. O Davi
+/// TOCA no baú → a tampa abre animada, estouram confetes 🎉 e o CARD da nova
+/// fase "sai" de dentro (escala elástica) com "▶ JOGAR AGORA" (continua a
+/// aventura) ou "Mapa". Na ÚLTIMA fase, o card mostra o 🏆 da aventura.
 class _BauDialog extends StatefulWidget {
-  const _BauDialog({required this.medalha, required this.regiao});
+  const _BauDialog({
+    required this.medalha,
+    required this.regiao,
+    required this.proxima,
+  });
 
   final String? medalha; // 'ouro' | 'prata' | 'bronze' | null
 
@@ -801,32 +788,61 @@ class _BauDialog extends StatefulWidget {
   /// não for uma região do mapa-múndi.
   final Regiao? regiao;
 
+  /// Próxima fase da ordem (o card sai do baú). `null` = última fase.
+  final Regiao? proxima;
+
   @override
   State<_BauDialog> createState() => _BauDialogState();
 }
 
 class _BauDialogState extends State<_BauDialog>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _c = AnimationController(
+    with TickerProviderStateMixin {
+  /// Abre a tampa do baú (0 fechado → 1 aberto).
+  late final AnimationController _abertura = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 800),
-  )..forward();
-
-  late final Animation<double> _escala = CurvedAnimation(
-    parent: _c,
-    curve: Curves.elasticOut,
+    duration: const Duration(milliseconds: 700),
   );
+
+  /// Card da nova fase "saindo" do baú (só depois de abrir).
+  late final AnimationController _card = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 650),
+  );
+
+  bool get _aberto => _abertura.isCompleted;
 
   @override
   void initState() {
     super.initState();
     unawaited(Fala.instance.falar('Fase concluída!'));
+    // quando a abertura termina, aparece o card + os botões (rebuild).
+    _abertura.addStatusListener((s) {
+      if (s == AnimationStatus.completed && mounted) setState(() {});
+    });
   }
 
   @override
   void dispose() {
-    _c.dispose();
+    _abertura.dispose();
+    _card.dispose();
     super.dispose();
+  }
+
+  /// Toca no baú: abre a tampa (com brilho), confetes estouram, o card da
+  /// próxima fase sai de dentro e o app anuncia o cenário em voz alta.
+  void _abrirBau() {
+    if (_aberto) return;
+    HapticFeedback.mediumImpact();
+    _abertura.forward();
+    _card.forward(from: 0.2);
+    final proxima = widget.proxima;
+    unawaited(
+      proxima == null
+          ? Fala.instance.falar('Parabéns! Você completou a aventura!')
+          : Fala.instance.falar(
+              'Você desbloqueou o cenário ${proxima.rotulo}!',
+            ),
+    );
   }
 
   String get _medalhaTexto => switch (widget.medalha) {
@@ -838,217 +854,307 @@ class _BauDialogState extends State<_BauDialog>
 
   @override
   Widget build(BuildContext context) {
+    final ehUltima = widget.proxima == null;
     return AlertDialog(
-      title: const Text('FASE CONCLUÍDA!'),
-      content: SizedBox(
-        width: double.maxFinite,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            // confetes 🎉 por cima do baú (efeito de festa)
-            const Positioned.fill(
-              child: ConfeteBurst(muito: true),
-            ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ScaleTransition(
-                  scale: _escala,
-                  child: const Text('🎁', style: TextStyle(fontSize: 76)),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  '+${ProgressoRepository.bonusFase} moedas!',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.accent,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  _medalhaTexto,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 15),
-                ),
-                if (widget.regiao != null) ...[
-                  const SizedBox(height: 8),
-                  Text(
-                    '🐾 Novo animal da coleção:\n'
-                    '${widget.regiao!.emoji} ${widget.regiao!.rotulo}!',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        FilledButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Continuar'),
-        ),
-      ],
-    );
-  }
-}
-
-/// Anúncio de fase DESBLOQUEADA (fluxo contínuo do mapa-múndi): o emoji da
-/// próxima região pula animado + o nome do cenário em destaque. "Jogar agora"
-/// abre a fase seguinte na mesma sessão; "Mapa" volta pro mapa-múndi.
-class _ProximaFaseDialog extends StatefulWidget {
-  const _ProximaFaseDialog({required this.regiao});
-
-  final Regiao regiao;
-
-  @override
-  State<_ProximaFaseDialog> createState() => _ProximaFaseDialogState();
-}
-
-class _ProximaFaseDialogState extends State<_ProximaFaseDialog>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _pulo = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 700),
-  )..repeat(reverse: true);
-
-  @override
-  void initState() {
-    super.initState();
-    unawaited(
-      Fala.instance.falar(
-        'Você desbloqueou o cenário ${widget.regiao.rotulo}!',
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    _pulo.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      // Compacto: a tela é deitada (360 de altura) — sem espaço pra sobrar,
-      // senão o texto encosta/fica atrás dos botões.
-      insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-      titlePadding: const EdgeInsets.fromLTRB(24, 16, 24, 4),
-      contentPadding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
-      title: Text(
-        'NOVA FASE! 🔓',
-        textAlign: TextAlign.center,
-        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
-      ),
+      // Compacto: a tela é deitada (360 de altura) — sem espaço pra sobrar.
+      insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
+      contentPadding: const EdgeInsets.fromLTRB(20, 14, 20, 0),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // emoji pulando (a "mascote" da próxima fase)
-          AnimatedBuilder(
-            animation: _pulo,
-            builder: (_, _) => Transform.translate(
-              offset: Offset(0, -6 * _pulo.value),
-              child: Text(
-                widget.regiao.emoji,
-                style: const TextStyle(fontSize: 52),
-              ),
+          Text(
+            '+${ProgressoRepository.bonusFase} moedas!',
+            style: const TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w800,
+              color: AppColors.accent,
             ),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 2),
+          // baú (fechado) + card da nova fase "saindo" dele
+          SizedBox(
+            height: 148,
+            width: double.maxFinite,
+            child: Stack(
+              // sem cortar: o card "sai" para cima, além da área do baú
+              clipBehavior: Clip.none,
+              alignment: Alignment.bottomCenter,
+              children: [
+                // confetes estouram quando o baú abre
+                if (_aberto)
+                  const Positioned.fill(child: ConfeteBurst(muito: true)),
+                AnimatedBuilder(
+                  animation: _abertura,
+                  builder: (_, _) => _Bau(
+                    p: _abertura.value,
+                    onTap: _abrirBau,
+                  ),
+                ),
+                // card da nova fase (ou 🏆 no fim da aventura)
+                if (_aberto)
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 74,
+                    child: AnimatedBuilder(
+                      animation: _card,
+                      builder: (_, _) {
+                        final t = Curves.elasticOut.transform(_card.value);
+                        return Opacity(
+                          opacity: _card.value.clamp(0.0, 1.0),
+                          child: Transform.scale(
+                            scale: 0.15 + 0.85 * t,
+                            child: _CardNovaFase(
+                              proxima: widget.proxima,
+                              ehUltima: ehUltima,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 2),
           Text(
-            'Você desbloqueou o cenário\n${widget.regiao.rotulo}!',
+            _medalhaTexto,
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+            style: const TextStyle(fontSize: 13),
           ),
-          const SizedBox(height: 4),
-          const Text(
-            'Pronto para conhecer os animais dele?',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 13),
-          ),
+          if (widget.regiao != null) ...[
+            const SizedBox(height: 2),
+            Text(
+              '🐾 Novo animal da coleção: '
+              '${widget.regiao!.emoji} ${widget.regiao!.rotulo}!',
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+          if (!_aberto) ...[
+            const SizedBox(height: 4),
+            const Text(
+              'Toque no baú para abrir! 🗝️',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: AppColors.bauOuro,
+              ),
+            ),
+          ],
         ],
       ),
       actionsPadding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context, false),
-          child: const Text('Mapa'),
-        ),
-        FilledButton.icon(
-          onPressed: () => Navigator.pop(context, true),
-          icon: const Icon(Icons.play_arrow_rounded),
-          label: const Text('JOGAR AGORA'),
-        ),
-      ],
+      actions: _aberto
+          ? (ehUltima
+              ? [
+                  FilledButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: const Text('Voltar ao mapa'),
+                  ),
+                ]
+              : [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: const Text('Mapa'),
+                  ),
+                  FilledButton.icon(
+                    onPressed: () => Navigator.pop(context, true),
+                    icon: const Icon(Icons.play_arrow_rounded),
+                    label: const Text('JOGAR AGORA'),
+                  ),
+                ])
+          : const [],
     );
   }
 }
 
-/// Fim da aventura: todas as fases do mapa-múndi concluídas. 🎉
-class _FimDaAventuraDialog extends StatefulWidget {
-  const _FimDaAventuraDialog();
+/// Card que "sai" do baú: emoji + nome da nova fase (ou 🏆 no fim da
+/// aventura).
+class _CardNovaFase extends StatelessWidget {
+  const _CardNovaFase({required this.proxima, required this.ehUltima});
 
-  @override
-  State<_FimDaAventuraDialog> createState() => _FimDaAventuraDialogState();
-}
-
-class _FimDaAventuraDialogState extends State<_FimDaAventuraDialog>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _c = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 900),
-  )..forward();
-
-  late final Animation<double> _escala = CurvedAnimation(
-    parent: _c,
-    curve: Curves.elasticOut,
-  );
-
-  @override
-  void initState() {
-    super.initState();
-    unawaited(Fala.instance.falar('Parabéns! Você completou a aventura!'));
-  }
-
-  @override
-  void dispose() {
-    _c.dispose();
-    super.dispose();
-  }
+  final Regiao? proxima;
+  final bool ehUltima;
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('AVENTURA CONCLUÍDA! 🏆'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ScaleTransition(
-            scale: _escala,
-            child: const Text('🎉', style: TextStyle(fontSize: 76)),
-          ),
-          const SizedBox(height: 10),
-          const Text(
-            'Você visitou TODAS as regiões do mapa-múndi!\nParabéns, Davi!',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-          ),
-        ],
-      ),
-      actions: [
-        FilledButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Voltar ao mapa'),
+    return Material(
+      color: AppColors.surface,
+      elevation: 8,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.lineStrong),
         ),
-      ],
+        child: ehUltima
+            ? const Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('🏆', style: TextStyle(fontSize: 36)),
+                  SizedBox(height: 2),
+                  Text(
+                    'AVENTURA CONCLUÍDA!',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w900),
+                  ),
+                  Text(
+                    'Você visitou TODAS as regiões do mapa-múndi!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ],
+              )
+            : Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(proxima!.emoji, style: const TextStyle(fontSize: 36)),
+                  const SizedBox(height: 2),
+                  const Text(
+                    'NOVA FASE! 🔓',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900),
+                  ),
+                  Text(
+                    'Você desbloqueou o cenário\n${proxima!.rotulo}!',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const Text(
+                    'Pronto para conhecer os animais dele?',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 11),
+                  ),
+                ],
+              ),
+      ),
     );
   }
+}
+
+/// O baú em si: corpo de madeira com faixas e cadeado de ouro; `p` = abertura
+/// (0 fechado → 1 aberto): a tampa gira para trás na dobradiça de cima e um
+/// brilho dourado sai de dentro.
+class _Bau extends StatelessWidget {
+  const _Bau({required this.p, required this.onTap});
+
+  final double p;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      key: const Key('bau'),
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: CustomPaint(
+        size: const Size(190, 128),
+        painter: _BauPainter(p),
+      ),
+    );
+  }
+}
+
+class _BauPainter extends CustomPainter {
+  _BauPainter(this.p);
+
+  final double p;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+
+    // corpo do baú (madeira com sombreado)
+    final corpo = RRect.fromRectAndRadius(
+      Rect.fromLTRB(w * 0.08, h * 0.44, w * 0.92, h * 0.96),
+      const Radius.circular(10),
+    );
+    canvas.drawRRect(
+      corpo,
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [AppColors.bauMadeira, AppColors.bauMadeiraEscura],
+        ).createShader(corpo.outerRect),
+    );
+
+    // faixas de ouro verticais
+    for (final fx in const [0.30, 0.70]) {
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromLTRB(w * fx - 3, h * 0.44, w * fx + 3, h * 0.96),
+          const Radius.circular(3),
+        ),
+        Paint()..color = AppColors.bauOuroEscuro,
+      );
+    }
+
+    // cadeado dourado no centro
+    final cadeado = Rect.fromCenter(
+      center: Offset(w / 2, h * 0.72),
+      width: w * 0.12,
+      height: h * 0.15,
+    );
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(cadeado, const Radius.circular(4)),
+      Paint()..color = AppColors.bauOuro,
+    );
+
+    // brilho dourado saindo de dentro (abre junto com a tampa)
+    if (p > 0) {
+      final brilho = Paint()
+        ..shader = RadialGradient(
+          colors: [
+            AppColors.bauOuro.withValues(alpha: 0.9 * p),
+            AppColors.bauOuro.withValues(alpha: 0),
+          ],
+        ).createShader(
+          Rect.fromCircle(
+            center: Offset(w / 2, h * 0.44),
+            radius: w * (0.30 + 0.30 * p),
+          ),
+        );
+      canvas.drawRect(Rect.fromLTRB(0, 0, w, h), brilho);
+    }
+
+    // tampa: gira na dobradiça (topo do corpo), abrindo para trás
+    final tampaLargura = w * 0.84;
+    final tampaAltura = h * 0.24;
+    final dobradica = Offset(w / 2, h * 0.44);
+    canvas.save();
+    canvas.translate(dobradica.dx, dobradica.dy);
+    canvas.rotate(-p * 1.9);
+    final tampa = RRect.fromRectAndRadius(
+      Rect.fromCenter(
+        center: Offset(0, -tampaAltura / 2),
+        width: tampaLargura,
+        height: tampaAltura,
+      ),
+      const Radius.circular(10),
+    );
+    canvas.drawRRect(tampa, Paint()..color = AppColors.bauMadeira);
+    // friso dourado na beirada da tampa
+    canvas.drawRect(
+      Rect.fromCenter(
+        center: Offset(0, -tampaAltura + 5),
+        width: tampaLargura,
+        height: 6,
+      ),
+      Paint()..color = AppColors.bauOuroEscuro,
+    );
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(_BauPainter old) => old.p != p;
 }
 
 /// Parabéns por terminar uma CATEGORIA (fora do mapa-múndi): festa com

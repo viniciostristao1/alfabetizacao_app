@@ -144,10 +144,12 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('+1'), findsNothing);
 
-    // última palavra da categoria (1 palavra) → PARABÉNS! Fechar p/ continuar.
+    // última palavra da categoria (1 palavra) → PARABÉNS! "Jogar de novo"
+    // recomeça a categoria na mesma tela (o "Sair" volta para os cenários).
     expect(find.text('PARABÉNS! 🎉'), findsOneWidget);
-    await tester.tap(find.text('Sair'));
+    await tester.tap(find.text('Jogar de novo'));
     await tester.pumpAndSettle();
+    expect(find.text('GATO'), findsOneWidget); // recomeçou do zero
 
     // X (errou): perde o ponto e a palavra continua na tela.
     await tester.tap(find.text('X'));
