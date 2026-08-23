@@ -3,6 +3,17 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.21.0 (2026-08-23)
+- **Janelas do baú e do parabéns mais estreitas 📐:** os diálogos não esticam
+  mais até a borda da tela — ficam do tamanho do conteúdo.
+- **Medalha removida do baú:** a frase "Medalha de OURO!" sumiu da janela do
+  fim de fase (o baú mostra moedas + o animal novo da coleção).
+- **Botão COLEÇÃO no mapa-múndi 🐾:** embaixo, junto dos outros botões, agora
+  há o "COLEÇÃO" (com a patinha) — abre a coleção de animais na hora.
+- **MAPA MUNDI na coleção 🗺️:** canto superior direito da coleção de animais,
+  botão "MAPA MUNDI" que leva direto ao mapa — e a coleção se atualiza ao
+  voltar.
+
 ## v0.20.0 (2026-08-23)
 - **Baú muito mais caprichado 🧰✨:** novo desenho com **tábuas de madeira com
   veios**, **faixas de ouro com rebites**, **cadeado com buraco de fechadura**,

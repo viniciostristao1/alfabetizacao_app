@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/regiao.dart';
 import '../../services/progresso_fases.dart';
 import '../../theme/app_colors.dart';
+import '../mapa_mundi/mapa_mundi_screen.dart';
 
 /// Coleção de animais 🐾: cada região do mapa-múndi vira um animalzinho
 /// colecionável. Concluiu a fase no mapa → o animal dela entra na coleção
@@ -28,6 +29,15 @@ class _ColecaoScreenState extends State<ColecaoScreen> {
     if (mounted) setState(() => _concluidas = concluidas);
   }
 
+  /// "MAPA MUNDI" (canto superior direito) — vai direto para o mapa-múndi;
+  /// ao voltar, recarrega a coleção (algum animal pode ter sido ganho).
+  Future<void> _abrirMapaMundi() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const MapaMundiScreen()),
+    );
+    if (mounted) _carregar();
+  }
+
   @override
   Widget build(BuildContext context) {
     final regioes = Regiao.regioes;
@@ -37,6 +47,22 @@ class _ColecaoScreenState extends State<ColecaoScreen> {
       backgroundColor: AppColors.bg,
       appBar: AppBar(
         title: Text('Coleção de animais 🐾  ($ganhas/${regioes.length})'),
+        actions: [
+          // MAPA MUNDI no canto superior direito.
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Center(
+              child: TextButton.icon(
+                onPressed: _abrirMapaMundi,
+                icon: const Icon(Icons.public_rounded),
+                label: const Text(
+                  'MAPA MUNDI',
+                  style: TextStyle(fontWeight: FontWeight.w800),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       body: SafeArea(
         child: Padding(

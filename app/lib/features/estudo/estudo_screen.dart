@@ -211,9 +211,6 @@ class _EstudoScreenState extends State<EstudoScreen> {
   /// fase ("Você desbloqueou o cenário Ártico!") com "JOGAR AGORA" — o jogo
   /// continua sem voltar ao mapa. Na última fase, o card mostra 🏆.
   Future<void> _concluirFase() async {
-    final medalha = await ProgressoRepository.medalhaDe(
-      widget.habitatConcluivel!,
-    );
     final regiao = Regiao.porChave(widget.habitatConcluivel!);
     await ProgressoRepository.registrarBonusFase();
     if (!mounted) return;
@@ -230,7 +227,6 @@ class _EstudoScreenState extends State<EstudoScreen> {
     final jogar = await showDialog<bool>(
       context: context,
       builder: (_) => _BauDialog(
-        medalha: medalha,
         regiao: regiao,
         proxima: proxima,
       ),
@@ -772,18 +768,15 @@ class _EstudoScreenState extends State<EstudoScreen> {
 }
 
 /// Baú do tesouro (fim de fase no mapa-múndi): começa FECHADO com o bônus de
-/// moedas + medalha pela precisão + aviso do animal novo na coleção. O Davi
-/// TOCA no baú → a tampa abre animada, estouram confetes 🎉 e o CARD da nova
-/// fase "sai" de dentro (escala elástica) com "▶ JOGAR AGORA" (continua a
-/// aventura) ou "Mapa". Na ÚLTIMA fase, o card mostra o 🏆 da aventura.
+/// moedas + aviso do animal novo na coleção. O Davi TOCA no baú → a tampa
+/// abre animada, estouram confetes 🎉 e o CARD da nova fase "sai" de dentro
+/// (escala elástica) com "▶ JOGAR AGORA" (continua a aventura) ou "Mapa". Na
+/// ÚLTIMA fase, o card mostra o 🏆 da aventura.
 class _BauDialog extends StatefulWidget {
   const _BauDialog({
-    required this.medalha,
     required this.regiao,
     required this.proxima,
   });
-
-  final String? medalha; // 'ouro' | 'prata' | 'bronze' | null
 
   /// Região concluída (o animal vai pra coleção) — pode ser null se a fase
   /// não for uma região do mapa-múndi.
@@ -846,19 +839,14 @@ class _BauDialogState extends State<_BauDialog>
     );
   }
 
-  String get _medalhaTexto => switch (widget.medalha) {
-        'ouro' => '🥇 Medalha de OURO!',
-        'prata' => '🥈 Medalha de PRATA!',
-        'bronze' => '🥉 Medalha de BRONZE!',
-        _ => 'Sem medalha ainda — tente acertar todas!',
-      };
-
   @override
   Widget build(BuildContext context) {
     final ehUltima = widget.proxima == null;
     return AlertDialog(
       // Compacto: a tela é deitada (360 de altura) — sem espaço pra sobrar.
+      // Largura limitada: a janela não precisa esticar até a borda da tela.
       insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
+      constraints: const BoxConstraints(maxWidth: 360),
       contentPadding: const EdgeInsets.fromLTRB(20, 14, 20, 0),
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -875,7 +863,6 @@ class _BauDialogState extends State<_BauDialog>
           // baú (fechado) + card da nova fase "saindo" dele
           SizedBox(
             height: 148,
-            width: double.maxFinite,
             child: Stack(
               // sem cortar: o card "sai" para cima, além da área do baú
               clipBehavior: Clip.none,
@@ -918,11 +905,6 @@ class _BauDialogState extends State<_BauDialog>
             ),
           ),
           const SizedBox(height: 2),
-          Text(
-            _medalhaTexto,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 13),
-          ),
           if (widget.regiao != null) ...[
             const SizedBox(height: 2),
             Text(
@@ -1510,6 +1492,8 @@ class _FimCategoriaDialogState extends State<_FimCategoriaDialog>
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      // Largura limitada: a janela não precisa esticar até a borda da tela.
+      constraints: const BoxConstraints(maxWidth: 360),
       insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
       titlePadding: const EdgeInsets.fromLTRB(24, 16, 24, 4),
       contentPadding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
@@ -1518,32 +1502,29 @@ class _FimCategoriaDialogState extends State<_FimCategoriaDialog>
         textAlign: TextAlign.center,
         style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
       ),
-      content: SizedBox(
-        width: double.maxFinite,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            const Positioned.fill(child: ConfeteBurst(muito: true)),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ScaleTransition(
-                  scale: _escala,
-                  child: const Text('🏆', style: TextStyle(fontSize: 52)),
+      content: Stack(
+        alignment: Alignment.center,
+        children: [
+          const Positioned.fill(child: ConfeteBurst(muito: true)),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ScaleTransition(
+                scale: _escala,
+                child: const Text('🏆', style: TextStyle(fontSize: 52)),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'Você terminou:\n${widget.titulo}',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
                 ),
-                const SizedBox(height: 6),
-                Text(
-                  'Você terminou:\n${widget.titulo}',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+        ],
       ),
       actionsPadding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
       actions: [

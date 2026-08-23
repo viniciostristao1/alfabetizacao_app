@@ -2,6 +2,19 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-23 — v0.21.0 (diálogos estreitos, sem medalha, COLEÇÃO ↔ MAPA MUNDI)
+- **AlertDialog estreito:** `constraints: BoxConstraints(maxWidth: 360)` no `_BauDialog` e
+  `_FimCategoriaDialog` (antes o `SizedBox(width: double.maxFinite)` do conteúdo esticava até a
+  borda). O Stack do baú agora dimensiona pela largura do próprio baú (190) — o card sai do baú
+  sem alargar a janela.
+- **Medalha fora do baú:** removida a linha `_medalhaTexto` (e o parâmetro `medalha` do
+  `_BauDialog`/chamada de `medalhaDe` no `_concluirFase`). `ProgressoRepository.medalhaDe` fica no
+  repositório (ainda coberto pelos testes de `progresso_repository_test`).
+- **COLEÇÃO no mapa-múndi:** 4º botão da fileira inferior (`Icons.pets_rounded`, `_abrirColecao`
+  empurra `ColecaoScreen` e reaplica paisagem ao voltar). **MAPA MUNDI na coleção:** ação da
+  AppBar (`TextButton.icon` com `Icons.public_rounded`) → `_abrirMapaMundi` recarrega a coleção
+  ao voltar (`_carregar()` — fases podem ter mudado no mapa).
+
 ## 2026-08-23 — v0.20.0 (redesenho do baú: madeira, ouro e TESOURO)
 - **`_BauPainter` reescrito com detalhes:** tábuas (vinco vertical) + veios (onda `sin(x/w*3)`),
   faixas de ouro com `_rebite` (3 por faixa no corpo, 2 na tampa), cadeado com placa + buraco

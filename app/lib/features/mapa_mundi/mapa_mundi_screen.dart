@@ -8,6 +8,7 @@ import '../../services/config_ordem.dart';
 import '../../services/progresso_fases.dart';
 import '../../services/progresso_repository.dart';
 import '../../theme/app_colors.dart';
+import '../colecao/colecao_screen.dart';
 import '../estudo/estudo_screen.dart';
 
 /// Cor neon dos anéis/caminho das fases.
@@ -134,6 +135,15 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
   Future<void> _voltarHabitat() async {
     final restantes = await ProgressoFases.voltarUltima();
     if (mounted) setState(() => _concluidas = restantes);
+  }
+
+  /// Abre a COLEÇÃO de animais direto do mapa-múndi.
+  Future<void> _abrirColecao() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const ColecaoScreen()),
+    );
+    if (!mounted) return;
+    _aplicarTela();
   }
 
   Future<void> _reiniciarAventura() async {
@@ -319,6 +329,12 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
                         texto: 'VOLTAR INÍCIO',
                         onTap: () => Navigator.of(context)
                             .popUntil((route) => route.isFirst),
+                      ),
+                      const SizedBox(width: 10),
+                      _BotaoTransparente(
+                        icon: Icons.pets_rounded,
+                        texto: 'COLEÇÃO',
+                        onTap: _abrirColecao,
                       ),
                     ],
                   ),
