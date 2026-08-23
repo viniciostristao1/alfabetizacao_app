@@ -3,6 +3,11 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.22.0 (2026-08-23)
+- **5 botões numa fileira no mapa-múndi 🗺️:** VOLTAR HABITAT · REINICIAR
+  AVENTURA · VOLTAR INÍCIO · COLEÇÃO · **INICIAR/CONTINUAR JOGO** (branco,
+  no fim) — todos lado a lado no rodapé, sem um cobrir o outro.
+
 ## v0.21.0 (2026-08-23)
 - **Janelas do baú e do parabéns mais estreitas 📐:** os diálogos não esticam
   mais até a borda da tela — ficam do tamanho do conteúdo.

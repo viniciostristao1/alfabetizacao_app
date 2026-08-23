@@ -70,7 +70,8 @@ void main() {
     expect(deco.borderRadius, BorderRadius.circular(8));
   });
 
-  testWidgets('mapa: botões de baixo não se sobrepõem', (tester) async {
+  testWidgets('mapa: os 5 botões numa fileira só, sem se sobreporem',
+      (tester) async {
     SharedPreferences.setMockInitialValues({});
     tester.view.physicalSize = const Size(800, 360);
     tester.view.devicePixelRatio = 1.0;
@@ -101,23 +102,33 @@ void main() {
     final reiniciar = botao('REINICIAR AVENTURA');
     final iniciar = botao('INICIAR JOGO');
     final inicio = botao('VOLTAR INÍCIO');
+    final colecao = botao('COLEÇÃO');
 
-    // nenhum fica sobre o outro
+    // nenhum fica sobre o outro (todos os vizinhos)
     expect(voltar.overlaps(reiniciar), isFalse);
-    expect(reiniciar.overlaps(iniciar), isFalse);
-    expect(iniciar.overlaps(inicio), isFalse);
+    expect(reiniciar.overlaps(inicio), isFalse);
+    expect(inicio.overlaps(colecao), isFalse);
+    expect(colecao.overlaps(iniciar), isFalse);
 
-    // TODOS na mesma linha (mesmo top) e na metade de baixo
+    // TODOS na mesma linha (mesmo top) e na metade de baixo da tela
     expect(iniciar.top, voltar.top);
     expect(inicio.top, voltar.top);
     expect(reiniciar.top, voltar.top);
+    expect(colecao.top, voltar.top);
     expect(voltar.bottom, lessThanOrEqualTo(360));
     expect(iniciar.bottom, lessThanOrEqualTo(360));
     expect(inicio.bottom, lessThanOrEqualTo(360));
+    expect(colecao.bottom, lessThanOrEqualTo(360));
 
-    // INICIAR JOGO no canto direito; os demais começam no canto esquerdo
-    expect(iniciar.center.dx, greaterThan(600));
-    expect(voltar.center.dx, lessThan(300));
+    // ordem na fileira: voltar → reiniciar → início → coleção → iniciar
+    expect(voltar.center.dx, lessThan(reiniciar.center.dx));
+    expect(reiniciar.center.dx, lessThan(inicio.center.dx));
+    expect(inicio.center.dx, lessThan(colecao.center.dx));
+    expect(colecao.center.dx, lessThan(iniciar.center.dx));
+
+    // a fileira inteira cabe na largura da tela
+    expect(voltar.left, greaterThanOrEqualTo(0));
+    expect(iniciar.right, lessThanOrEqualTo(800));
   });
 
   testWidgets('mapa: fases sem emoji de bicho (só os anéis)', (tester) async {

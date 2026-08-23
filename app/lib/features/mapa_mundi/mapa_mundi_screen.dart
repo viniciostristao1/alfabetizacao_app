@@ -281,30 +281,12 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
               ),
             ),
           ),
-          // INICIAR JOGO (inferior-DIREITO, fundo branco) — começa a aventura
-          // na 1ª fase da ordem configurada (ou CONTINUA de onde parou).
+          // Fileira única de botões (inferior, CENTRALIZADA): VOLTAR HABITAT ·
+          // REINICIAR AVENTURA · VOLTAR INÍCIO · COLEÇÃO · INICIAR/CONTINUAR
+          // JOGO (fundo branco, último). Tudo numa linha — cabe sem encostar.
           SafeArea(
             child: Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: _BotaoTransparente(
-                    icon: Icons.play_arrow_rounded,
-                    texto: _rotuloIniciar,
-                    fundo: Colors.white,
-                    letra: AppColors.bg,
-                    onTap: _iniciarJogo,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          // demais botões (inferior-ESQUERDO): desfazer / reiniciar / início.
-          SafeArea(
-            child: Align(
-              alignment: Alignment.bottomLeft,
+              alignment: Alignment.bottomCenter,
               child: Padding(
                 padding: const EdgeInsets.all(10),
                 child: FittedBox(
@@ -335,6 +317,14 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
                         icon: Icons.pets_rounded,
                         texto: 'COLEÇÃO',
                         onTap: _abrirColecao,
+                      ),
+                      const SizedBox(width: 10),
+                      _BotaoTransparente(
+                        icon: Icons.play_arrow_rounded,
+                        texto: _rotuloIniciar,
+                        fundo: Colors.white,
+                        letra: AppColors.bg,
+                        onTap: _iniciarJogo,
                       ),
                     ],
                   ),

@@ -2,6 +2,16 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-23 — v0.22.0 (fileira única de 5 botões no mapa-múndi)
+- **Layout do rodapé do mapa:** os DOIS SafeArea (INICIAR JOGO à direita + os 4 à esquerda)
+  viraram UMA `SafeArea` centralizada com `FittedBox(scaleDown)` + `Row` com os 5 botões
+  (INICIAR/CONTINUAR JOGO por último, branco). FittedBox garante que nunca encoste/sobreponha
+  em telas menores.
+- **Teste `layout_test` atualizado:** as checagens de canto (`iniciar.center.dx > 600`,
+  `voltar.center.dx < 300`) foram trocadas por: todos os 5 no mesmo top, sem overlaps entre
+  vizinhos, ordem da fileira (voltar < reiniciar < início < coleção < iniciar) e a fileira
+  inteira dentro da largura da tela.
+
 ## 2026-08-23 — v0.21.0 (diálogos estreitos, sem medalha, COLEÇÃO ↔ MAPA MUNDI)
 - **AlertDialog estreito:** `constraints: BoxConstraints(maxWidth: 360)` no `_BauDialog` e
   `_FimCategoriaDialog` (antes o `SizedBox(width: double.maxFinite)` do conteúdo esticava até a
