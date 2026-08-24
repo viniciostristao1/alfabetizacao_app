@@ -3,6 +3,12 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.27.0 (2026-08-24)
+- **Objetos em tela cheia 🎮:** o menu **Objetos** perdeu as bordas e o padding — as
+  4 cenas (Fácil/Médio/Difícil/Temas) agora ocupam a tela toda em modo jogo,
+  sem moldura. A legenda foi para dentro da imagem com degradê, dando cara de
+  jogo imersivo.
+
 ## v0.26.0 (2026-08-24)
 - **Foto dos Temas em tela cheia 🖼️📱:** a foto da cidade agora preenche quase
   a tela inteira (em vez de aparecer pequena no meio). As faixas clicáveis

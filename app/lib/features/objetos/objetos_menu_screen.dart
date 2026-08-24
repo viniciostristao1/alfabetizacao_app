@@ -33,69 +33,63 @@ class ObjetosMenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
+        backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
         title: Text('${Categoria.objetos.emoji}  ${Categoria.objetos.rotulo}'),
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            children: [
-              // 3 cenas de cima = os níveis de sempre
-              Expanded(
-                flex: 5,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: _CenaBotao(
-                        asset: 'assets/objetos/objetos_facil.png',
-                        legenda: 'Fácil',
-                        cor: Nivel.facil.cor,
-                        onTap: () => _abrirNivel(context, Nivel.facil),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: _CenaBotao(
-                        asset: 'assets/objetos/objetos_medio.png',
-                        legenda: 'Médio',
-                        cor: Nivel.media.cor,
-                        onTap: () => _abrirNivel(context, Nivel.media),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: _CenaBotao(
-                        asset: 'assets/objetos/objetos_dificil.png',
-                        legenda: 'Difícil',
-                        cor: Nivel.dificil.cor,
-                        onTap: () => _abrirNivel(context, Nivel.dificil),
-                      ),
-                    ),
-                  ],
+      body: Column(
+        children: [
+          Expanded(
+            flex: 5,
+            child: Row(
+              children: [
+                Expanded(
+                  child: _CenaBotao(
+                    asset: 'assets/objetos/objetos_facil.png',
+                    legenda: 'Fácil',
+                    cor: Nivel.facil.cor,
+                    onTap: () => _abrirNivel(context, Nivel.facil),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              // cena larga de baixo = Temas
-              Expanded(
-                flex: 4,
-                child: _CenaBotao(
-                  asset: 'assets/objetos/objetos_temas.png',
-                  legenda: 'Temas',
-                  cor: Categoria.objetos.cor,
-                  onTap: () => _abrirTemas(context),
+                const SizedBox(width: 4),
+                Expanded(
+                  child: _CenaBotao(
+                    asset: 'assets/objetos/objetos_medio.png',
+                    legenda: 'Médio',
+                    cor: Nivel.media.cor,
+                    onTap: () => _abrirNivel(context, Nivel.media),
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(width: 4),
+                Expanded(
+                  child: _CenaBotao(
+                    asset: 'assets/objetos/objetos_dificil.png',
+                    legenda: 'Difícil',
+                    cor: Nivel.dificil.cor,
+                    onTap: () => _abrirNivel(context, Nivel.dificil),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
+          const SizedBox(height: 4),
+          Expanded(
+            flex: 4,
+            child: _CenaBotao(
+              asset: 'assets/objetos/objetos_temas.png',
+              legenda: 'Temas',
+              cor: Categoria.objetos.cor,
+              onTap: () => _abrirTemas(context),
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-/// Uma cena da foto virada em botão: imagem (cantos arredondados, borda na cor
-/// do nível) + a legenda LOGO ABAIXO.
 class _CenaBotao extends StatelessWidget {
   const _CenaBotao({
     required this.asset,
@@ -114,40 +108,52 @@ class _CenaBotao extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        borderRadius: BorderRadius.circular(16),
         onTap: onTap,
-        child: Column(
-          children: [
-            Expanded(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: cor.withValues(alpha: 0.75),
-                    width: 2.5,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(14),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Image.asset(
+                asset,
+                fit: BoxFit.cover,
+                filterQuality: FilterQuality.medium,
+              ),
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 7,
                   ),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(14),
-                  child: Image.asset(
-                    asset,
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    height: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.transparent, Colors.black.withValues(alpha: 0.72)],
+                    ),
+                  ),
+                  child: Text(
+                    legenda,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          color: Colors.black.withValues(alpha: 0.6),
+                          blurRadius: 6,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              legenda,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w800,
-                color: cor,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

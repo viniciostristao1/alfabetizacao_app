@@ -2,6 +2,14 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-24 — v0.27.0 (Objetos tela cheia sem bordas)
+- **`objetos_menu_screen.dart` tela cheia:** removidos `SafeArea`+`Padding(10)` e a
+  `DecoratedBox` com `Border.all` do `_CenaBotao` (cara de "card com borda").
+  Agora `Scaffold(background:black)` + `Column` sem padding com gaps de `4px`
+  (linhas pretas finas). `_CenaBotao` virou `ClipRRect(14)` + `Stack(Image cover
+  + degradê preto na base com legenda branca em negrito)` — legenda dentro da
+  imagem, sem texto solto abaixo. Mais imersivo, ocupa a tela toda.
+
 ## 2026-08-24 — v0.23.0 (menu de Objetos com foto de 4 cenas)
 - **Nova tela `features/objetos/objetos_menu_screen.dart`:** substitui a
   `NivelScreen` **só para Objetos** (home: `Categoria.objetos => ObjetosMenuScreen`;
