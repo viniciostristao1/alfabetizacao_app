@@ -3,6 +3,13 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.25.0 (2026-08-24)
+- **Foto dos Temas clicável 🖱️🏙️:** ao abrir os **Temas** (em Objetos), a foto
+  da cidade aparece inteira e cada palavra dela é um botão invisível: **casa,
+  museu, escola, cafeteria e bombeiros** (da esquerda para a direita). Tocar
+  num lugar abre o estudo das palavras daquele tema (cadeira, aluno, café,
+  bombeiro…) — são palavras novas, fora dos níveis normais de Objetos.
+
 ## v0.24.1 (2026-08-24)
 - **Foto dos Temas corrigida 🖼️:** agora abre a imagem certa (a que foi
   enviada depois) — antes o botão abria uma foto antiga.

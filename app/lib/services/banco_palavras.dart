@@ -286,6 +286,107 @@ const List<Palavra> bancoPalavras = [
   Palavra(['I', 'sa', 'be', 'la'], Categoria.nomes, sub: 'menina'),
   Palavra(['Ma', 'nu', 'e', 'la'], Categoria.nomes, sub: 'menina'),
   Palavra(['Ce', 'cí', 'li', 'a'], Categoria.nomes, sub: 'menina'),
+
+  // ───────────────────────── TEMAS (CIDADE) ─────────────────────────
+  // Palavras dos lugares da foto dos Temas (Objetos → Temas). Vivem na categoria
+  // `objetos` só por herança de banco: NÃO entram nos níveis normais (palavrasDe
+  // filtra `tema == null`) — são jogadas apenas no estudo do tema (palavrasDoTema).
+  // 🏠 Casa
+  Palavra(['so', 'fá'], Categoria.objetos, tema: 'casa'),
+  Palavra(['pi', 'a'], Categoria.objetos, tema: 'casa'),
+  Palavra(['bu', 'le'], Categoria.objetos, tema: 'casa'),
+  Palavra(['len', 'çol'], Categoria.objetos, tema: 'casa'),
+  Palavra(['col', 'chão'], Categoria.objetos, tema: 'casa'),
+  Palavra(['quar', 'to'], Categoria.objetos, tema: 'casa'),
+  Palavra(['sa', 'la'], Categoria.objetos, tema: 'casa'),
+  Palavra(['rou', 'pa'], Categoria.objetos, tema: 'casa'),
+  Palavra(['to', 'a', 'lha'], Categoria.objetos, tema: 'casa'),
+  Palavra(['lâm', 'pa', 'da'], Categoria.objetos, tema: 'casa'),
+  Palavra(['chu', 'vei', 'ro'], Categoria.objetos, tema: 'casa'),
+  Palavra(['pi', 'ja', 'ma'], Categoria.objetos, tema: 'casa'),
+  Palavra(['ta', 'pe', 'te'], Categoria.objetos, tema: 'casa'),
+  Palavra(['co', 'zi', 'nha'], Categoria.objetos, tema: 'casa'),
+  Palavra(['ga', 'ra', 'gem'], Categoria.objetos, tema: 'casa'),
+  Palavra(['sa', 'ca', 'da'], Categoria.objetos, tema: 'casa'),
+  Palavra(['cô', 'mo', 'da'], Categoria.objetos, tema: 'casa'),
+  Palavra(['ba', 'nhei', 'ra'], Categoria.objetos, tema: 'casa'),
+  Palavra(['guar', 'da', 'rou', 'pa'], Categoria.objetos, tema: 'casa', texto: 'guarda-roupa'),
+  Palavra(['in', 'ter', 'rup', 'tor'], Categoria.objetos, tema: 'casa'),
+  Palavra(['es', 'cor', 're', 'dor'], Categoria.objetos, tema: 'casa'),
+  Palavra(['por', 'ta', 're', 'tra', 'to'], Categoria.objetos, tema: 'casa', texto: 'porta-retrato'),
+  // 🏛️ Museu
+  Palavra(['qua', 'dro'], Categoria.objetos, tema: 'museu'),
+  Palavra(['te', 'la'], Categoria.objetos, tema: 'museu'),
+  Palavra(['fós', 'sil'], Categoria.objetos, tema: 'museu'),
+  Palavra(['mu', 'seu'], Categoria.objetos, tema: 'museu'),
+  Palavra(['ar', 'te'], Categoria.objetos, tema: 'museu'),
+  Palavra(['bron', 'ze'], Categoria.objetos, tema: 'museu'),
+  Palavra(['pin', 'tu', 'ra'], Categoria.objetos, tema: 'museu'),
+  Palavra(['es', 'tá', 'tua'], Categoria.objetos, tema: 'museu'),
+  Palavra(['mol', 'du', 'ra'], Categoria.objetos, tema: 'museu'),
+  Palavra(['vi', 'tri', 'ne'], Categoria.objetos, tema: 'museu'),
+  Palavra(['es', 'cul', 'tor'], Categoria.objetos, tema: 'museu'),
+  Palavra(['es', 'cul', 'tu', 'ra'], Categoria.objetos, tema: 'museu'),
+  Palavra(['ga', 'le', 'ri', 'a'], Categoria.objetos, tema: 'museu'),
+  Palavra(['di', 'nos', 'sau', 'ro'], Categoria.objetos, tema: 'museu'),
+  Palavra(['ce', 'râ', 'mi', 'ca'], Categoria.objetos, tema: 'museu'),
+  Palavra(['pi', 'râ', 'mi', 'de'], Categoria.objetos, tema: 'museu'),
+  // 🏫 Escola
+  Palavra(['ré', 'gua'], Categoria.objetos, tema: 'escola'),
+  Palavra(['au', 'la'], Categoria.objetos, tema: 'escola'),
+  Palavra(['pro', 'va'], Categoria.objetos, tema: 'escola'),
+  Palavra(['qua', 'dro'], Categoria.objetos, tema: 'escola'),
+  Palavra(['sa', 'la'], Categoria.objetos, tema: 'escola'),
+  Palavra(['pá', 'tio'], Categoria.objetos, tema: 'escola'),
+  Palavra(['lou', 'sa'], Categoria.objetos, tema: 'escola'),
+  Palavra(['a', 'lu', 'no'], Categoria.objetos, tema: 'escola'),
+  Palavra(['bor', 'ra', 'cha'], Categoria.objetos, tema: 'escola'),
+  Palavra(['es', 'to', 'jo'], Categoria.objetos, tema: 'escola'),
+  Palavra(['mo', 'chi', 'la'], Categoria.objetos, tema: 'escola'),
+  Palavra(['lan', 'chei', 'ra'], Categoria.objetos, tema: 'escola'),
+  Palavra(['car', 'tei', 'ra'], Categoria.objetos, tema: 'escola'),
+  Palavra(['can', 'ti', 'na'], Categoria.objetos, tema: 'escola'),
+  Palavra(['re', 'crei', 'o'], Categoria.objetos, tema: 'escola'),
+  Palavra(['pro', 'fes', 'so', 'ra'], Categoria.objetos, tema: 'escola'),
+  Palavra(['di', 're', 'to', 'ra'], Categoria.objetos, tema: 'escola'),
+  Palavra(['ta', 'bu', 'a', 'da'], Categoria.objetos, tema: 'escola'),
+  Palavra(['a', 'pon', 'ta', 'dor'], Categoria.objetos, tema: 'escola'),
+  Palavra(['me', 'ren', 'dei', 'ra'], Categoria.objetos, tema: 'escola'),
+  // ☕ Cafeteria
+  Palavra(['ca', 'fé'], Categoria.objetos, tema: 'cafeteria'),
+  Palavra(['bo', 'lo'], Categoria.objetos, tema: 'cafeteria'),
+  Palavra(['pas', 'tel'], Categoria.objetos, tema: 'cafeteria'),
+  Palavra(['pu', 'dim'], Categoria.objetos, tema: 'cafeteria'),
+  Palavra(['gar', 'çom'], Categoria.objetos, tema: 'cafeteria'),
+  Palavra(['crois', 'sant'], Categoria.objetos, tema: 'cafeteria'),
+  Palavra(['xí', 'ca', 'ra'], Categoria.objetos, tema: 'cafeteria'),
+  Palavra(['ca', 'ne', 'ca'], Categoria.objetos, tema: 'cafeteria'),
+  Palavra(['fa', 'ti', 'a'], Categoria.objetos, tema: 'cafeteria'),
+  Palavra(['co', 'a', 'dor'], Categoria.objetos, tema: 'cafeteria'),
+  Palavra(['co', 'xi', 'nha'], Categoria.objetos, tema: 'cafeteria'),
+  Palavra(['chan', 'ti', 'lly'], Categoria.objetos, tema: 'cafeteria', texto: 'chantilly'),
+  Palavra(['es', 'pres', 'so'], Categoria.objetos, tema: 'cafeteria'),
+  Palavra(['san', 'du', 'í', 'che'], Categoria.objetos, tema: 'cafeteria'),
+  Palavra(['cap', 'puc', 'ci', 'no'], Categoria.objetos, tema: 'cafeteria'),
+  Palavra(['ca', 'fe', 'tei', 'ra'], Categoria.objetos, tema: 'cafeteria'),
+  // 🚒 Bombeiros
+  Palavra(['fo', 'go'], Categoria.objetos, tema: 'bombeiros'),
+  Palavra(['cha', 'mas'], Categoria.objetos, tema: 'bombeiros'),
+  Palavra(['ca', 'mi', 'nhão'], Categoria.objetos, tema: 'bombeiros'),
+  Palavra(['es', 'ca', 'da'], Categoria.objetos, tema: 'bombeiros'),
+  Palavra(['si', 're', 'ne'], Categoria.objetos, tema: 'bombeiros'),
+  Palavra(['hi', 'dran', 'te'], Categoria.objetos, tema: 'bombeiros'),
+  Palavra(['fu', 'ma', 'ça'], Categoria.objetos, tema: 'bombeiros'),
+  Palavra(['res', 'ga', 'te'], Categoria.objetos, tema: 'bombeiros'),
+  Palavra(['bom', 'bei', 'ro'], Categoria.objetos, tema: 'bombeiros'),
+  Palavra(['co', 'ra', 'gem'], Categoria.objetos, tema: 'bombeiros'),
+  Palavra(['man', 'guei', 'ra'], Categoria.objetos, tema: 'bombeiros'),
+  Palavra(['ca', 'pa', 'ce', 'te'], Categoria.objetos, tema: 'bombeiros'),
+  Palavra(['in', 'cên', 'di', 'o'], Categoria.objetos, tema: 'bombeiros'),
+  Palavra(['ex', 'tin', 'tor'], Categoria.objetos, tema: 'bombeiros'),
+  Palavra(['sal', 'va', 'men', 'to'], Categoria.objetos, tema: 'bombeiros'),
+  Palavra(['pron', 'ti', 'dão'], Categoria.objetos, tema: 'bombeiros'),
+  Palavra(['sal', 'va', 'vi', 'das'], Categoria.objetos, tema: 'bombeiros', texto: 'salva-vidas'),
 ];
 
 /// Todas as sílabas do banco em CAIXA ALTA (pool de distratores do modo
@@ -302,9 +403,15 @@ List<String> poolSilabasMaiusculas() {
 
 /// Palavras de uma categoria + nível, ordenadas por dificuldade (menos letras
 /// primeiro; ver [Palavra.porDificuldade]).
+///
+/// Palavras de TEMA da cidade (`tema != null`) ficam de fora: elas NÃO rodam nos
+/// níveis normais de Objetos — só no estudo do tema ([palavrasDoTema]).
 List<Palavra> palavrasDe(Categoria categoria, Nivel nivel) {
   final lista = bancoPalavras
-      .where((p) => p.categoria == categoria && p.nivelSilabas == nivel.silabas)
+      .where((p) =>
+          p.categoria == categoria &&
+          p.tema == null &&
+          p.nivelSilabas == nivel.silabas)
       .toList();
   lista.sort(Palavra.porDificuldade);
   return lista;
@@ -354,6 +461,17 @@ List<Palavra> todosOsAnimais() {
   final lista =
       bancoPalavras.where((p) => p.categoria == Categoria.animais).toList();
   lista.sort((a, b) => semAcento(a.texto).compareTo(semAcento(b.texto)));
+  return lista;
+}
+
+/// Palavras de um TEMA da cidade (foto dos Temas: 'casa' | 'museu' | 'escola' |
+/// 'cafeteria' | 'bombeiros'), ordenadas do MENOS para o MAIS sílabas — a
+/// criança começa pelas mais fáceis e vai passando (mesma ideia dos habitats).
+List<Palavra> palavrasDoTema(String temaChave) {
+  final lista = bancoPalavras
+      .where((p) => p.tema == temaChave)
+      .toList();
+  lista.sort(Palavra.porDificuldade);
   return lista;
 }
 

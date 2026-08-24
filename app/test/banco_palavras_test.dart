@@ -2,6 +2,7 @@ import 'package:alfabetizacao/models/categoria.dart';
 import 'package:alfabetizacao/models/habitat.dart';
 import 'package:alfabetizacao/models/palavra.dart';
 import 'package:alfabetizacao/models/regiao.dart';
+import 'package:alfabetizacao/models/tema.dart';
 import 'package:alfabetizacao/services/banco_palavras.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -73,6 +74,39 @@ void main() {
         if (permitidas != null && p.sub != null) {
           expect(permitidas.contains(p.sub), isTrue,
               reason: '"${p.texto}" tem sub="${p.sub}" inesperada');
+        }
+      }
+    });
+  });
+
+  group('temas da cidade (foto dos Temas)', () {
+    test('todo tema tem palavras, ordenadas por dificuldade (letras→sílabas)',
+        () {
+      for (final t in Tema.values) {
+        final lista = palavrasDoTema(t.chave);
+        expect(lista, isNotEmpty, reason: 'tema ${t.rotulo} sem palavras');
+        for (var i = 1; i < lista.length; i++) {
+          expect(Palavra.porDificuldade(lista[i - 1], lista[i]) <= 0, isTrue,
+              reason: 'tema ${t.rotulo} fora de ordem: '
+                  '${lista.map((p) => "${p.texto}(${p.nivelLetras}L/${p.nivelSilabas}s)").toList()}');
+        }
+      }
+    });
+
+    test('palavras de tema NÃO entram nos níveis normais de Objetos', () {
+      for (final n in Nivel.values) {
+        final normais = palavrasDe(Categoria.objetos, n);
+        expect(normais.every((p) => p.tema == null), isTrue,
+            reason: 'palavra de tema vazou para Objetos/${n.rotulo}');
+      }
+    });
+
+    test('toda palavra com tema usa uma chave de tema válida', () {
+      final chaves = Tema.values.map((t) => t.chave).toSet();
+      for (final p in bancoPalavras) {
+        if (p.tema != null) {
+          expect(chaves.contains(p.tema), isTrue,
+              reason: '"${p.texto}" tem tema="${p.tema}" inválido');
         }
       }
     });

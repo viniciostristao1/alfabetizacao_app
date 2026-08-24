@@ -20,6 +20,10 @@ import 'categoria.dart';
 /// 'ceu'. É uma classificação GEOGRÁFICA, independente do [habitat] (ex.: o tigre
 /// tem habitat 'selva' mas região 'asia'). Ver [Regiao] e o mapa-múndi.
 ///
+/// [tema] = tema da CIDADE (foto dos Temas em Objetos): 'casa' | 'museu' |
+/// 'escola' | 'cafeteria' | 'bombeiros'. Palavras com tema NÃO entram nos níveis
+/// normais de Objetos (ver [palavrasDe]) — só no estudo do tema ([palavrasDoTema]).
+///
 /// [textoOverride] permite palavras com **espaço/hífen** (ex.: "urso polar",
 /// "beija-flor") — nesses casos `silabas` ainda conta as sílabas p/ ordenar por
 /// dificuldade, mas o que se mostra é o [textoOverride].
@@ -30,6 +34,7 @@ class Palavra {
     this.sub,
     this.habitat,
     this.regiao,
+    this.tema,
     String? texto,
   }) : textoOverride = texto;
 
@@ -40,6 +45,7 @@ class Palavra {
   final String? sub;
   final String? habitat;
   final String? regiao;
+  final String? tema;
   final String? textoOverride;
 
   /// A palavra inteira exibida (ex.: 'cavalo', 'urso polar', 'beija-flor').
