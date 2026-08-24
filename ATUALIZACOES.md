@@ -3,6 +3,17 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.23.0 (2026-08-24)
+- **Objetos com foto de cenas 🏙️:** tocar em **Objetos** abre uma tela com
+  quatro cenas ilustradas. As **três de cima** são os níveis de sempre —
+  **Fácil · Médio · Difícil** (com a legenda embaixo de cada) — e rodam
+  exatamente como antes. A **cena larga de baixo** é o botão **Temas** (o que
+  ele faz será definido depois).
+- **Baú do fim de fase não corta mais em cima 🧰:** o card "NOVA FASE!" que sai
+  do baú ficava cortado no topo da tela. Agora ele aparece inteiro, logo acima
+  do baú aberto, com o "Mapa" e o "JOGAR AGORA" sempre visíveis. O card ficou
+  mais enxuto (emoji + nome da nova fase — a voz continua anunciando o cenário).
+
 ## v0.22.0 (2026-08-23)
 - **5 botões numa fileira no mapa-múndi 🗺️:** VOLTAR HABITAT · REINICIAR
   AVENTURA · VOLTAR INÍCIO · COLEÇÃO · **INICIAR/CONTINUAR JOGO** (branco,

@@ -40,16 +40,18 @@ void main() {
     expect(engrenagem.right, greaterThan(780)); // engrenagem na ponta direita
   });
 
-  testWidgets('tocar em Objetos abre a tela de níveis', (tester) async {
+  testWidgets('tocar em Objetos abre o menu (3 níveis + Temas)',
+      (tester) async {
     await _pumpApp(tester);
 
     await tester.tap(find.text('Objetos'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Escolha o nível'), findsOneWidget);
+    // foto com 4 cenas viram botões, com a legenda embaixo de cada
     expect(find.text('Fácil'), findsOneWidget);
-    expect(find.text('Média'), findsOneWidget);
+    expect(find.text('Médio'), findsOneWidget);
     expect(find.text('Difícil'), findsOneWidget);
+    expect(find.text('Temas'), findsOneWidget);
   });
 
   testWidgets('tocar em Animais abre o mapa de habitats', (tester) async {

@@ -107,7 +107,8 @@ void main() {
     await tester.pump(const Duration(milliseconds: 800)); // abre a tampa
     await tester.pump(); // rebuild: card + botões aparecem
 
-    expect(find.textContaining('Você desbloqueou o cenário'), findsOneWidget);
+    // card compacto: "NOVA FASE! 🔓" + o nome da próxima fase (Céu)
+    expect(find.text('NOVA FASE! 🔓'), findsOneWidget);
     expect(find.text('JOGAR AGORA'), findsOneWidget);
 
     // JOGAR AGORA → abre a próxima fase da ordem (Fase 3 · Céu)

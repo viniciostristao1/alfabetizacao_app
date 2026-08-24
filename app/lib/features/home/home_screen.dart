@@ -10,6 +10,7 @@ import '../colecao/colecao_screen.dart';
 import '../escrever/escrever_screen.dart';
 import '../habitat/habitat_map_screen.dart';
 import '../nivel/nivel_screen.dart';
+import '../objetos/objetos_menu_screen.dart';
 
 /// Tela principal (PAISAGEM): as modalidades de palavras.
 /// O emoji/cor de cada card é só apoio visual — a criança que ainda não lê
@@ -50,6 +51,8 @@ class _HomeScreenState extends State<HomeScreen> {
           // Animais viram um JOGO: mapa de habitats (paisagem), sem escolher
           // nível — cada habitat roda do mais fácil ao mais difícil.
           Categoria.animais => const HabitatMapScreen(),
+          // Objetos = foto com 4 cenas: 3 níveis de sempre + "Temas".
+          Categoria.objetos => const ObjetosMenuScreen(),
           // Escrever = palavras do próprio usuário (digitadas na tela).
           Categoria.escrever => const EscreverScreen(),
           // Contas = matemática (soma/subtração), tela própria.

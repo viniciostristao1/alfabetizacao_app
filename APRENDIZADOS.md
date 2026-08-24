@@ -2,6 +2,60 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-24 — v0.23.0 (menu de Objetos com foto de 4 cenas)
+- **Nova tela `features/objetos/objetos_menu_screen.dart`:** substitui a
+  `NivelScreen` **só para Objetos** (home: `Categoria.objetos => ObjetosMenuScreen`;
+  Alimentos/Nomes seguem na NivelScreen). Paisagem (o app é todo landscape).
+- **Origem da arte:** o usuário subiu pelo GitHub uma foto **1536×1024** com 4
+  cenas (`file_00000000198c820e82a90e650f7cb448.png`, na RAIZ do repo — commit
+  `f066b74 "Add files via upload"` no origin/main). Detectei os vãos brancos com
+  PIL (redução BOX → média por coluna/linha): verticais em x≈504–513 e 1021–1029,
+  horizontal em y≈461–469. Recortei em 4 assets em `assets/objetos/`:
+  `objetos_facil.png` (casa/ESCOLA, 504×461), `objetos_medio.png` (PADARIA,
+  508×461), `objetos_dificil.png` (HOSPITAL/SUPERMERCADO, 507×461) e
+  `objetos_temas.png` (cena larga MUSEU/ESCOLA/CAFETERIA/BOMBEIROS, 1536×555).
+  Declarados no `pubspec.yaml`.
+- **Layout:** `Column[ Expanded(flex:5, Row[3 tiles]) , Expanded(flex:4, tile
+  largo) ]`. Cada `_CenaBotao` = `Image.asset(BoxFit.cover)` com borda na cor do
+  nível (verde/âmbar/vermelho de `Nivel.cor`) + legenda LOGO ABAIXO. As 3 de cima
+  chamam `palavrasDe(objetos, nível)` → EstudoScreen (idêntico ao fluxo antigo).
+- **Temas (a de baixo):** comportamento ainda **não definido** (usuário decide
+  depois) — por ora só um SnackBar "Temas: em breve! 🧩" (botão não fica morto).
+- **Legenda "Médio":** o usuário pediu "médio" (masc., concorda com *nível*); a
+  `NivelScreen` continua usando "Média" no rótulo do enum — aqui a legenda é só
+  visual, o filtro segue `Nivel.media` (3 sílabas).
+- **Render de asset em teste:** pra capturar PNG com as imagens decodificadas,
+  `tester.runAsync` + `precacheImage(AssetImage(...), element)` ANTES do
+  `toImage`. Só achar os `Text` das legendas não precisa disso (existem na árvore
+  mesmo sem a imagem pintar) — por isso o `widget_test` valida por texto.
+- **⚠️ Pendência de git:** os 4 crops estão LOCAIS; o commit da foto original
+  (`f066b74`) está no origin/main mas ainda NÃO no main local. Ao commitar/pushar
+  a v0.23.0, integrar o origin/main primeiro (pull) senão o push é rejeitado.
+
+## 2026-08-24 — v0.23.0 (baú do fim de fase: card não corta mais no topo)
+- **Sintoma:** o card "NOVA FASE!" que sai do baú (`_BauDialog` em `features/estudo/
+  estudo_screen.dart`) ficava CORTADO no topo da tela em paisagem. Confirmado por render
+  headless (teste que dispara o baú + `RenderRepaintBoundary.toImage` → PNG): o texto do
+  card ficava em **y = −24** (acima do topo da tela). Causa: o card era ALTO (emoji + 4
+  linhas de texto ~112 px) e ficava `Positioned(bottom: 74)` num `SizedBox(height:148)` com
+  `Clip.none` → transbordava ~55 px acima da caixa, além do topo do `AlertDialog`. Em 360 px
+  de altura (paisagem) não havia folga.
+- **Fix (3 partes):** (1) `_CardNovaFase` **compacto** — só emoji + "NOVA FASE! 🔓" + o nome
+  da região (as frases "Você desbloqueou o cenário…" e "Pronto para conhecer…" saíram; a voz
+  TTS já as anuncia). (2) baú um tico menor (`_Bau` CustomPaint `190×128 → 168×112`; o
+  `_BauPainter` pinta tudo em frações de `size`, então escala proporcional). (3) a caixa do
+  Stack agora é **condicional e CONTÉM o card inteiro**: `height: _aberto ? 200 : 124`
+  (fechado = só o baú; aberto = alto o bastante pro card ficar todo dentro, `bottom: 82`),
+  `AlertDialog(scrollable: true)` como rede de segurança (rola em telas ainda mais baixas em
+  vez de cortar). A "+N moedas!" segue no topo (dá a folga que o card ocupa ao emergir).
+- **Verificação:** render headless nos dois estados (fechado/aberto) — todos os rects
+  positivos e < 360 (card em y≈55, botões Mapa/JOGAR AGORA em y≈310). Nada cortado.
+- **Teste atualizado:** `mapa_mundi_test.dart` checava `find.textContaining('Você
+  desbloqueou o cenário')` (texto removido) → trocado por `find.text('NOVA FASE! 🔓')`.
+- **Gotcha do render headless:** pra chegar no baú ABERTO no teste, use `pumpAndSettle`
+  depois de tocar no `Key('bau')` (as animações são one-shot); `pump` de duração fixa deixava
+  `_aberto=false` e o card nem entrava na árvore.
+
 ## 2026-08-23 — v0.22.0 (fileira única de 5 botões no mapa-múndi)
 - **Layout do rodapé do mapa:** os DOIS SafeArea (INICIAR JOGO à direita + os 4 à esquerda)
   viraram UMA `SafeArea` centralizada com `FittedBox(scaleDown)` + `Row` com os 5 botões

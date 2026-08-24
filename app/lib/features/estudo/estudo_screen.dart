@@ -844,27 +844,31 @@ class _BauDialogState extends State<_BauDialog>
     final ehUltima = widget.proxima == null;
     return AlertDialog(
       // Compacto: a tela é deitada (360 de altura) — sem espaço pra sobrar.
-      // Largura limitada: a janela não precisa esticar até a borda da tela.
-      insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
+      // `scrollable` = rede de segurança: em telas ainda mais baixas a janela
+      // ROLA em vez de cortar em cima. Largura limitada (não estica até a borda).
+      scrollable: true,
+      insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
       constraints: const BoxConstraints(maxWidth: 360),
-      contentPadding: const EdgeInsets.fromLTRB(20, 14, 20, 0),
+      contentPadding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             '+${ProgressoRepository.bonusFase} moedas!',
             style: const TextStyle(
-              fontSize: 17,
+              fontSize: 16,
               fontWeight: FontWeight.w800,
               color: AppColors.accent,
             ),
           ),
           const SizedBox(height: 2),
-          // baú (fechado) + card da nova fase "saindo" dele
+          // baú (fechado) + card da nova fase "saindo" dele. Fechado: caixa
+          // baixa (só o baú). Aberto: caixa ALTA o bastante para CONTER o card
+          // inteiro acima do baú — ele não sobe além do topo da janela (era
+          // isso que cortava). A janela cresce quando o baú abre.
           SizedBox(
-            height: 148,
+            height: _aberto ? 200 : 124,
             child: Stack(
-              // sem cortar: o card "sai" para cima, além da área do baú
               clipBehavior: Clip.none,
               alignment: Alignment.bottomCenter,
               children: [
@@ -883,7 +887,7 @@ class _BauDialogState extends State<_BauDialog>
                   Positioned(
                     left: 0,
                     right: 0,
-                    bottom: 74,
+                    bottom: 82,
                     child: AnimatedBuilder(
                       animation: _card,
                       builder: (_, _) {
@@ -965,12 +969,15 @@ class _CardNovaFase extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Card COMPACTO (a tela é deitada e baixa): emoji + rótulo curto. A frase
+    // longa "Você desbloqueou o cenário…" a voz (TTS) já anuncia — aqui ela só
+    // deixava o card alto demais e o empurrava para fora do topo da janela.
     return Material(
       color: AppColors.surface,
       elevation: 8,
       borderRadius: BorderRadius.circular(16),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: AppColors.lineStrong),
@@ -979,40 +986,30 @@ class _CardNovaFase extends StatelessWidget {
             ? const Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('🏆', style: TextStyle(fontSize: 36)),
+                  Text('🏆', style: TextStyle(fontSize: 34)),
                   SizedBox(height: 2),
                   Text(
                     'AVENTURA CONCLUÍDA!',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w900),
-                  ),
-                  Text(
-                    'Você visitou TODAS as regiões do mapa-múndi!',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 12),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900),
                   ),
                 ],
               )
             : Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(proxima!.emoji, style: const TextStyle(fontSize: 36)),
+                  Text(proxima!.emoji, style: const TextStyle(fontSize: 34)),
                   const SizedBox(height: 2),
                   const Text(
                     'NOVA FASE! 🔓',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900),
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900),
                   ),
                   Text(
-                    'Você desbloqueou o cenário\n${proxima!.rotulo}!',
+                    proxima!.rotulo,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-                      fontSize: 13,
+                      fontSize: 16,
                       fontWeight: FontWeight.w800,
                     ),
-                  ),
-                  const Text(
-                    'Pronto para conhecer os animais dele?',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 11),
                   ),
                 ],
               ),
@@ -1036,7 +1033,7 @@ class _Bau extends StatelessWidget {
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: CustomPaint(
-        size: const Size(190, 128),
+        size: const Size(168, 112),
         painter: _BauPainter(p),
       ),
     );
