@@ -3,6 +3,13 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.26.0 (2026-08-24)
+- **Foto dos Temas em tela cheia 🖼️📱:** a foto da cidade agora preenche quase
+  a tela inteira (em vez de aparecer pequena no meio). As faixas clicáveis
+  (casa, museu, escola, cafeteria, bombeiros) acompanham a imagem na nova
+  posição, calculada pela matemática do corte — nada quebra em telas de
+  tamanhos diferentes.
+
 ## v0.25.0 (2026-08-24)
 - **Foto dos Temas clicável 🖱️🏙️:** ao abrir os **Temas** (em Objetos), a foto
   da cidade aparece inteira e cada palavra dela é um botão invisível: **casa,
