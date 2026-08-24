@@ -3,6 +3,10 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.24.1 (2026-08-24)
+- **Foto dos Temas corrigida 🖼️:** agora abre a imagem certa (a que foi
+  enviada depois) — antes o botão abria uma foto antiga.
+
 ## v0.24.0 (2026-08-24)
 - **Temas abre a foto dos objetos 🖼️:** tocar em **Temas** (cena larga de
   baixo nos Objetos) agora abre a imagem que você adicionou, em tela cheia,
