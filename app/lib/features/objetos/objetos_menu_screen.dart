@@ -34,54 +34,75 @@ class ObjetosMenuScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        foregroundColor: Colors.white,
-        title: Text('${Categoria.objetos.emoji}  ${Categoria.objetos.rotulo}'),
-      ),
-      body: Column(
+      body: Stack(
         children: [
-          Expanded(
-            flex: 5,
-            child: Row(
-              children: [
-                Expanded(
-                  child: _CenaBotao(
-                    asset: 'assets/objetos/objetos_facil.png',
-                    legenda: 'Fácil',
-                    cor: Nivel.facil.cor,
-                    onTap: () => _abrirNivel(context, Nivel.facil),
-                  ),
+          Column(
+            children: [
+              Expanded(
+                flex: 5,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _CenaBotao(
+                        asset: 'assets/objetos/objetos_facil.png',
+                        legenda: 'Fácil',
+                        cor: Nivel.facil.cor,
+                        onTap: () => _abrirNivel(context, Nivel.facil),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: _CenaBotao(
+                        asset: 'assets/objetos/objetos_medio.png',
+                        legenda: 'Médio',
+                        cor: Nivel.media.cor,
+                        onTap: () => _abrirNivel(context, Nivel.media),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: _CenaBotao(
+                        asset: 'assets/objetos/objetos_dificil.png',
+                        legenda: 'Difícil',
+                        cor: Nivel.dificil.cor,
+                        onTap: () => _abrirNivel(context, Nivel.dificil),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 4),
-                Expanded(
-                  child: _CenaBotao(
-                    asset: 'assets/objetos/objetos_medio.png',
-                    legenda: 'Médio',
-                    cor: Nivel.media.cor,
-                    onTap: () => _abrirNivel(context, Nivel.media),
-                  ),
+              ),
+              const SizedBox(height: 4),
+              Expanded(
+                flex: 4,
+                child: _CenaBotao(
+                  asset: 'assets/objetos/objetos_temas.png',
+                  legenda: 'Temas',
+                  cor: Categoria.objetos.cor,
+                  onTap: () => _abrirTemas(context),
                 ),
-                const SizedBox(width: 4),
-                Expanded(
-                  child: _CenaBotao(
-                    asset: 'assets/objetos/objetos_dificil.png',
-                    legenda: 'Difícil',
-                    cor: Nivel.dificil.cor,
-                    onTap: () => _abrirNivel(context, Nivel.dificil),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-          const SizedBox(height: 4),
-          Expanded(
-            flex: 4,
-            child: _CenaBotao(
-              asset: 'assets/objetos/objetos_temas.png',
-              legenda: 'Temas',
-              cor: Categoria.objetos.cor,
-              onTap: () => _abrirTemas(context),
+          Positioned(
+            top: 6,
+            left: 6,
+            child: SafeArea(
+              child: Material(
+                color: Colors.black.withValues(alpha: 0.45),
+                shape: const CircleBorder(),
+                child: InkWell(
+                  customBorder: const CircleBorder(),
+                  onTap: () => Navigator.of(context).pop(),
+                  child: const Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Icon(
+                      Icons.arrow_back_rounded,
+                      color: Colors.white,
+                      size: 22,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
         ],

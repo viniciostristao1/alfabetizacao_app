@@ -2,6 +2,12 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-24 — v0.28.0 (Objetos sem AppBar, botão voltar flutuante)
+- **Sem `AppBar`:** `ObjetosMenuScreen` agora é `Scaffold(body: Stack[Column(4 cenas), Positioned voltar])`.
+  O `AppBar` que mostrava "🧸 Objetos" foi removido e a `Column` encosta no topo
+  (sem `SafeArea` ao redor — só o botão voltar está dentro de `SafeArea` flutuante
+  com fundo preto 45% circular). Ganha ~56px verticais: as cenas ocupam a tela toda.
+
 ## 2026-08-24 — v0.27.0 (Objetos tela cheia sem bordas)
 - **`objetos_menu_screen.dart` tela cheia:** removidos `SafeArea`+`Padding(10)` e a
   `DecoratedBox` com `Border.all` do `_CenaBotao` (cara de "card com borda").

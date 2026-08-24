@@ -3,6 +3,11 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.28.0 (2026-08-24)
+- **Objetos sem título, 100% tela cheia 🎮:** o cabeçalho "🧸 Objetos" saiu — as 4
+  cenas agora ocupam de fato a tela toda, sem margem superior. Botão de voltar
+  discreto (◀ no canto) mantém a navegação com cara de jogo.
+
 ## v0.27.0 (2026-08-24)
 - **Objetos em tela cheia 🎮:** o menu **Objetos** perdeu as bordas e o padding — as
   4 cenas (Fácil/Médio/Difícil/Temas) agora ocupam a tela toda em modo jogo,
