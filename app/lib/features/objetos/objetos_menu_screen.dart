@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/categoria.dart';
 import '../../services/banco_palavras.dart';
 import '../estudo/estudo_screen.dart';
+import 'temas_screen.dart';
 
 /// Menu de OBJETOS (paisagem): uma foto com 4 cenas viram 4 botões.
 /// As **3 de cima** rodam os níveis de sempre — Fácil / Médio / Difícil
@@ -24,16 +25,9 @@ class ObjetosMenuScreen extends StatelessWidget {
   }
 
   void _abrirTemas(BuildContext context) {
-    // O que acontece aqui ainda vai ser definido — por ora, um aviso amigável
-    // (não deixa o botão "morto" nem quebra o fluxo da criança).
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        const SnackBar(
-          content: Text('Temas: em breve! 🧩'),
-          duration: Duration(seconds: 2),
-        ),
-      );
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const TemasScreen()),
+    );
   }
 
   @override

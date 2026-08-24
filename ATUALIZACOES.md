@@ -3,6 +3,11 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.24.0 (2026-08-24)
+- **Temas abre a foto dos objetos 🖼️:** tocar em **Temas** (cena larga de
+  baixo nos Objetos) agora abre a imagem que você adicionou, em tela cheia,
+  com zoom e pano.
+
 ## v0.23.0 (2026-08-24)
 - **Objetos com foto de cenas 🏙️:** tocar em **Objetos** abre uma tela com
   quatro cenas ilustradas. As **três de cima** são os níveis de sempre —
