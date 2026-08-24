@@ -3,6 +3,11 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.29.0 (2026-08-24)
+- **Temas também 100% tela cheia 🎮:** o título "Temas" saiu, igual ao menu
+  Objetos — a foto da cidade agora ocupa a tela toda sem barra superior,
+  com botão de voltar flutuante discreto.
+
 ## v0.28.0 (2026-08-24)
 - **Objetos sem título, 100% tela cheia 🎮:** o cabeçalho "🧸 Objetos" saiu — as 4
   cenas agora ocupam de fato a tela toda, sem margem superior. Botão de voltar

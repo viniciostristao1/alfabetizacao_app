@@ -34,57 +34,71 @@ class TemasScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        foregroundColor: Colors.white,
-        title: const Text('Temas'),
-      ),
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, c) {
-            final w = c.maxWidth;
-            final h = c.maxHeight;
-            // Cover: a imagem (aspecto kTemasFotoAspect) cresce até cobrir a
-            // tela toda — o que passa da borda é cortado (dx/dy de cada lado).
-            final dW = math.max(w, h * kTemasFotoAspect);
-            final dH = math.max(h, w / kTemasFotoAspect);
-            final dx = (dW - w) / 2;
-            final dy = (dH - h) / 2;
-            // Cada palavra ocupa 1/5 da largura da IMAGEM — a faixa acompanha.
-            final zona = dW / Tema.values.length;
-            return Stack(
-              fit: StackFit.expand,
-              children: [
-                // A imagem posicionada manualmente (esquerda = -dx) — a mesma
-                // matemática do BoxFit.cover, sem depender do renderizador.
-                Positioned(
-                  left: -dx,
-                  top: -dy,
-                  width: dW,
-                  height: dH,
-                  child: Image.asset(
-                    'assets/objetos/objetos_temas_foto.png',
-                    fit: BoxFit.fill,
-                    filterQuality: FilterQuality.medium,
-                    errorBuilder: (_, _, _) =>
-                        const ColoredBox(color: Colors.black),
-                  ),
-                ),
-                for (final (i, tema) in Tema.values.indexed)
+      body: Stack(
+        children: [
+          LayoutBuilder(
+            builder: (context, c) {
+              final w = c.maxWidth;
+              final h = c.maxHeight;
+              final dW = math.max(w, h * kTemasFotoAspect);
+              final dH = math.max(h, w / kTemasFotoAspect);
+              final dx = (dW - w) / 2;
+              final dy = (dH - h) / 2;
+              final zona = dW / Tema.values.length;
+              return Stack(
+                fit: StackFit.expand,
+                children: [
                   Positioned(
-                    left: (i + 0.5) * zona - dx - zona / 2,
-                    width: zona,
-                    top: 0,
-                    bottom: 0,
-                    child: _FaixaTema(
-                      tema: tema,
-                      onTap: () => _abrirTema(context, tema),
+                    left: -dx,
+                    top: -dy,
+                    width: dW,
+                    height: dH,
+                    child: Image.asset(
+                      'assets/objetos/objetos_temas_foto.png',
+                      fit: BoxFit.fill,
+                      filterQuality: FilterQuality.medium,
+                      errorBuilder: (_, _, _) =>
+                          const ColoredBox(color: Colors.black),
                     ),
                   ),
-              ],
-            );
-          },
-        ),
+                  for (final (i, tema) in Tema.values.indexed)
+                    Positioned(
+                      left: (i + 0.5) * zona - dx - zona / 2,
+                      width: zona,
+                      top: 0,
+                      bottom: 0,
+                      child: _FaixaTema(
+                        tema: tema,
+                        onTap: () => _abrirTema(context, tema),
+                      ),
+                    ),
+                ],
+              );
+            },
+          ),
+          Positioned(
+            top: 6,
+            left: 6,
+            child: SafeArea(
+              child: Material(
+                color: Colors.black.withValues(alpha: 0.45),
+                shape: const CircleBorder(),
+                child: InkWell(
+                  customBorder: const CircleBorder(),
+                  onTap: () => Navigator.of(context).pop(),
+                  child: const Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Icon(
+                      Icons.arrow_back_rounded,
+                      color: Colors.white,
+                      size: 22,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

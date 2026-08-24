@@ -2,6 +2,12 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-24 — v0.29.0 (Temas sem AppBar, 100% tela cheia)
+- **`temas_screen.dart` sem `AppBar`/`SafeArea`:** removidos `AppBar("Temas")` e o
+  `SafeArea` que envolvia o `LayoutBuilder`. Agora `Scaffold(body: Stack[LayoutBuilder(cover),
+  voltar flutuante])` — idêntico ao padrão do `ObjetosMenuScreen` v0.28.0. Foto ocupa
+  a tela toda; botão voltar circular preto 45% em `SafeArea` no `Positioned(top:6,left:6)`.
+
 ## 2026-08-24 — v0.28.0 (Objetos sem AppBar, botão voltar flutuante)
 - **Sem `AppBar`:** `ObjetosMenuScreen` agora é `Scaffold(body: Stack[Column(4 cenas), Positioned voltar])`.
   O `AppBar` que mostrava "🧸 Objetos" foi removido e a `Column` encosta no topo
