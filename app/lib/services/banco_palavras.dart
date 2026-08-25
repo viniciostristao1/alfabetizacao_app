@@ -534,6 +534,22 @@ List<Palavra> todosOsAnimais() {
   return lista;
 }
 
+/// Todos os alimentos do app (para "Selecionar alimentos"), em ordem alfabética.
+List<Palavra> todosOsAlimentos() {
+  final lista =
+      bancoPalavras.where((p) => p.categoria == Categoria.alimentos).toList();
+  lista.sort((a, b) => semAcento(a.texto).compareTo(semAcento(b.texto)));
+  return lista;
+}
+
+/// Todos os objetos do app (para "Selecionar objetos"), em ordem alfabética.
+List<Palavra> todosOsObjetos() {
+  final lista =
+      bancoPalavras.where((p) => p.categoria == Categoria.objetos).toList();
+  lista.sort((a, b) => semAcento(a.texto).compareTo(semAcento(b.texto)));
+  return lista;
+}
+
 /// Palavras de um TEMA da cidade (foto dos Temas: 'casa' | 'museu' | 'escola' |
 /// 'cafeteria' | 'bombeiros'), ordenadas do MENOS para o MAIS sílabas — a
 /// criança começa pelas mais fáceis e vai passando (mesma ideia dos habitats).

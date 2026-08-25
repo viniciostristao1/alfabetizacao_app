@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.50.0 (2026-08-25)
+- **Selecionar alimentos e objetos 🔍🍎🧸:** nos menus **Alimentos** e **Objetos** (ao clicar em cada categoria na Home) adicionado botão inferior esquerdo transparente **SELECIONAR ALIMENTOS / SELECIONAR OBJETOS** (mesmo estilo de *SELECIONAR ANIMAIS* em Animais) — abre tela de busca com lista filtrável e confirmação para estudar palavras escolhidas (`🍎 Meus alimentos` / `🧸 Meus objetos`).
+
 ## v0.49.1 (2026-08-25)
 - **Baú: botões MAPA/FAZENDA/CIDADE voltam ao mapa 🗺️⬅️:** corrigido `_concluirFase*` — tocar em **MAPA** (animais), **FAZENDA** (alimentos) ou **CIDADE** (objetos) após abrir o baú agora volta ao respectivo mapa (`Navigator.pop` no `EstudoScreen` quando `showDialog` retorna `false`); antes o diálogo apenas fechava e mantinha o `EstudoScreen` aberto. `JOGAR AGORA` continua para a próxima fase.
 

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../models/categoria.dart';
+import '../../models/palavra.dart';
 import '../../services/banco_palavras.dart';
 import '../../services/progresso_repository.dart';
 import '../estudo/estudo_screen.dart';
+import '../selecao/selecao_alimentos_screen.dart';
 import 'alimentos_temas_screen.dart';
 
 class AlimentosMenuScreen extends StatefulWidget {
@@ -45,6 +47,24 @@ class _AlimentosMenuScreenState extends State<AlimentosMenuScreen> {
   void _abrirTemas(BuildContext context) async {
     await Navigator.of(context).push(
       MaterialPageRoute(builder: (_) => const AlimentosTemasScreen()),
+    );
+    if (mounted) _carregar();
+  }
+
+  Future<void> _selecionarAlimentos() async {
+    final escolhidos = await Navigator.of(context).push<List<Palavra>>(
+      MaterialPageRoute(builder: (_) => const SelecaoAlimentosScreen()),
+    );
+    if (escolhidos == null || escolhidos.isEmpty) return;
+    if (!mounted) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => EstudoScreen(
+          titulo: '🍎  Meus alimentos',
+          palavras: escolhidos,
+          manterPaisagemAoSair: true,
+        ),
+      ),
     );
     if (mounted) _carregar();
   }
@@ -144,7 +164,67 @@ class _AlimentosMenuScreenState extends State<AlimentosMenuScreen> {
               ),
             ),
           ),
+          SafeArea(
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: _BotaoTransparente(
+                  icon: Icons.search,
+                  texto: 'SELECIONAR ALIMENTOS',
+                  onTap: _selecionarAlimentos,
+                ),
+              ),
+            ),
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class _BotaoTransparente extends StatelessWidget {
+  const _BotaoTransparente({
+    required this.icon,
+    required this.texto,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String texto;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.black.withValues(alpha: 0.55),
+      borderRadius: BorderRadius.circular(22),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(22),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(color: Colors.white24),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: Colors.white, size: 18),
+              const SizedBox(width: 8),
+              Text(
+                texto,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 0.3,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
