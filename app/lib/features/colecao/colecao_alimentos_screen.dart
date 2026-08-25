@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/alimentos_tema.dart';
 import '../../services/progresso_alimentos_fases.dart';
 import '../../theme/app_colors.dart';
-import '../alimentos/alimentos_temas_screen.dart';
+import 'colecao_objetos_screen.dart';
 
 class ColecaoAlimentosScreen extends StatefulWidget {
   const ColecaoAlimentosScreen({super.key});
@@ -26,9 +26,9 @@ class _ColecaoAlimentosScreenState extends State<ColecaoAlimentosScreen> {
     if (mounted) setState(() => _concluidas = c);
   }
 
-  Future<void> _abrirFazenda() async {
+  Future<void> _abrirObjetos() async {
     await Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => const AlimentosTemasScreen()),
+      MaterialPageRoute(builder: (_) => const ColecaoObjetosScreen()),
     );
     if (mounted) _carregar();
   }
@@ -47,9 +47,9 @@ class _ColecaoAlimentosScreenState extends State<ColecaoAlimentosScreen> {
             padding: const EdgeInsets.only(right: 8),
             child: Center(
               child: TextButton.icon(
-                onPressed: _abrirFazenda,
-                icon: const Icon(Icons.agriculture_rounded),
-                label: const Text('FAZENDA', style: TextStyle(fontWeight: FontWeight.w800)),
+                onPressed: _abrirObjetos,
+                icon: const Text('🧸', style: TextStyle(fontSize: 18)),
+                label: const Text('OBJETOS', style: TextStyle(fontWeight: FontWeight.w800)),
               ),
             ),
           ),

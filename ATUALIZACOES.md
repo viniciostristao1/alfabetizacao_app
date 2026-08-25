@@ -3,6 +3,12 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.41.0 (2026-08-24)
+- **Coleções cruzadas 🔄🍎🧸:** dentro da **Coleção de Alimentos** o botão
+  "FAZENDA" virou **"OBJETOS" 🧸** (vai direto para a coleção de Objetos); na
+  **Coleção de Objetos** o botão "TEMAS" virou **"ALIMENTOS" 🍎** — navegação
+  direta entre coleções, sem precisar voltar.
+
 ## v0.40.0 (2026-08-24)
 - **Moedas nos Temas + coleções na Home 🪙🏠:** **Objetos → Temas** e
   **Alimentos → Temas** agora mostram **🪙 moedas · Nv** no topo direito (igual

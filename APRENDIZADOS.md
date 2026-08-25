@@ -2,6 +2,13 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-24 — v0.41.0 (Coleções cruzadas Alimentos ↔ Objetos)
+- **`colecao_alimentos_screen.dart`:** `FAZENDA` (agriculture_rounded + `AlimentosTemasScreen`)
+  → `OBJETOS` (🧸 + `ColecaoObjetosScreen`), método `_abrirObjetos`.
+- **`colecao_objetos_screen.dart`:** `TEMAS` (store_rounded + `TemasScreen`)
+  → `ALIMENTOS` (🍎 + `ColecaoAlimentosScreen`), método `_abrirAlimentos`.
+  Import cruzado (`colecao_alimentos ↔ colecao_objetos`) — Dart permite ciclo, `analyze` ok.
+
 ## 2026-08-24 — v0.40.0 (Moedas nos Temas + coleções na Home)
 - **`temas_screen.dart` e `alimentos_temas_screen.dart`:** `StatefulWidget` com
   `_moedas/_xp` + `SafeArea Align topRight` container 🪙·Nv (igual `HabitatMapScreen`),
