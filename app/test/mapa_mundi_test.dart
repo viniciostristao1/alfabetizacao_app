@@ -100,12 +100,11 @@ void main() {
     expect(find.text('Toque no baú para abrir! 🗝️'), findsOneWidget);
     expect(find.text('JOGAR AGORA'), findsNothing);
 
-    // toca no baú → abre → o card da próxima fase "sai" + JOGAR AGORA
     final bauFinder = find.byKey(const Key('bau'));
     await tester.tapAt(tester.getCenter(bauFinder));
-    await tester.pump(); // inicia a abertura (1º frame seta o startTime)
-    await tester.pump(const Duration(milliseconds: 800)); // abre a tampa
-    await tester.pump(); // rebuild: card + botões aparecem
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 1250));
+    await tester.pump();
 
     // card compacto: "NOVA FASE! 🔓" + o nome da próxima fase (Céu)
     expect(find.text('NOVA FASE! 🔓'), findsOneWidget);

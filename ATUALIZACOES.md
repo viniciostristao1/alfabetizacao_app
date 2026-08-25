@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.45.0 (2026-08-25)
+- **Baú refeito com realismo ✨🧰:** moedas agora são elipses douradas em 3D vistas de cima (com espessura lateral e brilho), não mais círculos frontais que pareciam "olhos"; pilha em 4 fileiras com joias incrustadas, brilho mais nítido e sombra interna. Tampa com dobradiça simétrica abre uniformemente para trás (perspectiva com `cos/sin` do ângulo até 110°) sem inclinar só de um lado, e corpo com veios/contraste mais nítido, bordas douradas com luz e rebites com reflexo. Animação mais lenta e fluida (`1100ms` + curva `easeInOutCubic`).
+
 
 ## v0.44.0 (2026-08-24)
 - **Mapa-múndi novo em alta qualidade 🌍✨:** ao clicar em Animais → Mapa-múndi,

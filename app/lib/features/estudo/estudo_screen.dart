@@ -875,16 +875,13 @@ class _BauDialog extends StatefulWidget {
 
 class _BauDialogState extends State<_BauDialog>
     with TickerProviderStateMixin {
-  /// Abre a tampa do baú (0 fechado → 1 aberto).
   late final AnimationController _abertura = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 700),
+    duration: const Duration(milliseconds: 1100),
   );
-
-  /// Card da nova fase "saindo" do baú (só depois de abrir).
   late final AnimationController _card = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 650),
+    duration: const Duration(milliseconds: 850),
   );
 
   bool get _aberto => _abertura.isCompleted;
@@ -962,11 +959,10 @@ class _BauDialogState extends State<_BauDialog>
                 AnimatedBuilder(
                   animation: _abertura,
                   builder: (_, _) => _Bau(
-                    p: _abertura.value,
+                    p: Curves.easeInOutCubic.transform(_abertura.value),
                     onTap: _abrirBau,
                   ),
                 ),
-                // card da nova fase (ou 🏆 no fim da aventura)
                 if (_aberto)
                   Positioned(
                     left: 0,
@@ -1116,11 +1112,11 @@ class _BauAlimentosDialogState extends State<_BauAlimentosDialog>
     with TickerProviderStateMixin {
   late final AnimationController _abertura = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 700),
+    duration: const Duration(milliseconds: 1100),
   );
   late final AnimationController _card = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 650),
+    duration: const Duration(milliseconds: 850),
   );
 
   bool get _aberto => _abertura.isCompleted;
@@ -1183,7 +1179,7 @@ class _BauAlimentosDialogState extends State<_BauAlimentosDialog>
                 if (_aberto) const Positioned.fill(child: ConfeteBurst(muito: true)),
                 AnimatedBuilder(
                   animation: _abertura,
-                  builder: (_, _) => _Bau(p: _abertura.value, onTap: _abrirBau),
+                  builder: (_, _) => _Bau(p: Curves.easeInOutCubic.transform(_abertura.value), onTap: _abrirBau),
                 ),
                 if (_aberto)
                   Positioned(
@@ -1304,8 +1300,8 @@ class _BauObjetosDialog extends StatefulWidget {
 
 class _BauObjetosDialogState extends State<_BauObjetosDialog>
     with TickerProviderStateMixin {
-  late final AnimationController _abertura = AnimationController(vsync: this, duration: const Duration(milliseconds: 700));
-  late final AnimationController _card = AnimationController(vsync: this, duration: const Duration(milliseconds: 650));
+  late final AnimationController _abertura = AnimationController(vsync: this, duration: const Duration(milliseconds: 1100));
+  late final AnimationController _card = AnimationController(vsync: this, duration: const Duration(milliseconds: 850));
   bool get _aberto => _abertura.isCompleted;
   @override
   void initState() {
@@ -1343,7 +1339,7 @@ class _BauObjetosDialogState extends State<_BauObjetosDialog>
               alignment: Alignment.bottomCenter,
               children: [
                 if (_aberto) const Positioned.fill(child: ConfeteBurst(muito: true)),
-                AnimatedBuilder(animation: _abertura, builder: (_, _) => _Bau(p: _abertura.value, onTap: _abrirBau)),
+                AnimatedBuilder(animation: _abertura, builder: (_, _) => _Bau(p: Curves.easeInOutCubic.transform(_abertura.value), onTap: _abrirBau)),
                 if (_aberto)
                   Positioned(
                     left: 0,
@@ -1424,30 +1420,18 @@ class _Bau extends StatelessWidget {
   }
 }
 
-/// Desenho do baú com detalhes: tábuas de madeira com veios, faixas de ouro
-/// com rebites, cadeado com buraco de fechadura, tampa abaulada com friso
-/// dourado e brasão — e, quando abre, o TESOURO: pilha de moedas de ouro com
-/// joias (esmeralda/safira) e brilhos que vão aparecendo com a tampa, mais
-/// moedas escorrendo pela frente.
 class _BauPainter extends CustomPainter {
   _BauPainter(this.p);
-
-  /// Abertura (0 fechado → 1 aberto).
   final double p;
-
-  /// Posições do tesouro fixas (seed) — as moedas não pulam entre frames.
   final Random _r = Random(7);
-
   static const _moedaRaio = 7.0;
-
   @override
   void paint(Canvas canvas, Size size) {
     final w = size.width;
     final h = size.height;
-    final topo = h * 0.42; // topo do corpo (dobradiça da tampa)
-    final baixo = h * 0.96; // fundo do corpo
-    final lidH = h * 0.30; // altura da tampa fechada
-
+    final topo = h * 0.42;
+    final baixo = h * 0.96;
+    final lidH = h * 0.30;
     _sombra(canvas, w, h);
     _glow(canvas, w, h, topo);
     _interiorETesouro(canvas, w, h, topo, lidH);
@@ -1456,380 +1440,267 @@ class _BauPainter extends CustomPainter {
     _cadeado(canvas, w, h, topo);
     _tampa(canvas, w, h, topo, lidH);
   }
-
-  // ── sombra no chão ──
   void _sombra(Canvas canvas, double w, double h) {
     canvas.drawOval(
-      Rect.fromLTRB(w * 0.12, h * 0.88, w * 0.88, h * 0.98),
-      Paint()
-        ..color = Colors.black.withValues(alpha: 0.35)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6),
+      Rect.fromLTRB(w * 0.14, h * 0.90, w * 0.86, h * 0.985),
+      Paint()..color = Colors.black.withValues(alpha: 0.42)..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
+    );
+    canvas.drawOval(
+      Rect.fromLTRB(w * 0.22, h * 0.92, w * 0.78, h * 0.975),
+      Paint()..color = Colors.black.withValues(alpha: 0.22)..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4),
     );
   }
-
-  // ── brilho dourado saindo de dentro (abre junto com a tampa) ──
   void _glow(Canvas canvas, double w, double h, double topo) {
     if (p <= 0) return;
+    final eased = Curves.easeOutCubic.transform(p);
     canvas.drawRect(
       Rect.fromLTRB(0, 0, w, h),
       Paint()
         ..shader = RadialGradient(
-          colors: [
-            AppColors.bauOuro.withValues(alpha: 0.85 * p),
-            AppColors.bauOuro.withValues(alpha: 0),
-          ],
-        ).createShader(
-          Rect.fromCircle(
-            center: Offset(w / 2, topo),
-            radius: w * (0.35 + 0.30 * p),
-          ),
-        ),
+          colors: [AppColors.bauOuro.withValues(alpha: 0.75 * eased), AppColors.bauOuro.withValues(alpha: 0.18 * eased), AppColors.bauOuro.withValues(alpha: 0)],
+          stops: const [0.0, 0.45, 1.0],
+        ).createShader(Rect.fromCircle(center: Offset(w / 2, topo - 4), radius: w * (0.38 + 0.32 * eased))),
+    );
+    canvas.drawRect(
+      Rect.fromLTRB(w * 0.08, topo - 18 * eased, w * 0.92, topo + 2),
+      Paint()..shader = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Colors.white.withValues(alpha: 0.42 * eased), Colors.transparent]).createShader(Rect.fromLTRB(w * 0.08, topo - 18 * eased, w * 0.92, topo + 2)),
     );
   }
-
-  // ── parede de dentro + tesouro (aparece conforme a tampa abre) ──
-  void _interiorETesouro(
-      Canvas canvas, double w, double h, double topo, double lidH) {
-    final aberto = p * lidH; // altura visível da boca do baú
-    if (aberto <= 0.5) return;
-
-    // parede interna escura
-    canvas.drawRect(
-      Rect.fromLTRB(w * 0.08, topo - aberto, w * 0.92, topo + 2),
-      Paint()..color = AppColors.bauInterior,
-    );
-
-    // pilha de moedas + joias (fileiras que "sobem" com a abertura)
+  void _interiorETesouro(Canvas canvas, double w, double h, double topo, double lidH) {
+    final eased = Curves.easeOutCubic.transform(p);
+    final aberto = eased * lidH;
+    if (aberto <= 0.8) return;
+    final clip = Path()..addRect(Rect.fromLTRB(w * 0.085, topo - aberto, w * 0.915, topo + 1));
+    canvas.save();
+    canvas.clipPath(clip);
+    final parede = Path()..addRect(Rect.fromLTRB(w * 0.085, topo - aberto, w * 0.915, topo + 2));
+    canvas.drawPath(parede, Paint()..color = AppColors.bauInterior);
+    canvas.drawRect(Rect.fromLTRB(w * 0.085, topo - aberto, w * 0.915, topo - aberto + 3), Paint()..color = Colors.black.withValues(alpha: 0.55));
+    final sombraInterna = Paint()..shader = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Colors.black.withValues(alpha: 0.55), Colors.transparent]).createShader(Rect.fromLTRB(w * 0.085, topo - aberto, w * 0.915, topo));
+    canvas.drawRect(Rect.fromLTRB(w * 0.085, topo - aberto, w * 0.915, topo), sombraInterna);
+    canvas.drawRect(Rect.fromLTRB(w * 0.085, topo - 8, w * 0.915, topo + 1), Paint()..color = AppColors.bauInterior.withValues(alpha: 0.95));
+    final fundoTesouro = Paint()..shader = RadialGradient(center: const Alignment(0, -0.3), colors: [AppColors.bauOuro.withValues(alpha: 0.22), Colors.transparent], stops: const [0.0, 1.0]).createShader(Rect.fromCircle(center: Offset(w / 2, topo - 10), radius: w * 0.42));
+    canvas.drawRect(Rect.fromLTRB(w * 0.10, topo - 28, w * 0.90, topo), fundoTesouro);
     _fileiraMoedas(canvas, w, topo, aberto, 0, 5);
     _fileiraMoedas(canvas, w, topo, aberto, 1, 4);
     _fileiraMoedas(canvas, w, topo, aberto, 2, 3);
-
-    // brilhos sobre o tesouro
-    for (var i = 0; i < 3; i++) {
-      final sx = w * (0.28 + 0.22 * i) + (i == 1 ? 0 : _r.nextDouble() * 16 - 8);
-      final sy = topo - (6 + i * 9) - _r.nextDouble() * 6;
-      _brilho(canvas, Offset(sx, sy), 3.2 + _r.nextDouble() * 1.6,
-          0.45 + 0.55 * p);
+    _fileiraMoedas(canvas, w, topo, aberto, 3, 3);
+    for (var i = 0; i < 4; i++) {
+      final sx = w * (0.26 + 0.18 * i) + (i == 2 ? 0 : _r.nextDouble() * 14 - 7);
+      final sy = topo - (5 + i * 8) - _r.nextDouble() * 5;
+      _brilho(canvas, Offset(sx, sy), 2.8 + _r.nextDouble() * 1.8, 0.50 + 0.50 * eased);
     }
+    canvas.restore();
+    canvas.drawRect(Rect.fromLTRB(w * 0.085, topo - 1.2, w * 0.915, topo + 1.2), Paint()..color = AppColors.bauOuro.withValues(alpha: 0.9));
+    canvas.drawRect(Rect.fromLTRB(w * 0.085, topo + 1.2, w * 0.915, topo + 2.8), Paint()..color = Colors.white.withValues(alpha: 0.18));
   }
-
-  /// Uma fileira de moedas (algumas viram joias). `i` = 0 baixo → 2 topo;
-  /// só aparece quando a boca do baú já abriu o suficiente (progressivo).
-  void _fileiraMoedas(
-      Canvas canvas, double w, double topo, double aberto, int i, int n) {
-    final dy = -6 - 11 * i;
-    if (aberto < _moedaRaio - dy) return;
+  void _fileiraMoedas(Canvas canvas, double w, double topo, double aberto, int i, int n) {
+    final dy = -4 - 10.5 * i;
+    final need = 6.5 - dy;
+    if (aberto < need) return;
+    final scaleByRow = [1.0, 0.96, 0.92, 0.88][i.clamp(0, 3)];
     for (var k = 0; k < n; k++) {
-      final x = w * (0.26 + 0.48 * (k + 0.5) / n) + (k == n - 1 ? 2 : 0);
-      final y = topo + dy + _r.nextDouble() * 3;
+      final spread = n == 5 ? 0.48 : n == 4 ? 0.42 : 0.34;
+      final baseX = w * (0.5 - spread / 2 + spread * (k + 0.5) / n);
+      final jitter = (k * 1.7) % 2 - 1;
+      final x = baseX + jitter + _r.nextDouble() * 1.2 - 0.6;
+      final y = topo + dy + _r.nextDouble() * 2.4 - 1.2;
+      final off = Offset(x, y);
       if (i == 1 && k == n ~/ 2) {
-        _joia(canvas, Offset(x, y - 3), 7.5, AppColors.acerto); // esmeralda
+        _joia(canvas, off + const Offset(0, -1.5), 7.2 * scaleByRow, AppColors.acerto);
       } else if (i == 2 && k == 0) {
-        _joia(canvas, Offset(x, y - 3), 7, AppColors.accent); // safira
+        _joia(canvas, off + const Offset(0, -1.2), 6.8 * scaleByRow, AppColors.accent);
+      } else if (i == 3 && k == 1) {
+        _joia(canvas, off + const Offset(0, -1), 5.8, AppColors.danger.withValues(alpha: 0.95));
       } else {
-        _moeda(canvas, Offset(x, y));
+        _moeda(canvas, off, scale: scaleByRow);
       }
     }
   }
-
-  /// Moeda de ouro: sombra + corpo dourado + aresta + brilho.
-  void _moeda(Canvas canvas, Offset c) {
-    final pinta = Paint();
-    pinta.color = Colors.black.withValues(alpha: 0.3);
-    canvas.drawCircle(c + const Offset(1.2, 1.6), _moedaRaio, pinta);
-    pinta.shader = RadialGradient(
-      center: const Alignment(-0.4, -0.4),
-      colors: [
-        Color.lerp(AppColors.bauOuro, Colors.white, 0.4)!,
-        AppColors.bauOuro,
-        AppColors.bauOuroEscuro,
-      ],
-    ).createShader(Rect.fromCircle(center: c, radius: _moedaRaio));
-    canvas.drawCircle(c, _moedaRaio, pinta);
-    pinta.shader = null;
-    pinta.color = AppColors.bauOuroEscuro.withValues(alpha: 0.75);
-    pinta.style = PaintingStyle.stroke;
-    pinta.strokeWidth = 1.4;
-    canvas.drawCircle(c, _moedaRaio * 0.62, pinta);
-    pinta.style = PaintingStyle.fill;
-    pinta.color = Colors.white.withValues(alpha: 0.9);
-    canvas.drawCircle(
-        c + Offset(-_moedaRaio * 0.35, -_moedaRaio * 0.35), _moedaRaio * 0.22, pinta);
+  void _moeda(Canvas canvas, Offset c, {double scale = 1.0}) {
+    final rx = _moedaRaio * scale;
+    final ry = _moedaRaio * 0.58 * scale;
+    final thick = 2.2 * scale;
+    canvas.drawOval(Rect.fromCenter(center: c + Offset(0.9 * scale, 1.9 * scale), width: rx * 2, height: ry * 2), Paint()..color = Colors.black.withValues(alpha: 0.38));
+    final sideRect = Rect.fromCenter(center: c + Offset(0, thick * 0.55), width: rx * 2, height: ry * 2);
+    canvas.drawOval(sideRect, Paint()..color = const Color(0xFF8C6A0E));
+    canvas.drawOval(Rect.fromCenter(center: c + Offset(0, thick * 0.22), width: rx * 2, height: ry * 1.92), Paint()..color = const Color(0xFFA67C0A));
+    final topRect = Rect.fromCenter(center: c, width: rx * 2, height: ry * 2);
+    final topPaint = Paint()..shader = RadialGradient(center: const Alignment(-0.45, -0.55), radius: 1.0, colors: [Color.lerp(AppColors.bauOuro, Colors.white, 0.52)!, AppColors.bauOuro, const Color(0xFFE8A910), AppColors.bauOuroEscuro], stops: const [0.0, 0.32, 0.68, 1.0]).createShader(topRect);
+    canvas.drawOval(topRect, topPaint);
+    canvas.drawOval(topRect, Paint()..color = AppColors.bauOuroEscuro.withValues(alpha: 0.95)..style = PaintingStyle.stroke..strokeWidth = 1.05 * scale);
+    final innerRim = Rect.fromCenter(center: c, width: rx * 1.28, height: ry * 1.28);
+    canvas.drawOval(innerRim, Paint()..color = AppColors.bauOuroEscuro.withValues(alpha: 0.52)..style = PaintingStyle.stroke..strokeWidth = 0.85 * scale);
+    final innerDot = Rect.fromCenter(center: c, width: rx * 0.42, height: ry * 0.42);
+    canvas.drawOval(innerDot, Paint()..color = AppColors.bauOuroEscuro.withValues(alpha: 0.22));
+    final highlight = Rect.fromCenter(center: c + Offset(-rx * 0.32, -ry * 0.42), width: rx * 0.62, height: ry * 0.48);
+    canvas.drawOval(highlight, Paint()..color = Colors.white.withValues(alpha: 0.78));
+    canvas.drawOval(Rect.fromCenter(center: c + Offset(-rx * 0.18, -ry * 0.28), width: rx * 0.22, height: ry * 0.18), Paint()..color = Colors.white.withValues(alpha: 0.92));
   }
-
-  /// Joia em losango: corpo facetado + linhas de faceta + brilho.
   void _joia(Canvas canvas, Offset c, double r, Color cor) {
-    final path = Path()
-      ..moveTo(c.dx, c.dy - r)
-      ..lineTo(c.dx + r * 0.78, c.dy)
-      ..lineTo(c.dx, c.dy + r)
-      ..lineTo(c.dx - r * 0.78, c.dy)
-      ..close();
-    canvas.drawPath(
-      path,
-      Paint()
-        ..shader = LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color.lerp(cor, Colors.white, 0.4)!,
-            cor,
-            Color.lerp(cor, Colors.black, 0.5)!,
-          ],
-        ).createShader(Rect.fromCircle(center: c, radius: r)),
-    );
-    final faceta = Paint()
-      ..color = Colors.white.withValues(alpha: 0.55)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.2;
-    canvas.drawLine(
-        Offset(c.dx - r * 0.5, c.dy - r * 0.35),
-        Offset(c.dx + r * 0.5, c.dy - r * 0.35), faceta);
-    canvas.drawLine(
-        Offset(c.dx - r * 0.5, c.dy - r * 0.35), Offset(c.dx, c.dy + r * 0.3), faceta);
-    canvas.drawLine(
-        Offset(c.dx + r * 0.5, c.dy - r * 0.35), Offset(c.dx, c.dy + r * 0.3), faceta);
-    canvas.drawCircle(
-        c + Offset(-r * 0.3, -r * 0.3), r * 0.2,
-        Paint()..color = Colors.white.withValues(alpha: 0.9));
+    final ovalH = r * 1.45;
+    canvas.drawOval(Rect.fromCenter(center: c + Offset(0.9, 1.4), width: r * 1.6, height: ovalH), Paint()..color = Colors.black.withValues(alpha: 0.38));
+    final path = Path()..moveTo(c.dx, c.dy - r)..lineTo(c.dx + r * 0.82, c.dy)..lineTo(c.dx, c.dy + r)..lineTo(c.dx - r * 0.82, c.dy)..close();
+    canvas.drawPath(path, Paint()..shader = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color.lerp(cor, Colors.white, 0.48)!, cor, Color.lerp(cor, Colors.black, 0.58)!], stops: const [0.0, 0.52, 1.0]).createShader(Rect.fromCircle(center: c, radius: r)));
+    canvas.drawPath(path, Paint()..color = Colors.white.withValues(alpha: 0.18)..style = PaintingStyle.stroke..strokeWidth = 1.1);
+    final faceta = Paint()..color = Colors.white.withValues(alpha: 0.52)..style = PaintingStyle.stroke..strokeWidth = 1.0;
+    canvas.drawLine(Offset(c.dx - r * 0.52, c.dy - r * 0.32), Offset(c.dx + r * 0.52, c.dy - r * 0.32), faceta);
+    canvas.drawLine(Offset(c.dx - r * 0.52, c.dy - r * 0.32), Offset(c.dx, c.dy + r * 0.28), faceta);
+    canvas.drawLine(Offset(c.dx + r * 0.52, c.dy - r * 0.32), Offset(c.dx, c.dy + r * 0.28), faceta);
+    canvas.drawPath(Path()..moveTo(c.dx, c.dy - r)..lineTo(c.dx, c.dy + r)..close(), Paint()..color = Colors.white.withValues(alpha: 0.22)..style = PaintingStyle.stroke..strokeWidth = 0.9);
+    canvas.drawCircle(c + Offset(-r * 0.28, -r * 0.32), r * 0.22, Paint()..color = Colors.white.withValues(alpha: 0.92));
+    canvas.drawCircle(c + Offset(r * 0.22, r * 0.18), r * 0.10, Paint()..color = Colors.white.withValues(alpha: 0.55));
   }
-
-  /// Estrelinha de brilho (duas cápsulas cruzadas + núcleo).
   void _brilho(Canvas canvas, Offset c, double r, double alpha) {
-    final pinta = Paint()..color = Colors.white.withValues(alpha: alpha);
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-          Rect.fromCenter(center: c, width: r * 4, height: r),
-          Radius.circular(r / 2)),
-      pinta,
-    );
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-          Rect.fromCenter(center: c, width: r, height: r * 4),
-          Radius.circular(r / 2)),
-      pinta,
-    );
-    canvas.drawCircle(
-        c, r * 0.8, Paint()..color = Colors.white.withValues(alpha: alpha * 0.9));
+    final paint = Paint()..color = Colors.white.withValues(alpha: alpha)..maskFilter = const MaskFilter.blur(BlurStyle.normal, 0.6);
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromCenter(center: c, width: r * 3.8, height: r * 0.95), Radius.circular(r / 2)), paint);
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromCenter(center: c, width: r * 0.95, height: r * 3.8), Radius.circular(r / 2)), paint);
+    canvas.drawCircle(c, r * 0.78, Paint()..color = Colors.white.withValues(alpha: alpha * 0.95));
+    canvas.drawCircle(c, r * 0.28, Paint()..color = Colors.white.withValues(alpha: 1.0));
   }
-
-  // ── corpo do baú (frente) ──
   void _corpo(Canvas canvas, double w, double h, double topo, double baixo) {
-    final corpo = RRect.fromRectAndRadius(
-      Rect.fromLTRB(w * 0.08, topo, w * 0.92, baixo),
-      const Radius.circular(10),
-    );
-    canvas.drawRRect(
-      corpo,
-      Paint()
-        ..shader = LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [AppColors.bauMadeira, AppColors.bauMadeiraEscura],
-        ).createShader(corpo.outerRect),
-    );
-
-    // vinco entre as tábuas verticais
-    final vinco = Paint()..color = Colors.black.withValues(alpha: 0.25);
+    final outer = RRect.fromRectAndRadius(Rect.fromLTRB(w * 0.078, topo - 0.5, w * 0.922, baixo + 0.8), const Radius.circular(11));
+    canvas.drawRRect(outer, Paint()..color = Colors.black.withValues(alpha: 0.55));
+    final corpo = RRect.fromRectAndRadius(Rect.fromLTRB(w * 0.08, topo, w * 0.92, baixo), const Radius.circular(10));
+    canvas.drawRRect(corpo, Paint()..shader = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [const Color(0xFFB07A3A), AppColors.bauMadeira, AppColors.bauMadeiraEscura, const Color(0xFF4E2E14)], stops: const [0.0, 0.35, 0.72, 1.0]).createShader(corpo.outerRect));
+    canvas.drawRRect(corpo, Paint()..color = const Color(0xFF3A1F0A).withValues(alpha: 0.95)..style = PaintingStyle.stroke..strokeWidth = 1.4);
+    final highlightTop = RRect.fromRectAndRadius(Rect.fromLTRB(w * 0.085, topo + 0.6, w * 0.915, topo + 5.5), const Radius.circular(6));
+    canvas.drawRRect(highlightTop, Paint()..color = Colors.white.withValues(alpha: 0.16));
+    final vinco = Paint()..color = const Color(0xFF3A1F0A).withValues(alpha: 0.42)..strokeWidth = 1.25..style = PaintingStyle.stroke;
+    final sombraVinco = Paint()..color = Colors.white.withValues(alpha: 0.08)..strokeWidth = 1.0..style = PaintingStyle.stroke;
     for (final fx in const [0.30, 0.50, 0.70]) {
-      canvas.drawLine(
-          Offset(w * fx, topo + 2), Offset(w * fx, baixo - 2), vinco);
+      canvas.drawLine(Offset(w * fx, topo + 3), Offset(w * fx, baixo - 3), vinco);
+      canvas.drawLine(Offset(w * fx + 0.9, topo + 3), Offset(w * fx + 0.9, baixo - 3), sombraVinco);
     }
-
-    // veios da madeira (ondas sutis)
-    final veio = Paint()
-      ..color = Colors.white.withValues(alpha: 0.05)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.2;
+    final veioClaro = Paint()..color = Colors.white.withValues(alpha: 0.07)..style = PaintingStyle.stroke..strokeWidth = 1.15;
+    final veioEscuro = Paint()..color = Colors.black.withValues(alpha: 0.14)..style = PaintingStyle.stroke..strokeWidth = 1.0;
     for (var i = 0; i < 3; i++) {
-      final y = topo + h * (0.13 + 0.10 * i);
-      final path = Path()..moveTo(w * 0.11, y);
-      for (var x = w * 0.11; x < w * 0.89; x += w * 0.04) {
-        path.lineTo(x, y + 1.4 * sin(x / w * 3));
+      final y = topo + h * (0.13 + 0.11 * i);
+      final pathC = Path()..moveTo(w * 0.11, y);
+      final pathE = Path()..moveTo(w * 0.11, y + 1.2);
+      for (var x = w * 0.11; x < w * 0.89; x += w * 0.035) {
+        pathC.lineTo(x, y + 1.5 * sin(x / w * 3.2 + i * 1.1));
+        pathE.lineTo(x, y + 1.2 + 1.5 * sin(x / w * 3.2 + i * 1.1));
       }
-      canvas.drawPath(path, veio);
+      canvas.drawPath(pathE, veioEscuro);
+      canvas.drawPath(pathC, veioClaro);
     }
-
-    // frisos dourados: boca (beirada de cima) e rodapé
-    canvas.drawRect(
-        Rect.fromLTRB(w * 0.08, topo - 2.5, w * 0.92, topo + 2.5),
-        Paint()..color = AppColors.bauOuro);
-    canvas.drawRect(
-        Rect.fromLTRB(w * 0.08, baixo - 3, w * 0.92, baixo),
-        Paint()..color = AppColors.bauOuroEscuro);
-
-    // faixas de ouro verticais com rebites
+    final frisoBoca = RRect.fromRectAndRadius(Rect.fromLTRB(w * 0.08, topo - 2.8, w * 0.92, topo + 2.9), const Radius.circular(2));
+    canvas.drawRRect(frisoBoca, Paint()..shader = LinearGradient(colors: [Color.lerp(AppColors.bauOuro, Colors.white, 0.35)!, AppColors.bauOuro, AppColors.bauOuroEscuro]).createShader(frisoBoca.outerRect));
+    canvas.drawRRect(frisoBoca, Paint()..color = Colors.black.withValues(alpha: 0.28)..style = PaintingStyle.stroke..strokeWidth = 0.8);
+    final rodape = RRect.fromRectAndRadius(Rect.fromLTRB(w * 0.08, baixo - 3.6, w * 0.92, baixo), const Radius.circular(3));
+    canvas.drawRRect(rodape, Paint()..color = AppColors.bauOuroEscuro);
+    canvas.drawRRect(rodape, Paint()..color = Colors.white.withValues(alpha: 0.14)..style = PaintingStyle.stroke..strokeWidth = 0.7);
     for (final fx in const [0.26, 0.74]) {
-      final faixa = Rect.fromCenter(
-          center: Offset(w * fx, (topo + baixo) / 2),
-          width: 9,
-          height: baixo - topo - 6);
-      canvas.drawRRect(
-        RRect.fromRectAndRadius(faixa, const Radius.circular(4)),
-        Paint()
-          ..shader = LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [AppColors.bauOuro, AppColors.bauOuroEscuro],
-          ).createShader(faixa),
-      );
+      final faixa = RRect.fromRectAndRadius(Rect.fromCenter(center: Offset(w * fx, (topo + baixo) / 2), width: 9.5, height: baixo - topo - 6), const Radius.circular(4));
+      canvas.drawRRect(faixa, Paint()..color = Colors.black.withValues(alpha: 0.35));
+      final faixaF = RRect.fromRectAndRadius(Rect.fromCenter(center: Offset(w * fx - 0.4, (topo + baixo) / 2), width: 9.5, height: baixo - topo - 6), const Radius.circular(4));
+      canvas.drawRRect(faixaF, Paint()..shader = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color.lerp(AppColors.bauOuro, Colors.white, 0.32)!, AppColors.bauOuro, AppColors.bauOuroEscuro, const Color(0xFF7A5806)]).createShader(faixa.outerRect));
+      canvas.drawRRect(faixaF, Paint()..color = const Color(0xFF5A3E05).withValues(alpha: 0.9)..style = PaintingStyle.stroke..strokeWidth = 0.9);
+      canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromCenter(center: Offset(w * fx - 0.4, (topo + baixo) / 2 - 0.6), width: 7, height: (baixo - topo - 6) * 0.55), const Radius.circular(2)), Paint()..color = Colors.white.withValues(alpha: 0.22));
       for (var i = 0; i < 3; i++) {
-        _rebite(canvas, Offset(w * fx, topo + h * (0.12 + 0.14 * i)));
+        _rebite(canvas, Offset(w * fx - 0.3, topo + h * (0.12 + 0.14 * i)));
       }
     }
   }
-
-  /// Rebite dourado (com brilho).
   void _rebite(Canvas canvas, Offset c) {
-    canvas.drawCircle(c, 1.8, Paint()..color = AppColors.bauOuroEscuro);
-    canvas.drawCircle(c + const Offset(-0.4, -0.4), 0.8,
-        Paint()..color = Colors.white.withValues(alpha: 0.7));
+    canvas.drawCircle(c + const Offset(0.6, 0.7), 2.0, Paint()..color = Colors.black.withValues(alpha: 0.42));
+    canvas.drawCircle(c, 1.85, Paint()..shader = RadialGradient(center: const Alignment(-0.4, -0.45), colors: [Color.lerp(AppColors.bauOuro, Colors.white, 0.5)!, AppColors.bauOuro, AppColors.bauOuroEscuro]).createShader(Rect.fromCircle(center: c, radius: 1.85)));
+    canvas.drawCircle(c, 1.85, Paint()..color = AppColors.bauOuroEscuro.withValues(alpha: 0.9)..style = PaintingStyle.stroke..strokeWidth = 0.7);
+    canvas.drawCircle(c + const Offset(-0.45, -0.55), 0.72, Paint()..color = Colors.white.withValues(alpha: 0.92));
   }
-
-  // ── moedas escorrendo pela frente quando o baú abre ──
   void _tesouroDerramado(Canvas canvas, double w, double h, double topo) {
-    if (p < 0.55) return;
-    final deslize = (p - 0.55) / 0.45; // 0..1
-    _moeda(canvas, Offset(w * 0.30, topo + 8 + deslize * 14));
-    _moeda(canvas, Offset(w * 0.50, topo + 12 + deslize * 18));
-    _moeda(canvas, Offset(w * 0.70, topo + 8 + deslize * 16));
+    if (p < 0.52) return;
+    final eased = Curves.easeOutCubic.transform(((p - 0.52) / 0.48).clamp(0.0, 1.0));
+    canvas.save();
+    canvas.clipRect(Rect.fromLTRB(w * 0.10, topo + 1, w * 0.90, h * 0.98));
+    _moeda(canvas, Offset(w * 0.30, topo + 6 + eased * 16), scale: 0.92);
+    _moeda(canvas, Offset(w * 0.50, topo + 10 + eased * 20), scale: 1.02);
+    _moeda(canvas, Offset(w * 0.70, topo + 7 + eased * 17), scale: 0.94);
+    if (eased > 0.45) _moeda(canvas, Offset(w * 0.42, topo + 14 + eased * 12), scale: 0.78);
+    canvas.restore();
   }
-
-  // ── cadeado com fechadura e alça ──
   void _cadeado(Canvas canvas, double w, double h, double topo) {
-    final placa = RRect.fromRectAndRadius(
-      Rect.fromCenter(
-          center: Offset(w / 2, topo + h * 0.16),
-          width: w * 0.13,
-          height: h * 0.17),
-      const Radius.circular(5),
-    );
-    canvas.drawRRect(
-      placa,
-      Paint()
-        ..shader = LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [AppColors.bauOuro, AppColors.bauOuroEscuro],
-        ).createShader(placa.outerRect),
-    );
-    canvas.drawRRect(
-      placa,
-      Paint()
-        ..color = AppColors.bauOuroEscuro
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.6,
-    );
-    // buraco da fechadura (círculo + triângulo)
-    canvas.drawCircle(
-        Offset(w / 2, topo + h * 0.13), 2.4, Paint()..color = AppColors.bauInterior);
-    canvas.drawPath(
-      Path()
-        ..moveTo(w / 2 - 1.8, topo + h * 0.135)
-        ..lineTo(w / 2 + 1.8, topo + h * 0.135)
-        ..lineTo(w / 2, topo + h * 0.19)
-        ..close(),
-      Paint()..color = AppColors.bauInterior,
-    );
-    // alça do cadeado (arco)
-    canvas.drawArc(
-      Rect.fromCircle(center: Offset(w / 2, topo + h * 0.07), radius: 5.5),
-      pi,
-      pi,
-      false,
-      Paint()
-        ..color = AppColors.bauOuroEscuro
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 3.2,
-    );
+    final show = (1 - (p * 1.35).clamp(0.0, 1.0));
+    if (show <= 0.02) return;
+    canvas.save();
+    canvas.translate(w / 2, topo + h * 0.16);
+    canvas.scale(show, show);
+    final placaOuter = RRect.fromRectAndRadius(Rect.fromCenter(center: Offset.zero, width: w * 0.135, height: h * 0.175), const Radius.circular(5));
+    canvas.drawRRect(placaOuter, Paint()..color = Colors.black.withValues(alpha: 0.38));
+    final placa = RRect.fromRectAndRadius(Rect.fromCenter(center: Offset(-0.5, -0.6), width: w * 0.135, height: h * 0.175), const Radius.circular(5));
+    canvas.drawRRect(placa, Paint()..shader = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color.lerp(AppColors.bauOuro, Colors.white, 0.34)!, AppColors.bauOuro, AppColors.bauOuroEscuro]).createShader(placa.outerRect));
+    canvas.drawRRect(placa, Paint()..color = const Color(0xFF5A3E05)..style = PaintingStyle.stroke..strokeWidth = 1.4);
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromCenter(center: Offset(-0.5, -h * 0.03), width: w * 0.08, height: 4.5), const Radius.circular(2)), Paint()..color = Colors.white.withValues(alpha: 0.28));
+    canvas.drawCircle(Offset(-0.5, -h * 0.025), 2.5, Paint()..color = AppColors.bauInterior);
+    canvas.drawPath(Path()..moveTo(-0.5 - 1.9, -h * 0.022)..lineTo(-0.5 + 1.9, -h * 0.022)..lineTo(-0.5, h * 0.028)..close(), Paint()..color = AppColors.bauInterior);
+    canvas.drawCircle(Offset(-0.5, -h * 0.025), 2.5, Paint()..color = Colors.black.withValues(alpha: 0.55)..style = PaintingStyle.stroke..strokeWidth = 0.6);
+    canvas.drawArc(Rect.fromCircle(center: Offset(-0.5, -h * 0.088), radius: 5.8), pi, pi, false, Paint()..color = Colors.black.withValues(alpha: 0.35)..style = PaintingStyle.stroke..strokeWidth = 3.6);
+    canvas.drawArc(Rect.fromCircle(center: Offset(-0.5, -h * 0.092), radius: 5.8), pi, pi, false, Paint()..shader = LinearGradient(colors: [Color.lerp(AppColors.bauOuro, Colors.white, 0.3)!, AppColors.bauOuroEscuro]).createShader(Rect.fromCircle(center: Offset(-0.5, -h * 0.092), radius: 5.8))..style = PaintingStyle.stroke..strokeWidth = 3.2);
+    canvas.restore();
   }
-
-  // ── tampa: abaulada, com tábuas, friso, faixas e brasão ──
   void _tampa(Canvas canvas, double w, double h, double topo, double lidH) {
-    // Ao abrir, a tampa "levanta e afunda para trás" (achata + sobe) — jeito
-    // 2D de mostrar a boca do baú sem esconder o tesouro.
-    final visivel = lidH * (1 - 0.72 * p); // altura aparente
-    final sobe = -p * lidH * 0.6; // levanta um pouco
+    final angle = p * 1.92;
+    final cosA = cos(angle);
+    final sinA = sin(angle);
+    const thickness = 7.0;
+    final visH = (lidH * cosA).clamp(thickness * 0.55, lidH) + thickness * sinA * 0.55;
+    final lidW = w * 0.884;
     canvas.save();
-    canvas.translate(w / 2, topo + sobe);
-    canvas.rotate(-p * 0.3); // leve inclinação
-
-    final largura = w * 0.88; // tampa com "boca" maior que o corpo
-    final tampaRect = RRect.fromRectAndRadius(
-      Rect.fromCenter(
-          center: Offset(0, -visivel / 2), width: largura, height: visivel),
-      const Radius.circular(16), // topo abaulada
-    );
-    canvas.drawRRect(
-      tampaRect,
-      Paint()
-        ..shader = LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [AppColors.bauMadeira, AppColors.bauMadeiraEscura],
-        ).createShader(tampaRect.outerRect),
-    );
-
-    // vinco entre as tábuas da tampa
-    final vinco = Paint()..color = Colors.black.withValues(alpha: 0.22);
+    canvas.translate(w / 2, topo);
+    final lidRect = RRect.fromRectAndRadius(Rect.fromCenter(center: Offset(0, -visH / 2), width: lidW, height: visH), Radius.circular(16 * (0.45 + 0.55 * cosA.clamp(0.0, 1.0))));
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromCenter(center: Offset(0.8, -visH / 2 + 0.9), width: lidW, height: visH), Radius.circular(16 * (0.45 + 0.55 * cosA.clamp(0.0, 1.0)))), Paint()..color = Colors.black.withValues(alpha: 0.28 * (1 - p * 0.5)));
+    canvas.drawRRect(lidRect, Paint()..shader = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [const Color(0xFFBD7F3A), AppColors.bauMadeira, AppColors.bauMadeiraEscura, const Color(0xFF4A2A12)], stops: const [0.0, 0.38, 0.74, 1.0]).createShader(lidRect.outerRect));
+    canvas.drawRRect(lidRect, Paint()..color = const Color(0xFF3A1F0A).withValues(alpha: 0.92)..style = PaintingStyle.stroke..strokeWidth = 1.35);
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromCenter(center: Offset(0, -visH + 2.2), width: lidW * 0.96, height: 3.2), const Radius.circular(2)), Paint()..color = Colors.white.withValues(alpha: 0.14 * cosA.clamp(0.0, 1.0)));
+    final vinco = Paint()..color = const Color(0xFF3A1F0A).withValues(alpha: 0.50)..strokeWidth = 1.15..style = PaintingStyle.stroke;
+    final vincoLight = Paint()..color = Colors.white.withValues(alpha: 0.07)..strokeWidth = 0.9..style = PaintingStyle.stroke;
     for (final fx in const [-0.30, 0.0, 0.30]) {
-      canvas.drawLine(
-          Offset(largura * fx, -visivel + 6), Offset(largura * fx, -6), vinco);
+      canvas.drawLine(Offset(lidW * fx, -visH + 5), Offset(lidW * fx, -1.2), vinco);
+      canvas.drawLine(Offset(lidW * fx + 0.8, -visH + 5), Offset(lidW * fx + 0.8, -1.2), vincoLight);
     }
-
-    // friso dourado na beirada da tampa (a "boca", encosta no corpo)
-    canvas.drawRect(
-      Rect.fromCenter(center: Offset(0, -5), width: largura, height: 6),
-      Paint()..color = AppColors.bauOuro,
-    );
-
-    // arco do topo (leve brilho da curvatura)
-    canvas.drawArc(
-      Rect.fromCenter(
-          center: Offset(0, -visivel), width: largura * 0.98, height: visivel * 1.6),
-      0,
-      pi,
-      false,
-      Paint()
-        ..color = Colors.white.withValues(alpha: 0.12)
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2,
-    );
-
-    // faixas de ouro (alinham com as do corpo) + rebites
-    for (final fx in const [-0.24, 0.24]) {
-      final faixa = Rect.fromCenter(
-          center: Offset(largura * fx, -visivel / 2),
-          width: 9,
-          height: visivel - 14);
-      canvas.drawRRect(
-        RRect.fromRectAndRadius(faixa, const Radius.circular(4)),
-        Paint()
-          ..shader = LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [AppColors.bauOuro, AppColors.bauOuroEscuro],
-          ).createShader(faixa),
-      );
-      _rebite(canvas, Offset(largura * fx, -visivel + 10));
-      _rebite(canvas, Offset(largura * fx, -10));
+    final frisoY = -2.6;
+    final friso = RRect.fromRectAndRadius(Rect.fromCenter(center: Offset(0, frisoY), width: lidW, height: 5.8), const Radius.circular(2));
+    canvas.drawRRect(friso, Paint()..shader = LinearGradient(colors: [Color.lerp(AppColors.bauOuro, Colors.white, 0.38)!, AppColors.bauOuro, AppColors.bauOuroEscuro]).createShader(friso.outerRect));
+    canvas.drawRRect(friso, Paint()..color = Colors.black.withValues(alpha: 0.28)..style = PaintingStyle.stroke..strokeWidth = 0.75);
+    canvas.drawRect(Rect.fromCenter(center: Offset(0, frisoY - 1.0), width: lidW * 0.92, height: 1.1), Paint()..color = Colors.white.withValues(alpha: 0.32));
+    if (cosA > 0.12) {
+      canvas.drawArc(Rect.fromCenter(center: Offset(0, -visH + 0.6), width: lidW * 0.985, height: visH * 1.55), 0, pi, false, Paint()..color = Colors.white.withValues(alpha: 0.13 * cosA)..style = PaintingStyle.stroke..strokeWidth = 1.8);
+      canvas.drawArc(Rect.fromCenter(center: Offset(0, -visH * 0.92), width: lidW * 0.72, height: visH * 0.55), pi, pi, false, Paint()..color = Colors.white.withValues(alpha: 0.09 * cosA)..style = PaintingStyle.stroke..strokeWidth = 1.0);
     }
-
-    // brasão dourado no centro da tampa
-    canvas.save();
-    canvas.translate(0, -visivel * 0.55);
-    canvas.rotate(pi / 4);
-    canvas.drawRect(
-        Rect.fromCenter(center: Offset.zero, width: 9, height: 9),
-        Paint()..color = AppColors.bauOuro);
-    canvas.drawRect(
-        Rect.fromCenter(center: Offset.zero, width: 5, height: 5),
-        Paint()..color = AppColors.bauOuroEscuro);
-    canvas.restore();
-
+    for (final fx in const [-0.242, 0.242]) {
+      final faixaH = (visH - 12).clamp(8.0, 28.0);
+      final faixa = RRect.fromRectAndRadius(Rect.fromCenter(center: Offset(lidW * fx, -visH / 2), width: 9.8, height: faixaH), const Radius.circular(4));
+      canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromCenter(center: Offset(lidW * fx + 0.5, -visH / 2 + 0.5), width: 9.8, height: faixaH), const Radius.circular(4)), Paint()..color = Colors.black.withValues(alpha: 0.32));
+      canvas.drawRRect(faixa, Paint()..shader = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color.lerp(AppColors.bauOuro, Colors.white, 0.32)!, AppColors.bauOuro, AppColors.bauOuroEscuro]).createShader(faixa.outerRect));
+      canvas.drawRRect(faixa, Paint()..color = const Color(0xFF5A3E05)..style = PaintingStyle.stroke..strokeWidth = 0.85);
+      canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromCenter(center: Offset(lidW * fx, -visH / 2 - 0.4), width: 7, height: faixaH * 0.58), const Radius.circular(2)), Paint()..color = Colors.white.withValues(alpha: 0.20));
+      _rebite(canvas, Offset(lidW * fx, -visH + 9.5));
+      _rebite(canvas, Offset(lidW * fx, -9.0));
+    }
+    if (cosA > 0.18) {
+      canvas.save();
+      canvas.translate(0, -visH * 0.58);
+      final s = (0.85 + 0.15 * cosA);
+      canvas.scale(s, s);
+      canvas.rotate(pi / 4);
+      final glow = Paint()..color = Colors.white.withValues(alpha: 0.10)..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2);
+      canvas.drawRect(Rect.fromCenter(center: Offset.zero, width: 11, height: 11), glow);
+      canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromCenter(center: Offset.zero, width: 9.5, height: 9.5), const Radius.circular(1.5)), Paint()..shader = LinearGradient(colors: [Color.lerp(AppColors.bauOuro, Colors.white, 0.32)!, AppColors.bauOuroEscuro]).createShader(Rect.fromCenter(center: Offset.zero, width: 9.5, height: 9.5)));
+      canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromCenter(center: Offset.zero, width: 9.5, height: 9.5), const Radius.circular(1.5)), Paint()..color = const Color(0xFF5A3E05)..style = PaintingStyle.stroke..strokeWidth = 0.9);
+      canvas.drawRect(Rect.fromCenter(center: Offset.zero, width: 4.8, height: 4.8), Paint()..color = const Color(0xFF7A5806));
+      canvas.drawRect(Rect.fromCenter(center: Offset(-0.7, -0.7), width: 2.2, height: 2.2), Paint()..color = Colors.white.withValues(alpha: 0.65));
+      canvas.restore();
+    }
+    if (sinA > 0.12) {
+      final innerH = (thickness * 0.92).clamp(3.0, 7.0);
+      final inner = RRect.fromRectAndRadius(Rect.fromLTRB(-lidW / 2 + 1, 0.6, lidW / 2 - 1, 0.6 + innerH * sinA), const Radius.circular(2));
+      canvas.drawRRect(inner, Paint()..color = const Color(0xFF5A3418));
+      canvas.drawRRect(inner, Paint()..color = Colors.black.withValues(alpha: 0.35)..style = PaintingStyle.stroke..strokeWidth = 0.7);
+      canvas.drawRect(Rect.fromLTRB(-lidW / 2 + 6, 0.8, lidW / 2 - 6, 1.8), Paint()..color = AppColors.bauOuro.withValues(alpha: 0.85 * sinA));
+    }
     canvas.restore();
   }
-
   @override
   bool shouldRepaint(_BauPainter old) => old.p != p;
 }
