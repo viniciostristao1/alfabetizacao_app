@@ -3,6 +3,12 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.32.0 (2026-08-24)
+- **Anéis nos Temas dos Alimentos 💍🌾:** cada fase clicável da foto da fazenda
+  agora tem o **anel/círculo do mapa-múndi** (neon, pulsando) no centro da área
+  — igual ao dos animais. A criança vê onde tocar: Mercado, Pomar, Horta, Roça
+  e Arrozal.
+
 ## v0.31.0 (2026-08-24)
 - **Temas dos Alimentos com foto da fazenda 🌾🏪:** o botão "Temas" nos Alimentos
   agora abre a foto da fazenda (mercado, rio, plantação) em tela cheia, sem

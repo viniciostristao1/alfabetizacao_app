@@ -117,8 +117,83 @@ class _FaixaAlimentosTema extends StatelessWidget {
         onTap: onTap,
         splashColor: tema.cor.withValues(alpha: 0.35),
         highlightColor: tema.cor.withValues(alpha: 0.15),
-        child: const SizedBox.expand(),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            const SizedBox.expand(),
+            Center(child: _AnelAlimentos(tema: tema)),
+          ],
+        ),
       ),
+    );
+  }
+}
+
+class _AnelAlimentos extends StatefulWidget {
+  const _AnelAlimentos({required this.tema});
+  final AlimentosTema tema;
+
+  @override
+  State<_AnelAlimentos> createState() => _AnelAlimentosState();
+}
+
+class _AnelAlimentosState extends State<_AnelAlimentos>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _pulso = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 900),
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _pulso.repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _pulso.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _pulso,
+      builder: (_, _) {
+        final pulso = 0.5 + 0.5 * _pulso.value;
+        return Container(
+          width: 78,
+          height: 26,
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.elliptical(360, 120)),
+            gradient: RadialGradient(
+              radius: 0.95,
+              colors: [
+                widget.tema.cor.withValues(alpha: 0.08),
+                widget.tema.cor.withValues(alpha: 0.38),
+              ],
+              stops: const [0.35, 1.0],
+            ),
+            border: Border.all(
+              color: Color.lerp(Colors.white, widget.tema.cor, pulso)!,
+              width: 2.2 + 1.2 * pulso,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: widget.tema.cor.withValues(alpha: 0.45),
+                blurRadius: 14,
+                spreadRadius: 1,
+              ),
+              BoxShadow(
+                color: widget.tema.cor.withValues(alpha: 0.22 + 0.35 * pulso),
+                blurRadius: 10 + 14 * pulso,
+                spreadRadius: 1 + 2 * pulso,
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

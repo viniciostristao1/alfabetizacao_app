@@ -2,6 +2,13 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-24 — v0.32.0 (Anéis pulsando nos Temas Alimentos)
+- **`alimentos_temas_screen.dart`:** `_FaixaAlimentosTema` agora tem `Stack` com
+  `Center(_AnelAlimentos)` — anel elíptico 78×26 pulsante (`AnimationController 900ms
+  repeat/reverse`) nas cores do `AlimentosTema`, igual ao `_AnelFase` do mapa-múndi
+  (gradiente radial, borda `lerp(branco, cor, pulso)` + 2 `BoxShadow`). O `InkWell`
+  continua invisível cobrindo o `Rect` inteiro; o anel só indica visualmente a fase.
+
 ## 2026-08-24 — v0.31.0 (Temas Alimentos: 5 faixas na foto da fazenda)
 - **Renomeado "Todos" → "Temas" em `alimentos_menu_screen.dart`:** `_abrirTodos`
   virou `_abrirTemas` → `AlimentosTemasScreen`. A nova foto `1787617182584.png`
