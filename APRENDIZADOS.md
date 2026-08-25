@@ -2,6 +2,25 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-24 — v0.35.0 (Coleção Alimentos + baú por fase)
+- **`models/alimentos_tema.dart`:** `AlimentosTema` ganhou `premioEmoji/premioNome`
+  (pizza/sushi/hamburguer/macarrão/iogurte) para a coleção.
+- **`services/progresso_alimentos_fases.dart`:** novo `ProgressoAlimentosFases`
+  (chave `fases_alimentos_concluidas_v1`, métodos `carregar/marcarConcluido/voltarUltima/reiniciar`)
+  espelhando `ProgressoFases`.
+- **`features/colecao/colecao_alimentos_screen.dart`:** grade 3 colunas com 5
+  temas + 1 bônus chocolate (6 cards). Cada card: premioEmoji + nome + tema,
+  borda dourada no bônus quando todos ganhos. Botão `FAZENDA` volta à foto.
+- **`features/estudo/estudo_screen.dart`:** novo `alimentosTemaConcluivel` +
+  `_concluirFaseAlimentos()` + `_BauAlimentosDialog`/`_CardNovaFaseAlimentos`
+  (baú com `Novo sabor desbloqueado` e chocolate no fim). `_talvezConcluir`
+  agora marca também alimentos. Fluxo idêntico ao mapa-múndi com `pushReplacement`.
+- **`features/alimentos/alimentos_temas_screen.dart`:** virou `StatefulWidget`
+  com `_concluidas/_proximaChave/_rotuloIniciar`, `_AnelAlimentos` com
+  `isConcluida/isProximo` (apagado vs aceso vs pulsando). Botões inferiores:
+  VOLTAR ALIMENTOS, REINICIAR (limpa `ProgressoAlimentosFases`), VOLTAR INÍCIO,
+  COLEÇÃO 🍎 (abre `ColecaoAlimentosScreen`) e INICIAR/CONTINUAR branco.
+
 ## 2026-08-24 — v0.34.0 (Alimentos Temas: anéis + botões inferiores)
 - **Pomar/Roça mais baixo de novo:** `pomar 0,0.15→0,0.22` e `roca 0.62,0.15→0.62,0.22`
   (centro de y≈0.35→0.42, bem na copa/vinhedo, longe da serra).

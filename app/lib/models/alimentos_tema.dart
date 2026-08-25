@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 
 enum AlimentosTema {
-  mercado('mercado', 'Mercado', '🏪', Color(0xFFF5A524)),
-  pomar('pomar', 'Pomar', '🍎', Color(0xFF54C08A)),
-  horta('horta', 'Horta', '🥬', Color(0xFF5B9CFF)),
-  roca('roca', 'Roça', '🌾', Color(0xFFFF8A5B)),
-  arrozal('arrozal', 'Arrozal', '🍚', Color(0xFF2DD4BF));
+  mercado('mercado', 'Mercado', '🏪', Color(0xFFF5A524), '🍕', 'Pizza'),
+  pomar('pomar', 'Pomar', '🍎', Color(0xFF54C08A), '🍣', 'Sushi'),
+  horta('horta', 'Horta', '🥬', Color(0xFF5B9CFF), '🍔', 'Hambúrguer'),
+  roca('roca', 'Roça', '🌾', Color(0xFFFF8A5B), '🍝', 'Macarrão'),
+  arrozal('arrozal', 'Arrozal', '🍚', Color(0xFF2DD4BF), '🍦', 'Iogurte');
 
-  const AlimentosTema(this.chave, this.rotulo, this.emoji, this.cor);
+  const AlimentosTema(this.chave, this.rotulo, this.emoji, this.cor, this.premioEmoji, this.premioNome);
 
   final String chave;
   final String rotulo;
   final String emoji;
   final Color cor;
+  final String premioEmoji;
+  final String premioNome;
 
   static AlimentosTema? porChave(String chave) {
     for (final t in AlimentosTema.values) {

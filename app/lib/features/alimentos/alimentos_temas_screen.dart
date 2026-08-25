@@ -4,22 +4,57 @@ import 'package:flutter/material.dart';
 
 import '../../models/alimentos_tema.dart';
 import '../../services/banco_palavras.dart';
+import '../../services/progresso_alimentos_fases.dart';
 import '../../theme/app_colors.dart';
-import '../colecao/colecao_screen.dart';
+import '../colecao/colecao_alimentos_screen.dart';
 import '../estudo/estudo_screen.dart';
 
-class AlimentosTemasScreen extends StatelessWidget {
+class AlimentosTemasScreen extends StatefulWidget {
   const AlimentosTemasScreen({super.key});
 
-  void _abrirTema(BuildContext context, AlimentosTema tema) {
-    Navigator.of(context).push(
+  @override
+  State<AlimentosTemasScreen> createState() => _AlimentosTemasScreenState();
+}
+
+class _AlimentosTemasScreenState extends State<AlimentosTemasScreen> {
+  List<String> _concluidas = const [];
+
+  @override
+  void initState() {
+    super.initState();
+    _carregar();
+  }
+
+  Future<void> _carregar() async {
+    final c = await ProgressoAlimentosFases.carregar();
+    if (mounted) setState(() => _concluidas = c);
+  }
+
+  String? get _proximaChave {
+    for (final t in AlimentosTema.values) {
+      if (!_concluidas.contains(t.chave)) return t.chave;
+    }
+    return null;
+  }
+
+  String get _rotuloIniciar {
+    if (_concluidas.isEmpty) return 'INICIAR JOGO';
+    if (_proximaChave != null) return 'CONTINUAR JOGO';
+    return 'REINICIAR JOGO';
+  }
+
+  void _abrirTema(BuildContext context, AlimentosTema tema) async {
+    await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => EstudoScreen(
           titulo: '${tema.emoji}  ${tema.rotulo}',
           palavras: palavrasDoTema(tema.chave),
+          manterPaisagemAoSair: true,
+          alimentosTemaConcluivel: tema.chave,
         ),
       ),
     );
+    if (mounted) _carregar();
   }
 
   Future<void> _voltarAlimentos(BuildContext context) async {
@@ -47,20 +82,29 @@ class AlimentosTemasScreen extends StatelessWidget {
       ),
     );
     if (ok != true || !context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Aventura reiniciada!')),
-    );
+    await ProgressoAlimentosFases.reiniciar();
+    if (mounted) setState(() => _concluidas = const []);
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Aventura reiniciada!')),
+      );
+    }
   }
 
   Future<void> _abrirColecao(BuildContext context) async {
     await Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => const ColecaoScreen()),
+      MaterialPageRoute(builder: (_) => const ColecaoAlimentosScreen()),
     );
+    if (mounted) _carregar();
   }
 
   Future<void> _iniciarJogo(BuildContext context) async {
-    final primeiro = AlimentosTema.values.first;
-    _abrirTema(context, primeiro);
+    final concluidas = await ProgressoAlimentosFases.carregar();
+    final idx = AlimentosTema.values.indexWhere((t) => !concluidas.contains(t.chave));
+    final inicio = idx < 0 ? 0 : idx;
+    final tema = AlimentosTema.values[inicio];
+    if (!context.mounted) return;
+    _abrirTema(context, tema);
   }
 
   @override
@@ -100,6 +144,8 @@ class AlimentosTemasScreen extends StatelessWidget {
                       height: _rect(tema).height * dH,
                       child: _FaixaAlimentosTema(
                         tema: tema,
+                        isProximo: tema.chave == _proximaChave,
+                        isConcluida: _concluidas.contains(tema.chave),
                         onTap: () => _abrirTema(context, tema),
                       ),
                     ),
@@ -161,7 +207,7 @@ class AlimentosTemasScreen extends StatelessWidget {
                       const SizedBox(width: 10),
                       _BotaoAlimentos(
                         icon: Icons.play_arrow_rounded,
-                        texto: 'INICIAR JOGO',
+                        texto: _rotuloIniciar,
                         fundo: Colors.white,
                         letra: AppColors.bg,
                         onTap: () => _iniciarJogo(context),
@@ -194,10 +240,17 @@ class AlimentosTemasScreen extends StatelessWidget {
 }
 
 class _FaixaAlimentosTema extends StatelessWidget {
-  const _FaixaAlimentosTema({required this.tema, required this.onTap});
+  const _FaixaAlimentosTema({
+    required this.tema,
+    required this.onTap,
+    this.isProximo = false,
+    this.isConcluida = false,
+  });
 
   final AlimentosTema tema;
   final VoidCallback onTap;
+  final bool isProximo;
+  final bool isConcluida;
 
   @override
   Widget build(BuildContext context) {
@@ -211,7 +264,13 @@ class _FaixaAlimentosTema extends StatelessWidget {
           fit: StackFit.expand,
           children: [
             const SizedBox.expand(),
-            Center(child: _AnelAlimentos(tema: tema)),
+            Center(
+              child: _AnelAlimentos(
+                tema: tema,
+                isProximo: isProximo,
+                isConcluida: isConcluida,
+              ),
+            ),
           ],
         ),
       ),
@@ -220,8 +279,14 @@ class _FaixaAlimentosTema extends StatelessWidget {
 }
 
 class _AnelAlimentos extends StatefulWidget {
-  const _AnelAlimentos({required this.tema});
+  const _AnelAlimentos({
+    required this.tema,
+    this.isProximo = false,
+    this.isConcluida = false,
+  });
   final AlimentosTema tema;
+  final bool isProximo;
+  final bool isConcluida;
 
   @override
   State<_AnelAlimentos> createState() => _AnelAlimentosState();
@@ -237,7 +302,18 @@ class _AnelAlimentosState extends State<_AnelAlimentos>
   @override
   void initState() {
     super.initState();
-    _pulso.repeat(reverse: true);
+    if (widget.isProximo) _pulso.repeat(reverse: true);
+  }
+
+  @override
+  void didUpdateWidget(covariant _AnelAlimentos oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isProximo && !oldWidget.isProximo) {
+      _pulso.repeat(reverse: true);
+    } else if (!widget.isProximo && oldWidget.isProximo) {
+      _pulso.stop();
+      _pulso.value = 0;
+    }
   }
 
   @override
@@ -248,6 +324,36 @@ class _AnelAlimentosState extends State<_AnelAlimentos>
 
   @override
   Widget build(BuildContext context) {
+    if (!widget.isProximo) {
+      return Container(
+        width: 72,
+        height: 24,
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.elliptical(360, 120)),
+          gradient: RadialGradient(
+            radius: 0.95,
+            colors: widget.isConcluida
+                ? [
+                    widget.tema.cor.withValues(alpha: 0.12),
+                    widget.tema.cor.withValues(alpha: 0.45),
+                  ]
+                : [
+                    Colors.white.withValues(alpha: 0.02),
+                    Colors.black.withValues(alpha: 0.28),
+                  ],
+          ),
+          border: Border.all(
+            color: widget.isConcluida ? widget.tema.cor : Colors.white.withValues(alpha: 0.5),
+            width: widget.isConcluida ? 2.6 : 2.0,
+          ),
+          boxShadow: widget.isConcluida
+              ? [
+                  BoxShadow(color: widget.tema.cor.withValues(alpha: 0.55), blurRadius: 14, spreadRadius: 1),
+                ]
+              : null,
+        ),
+      );
+    }
     return AnimatedBuilder(
       animation: _pulso,
       builder: (_, _) {

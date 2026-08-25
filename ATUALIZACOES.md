@@ -3,6 +3,14 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.35.0 (2026-08-24)
+- **Coleção de alimentos saborosos 🍎🍕 + baú nas fases 🧰:** a COLEÇÃO dos
+  Alimentos deixou de mostrar bichos e agora mostra **comidas**: 🍕 Pizza,
+  🍣 Sushi, 🍔 Hambúrguer, 🍝 Macarrão, 🍦 Iogurte e bônus 🍫 Chocolate.
+  Ao acertar a **última palavra** de um tema, abre o **baú** — toque para abrir
+  e **JOGAR AGORA** já cai na próxima fase (igual ao mapa-múndi). Anéis agora
+  indicam progresso (apagado → próximo pulsando → concluído aceso).
+
 ## v0.34.0 (2026-08-24)
 - **Alimentos Temas: anéis mais baixos + botões embaixo 🎮🍎:** CAJU (Pomar) e
   SOJA (Roça) desceram mais um pouco (fora das montanhas, na plantação). Na
