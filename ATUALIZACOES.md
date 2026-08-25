@@ -3,6 +3,12 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.34.0 (2026-08-24)
+- **Alimentos Temas: anéis mais baixos + botões embaixo 🎮🍎:** CAJU (Pomar) e
+  SOJA (Roça) desceram mais um pouco (fora das montanhas, na plantação). Na
+  parte inferior entraram 5 botões iguais ao mapa-múndi: **VOLTAR ALIMENTOS ·
+  REINICIAR AVENTURA · VOLTAR INÍCIO · COLEÇÃO 🍎 · INICIAR JOGO** (branco).
+
 ## v0.33.0 (2026-08-24)
 - **Anéis também nos Temas dos Objetos 💍🏙️ + ajuste Alimentos:** a foto da
   cidade (Temas Objetos) agora também tem os anéis pulsantes nas 5 faixas.

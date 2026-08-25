@@ -2,6 +2,16 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-24 — v0.34.0 (Alimentos Temas: anéis + botões inferiores)
+- **Pomar/Roça mais baixo de novo:** `pomar 0,0.15→0,0.22` e `roca 0.62,0.15→0.62,0.22`
+  (centro de y≈0.35→0.42, bem na copa/vinhedo, longe da serra).
+- **5 botões inferiores em `alimentos_temas_screen.dart`:** `VOLTAR ALIMENTOS`
+  (`pop`), `REINICIAR AVENTURA` (dialog + SnackBar), `VOLTAR INÍCIO`
+  (`popUntil isFirst`), `COLEÇÃO 🍎` (emoji, abre `ColecaoScreen`) e `INICIAR JOGO`
+  branco (`_abrirTema(primeiro)`). Layout `SafeArea Align bottomCenter FittedBox Row`
+  idêntico ao `MapaMundiScreen._BotaoTransparente` — novo `_BotaoAlimentos` local
+  com `icon?/emoji?`.
+
 ## 2026-08-24 — v0.33.0 (Anéis em Objetos + ajuste Pomar/Roça)
 - **`temas_screen.dart` (Objetos):** `_FaixaTema` agora com `Stack[expand, Center(_AnelTema)]`
   — `_AnelTema` idêntico ao `_AnelAlimentos` (78×26 elíptico pulsante na cor do `Tema`).

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 import '../../models/alimentos_tema.dart';
 import '../../services/banco_palavras.dart';
+import '../../theme/app_colors.dart';
+import '../colecao/colecao_screen.dart';
 import '../estudo/estudo_screen.dart';
 
 class AlimentosTemasScreen extends StatelessWidget {
@@ -18,6 +20,47 @@ class AlimentosTemasScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _voltarAlimentos(BuildContext context) async {
+    Navigator.of(context).pop();
+  }
+
+  Future<void> _reiniciarAventura(BuildContext context) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Reiniciar aventura?'),
+        content: const Text(
+          'As fases dos Alimentos voltarão ao início. As palavras continuam todas lá.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancelar'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Reiniciar'),
+          ),
+        ],
+      ),
+    );
+    if (ok != true || !context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Aventura reiniciada!')),
+    );
+  }
+
+  Future<void> _abrirColecao(BuildContext context) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const ColecaoScreen()),
+    );
+  }
+
+  Future<void> _iniciarJogo(BuildContext context) async {
+    final primeiro = AlimentosTema.values.first;
+    _abrirTema(context, primeiro);
   }
 
   @override
@@ -82,6 +125,53 @@ class AlimentosTemasScreen extends StatelessWidget {
               ),
             ),
           ),
+          SafeArea(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _BotaoAlimentos(
+                        icon: Icons.undo_rounded,
+                        texto: 'VOLTAR ALIMENTOS',
+                        onTap: () => _voltarAlimentos(context),
+                      ),
+                      const SizedBox(width: 10),
+                      _BotaoAlimentos(
+                        icon: Icons.refresh_rounded,
+                        texto: 'REINICIAR AVENTURA',
+                        onTap: () => _reiniciarAventura(context),
+                      ),
+                      const SizedBox(width: 10),
+                      _BotaoAlimentos(
+                        icon: Icons.home_rounded,
+                        texto: 'VOLTAR INÍCIO',
+                        onTap: () => Navigator.of(context).popUntil((r) => r.isFirst),
+                      ),
+                      const SizedBox(width: 10),
+                      _BotaoAlimentos(
+                        texto: 'COLEÇÃO',
+                        emoji: '🍎',
+                        onTap: () => _abrirColecao(context),
+                      ),
+                      const SizedBox(width: 10),
+                      _BotaoAlimentos(
+                        icon: Icons.play_arrow_rounded,
+                        texto: 'INICIAR JOGO',
+                        fundo: Colors.white,
+                        letra: AppColors.bg,
+                        onTap: () => _iniciarJogo(context),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -92,11 +182,11 @@ class AlimentosTemasScreen extends StatelessWidget {
       case AlimentosTema.mercado:
         return const Rect.fromLTWH(0.30, 0.30, 0.38, 0.42);
       case AlimentosTema.pomar:
-        return const Rect.fromLTWH(0.00, 0.15, 0.30, 0.40);
+        return const Rect.fromLTWH(0.00, 0.22, 0.30, 0.40);
       case AlimentosTema.horta:
         return const Rect.fromLTWH(0.55, 0.58, 0.45, 0.42);
       case AlimentosTema.roca:
-        return const Rect.fromLTWH(0.62, 0.15, 0.38, 0.40);
+        return const Rect.fromLTWH(0.62, 0.22, 0.38, 0.40);
       case AlimentosTema.arrozal:
         return const Rect.fromLTWH(0.00, 0.52, 0.32, 0.48);
     }
@@ -194,6 +284,61 @@ class _AnelAlimentosState extends State<_AnelAlimentos>
           ),
         );
       },
+    );
+  }
+}
+
+class _BotaoAlimentos extends StatelessWidget {
+  const _BotaoAlimentos({
+    required this.texto,
+    required this.onTap,
+    this.icon,
+    this.emoji,
+    this.fundo = const Color(0x8C000000),
+    this.letra = Colors.white,
+  });
+
+  final String texto;
+  final VoidCallback onTap;
+  final IconData? icon;
+  final String? emoji;
+  final Color fundo;
+  final Color letra;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: fundo,
+      borderRadius: BorderRadius.circular(22),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(22),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(color: Colors.white24),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (icon != null) Icon(icon, color: letra, size: 18),
+              if (emoji != null)
+                Text(emoji!, style: TextStyle(fontSize: 16, color: letra)),
+              if (icon != null || emoji != null) const SizedBox(width: 8),
+              Text(
+                texto,
+                style: TextStyle(
+                  color: letra,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 0.3,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
