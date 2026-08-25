@@ -1,6 +1,7 @@
 import 'package:alfabetizacao/models/categoria.dart';
 import 'package:alfabetizacao/models/habitat.dart';
 import 'package:alfabetizacao/models/alimentos_tema.dart';
+import 'package:alfabetizacao/models/nomes_tema.dart';
 import 'package:alfabetizacao/models/palavra.dart';
 import 'package:alfabetizacao/models/regiao.dart';
 import 'package:alfabetizacao/models/tema.dart';
@@ -106,6 +107,7 @@ void main() {
       final chaves = {
         ...Tema.values.map((t) => t.chave),
         ...AlimentosTema.values.map((t) => t.chave),
+        ...NomesTema.values.map((t) => t.chave),
       };
       for (final p in bancoPalavras) {
         if (p.tema != null) {

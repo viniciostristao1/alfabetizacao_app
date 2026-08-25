@@ -286,6 +286,19 @@ const List<Palavra> bancoPalavras = [
   Palavra(['I', 'sa', 'be', 'la'], Categoria.nomes, sub: 'menina'),
   Palavra(['Ma', 'nu', 'e', 'la'], Categoria.nomes, sub: 'menina'),
   Palavra(['Ce', 'cí', 'li', 'a'], Categoria.nomes, sub: 'menina'),
+  // nomes compostos (tema "compostos" — 4ª fase de Nomes > Temas)
+  Palavra(['A', 'na', 'Cla', 'ra'], Categoria.nomes, tema: 'compostos', texto: 'Ana Clara'),
+  Palavra(['Jo', 'ão', 'An', 'tô', 'nio'], Categoria.nomes, tema: 'compostos', texto: 'João Antônio'),
+  Palavra(['Ma', 'ri', 'a', 'E', 'duar', 'da'], Categoria.nomes, tema: 'compostos', texto: 'Maria Eduarda'),
+  Palavra(['Pe', 'dro', 'Hen', 'ri', 'que'], Categoria.nomes, tema: 'compostos', texto: 'Pedro Henrique'),
+  Palavra(['A', 'na', 'Ju', 'lia'], Categoria.nomes, tema: 'compostos', texto: 'Ana Julia'),
+  Palavra(['Car', 'los', 'E', 'duar', 'do'], Categoria.nomes, tema: 'compostos', texto: 'Carlos Eduardo'),
+  Palavra(['Ma', 'ri', 'a', 'Cla', 'ra'], Categoria.nomes, tema: 'compostos', texto: 'Maria Clara'),
+  Palavra(['Jo', 'ão', 'Pe', 'dro'], Categoria.nomes, tema: 'compostos', texto: 'João Pedro'),
+  Palavra(['A', 'na', 'Lu', 'i', 'za'], Categoria.nomes, tema: 'compostos', texto: 'Ana Luiza'),
+  Palavra(['Lu', 'iz', 'Fe', 'li', 'pe'], Categoria.nomes, tema: 'compostos', texto: 'Luiz Felipe'),
+  Palavra(['Ma', 'ri', 'a', 'Ce', 'cí', 'lia'], Categoria.nomes, tema: 'compostos', texto: 'Maria Cecília'),
+  Palavra(['Jo', 'ão', 'Mi', 'guel'], Categoria.nomes, tema: 'compostos', texto: 'João Miguel'),
 
   // ───────────────────────── TEMAS (CIDADE) ─────────────────────────
   // Palavras dos lugares da foto dos Temas (Objetos → Temas). Vivem na categoria

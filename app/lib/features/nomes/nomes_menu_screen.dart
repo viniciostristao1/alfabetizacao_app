@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../models/categoria.dart';
-import '../../models/palavra.dart';
 import '../../services/banco_palavras.dart';
 import '../../services/progresso_repository.dart';
 import '../estudo/estudo_screen.dart';
+import 'nomes_temas_screen.dart';
 
 class NomesMenuScreen extends StatefulWidget {
   const NomesMenuScreen({super.key});
@@ -43,22 +43,10 @@ class _NomesMenuScreenState extends State<NomesMenuScreen> {
   }
 
   void _abrirTemas(BuildContext context) async {
-    final todas = _todosNomes();
     await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => EstudoScreen(
-          titulo: '${Categoria.nomes.emoji}  ${Categoria.nomes.rotulo} · Temas',
-          palavras: todas,
-        ),
-      ),
+      MaterialPageRoute(builder: (_) => const NomesTemasScreen()),
     );
     if (mounted) _carregar();
-  }
-
-  List<Palavra> _todosNomes() {
-    final lista = bancoPalavras.where((p) => p.categoria == Categoria.nomes).toList();
-    lista.sort(Palavra.porDificuldade);
-    return lista;
   }
 
   @override
