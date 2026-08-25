@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.49.1 (2026-08-25)
+- **Baú: botões MAPA/FAZENDA/CIDADE voltam ao mapa 🗺️⬅️:** corrigido `_concluirFase*` — tocar em **MAPA** (animais), **FAZENDA** (alimentos) ou **CIDADE** (objetos) após abrir o baú agora volta ao respectivo mapa (`Navigator.pop` no `EstudoScreen` quando `showDialog` retorna `false`); antes o diálogo apenas fechava e mantinha o `EstudoScreen` aberto. `JOGAR AGORA` continua para a próxima fase.
+
 ## v0.49.0 (2026-08-25)
 - **Baú 3D verificado visualmente ✅🧰:** reescrita completa do `BauPainter` com modelo 3D consistente (mesma projeção cavalier `kx=0.55, ky=0.30` para corpo/interior/moedas/tampa), tampa semicilíndrica girando na dobradiça traseira (`y=y0·cosθ-dz0·sinθ`, `z=_prof+y0·sinθ+dz0·cosθ`, `θ=eff·π/2`, `eff=easeOutCubic+overshoot` sutil) — verificado em 5 frames headless (fechado/25%/50%/75%/aberto) — pivô traseiro correto, 90°, perspectiva/volume/iluminação/sombras coerentes, moedas estáveis com volume metálico.
 

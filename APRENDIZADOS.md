@@ -2,6 +2,9 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-25 — v0.49.1 (Baú: MAPA/FAZENDA/CIDADE voltam ao mapa)
+- **`_concluirFase*`:** `showDialog<bool>` com `BauDialog` retornava `false` (MAPA/FAZENDA/CIDADE) e o handler fazia `if (jogar != true || proxima == null) return;` — só tratava `true` (próxima fase), ignorando o `false` pedido do usuário. Corrigido para `if (!mounted) return; if (jogar == true && proxima != null) pushReplacement(next); else if (jogar == false) pop();` nos 3 métodos (`_concluirFase` com `Regiao`, `_concluirFaseAlimentos` com `AlimentosTema`, `_concluirFaseObjetosTemas` com `Tema`). Cobre também o caso `ehUltima` ("Voltar ao mapa/fazenda/cidade"). `null` (dismiss na borda) continua sem navegar.
+
 ## 2026-08-25 — v0.49.0 (Baú verificado em 5 PNGs headless: pivô traseiro 90° com overshoot)
 - **Verificação visual headless:** `BauPainter` tornado público para `test/bau_preview_test.dart` que renderiza 5 frames (`p=0/0.25/0.50/0.75/1.0`) via `RepaintBoundary.toImage(pixelRatio:3)` + `tester.runAsync` → `/tmp/bau_frames/*.png` (necessário `runAsync` pois `toImage` é async real; sem ele o teste trava "did not complete") + `Read` das imagens para inspeção; após verificação o teste foi removido (mantido só `flutter test` funcional). Confirmado: 3/4 com frente+lateral+topo, tampa curva com volume/espessura, interior escuro, moedas metálicas com monte e highlights, dobradiça traseira correta, 90° com `θ=-eff·π/2` e overshoot sutil, corpo parado, moedas estáveis, perspectiva/sombras/iluminação coerentes durante toda a animação — sensação de objeto 3D de videogame, não 2D.
 

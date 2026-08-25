@@ -247,17 +247,21 @@ class _EstudoScreenState extends State<EstudoScreen> {
         proxima: proxima,
       ),
     );
-    if (jogar != true || !mounted || proxima == null) return;
-    await Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (_) => EstudoScreen(
-          titulo: '${proxima.emoji}  Fase ${i + 2} · ${proxima.rotulo}',
-          palavras: palavrasDaRegiao(proxima.chave),
-          manterPaisagemAoSair: true,
-          habitatConcluivel: proxima.chave,
+    if (!mounted) return;
+    if (jogar == true && proxima != null) {
+      await Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => EstudoScreen(
+            titulo: '${proxima.emoji}  Fase ${i + 2} · ${proxima.rotulo}',
+            palavras: palavrasDaRegiao(proxima.chave),
+            manterPaisagemAoSair: true,
+            habitatConcluivel: proxima.chave,
+          ),
         ),
-      ),
-    );
+      );
+    } else if (jogar == false) {
+      Navigator.of(context).pop();
+    }
   }
 
   Future<void> _concluirFaseAlimentos() async {
@@ -277,17 +281,21 @@ class _EstudoScreenState extends State<EstudoScreen> {
         proxima: proxima,
       ),
     );
-    if (jogar != true || !mounted || proxima == null) return;
-    await Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (_) => EstudoScreen(
-          titulo: '${proxima.emoji}  ${proxima.rotulo}',
-          palavras: palavrasDoTema(proxima.chave),
-          manterPaisagemAoSair: true,
-          alimentosTemaConcluivel: proxima.chave,
+    if (!mounted) return;
+    if (jogar == true && proxima != null) {
+      await Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => EstudoScreen(
+            titulo: '${proxima.emoji}  ${proxima.rotulo}',
+            palavras: palavrasDoTema(proxima.chave),
+            manterPaisagemAoSair: true,
+            alimentosTemaConcluivel: proxima.chave,
+          ),
         ),
-      ),
-    );
+      );
+    } else if (jogar == false) {
+      Navigator.of(context).pop();
+    }
   }
 
   Future<void> _concluirFaseObjetosTemas() async {
@@ -307,17 +315,21 @@ class _EstudoScreenState extends State<EstudoScreen> {
         proxima: proxima,
       ),
     );
-    if (jogar != true || !mounted || proxima == null) return;
-    await Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (_) => EstudoScreen(
-          titulo: '${proxima.emoji}  ${proxima.rotulo}',
-          palavras: palavrasDoTema(proxima.chave),
-          manterPaisagemAoSair: true,
-          objetosTemaConcluivel: proxima.chave,
+    if (!mounted) return;
+    if (jogar == true && proxima != null) {
+      await Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => EstudoScreen(
+            titulo: '${proxima.emoji}  ${proxima.rotulo}',
+            palavras: palavrasDoTema(proxima.chave),
+            manterPaisagemAoSair: true,
+            objetosTemaConcluivel: proxima.chave,
+          ),
         ),
-      ),
-    );
+      );
+    } else if (jogar == false) {
+      Navigator.of(context).pop();
+    }
   }
 
   /// Última palavra de uma categoria FORA do mapa-múndi (habitats, níveis,
