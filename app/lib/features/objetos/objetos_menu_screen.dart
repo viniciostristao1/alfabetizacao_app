@@ -2,18 +2,35 @@ import 'package:flutter/material.dart';
 
 import '../../models/categoria.dart';
 import '../../services/banco_palavras.dart';
+import '../../services/progresso_repository.dart';
 import '../estudo/estudo_screen.dart';
 import 'temas_screen.dart';
 
-/// Menu de OBJETOS (paisagem): uma foto com 4 cenas viram 4 botões.
-/// As **3 de cima** rodam os níveis de sempre — Fácil / Médio / Difícil
-/// (`palavrasDe(objetos, nível)` → EstudoScreen). A **de baixo** ("Temas")
-/// é o ponto de entrada de um modo por tema (comportamento a definir).
-class ObjetosMenuScreen extends StatelessWidget {
+class ObjetosMenuScreen extends StatefulWidget {
   const ObjetosMenuScreen({super.key});
 
-  void _abrirNivel(BuildContext context, Nivel nivel) {
-    Navigator.of(context).push(
+  @override
+  State<ObjetosMenuScreen> createState() => _ObjetosMenuScreenState();
+}
+
+class _ObjetosMenuScreenState extends State<ObjetosMenuScreen> {
+  int _moedas = 0;
+  int _xp = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _carregar();
+  }
+
+  Future<void> _carregar() async {
+    final moedas = await ProgressoRepository.moedas();
+    final xp = await ProgressoRepository.xp();
+    if (mounted) setState(() { _moedas = moedas; _xp = xp; });
+  }
+
+  void _abrirNivel(BuildContext context, Nivel nivel) async {
+    await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => EstudoScreen(
           titulo: '${Categoria.objetos.emoji}  '
@@ -22,12 +39,14 @@ class ObjetosMenuScreen extends StatelessWidget {
         ),
       ),
     );
+    if (mounted) _carregar();
   }
 
-  void _abrirTemas(BuildContext context) {
-    Navigator.of(context).push(
+  void _abrirTemas(BuildContext context) async {
+    await Navigator.of(context).push(
       MaterialPageRoute(builder: (_) => const TemasScreen()),
     );
+    if (mounted) _carregar();
   }
 
   @override
@@ -100,6 +119,26 @@ class ObjetosMenuScreen extends StatelessWidget {
                       color: Colors.white,
                       size: 22,
                     ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SafeArea(
+            child: Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.55),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.white24),
+                  ),
+                  child: Text(
+                    '🪙 $_moedas · Nv ${ProgressoRepository.nivelDe(_xp)}',
+                    style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w800),
                   ),
                 ),
               ),

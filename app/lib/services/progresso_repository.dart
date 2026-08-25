@@ -19,7 +19,7 @@ class ProgressoRepository {
   /// XP para subir de nível: nível = 1 + (xp ~/ xpPorNivel).
   static const xpPorNivel = 25;
 
-  /// Bônus (moedas + XP) ao concluir uma fase — o "baú" do mapa-múndi.
+  /// Bônus ao concluir uma fase — o "baú". Cada fase dá 1 nível (25 XP) + 10 moedas.
   static const bonusFase = 10;
 
   static String _habitatAcertos(String habitat) => '$_chaveAcertos$habitat';
@@ -40,11 +40,9 @@ class ProgressoRepository {
   /// Nível da criança a partir do XP acumulado.
   static int nivelDe(int xp) => 1 + xp ~/ xpPorNivel;
 
-  /// Soma [pontos] no XP e nas moedas (acerto). Se [habitat] for passado
-  /// (fase do mapa-múndi), conta um acerto para a medalha daquele habitat.
+  /// Soma [pontos] nas moedas (acerto). XP só sobe ao concluir fase (baú) — 1 nível por fase.
   static Future<void> registrarAcerto(int pontos, {String? habitat}) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(_chaveXp, (prefs.getInt(_chaveXp) ?? 0) + pontos);
     await prefs.setInt(_chaveMoedas, (prefs.getInt(_chaveMoedas) ?? 0) + pontos);
     if (habitat != null) {
       await prefs.setInt(
@@ -68,19 +66,18 @@ class ProgressoRepository {
     return perda;
   }
 
-  /// Bônus da fase concluída (o "baú"): XP e moedas extras.
+  /// Bônus da fase concluída (o "baú"): 1 nível (25 XP) + moedas extras.
   static Future<void> registrarBonusFase() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(_chaveXp, (prefs.getInt(_chaveXp) ?? 0) + bonusFase);
+    await prefs.setInt(_chaveXp, (prefs.getInt(_chaveXp) ?? 0) + xpPorNivel);
     await prefs.setInt(
         _chaveMoedas, (prefs.getInt(_chaveMoedas) ?? 0) + bonusFase);
   }
 
-  /// Bônus extra qualquer (ex.: sequência de acertos 🔥): XP e moedas.
+  /// Bônus extra qualquer (ex.: sequência de acertos 🔥): só moedas (não sobe nível).
   /// Não conta acerto/erro — a medalha do habitat mede só a precisão.
   static Future<void> registrarBonus(int pontos) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(_chaveXp, (prefs.getInt(_chaveXp) ?? 0) + pontos);
     await prefs.setInt(
         _chaveMoedas, (prefs.getInt(_chaveMoedas) ?? 0) + pontos);
   }

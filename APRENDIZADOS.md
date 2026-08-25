@@ -2,6 +2,15 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-24 — v0.39.0 (Nível por fase + moedas no topo)
+- **`progresso_repository.dart`:** `registrarAcerto` e `registrarBonus` (sequência)
+  agora só somam **moedas**, não XP. `registrarBonusFase` dá `xpPorNivel` (25 XP = 1 nível)
+  + `bonusFase` (10 moedas). Nível = 1 + xp/25 só sobe no baú. Teste `progresso_repository_test`
+  atualizado (acerto 0 XP, bônus fase 25 XP).
+- **`objetos_menu_screen.dart` e `alimentos_menu_screen.dart`:** viraram `StatefulWidget`
+  com `_moedas/_xp` e `Container` 🪙·Nv no `Align topRight` (igual `HabitatMapScreen`),
+  recarregam após voltar de qualquer `EstudoScreen`/`TemasScreen`.
+
 ## 2026-08-24 — v0.38.0 (Alimentos Temas com palavras familiares)
 - **`banco_palavras.dart` Temas Alimentos:** 5×12 trocados de exóticos para rotina.
   Mercado: bolo/queijo/leite/carne/ovo/suco/café/biscoito/bolacha/salsicha/presunto/manteiga.

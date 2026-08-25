@@ -5,10 +5,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  test('acerto soma XP e moedas', () async {
+  test('acerto soma só moedas (XP só sobe com fase/baú)', () async {
     await ProgressoRepository.registrarAcerto(4);
     await ProgressoRepository.registrarAcerto(2);
-    expect(await ProgressoRepository.xp(), 6);
+    expect(await ProgressoRepository.xp(), 0);
     expect(await ProgressoRepository.moedas(), 6);
   });
 
@@ -17,7 +17,7 @@ void main() {
     await ProgressoRepository.registrarAcerto(4);
     expect(await ProgressoRepository.registrarErro(4), 4);
     expect(await ProgressoRepository.moedas(), 0);
-    expect(await ProgressoRepository.xp(), 4);
+    expect(await ProgressoRepository.xp(), 0);
     // com saldo zerado não perde mais nada
     expect(await ProgressoRepository.registrarErro(4), 0);
     expect(await ProgressoRepository.moedas(), 0);
@@ -30,10 +30,11 @@ void main() {
     expect(ProgressoRepository.nivelDe(74), 3);
   });
 
-  test('bônus de fase soma XP e moedas', () async {
+  test('bônus de fase dá 1 nível (25 XP) + moedas', () async {
     await ProgressoRepository.registrarBonusFase();
-    expect(await ProgressoRepository.xp(), ProgressoRepository.bonusFase);
+    expect(await ProgressoRepository.xp(), ProgressoRepository.xpPorNivel);
     expect(await ProgressoRepository.moedas(), ProgressoRepository.bonusFase);
+    expect(ProgressoRepository.nivelDe(await ProgressoRepository.xp()), 2);
   });
 
   test('medalha pela precisão do habitat', () async {

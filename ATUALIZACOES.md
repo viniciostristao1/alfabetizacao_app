@@ -3,6 +3,13 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.39.0 (2026-08-24)
+- **Nível só no baú (1 por fase) + moedas no topo 🪙⬆️:** nível não sobe mais a
+  cada palavra — só quando **conclui a fase e toca no baú** (mapa-múndi, Temas
+  Objetos e Temas Alimentos: cada baú = +1 nível = 25 XP). Ao clicar em
+  **Animais** e **Objetos** (e Alimentos) o topo direito agora mostra
+  **🪙 moedas · Nv** sempre visível.
+
 ## v0.38.0 (2026-08-24)
 - **Temas Alimentos agora com palavras da rotina 🍎🥬:** Mercado/Pomar/Horta/Roça/
   Arrozal trocados de exóticos (jabuticaba, seriguela, gergelim…) para **familiares**
