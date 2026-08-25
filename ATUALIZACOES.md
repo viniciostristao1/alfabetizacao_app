@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.51.0 (2026-08-25)
+- **Nomes com 4 cenas 🧑‍🎤📚💻🏁:** ao clicar em **Nomes** na Home abre `NomesMenuScreen` em tela cheia (igual a Alimentos/Objetos): 3 imagens no topo **Fácil/Médio/Difícil** (esq→dir) e imagem larga `Temas` embaixo — cada uma abre `EstudoScreen` com `palavrasDe(Nomes, nivel)` e `Temas` abre todas as palavras de Nomes. Imagem `file_0000000035d8820e9879ae2fd63481e4.png` (1536×1024) recortada em `assets/nomes/` (3× 505×515 + 1536×499) via PIL nas quebras de média (verticais 505/516 e 1021/1031, horizontal 515/525).
+
 ## v0.50.0 (2026-08-25)
 - **Selecionar alimentos e objetos 🔍🍎🧸:** nos menus **Alimentos** e **Objetos** (ao clicar em cada categoria na Home) adicionado botão inferior esquerdo transparente **SELECIONAR ALIMENTOS / SELECIONAR OBJETOS** (mesmo estilo de *SELECIONAR ANIMAIS* em Animais) — abre tela de busca com lista filtrável e confirmação para estudar palavras escolhidas (`🍎 Meus alimentos` / `🧸 Meus objetos`).
 

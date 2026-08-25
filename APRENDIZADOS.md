@@ -2,6 +2,9 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-25 — v0.51.0 (Nomes em 4 cenas — recorte da imagem enviada)
+- **`NomesMenuScreen` (`features/nomes/nomes_menu_screen.dart`):** espelha `ObjetosMenuScreen`/`AlimentosMenuScreen` (Scaffold preto, Stack `Column[Expanded flex5 Row 3 _CenaBotao + Expanded flex4 _CenaBotao]`) mas com `assets/nomes/nomes_facil/medio/dificil/temas.png` (labels **Fácil/Médio/Difícil/Temas**). `NomesMenuScreen` mostra `🪙/Nv`, `_carregar()` e `_abrirNivel/_abrirTemas` (`_abrirTemas` = todos os Nomes ordenados por `porDificuldade`). Imagem origem `file_0000000035d8820e9879ae2fd63481e4.png` (1536×1024, Bin da raiz) recortada com PIL nas quebras 505/516, 1021/1031 e 515/525 → 4 crops em `assets/nomes/` declarados no `pubspec.yaml`. Home: `_abrirCategoria` trocado `Categoria.nomes => NomesMenuScreen` (antes `NivelScreen`), import ajustado e `NivelScreen` removido do switch (evita `unreachable_switch_case`). `+ todosOsNomes()` não necessário (Temas usa `bancoPalavras.where(Categoria.nomes)` direto).
+
 ## 2026-08-25 — v0.50.0 (Selecionar alimentos/objetos — botão inferior esquerdo)
 - **Novas telas `selecao_alimentos_screen.dart` / `selecao_objetos_screen.dart`:** espelham `selecao_animais_screen.dart` (busca com `semAcento`, `+`/`check`, `Confirmar` → `Navigator.pop(List<Palavra>)` ordenada por `nivelSilabas`) mas com `todosOsAlimentos()` / `todosOsObjetos()` (novas funções em `banco_palavras.dart` que filtram por `Categoria` e ordenam alfabeticamente sem acento). **Menus:** `alimentos_menu_screen.dart` e `objetos_menu_screen.dart` ganharam `SafeArea Align bottomLeft` com `_BotaoTransparente` (mesmo estilo preto 0.55 + borda branca, `Icons.search`) e método `_selecionarAlimentos/_selecionarObjetos` que faz `push(Selecao…)` → se `escolhidos != null` faz `push(EstudoScreen(titulo: '🍎/🧸 Meus …', palavras: escolhidos))`.
 

@@ -4,7 +4,7 @@ publish_to: 'none'
 
 # versionName+versionCode. Ex.: 0.1.0+1 → versionName "0.1.0", versionCode 1.
 # O +N (versionCode) TEM de crescer a cada release.
-version: 0.50.0+80
+version: 0.51.0+81
 
 environment:
   sdk: ^3.12.2
@@ -41,6 +41,11 @@ flutter:
     - assets/alimentos/alimentos_dificil.png
     - assets/alimentos/alimentos_temas.png
     - assets/alimentos/alimentos_temas_foto.png
+    - assets/nomes/nomes_facil.png
+    - assets/nomes/nomes_medio.png
+    - assets/nomes/nomes_dificil.png
+    - assets/nomes/nomes_temas.png
+    - assets/nomes/nomes_temas_foto.png
 
 # Ícone do app. Arte original: assets/icon/logo_fonte.png (fundo âmbar) —
 # logo.png = quadrado âmbar (legado); logo_foreground.png = arte sem o âmbar
