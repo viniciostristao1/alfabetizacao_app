@@ -2,6 +2,15 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-24 — v0.38.0 (Alimentos Temas com palavras familiares)
+- **`banco_palavras.dart` Temas Alimentos:** 5×12 trocados de exóticos para rotina.
+  Mercado: bolo/queijo/leite/carne/ovo/suco/café/biscoito/bolacha/salsicha/presunto/manteiga.
+  Pomar: maçã/pera/uva/banana/laranja/manga/limão/mamão/melão/abacate/abacaxi/morango.
+  Horta: couve/alface/tomate/cenoura/batata/cebola/pepino/repolho/beterraba/pimentão/brócolis/abóbora.
+  Roça: arroz/feijão/milho/trigo/soja/cana/aveia/mandioca/amendoim/pipoca/farinha/açúcar.
+  Arrozal: peixe/siri/ostra/lula/polvo/atum/camarão/sardinha/tilápia/dourado/pescada/caranguejo.
+  Todas 2–4 sílabas, ordenadas por `porDificuldade` então as curtas (maçã, pera, uva) vêm primeiro.
+
 ## 2026-08-24 — v0.37.0 (Coleção Objetos + baú + caminhos)
 - **`models/tema.dart`:** `Tema` ganhou `premioEmoji/premioNome` (brinquedo/videogame/mochila/bola/bicicleta).
 - **`services/progresso_objetos_temas_fases.dart`:** novo (chave `fases_objetos_temas_concluidas_v1`).

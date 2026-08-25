@@ -3,6 +3,12 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.38.0 (2026-08-24)
+- **Temas Alimentos agora com palavras da rotina 🍎🥬:** Mercado/Pomar/Horta/Roça/
+  Arrozal trocados de exóticos (jabuticaba, seriguela, gergelim…) para **familiares**
+  como nos níveis: **maçã, pera, uva, banana, ovo, leite, carne, arroz, feijão,
+  peixe, tomate, cenoura** — começam curtas e conhecidas, depois as mais longas.
+
 ## v0.37.0 (2026-08-24)
 - **Coleção de objetos 🧸🎮 + baú e caminhos nos Temas 🏛️➖:** coleção deixou de
   ser 🍎 e agora é de brinquedos: 🧸 Brinquedo, 🎮 Videogame, 🎒 Mochila,
