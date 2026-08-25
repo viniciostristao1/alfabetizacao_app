@@ -3,6 +3,12 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.43.0 (2026-08-24)
+- **Novo mapa dos Animais 🗺️🦁 + coleção sem MAPA:** ao clicar em Animais, a
+  imagem 1536×1024 com 6 cenários (Ártico/Savana/Selva/Aquático/Fazenda/Mapa)
+  aparece exatamente como enviada (sem cortes, 3×2). Na **Coleção de animais**
+  o botão "MAPA" foi removido — ficam só **ALIMENTOS 🍎** e **OBJETOS 🧸**.
+
 ## v0.42.0 (2026-08-24)
 - **Coleções interligadas 3 vias 🔄🐾🍎🧸:** cada coleção agora tem 2 botões para
   as outras: **Animais ↔ Alimentos ↔ Objetos** (ex.: Alimentos tem 🧸 e 🐾;

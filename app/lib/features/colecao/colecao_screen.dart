@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../models/regiao.dart';
 import '../../services/progresso_fases.dart';
 import '../../theme/app_colors.dart';
-import '../mapa_mundi/mapa_mundi_screen.dart';
 import 'colecao_alimentos_screen.dart';
 import 'colecao_objetos_screen.dart';
 
@@ -29,15 +28,6 @@ class _ColecaoScreenState extends State<ColecaoScreen> {
   Future<void> _carregar() async {
     final concluidas = await ProgressoFases.carregar();
     if (mounted) setState(() => _concluidas = concluidas);
-  }
-
-  /// "MAPA MUNDI" (canto superior direito) — vai direto para o mapa-múndi;
-  /// ao voltar, recarrega a coleção (algum animal pode ter sido ganho).
-  Future<void> _abrirMapaMundi() async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => const MapaMundiScreen()),
-    );
-    if (mounted) _carregar();
   }
 
   Future<void> _abrirAlimentos() async {
@@ -75,25 +65,12 @@ class _ColecaoScreenState extends State<ColecaoScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(right: 4),
+            padding: const EdgeInsets.only(right: 8),
             child: Center(
               child: TextButton.icon(
                 onPressed: _abrirObjetos,
                 icon: const Text('🧸', style: TextStyle(fontSize: 16)),
                 label: const Text('OBJETOS', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12)),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: Center(
-              child: TextButton.icon(
-                onPressed: _abrirMapaMundi,
-                icon: const Icon(Icons.public_rounded, size: 18),
-                label: const Text(
-                  'MAPA',
-                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12),
-                ),
               ),
             ),
           ),

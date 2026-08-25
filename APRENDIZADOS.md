@@ -2,6 +2,15 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-24 — v0.43.0 (Novo mapa Animais + coleção sem MAPA)
+- **Novo `mapa_animais.jpg`:** `file_00000000e354820eb45010595305fc39.png` (1536×1024,
+  3,5 MB PNG) convertido para JPG 92% (818 KB) em `assets/habitats/mapa_animais.jpg`
+  (mesmo `kMapaDisplayAspect`, grade 3×2 `HabitatMapScreen` sem cortes, `BoxFit.fill`).
+  Cenários: Ártico (gelo/urso), Savana (elefante/girafa/leão), Selva (onça/tucano),
+  Aquático (baleia/golfinho), Fazenda (vaca/cavalo) e Mapa-múndi.
+- **`colecao_screen.dart`:** removido `MAPA` (`_abrirMapaMundi` e import `mapa_mundi_screen`),
+  ficam só `ALIMENTOS 🍎` e `OBJETOS 🧸` — navegação cruzada 2 vias nas 3 coleções.
+
 ## 2026-08-24 — v0.42.0 (Coleções 3 vias)
 - **3 coleções cruzadas:** `colecao_screen.dart` (animais) agora importa alimentos/objetos
   e tem 2 `TextButton.icon` extras (ALIMENTOS 🍎, OBJETOS 🧸) ao lado de MAPA;
