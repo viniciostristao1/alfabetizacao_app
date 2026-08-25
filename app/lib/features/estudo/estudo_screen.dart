@@ -877,11 +877,11 @@ class _BauDialogState extends State<_BauDialog>
     with TickerProviderStateMixin {
   late final AnimationController _abertura = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 1100),
+    duration: const Duration(milliseconds: 750),
   );
   late final AnimationController _card = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 850),
+    duration: const Duration(milliseconds: 650),
   );
 
   bool get _aberto => _abertura.isCompleted;
@@ -959,7 +959,7 @@ class _BauDialogState extends State<_BauDialog>
                 AnimatedBuilder(
                   animation: _abertura,
                   builder: (_, _) => _Bau(
-                    p: Curves.easeInOutCubic.transform(_abertura.value),
+                    p: Curves.easeOutCubic.transform(_abertura.value),
                     onTap: _abrirBau,
                   ),
                 ),
@@ -1112,11 +1112,11 @@ class _BauAlimentosDialogState extends State<_BauAlimentosDialog>
     with TickerProviderStateMixin {
   late final AnimationController _abertura = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 1100),
+    duration: const Duration(milliseconds: 750),
   );
   late final AnimationController _card = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 850),
+    duration: const Duration(milliseconds: 650),
   );
 
   bool get _aberto => _abertura.isCompleted;
@@ -1179,7 +1179,7 @@ class _BauAlimentosDialogState extends State<_BauAlimentosDialog>
                 if (_aberto) const Positioned.fill(child: ConfeteBurst(muito: true)),
                 AnimatedBuilder(
                   animation: _abertura,
-                  builder: (_, _) => _Bau(p: Curves.easeInOutCubic.transform(_abertura.value), onTap: _abrirBau),
+                  builder: (_, _) => _Bau(p: Curves.easeOutCubic.transform(_abertura.value), onTap: _abrirBau),
                 ),
                 if (_aberto)
                   Positioned(
@@ -1300,8 +1300,8 @@ class _BauObjetosDialog extends StatefulWidget {
 
 class _BauObjetosDialogState extends State<_BauObjetosDialog>
     with TickerProviderStateMixin {
-  late final AnimationController _abertura = AnimationController(vsync: this, duration: const Duration(milliseconds: 1100));
-  late final AnimationController _card = AnimationController(vsync: this, duration: const Duration(milliseconds: 850));
+  late final AnimationController _abertura = AnimationController(vsync: this, duration: const Duration(milliseconds: 750));
+  late final AnimationController _card = AnimationController(vsync: this, duration: const Duration(milliseconds: 650));
   bool get _aberto => _abertura.isCompleted;
   @override
   void initState() {
@@ -1339,7 +1339,7 @@ class _BauObjetosDialogState extends State<_BauObjetosDialog>
               alignment: Alignment.bottomCenter,
               children: [
                 if (_aberto) const Positioned.fill(child: ConfeteBurst(muito: true)),
-                AnimatedBuilder(animation: _abertura, builder: (_, _) => _Bau(p: Curves.easeInOutCubic.transform(_abertura.value), onTap: _abrirBau)),
+                AnimatedBuilder(animation: _abertura, builder: (_, _) => _Bau(p: Curves.easeOutCubic.transform(_abertura.value), onTap: _abrirBau)),
                 if (_aberto)
                   Positioned(
                     left: 0,
@@ -1441,8 +1441,15 @@ class _BauPainter extends CustomPainter {
     _tampaCubo(canvas, w, h, topo, lidH);
   }
   void _sombra(Canvas canvas, double w, double h) {
-    canvas.drawOval(Rect.fromLTRB(w * 0.12, h * 0.90, w * 0.90, h * 0.985), Paint()..color = Colors.black.withValues(alpha: 0.42)..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8));
-    canvas.drawOval(Rect.fromLTRB(w * 0.20, h * 0.92, w * 0.82, h * 0.975), Paint()..color = Colors.black.withValues(alpha: 0.22)..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4));
+    final eased = Curves.easeOutCubic.transform(p);
+    final shift = eased * 2.2;
+    final scale = 1 + eased * 0.08;
+    canvas.drawOval(Rect.fromLTRB(w * 0.12 - shift * 0.5, h * 0.90, (w * 0.90 - shift * 0.5) * scale.clamp(1.0, 1.12), h * 0.985), Paint()..color = Colors.black.withValues(alpha: (0.42 - eased * 0.06).clamp(0.28, 0.42))..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8));
+    canvas.drawOval(Rect.fromLTRB(w * 0.20 - shift * 0.3, h * 0.92, w * 0.82 * scale.clamp(1.0, 1.06), h * 0.975), Paint()..color = Colors.black.withValues(alpha: 0.22)..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4));
+    if (p > 0.15) {
+      final lidShadowAlpha = (0.18 * (1 - (p - 0.15) / 0.85).clamp(0.0, 1.0));
+      canvas.drawOval(Rect.fromLTRB(w * 0.28, h * 0.88 - eased * 4, w * 0.72, h * 0.92 - eased * 2), Paint()..color = Colors.black.withValues(alpha: lidShadowAlpha * 0.55)..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3));
+    }
   }
   void _glow(Canvas canvas, double w, double h, double topo) {
     if (p <= 0) return;
@@ -1670,7 +1677,8 @@ class _BauPainter extends CustomPainter {
     final barrelR = boxD * 0.46;
     final hingeX = frontL + boxW / 2 + sideW;
     final hingeY = topo - sideUp;
-    final angle = -p * 1.92;
+    final eff = (p + 0.07 * sin(p * pi) * (1 - p)).clamp(0.0, 1.08);
+    final angle = -eff * 1.571;
     final cosA = cos(angle);
     final sinA = sin(angle);
     Offset proj(double x, double y, double z) {

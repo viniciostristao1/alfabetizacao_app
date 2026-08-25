@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.48.0 (2026-08-25)
+- **Baú de tesouro 3D de videogame final 🎮🧰:** reconstruído em **perspectiva 3/4 real** (frente + lateral + topo/interior) com volumes e oclusão: corpo com espessura visível, tampa curva arqueada clássica (paralelepípedo + barril cilíndrico `Ht+barrelR`) com espessura própria, interior escuro com contraste e moedas douradas metálicas sobrepostas em monte com highlights/volumes. **Abertura a 90°** com pivô correto na dobradiça traseira (rotação Y-Z `angle=-eff*π/2`, `eff=easeOutCubic+overshoot` sutil), 750 ms `easeOutCubic` + acomodação, corpo parado e moedas estáveis, sombras dinâmicas (chão e interior) e iluminação de jogo (luz topo/lateral, interior mais evidente ao abrir).
+
 ## v0.47.0 (2026-08-25)
 - **Baú 3D real com tampa articulada em dobradiça 🔩🧰:** refiz a tampa do cubo 90° com **rotação 3D genuína em torno da dobradiça traseira** (`angle=-p*1.92`, rotação Y-Z com `cos/sin` e projeção cavalier `sideW/sideUp`): a tampa é um paralelepípedo `W×D×Ht` com barril cilíndrico (`barrelR=D*0.46`) — ao abrir, a face frontal levanta desenhando arco real para trás, a lateral acompanha, e o barril arqueado aparece com volume; dobradiça traseira fica visível, interior mostra espessura e brilho da madeira, com nitidez e sombra oclusiva. Profundidade e volume agora convencem.
 
