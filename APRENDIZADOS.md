@@ -2,6 +2,14 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-24 — v0.40.0 (Moedas nos Temas + coleções na Home)
+- **`temas_screen.dart` e `alimentos_temas_screen.dart`:** `StatefulWidget` com
+  `_moedas/_xp` + `SafeArea Align topRight` container 🪙·Nv (igual `HabitatMapScreen`),
+  recarrega após cada tema/coleção. `TemasScreen` já era stateful (progresso objetos).
+- **`home_screen.dart`:** importadas `colecao_alimentos_screen` e `colecao_objetos_screen`;
+  2 `IconButton` novos com emoji `Text('🍎')`/`Text('🧸')` antes da engrenagem, tooltips
+  "Coleção de alimentos/objetos", `pop` + `_carregarPontuacao` após voltar.
+
 ## 2026-08-24 — v0.39.0 (Nível por fase + moedas no topo)
 - **`progresso_repository.dart`:** `registrarAcerto` e `registrarBonus` (sequência)
   agora só somam **moedas**, não XP. `registrarBonusFase` dá `xpPorNivel` (25 XP = 1 nível)

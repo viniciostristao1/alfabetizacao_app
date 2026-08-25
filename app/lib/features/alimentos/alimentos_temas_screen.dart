@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../models/alimentos_tema.dart';
 import '../../services/banco_palavras.dart';
 import '../../services/progresso_alimentos_fases.dart';
+import '../../services/progresso_repository.dart';
 import '../../theme/app_colors.dart';
 import '../colecao/colecao_alimentos_screen.dart';
 import '../estudo/estudo_screen.dart';
@@ -18,16 +19,25 @@ class AlimentosTemasScreen extends StatefulWidget {
 
 class _AlimentosTemasScreenState extends State<AlimentosTemasScreen> {
   List<String> _concluidas = const [];
+  int _moedas = 0;
+  int _xp = 0;
 
   @override
   void initState() {
     super.initState();
     _carregar();
+    _carregarPontuacao();
   }
 
   Future<void> _carregar() async {
     final c = await ProgressoAlimentosFases.carregar();
     if (mounted) setState(() => _concluidas = c);
+  }
+
+  Future<void> _carregarPontuacao() async {
+    final moedas = await ProgressoRepository.moedas();
+    final xp = await ProgressoRepository.xp();
+    if (mounted) setState(() { _moedas = moedas; _xp = xp; });
   }
 
   String? get _proximaChave {
@@ -54,7 +64,7 @@ class _AlimentosTemasScreenState extends State<AlimentosTemasScreen> {
         ),
       ),
     );
-    if (mounted) _carregar();
+    if (mounted) { _carregar(); _carregarPontuacao(); }
   }
 
   Future<void> _voltarAlimentos(BuildContext context) async {
@@ -95,7 +105,7 @@ class _AlimentosTemasScreenState extends State<AlimentosTemasScreen> {
     await Navigator.of(context).push(
       MaterialPageRoute(builder: (_) => const ColecaoAlimentosScreen()),
     );
-    if (mounted) _carregar();
+    if (mounted) { _carregar(); _carregarPontuacao(); }
   }
 
   Future<void> _iniciarJogo(BuildContext context) async {
@@ -179,6 +189,26 @@ class _AlimentosTemasScreenState extends State<AlimentosTemasScreen> {
                   child: const Padding(
                     padding: EdgeInsets.all(8),
                     child: Icon(Icons.arrow_back_rounded, color: Colors.white, size: 22),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SafeArea(
+            child: Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.55),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.white24),
+                  ),
+                  child: Text(
+                    '🪙 $_moedas · Nv ${ProgressoRepository.nivelDe(_xp)}',
+                    style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w800),
                   ),
                 ),
               ),

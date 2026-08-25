@@ -6,6 +6,8 @@ import '../../theme/app_colors.dart';
 import '../../util/versao.dart';
 import '../config/config_screen.dart';
 import '../contas/contas_menu_screen.dart';
+import '../colecao/colecao_alimentos_screen.dart';
+import '../colecao/colecao_objetos_screen.dart';
 import '../colecao/colecao_screen.dart';
 import '../escrever/escrever_screen.dart';
 import '../alimentos/alimentos_menu_screen.dart';
@@ -134,6 +136,27 @@ class _HomeScreenState extends State<HomeScreen> {
               await Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const ColecaoScreen()),
               );
+              if (mounted) _carregarPontuacao();
+            },
+          ),
+          IconButton(
+            tooltip: 'Coleção de alimentos',
+            icon: const Text('🍎', style: TextStyle(fontSize: 20)),
+            onPressed: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const ColecaoAlimentosScreen()),
+              );
+              if (mounted) _carregarPontuacao();
+            },
+          ),
+          IconButton(
+            tooltip: 'Coleção de objetos',
+            icon: const Text('🧸', style: TextStyle(fontSize: 20)),
+            onPressed: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const ColecaoObjetosScreen()),
+              );
+              if (mounted) _carregarPontuacao();
             },
           ),
           IconButton(

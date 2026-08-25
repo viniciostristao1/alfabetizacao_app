@@ -3,6 +3,12 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.40.0 (2026-08-24)
+- **Moedas nos Temas + coleções na Home 🪙🏠:** **Objetos → Temas** e
+  **Alimentos → Temas** agora mostram **🪙 moedas · Nv** no topo direito (igual
+  Animais/Objetos). Na **Home** entraram 2 ícones novos ao lado da patinha:
+  **🍎 Alimentos** e **🧸 Objetos** — abrem suas coleções saborosa/de brinquedos.
+
 ## v0.39.0 (2026-08-24)
 - **Nível só no baú (1 por fase) + moedas no topo 🪙⬆️:** nível não sobe mais a
   cada palavra — só quando **conclui a fase e toca no baú** (mapa-múndi, Temas
