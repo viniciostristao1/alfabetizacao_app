@@ -2,6 +2,13 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-24 — v0.44.0 (Mapa-múndi 1679×937 alta qualidade)
+- **`mapa_mundi.jpg` trocado:** `file_000000007a64820e9057a288b79cdc6c.png` (1679×937,
+  2,8 MB PNG) convertido para JPG 92% (616 KB) em `assets/habitats/mapa_mundi.jpg`.
+  Mesma arte, mais nítida. `kMapaMundiAspect` atualizado para `1679/937` (era 1376/768);
+  exibição continua em `SizedBox` com `kMapaDisplayAspect=2.0` + `BoxFit.fill` — ocupa a tela toda,
+  círculos `Regiao.fx/fy` mantidos idênticos.
+
 ## 2026-08-24 — v0.43.0 (Novo mapa Animais + coleção sem MAPA)
 - **Novo `mapa_animais.jpg`:** `file_00000000e354820eb45010595305fc39.png` (1536×1024,
   3,5 MB PNG) convertido para JPG 92% (818 KB) em `assets/habitats/mapa_animais.jpg`

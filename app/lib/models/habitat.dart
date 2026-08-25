@@ -59,9 +59,9 @@ const int kHabitatColunas = 3;
 const int kHabitatLinhas = 2;
 
 /// Aspecto das imagens: `mapa_animais.jpg` = 1536×1024 (3:2); `mapa_mundi.jpg`
-/// = 1376×768 (≈16:9). Exibição usa `kMapaDisplayAspect` (esticado p/ tela cheia).
+/// = 1679×937 (≈16:9, nova arte com mais qualidade). Exibição usa `kMapaDisplayAspect` (esticado p/ tela cheia).
 const double kMapaAnimaisAspect = 1536 / 1024;
-const double kMapaMundiAspect = 1376 / 768;
+const double kMapaMundiAspect = 1679 / 937;
 
 /// Aspecto de EXIBIÇÃO dos mapas em paisagem — um pouco mais largo que o nativo,
 /// pra imagem **encostar nas laterais** (não ficar "quadrada"). A imagem enche a

@@ -3,6 +3,12 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.44.0 (2026-08-24)
+- **Mapa-múndi novo em alta qualidade 🌍✨:** ao clicar em Animais → Mapa-múndi,
+  a imagem foi trocada pela nova 1679×937 (mesma arte, mais nítida). **Círculos
+  clicáveis mantidos exatamente nas mesmas posições** e a imagem ocupa a tela
+  toda no fundo (`BoxFit.fill`).
+
 ## v0.43.0 (2026-08-24)
 - **Novo mapa dos Animais 🗺️🦁 + coleção sem MAPA:** ao clicar em Animais, a
   imagem 1536×1024 com 6 cenários (Ártico/Savana/Selva/Aquático/Fazenda/Mapa)
