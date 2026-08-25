@@ -315,7 +315,9 @@ class _AnelAlimentosState extends State<_AnelAlimentos>
   @override
   void initState() {
     super.initState();
-    if (widget.isProximo) _pulso.repeat(reverse: true);
+    if (widget.isProximo) {
+      _pulso.repeat(reverse: true);
+    }
   }
 
   @override

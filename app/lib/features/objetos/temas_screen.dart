@@ -4,38 +4,64 @@ import 'package:flutter/material.dart';
 
 import '../../models/tema.dart';
 import '../../services/banco_palavras.dart';
+import '../../services/progresso_objetos_temas_fases.dart';
 import '../../theme/app_colors.dart';
-import '../colecao/colecao_alimentos_screen.dart';
+import '../colecao/colecao_objetos_screen.dart';
 import '../estudo/estudo_screen.dart';
 
-/// Tela de TEMAS: a foto `assets/objetos/objetos_temas_foto.png` preenche a
-/// tela inteira (modo "cover": corta só o que sobra do cenário em cima/embaixo,
-/// as palavras do meio ficam visíveis) e tem **5 faixas clicáveis** — uma para
-/// cada palavra da foto (casa, museu, escola, cafeteria, bombeiros), da
-/// esquerda para a direita. A imagem já tem a descrição de cada lugar, então as
-/// faixas são invisíveis. Tocar numa faixa abre o estudo das palavras do tema.
-///
-/// As faixas acompanham a imagem "esticada": cada palavra está no centro de uma
-/// das 5 colunas iguais da foto; o botão fica exatamente na posição que a
-/// coluna ocupa depois do corte (`dx`/`dy` da matemática do cover).
-class TemasScreen extends StatelessWidget {
+class TemasScreen extends StatefulWidget {
   const TemasScreen({super.key});
 
-  void _abrirTema(BuildContext context, Tema tema) {
-    Navigator.of(context).push(
+  @override
+  State<TemasScreen> createState() => _TemasScreenState();
+}
+
+class _TemasScreenState extends State<TemasScreen> {
+  List<String> _concluidas = const [];
+
+  @override
+  void initState() {
+    super.initState();
+    _carregar();
+  }
+
+  Future<void> _carregar() async {
+    final c = await ProgressoObjetosTemasFases.carregar();
+    if (mounted) setState(() => _concluidas = c);
+  }
+
+  String? get _proximaChave {
+    for (final t in Tema.values) {
+      if (!_concluidas.contains(t.chave)) return t.chave;
+    }
+    return null;
+  }
+
+  String get _rotuloIniciar {
+    if (_concluidas.isEmpty) return 'INICIAR JOGO';
+    if (_proximaChave != null) return 'CONTINUAR JOGO';
+    return 'REINICIAR JOGO';
+  }
+
+  void _abrirTema(BuildContext context, Tema tema) async {
+    await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => EstudoScreen(
           titulo: '${tema.emoji}  ${tema.rotulo}',
           palavras: palavrasDoTema(tema.chave),
+          manterPaisagemAoSair: true,
+          objetosTemaConcluivel: tema.chave,
         ),
       ),
     );
+    if (mounted) _carregar();
   }
 
   Future<void> _abrirColecao(BuildContext context) async {
     await Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => const ColecaoAlimentosScreen()),
+      MaterialPageRoute(builder: (_) => const ColecaoObjetosScreen()),
     );
+    if (mounted) _carregar();
   }
 
   Future<void> _reiniciarAventura(BuildContext context) async {
@@ -51,13 +77,20 @@ class TemasScreen extends StatelessWidget {
       ),
     );
     if (ok != true || !context.mounted) return;
+    await ProgressoObjetosTemasFases.reiniciar();
+    if (mounted) setState(() => _concluidas = const []);
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Aventura reiniciada!')));
     }
   }
 
-  void _iniciarJogo(BuildContext context) {
-    _abrirTema(context, Tema.values.first);
+  Future<void> _iniciarJogo(BuildContext context) async {
+    final concluidas = await ProgressoObjetosTemasFases.carregar();
+    final idx = Tema.values.indexWhere((t) => !concluidas.contains(t.chave));
+    final inicio = idx < 0 ? 0 : idx;
+    final tema = Tema.values[inicio];
+    if (!context.mounted) return;
+    _abrirTema(context, tema);
   }
 
   @override
@@ -87,8 +120,14 @@ class TemasScreen extends StatelessWidget {
                       'assets/objetos/objetos_temas_foto.png',
                       fit: BoxFit.fill,
                       filterQuality: FilterQuality.medium,
-                      errorBuilder: (_, _, _) =>
-                          const ColoredBox(color: Colors.black),
+                      errorBuilder: (_, _, _) => const ColoredBox(color: Colors.black),
+                    ),
+                  ),
+                  Positioned.fill(
+                    child: IgnorePointer(
+                      child: CustomPaint(
+                        painter: _CaminhoObjetosPainter(concluidas: _concluidas, dW: dW, dH: dH, dx: dx, dy: dy, zona: zona),
+                      ),
                     ),
                   ),
                   for (final (i, tema) in Tema.values.indexed)
@@ -99,6 +138,8 @@ class TemasScreen extends StatelessWidget {
                       bottom: 0,
                       child: _FaixaTema(
                         tema: tema,
+                        isProximo: tema.chave == _proximaChave,
+                        isConcluida: _concluidas.contains(tema.chave),
                         onTap: () => _abrirTema(context, tema),
                       ),
                     ),
@@ -118,11 +159,7 @@ class TemasScreen extends StatelessWidget {
                   onTap: () => Navigator.of(context).pop(),
                   child: const Padding(
                     padding: EdgeInsets.all(8),
-                    child: Icon(
-                      Icons.arrow_back_rounded,
-                      color: Colors.white,
-                      size: 22,
-                    ),
+                    child: Icon(Icons.arrow_back_rounded, color: Colors.white, size: 22),
                   ),
                 ),
               ),
@@ -140,7 +177,7 @@ class TemasScreen extends StatelessWidget {
                     children: [
                       _BotaoObjetos(
                         icon: Icons.undo_rounded,
-                        texto: 'VOLTAR ALIMENTOS',
+                        texto: 'VOLTAR OBJETOS',
                         onTap: () => Navigator.of(context).pop(),
                       ),
                       const SizedBox(width: 10),
@@ -158,13 +195,13 @@ class TemasScreen extends StatelessWidget {
                       const SizedBox(width: 10),
                       _BotaoObjetos(
                         texto: 'COLEÇÃO',
-                        emoji: '🍎',
+                        emoji: '🧸',
                         onTap: () => _abrirColecao(context),
                       ),
                       const SizedBox(width: 10),
                       _BotaoObjetos(
                         icon: Icons.play_arrow_rounded,
-                        texto: 'INICIAR JOGO',
+                        texto: _rotuloIniciar,
                         fundo: Colors.white,
                         letra: AppColors.bg,
                         onTap: () => _iniciarJogo(context),
@@ -182,10 +219,12 @@ class TemasScreen extends StatelessWidget {
 }
 
 class _FaixaTema extends StatelessWidget {
-  const _FaixaTema({required this.tema, required this.onTap});
+  const _FaixaTema({required this.tema, required this.onTap, this.isProximo = false, this.isConcluida = false});
 
   final Tema tema;
   final VoidCallback onTap;
+  final bool isProximo;
+  final bool isConcluida;
 
   @override
   Widget build(BuildContext context) {
@@ -199,7 +238,7 @@ class _FaixaTema extends StatelessWidget {
           fit: StackFit.expand,
           children: [
             const SizedBox.expand(),
-            Center(child: _AnelTema(tema: tema)),
+            Center(child: _AnelTema(tema: tema, isProximo: isProximo, isConcluida: isConcluida)),
           ],
         ),
       ),
@@ -208,66 +247,71 @@ class _FaixaTema extends StatelessWidget {
 }
 
 class _AnelTema extends StatefulWidget {
-  const _AnelTema({required this.tema});
+  const _AnelTema({required this.tema, this.isProximo = false, this.isConcluida = false});
   final Tema tema;
+  final bool isProximo;
+  final bool isConcluida;
 
   @override
   State<_AnelTema> createState() => _AnelTemaState();
 }
 
-class _AnelTemaState extends State<_AnelTema>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _pulso = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 900),
-  );
+class _AnelTemaState extends State<_AnelTema> with SingleTickerProviderStateMixin {
+  late final AnimationController _pulso = AnimationController(vsync: this, duration: const Duration(milliseconds: 900));
 
   @override
   void initState() {
     super.initState();
-    _pulso.repeat(reverse: true);
+    if (widget.isProximo) {
+      _pulso.repeat(reverse: true);
+    }
   }
 
   @override
-  void dispose() {
-    _pulso.dispose();
-    super.dispose();
+  void didUpdateWidget(covariant _AnelTema oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isProximo && !oldWidget.isProximo) {
+      _pulso.repeat(reverse: true);
+    } else if (!widget.isProximo && oldWidget.isProximo) {
+      _pulso.stop();
+      _pulso.value = 0;
+    }
   }
+
+  @override
+  void dispose() { _pulso.dispose(); super.dispose(); }
 
   @override
   Widget build(BuildContext context) {
+    if (!widget.isProximo) {
+      return Container(
+        width: 72, height: 24,
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.elliptical(360, 120)),
+          gradient: RadialGradient(
+            radius: 0.95,
+            colors: widget.isConcluida
+                ? [widget.tema.cor.withValues(alpha: 0.12), widget.tema.cor.withValues(alpha: 0.45)]
+                : [Colors.white.withValues(alpha: 0.02), Colors.black.withValues(alpha: 0.28)],
+          ),
+          border: Border.all(color: widget.isConcluida ? widget.tema.cor : Colors.white.withValues(alpha: 0.5), width: widget.isConcluida ? 2.6 : 2.0),
+          boxShadow: widget.isConcluida ? [BoxShadow(color: widget.tema.cor.withValues(alpha: 0.55), blurRadius: 14, spreadRadius: 1)] : null,
+        ),
+      );
+    }
     return AnimatedBuilder(
       animation: _pulso,
       builder: (_, _) {
         final pulso = 0.5 + 0.5 * _pulso.value;
         return Container(
-          width: 78,
-          height: 26,
+          width: 78, height: 26,
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.elliptical(360, 120)),
-            gradient: RadialGradient(
-              radius: 0.95,
-              colors: [
-                widget.tema.cor.withValues(alpha: 0.08),
-                widget.tema.cor.withValues(alpha: 0.38),
-              ],
-              stops: const [0.35, 1.0],
-            ),
-            border: Border.all(
-              color: Color.lerp(Colors.white, widget.tema.cor, pulso)!,
-              width: 2.2 + 1.2 * pulso,
-            ),
+            gradient: RadialGradient(radius: 0.95, colors: [widget.tema.cor.withValues(alpha: 0.08), widget.tema.cor.withValues(alpha: 0.38)], stops: const [0.35, 1.0]),
+            border: Border.all(color: Color.lerp(Colors.white, widget.tema.cor, pulso)!, width: 2.2 + 1.2 * pulso),
             boxShadow: [
-              BoxShadow(
-                color: widget.tema.cor.withValues(alpha: 0.45),
-                blurRadius: 14,
-                spreadRadius: 1,
-              ),
-              BoxShadow(
-                color: widget.tema.cor.withValues(alpha: 0.22 + 0.35 * pulso),
-                blurRadius: 10 + 14 * pulso,
-                spreadRadius: 1 + 2 * pulso,
-              ),
+              BoxShadow(color: widget.tema.cor.withValues(alpha: 0.45), blurRadius: 14, spreadRadius: 1),
+              BoxShadow(color: widget.tema.cor.withValues(alpha: 0.22 + 0.35 * pulso), blurRadius: 10 + 14 * pulso, spreadRadius: 1 + 2 * pulso),
             ],
           ),
         );
@@ -276,46 +320,51 @@ class _AnelTemaState extends State<_AnelTema>
   }
 }
 
+class _CaminhoObjetosPainter extends CustomPainter {
+  _CaminhoObjetosPainter({required this.concluidas, required this.dW, required this.dH, required this.dx, required this.dy, required this.zona});
+  final List<String> concluidas;
+  final double dW; final double dH; final double dx; final double dy; final double zona;
+  @override
+  void paint(Canvas canvas, Size size) {
+    final fases = Tema.values;
+    for (var i = 0; i < fases.length - 1; i++) {
+      final ax = (i + 0.5) * zona - dx + zona / 2;
+      final ay = size.height / 2;
+      final bx = (i + 1 + 0.5) * zona - dx + zona / 2;
+      final by = size.height / 2;
+      final a = Offset(ax, ay);
+      final b = Offset(bx, by);
+      final aceso = concluidas.contains(fases[i].chave);
+      if (aceso) {
+        canvas.drawLine(a, b, Paint()..color = const Color(0xFF3DF5E4).withValues(alpha: 0.25)..strokeWidth = 14..strokeCap = StrokeCap.round);
+        canvas.drawLine(a, b, Paint()..color = const Color(0xFF3DF5E4)..strokeWidth = 5..strokeCap = StrokeCap.round);
+      } else {
+        canvas.drawLine(a, b, Paint()..color = Colors.white.withValues(alpha: 0.22)..strokeWidth = 3..strokeCap = StrokeCap.round);
+      }
+    }
+  }
+  @override
+  bool shouldRepaint(covariant _CaminhoObjetosPainter oldDelegate) => oldDelegate.concluidas != concluidas || oldDelegate.dW != dW || oldDelegate.dH != dH || oldDelegate.dx != dx || oldDelegate.dy != dy;
+}
+
 class _BotaoObjetos extends StatelessWidget {
-  const _BotaoObjetos({
-    required this.texto,
-    required this.onTap,
-    this.icon,
-    this.emoji,
-    this.fundo = const Color(0x8C000000),
-    this.letra = Colors.white,
-  });
-
-  final String texto;
-  final VoidCallback onTap;
-  final IconData? icon;
-  final String? emoji;
-  final Color fundo;
-  final Color letra;
-
+  const _BotaoObjetos({required this.texto, required this.onTap, this.icon, this.emoji, this.fundo = const Color(0x8C000000), this.letra = Colors.white});
+  final String texto; final VoidCallback onTap; final IconData? icon; final String? emoji; final Color fundo; final Color letra;
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: fundo,
-      borderRadius: BorderRadius.circular(22),
+      color: fundo, borderRadius: BorderRadius.circular(22),
       child: InkWell(
-        borderRadius: BorderRadius.circular(22),
-        onTap: onTap,
+        borderRadius: BorderRadius.circular(22), onTap: onTap,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(22),
-            border: Border.all(color: Colors.white24),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (icon != null) Icon(icon, color: letra, size: 18),
-              if (emoji != null) Text(emoji!, style: TextStyle(fontSize: 16, color: letra)),
-              if (icon != null || emoji != null) const SizedBox(width: 8),
-              Text(texto, style: TextStyle(color: letra, fontSize: 13, fontWeight: FontWeight.w800, letterSpacing: 0.3)),
-            ],
-          ),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(22), border: Border.all(color: Colors.white24)),
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            if (icon != null) Icon(icon, color: letra, size: 18),
+            if (emoji != null) Text(emoji!, style: TextStyle(fontSize: 16, color: letra)),
+            if (icon != null || emoji != null) const SizedBox(width: 8),
+            Text(texto, style: TextStyle(color: letra, fontSize: 13, fontWeight: FontWeight.w800, letterSpacing: 0.3)),
+          ]),
         ),
       ),
     );

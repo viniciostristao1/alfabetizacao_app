@@ -3,6 +3,14 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.37.0 (2026-08-24)
+- **Coleção de objetos 🧸🎮 + baú e caminhos nos Temas 🏛️➖:** coleção deixou de
+  ser 🍎 e agora é de brinquedos: 🧸 Brinquedo, 🎮 Videogame, 🎒 Mochila,
+  ⚽ Bola, 🚲 Bicicleta + bônus 🎁 Presente. Fases concluídas nos **Temas
+  Objetos se ligam com linha neon** e, na última palavra, abre o **baú → JOGAR
+  AGORA** na próxima fase (igual Alimentos/mapa-múndi). Símbolo da coleção
+  trocado para 🧸.
+
 ## v0.36.0 (2026-08-24)
 - **Caminhos nos Alimentos + anéis ajustados + botões Objetos 💍➖🎮:** CAJU e
   SOJA desceram mais um pouco (plantação). Fases concluídas nos Alimentos agora

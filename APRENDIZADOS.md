@@ -2,6 +2,16 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-24 — v0.37.0 (Coleção Objetos + baú + caminhos)
+- **`models/tema.dart`:** `Tema` ganhou `premioEmoji/premioNome` (brinquedo/videogame/mochila/bola/bicicleta).
+- **`services/progresso_objetos_temas_fases.dart`:** novo (chave `fases_objetos_temas_concluidas_v1`).
+- **`features/colecao/colecao_objetos_screen.dart`:** grade 3 colunas (5+1 bônus presente), espelho da alimentos.
+- **`features/estudo/estudo_screen.dart`:** `objetosTemaConcluivel` + `_concluirFaseObjetosTemas()` +
+  `_BauObjetosDialog`/`_CardNovaFaseObjetos` (mensagem "Novo brinquedo desbloqueado").
+- **`features/objetos/temas_screen.dart`:** virou `StatefulWidget` com `_concluidas/_proximaChave`,
+  `_CaminhoObjetosPainter` (linha neon entre 5 colunas) e 5 botões inferiores
+  (VOLTAR OBJETOS→pop, REINICIAR limpa progresso objetos, COLEÇÃO 🧸 abre objetos, INICIAR branco).
+
 ## 2026-08-24 — v0.36.0 (Caminhos Alimentos + ajuste anéis + botões Objetos)
 - **CAJU/SOJA mais baixo de novo:** `pomar/roca top 0.22` (centro y≈0.42) — longe da serra.
 - **`alimentos_temas_screen.dart` caminho:** novo `_CaminhoAlimentosPainter`
