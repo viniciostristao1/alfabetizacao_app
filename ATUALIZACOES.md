@@ -3,6 +3,12 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.33.0 (2026-08-24)
+- **Anéis também nos Temas dos Objetos 💍🏙️ + ajuste Alimentos:** a foto da
+  cidade (Temas Objetos) agora também tem os anéis pulsantes nas 5 faixas.
+  Nos Alimentos, os anéis de **CAJU (Pomar)** e **SOJA (Roça)** desceram das
+  montanhas para a plantação — ficam no contexto certo.
+
 ## v0.32.0 (2026-08-24)
 - **Anéis nos Temas dos Alimentos 💍🌾:** cada fase clicável da foto da fazenda
   agora tem o **anel/círculo do mapa-múndi** (neon, pulsando) no centro da área

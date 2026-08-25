@@ -92,11 +92,11 @@ class AlimentosTemasScreen extends StatelessWidget {
       case AlimentosTema.mercado:
         return const Rect.fromLTWH(0.30, 0.30, 0.38, 0.42);
       case AlimentosTema.pomar:
-        return const Rect.fromLTWH(0.00, 0.00, 0.30, 0.48);
+        return const Rect.fromLTWH(0.00, 0.15, 0.30, 0.40);
       case AlimentosTema.horta:
         return const Rect.fromLTWH(0.55, 0.58, 0.45, 0.42);
       case AlimentosTema.roca:
-        return const Rect.fromLTWH(0.62, 0.00, 0.38, 0.48);
+        return const Rect.fromLTWH(0.62, 0.15, 0.38, 0.40);
       case AlimentosTema.arrozal:
         return const Rect.fromLTWH(0.00, 0.52, 0.32, 0.48);
     }

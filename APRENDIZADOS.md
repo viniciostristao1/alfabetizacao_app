@@ -2,6 +2,13 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-24 — v0.33.0 (Anéis em Objetos + ajuste Pomar/Roça)
+- **`temas_screen.dart` (Objetos):** `_FaixaTema` agora com `Stack[expand, Center(_AnelTema)]`
+  — `_AnelTema` idêntico ao `_AnelAlimentos` (78×26 elíptico pulsante na cor do `Tema`).
+- **Ajuste Pomar/Roça em `alimentos_temas_screen.dart`:** `pomar 0,0 0.30×0.48 → 0,0.15 0.30×0.40`
+  e `roca 0.62,0 0.38×0.48 → 0.62,0.15 0.38×0.40` — centro sai de y≈0.24 (montanhas)
+  para y≈0.35 (pomar/vinhedo), pedido "CAJU e SOJA nas montanhas fora de contexto".
+
 ## 2026-08-24 — v0.32.0 (Anéis pulsando nos Temas Alimentos)
 - **`alimentos_temas_screen.dart`:** `_FaixaAlimentosTema` agora tem `Stack` com
   `Center(_AnelAlimentos)` — anel elíptico 78×26 pulsante (`AnimationController 900ms
