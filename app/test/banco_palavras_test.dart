@@ -1,5 +1,6 @@
 import 'package:alfabetizacao/models/categoria.dart';
 import 'package:alfabetizacao/models/habitat.dart';
+import 'package:alfabetizacao/models/alimentos_tema.dart';
 import 'package:alfabetizacao/models/palavra.dart';
 import 'package:alfabetizacao/models/regiao.dart';
 import 'package:alfabetizacao/models/tema.dart';
@@ -102,11 +103,26 @@ void main() {
     });
 
     test('toda palavra com tema usa uma chave de tema válida', () {
-      final chaves = Tema.values.map((t) => t.chave).toSet();
+      final chaves = {
+        ...Tema.values.map((t) => t.chave),
+        ...AlimentosTema.values.map((t) => t.chave),
+      };
       for (final p in bancoPalavras) {
         if (p.tema != null) {
           expect(chaves.contains(p.tema), isTrue,
               reason: '"${p.texto}" tem tema="${p.tema}" inválido');
+        }
+      }
+    });
+
+    test('todo tema de Alimentos tem palavras (12+), ordenadas', () {
+      for (final t in AlimentosTema.values) {
+        final lista = palavrasDoTema(t.chave);
+        expect(lista.length, greaterThanOrEqualTo(10),
+            reason: 'tema ${t.rotulo} tem só ${lista.length} palavras (quer 10+)');
+        for (var i = 1; i < lista.length; i++) {
+          expect(Palavra.porDificuldade(lista[i - 1], lista[i]) <= 0, isTrue,
+              reason: 'tema ${t.rotulo} fora de ordem');
         }
       }
     });

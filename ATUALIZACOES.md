@@ -3,6 +3,13 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.31.0 (2026-08-24)
+- **Temas dos Alimentos com foto da fazenda 🌾🏪:** o botão "Temas" nos Alimentos
+  agora abre a foto da fazenda (mercado, rio, plantação) em tela cheia, sem
+  título nem bordas. **5 temas com botões invisíveis:** 🏪 Mercado, 🍎 Pomar,
+  🥬 Horta, 🌾 Roça e 🍚 Arrozal — cada um com 12 palavras (60 novas) para o
+  Davi estudar. Renomeado "Todos" → "Temas".
+
 ## v0.30.0 (2026-08-24)
 - **Alimentos em tela cheia com foto nova 🍎🎮:** ao tocar em **Alimentos** abre
   agora a foto enviada (4 cenas: Fácil/Médio/Difícil + Todos) em tela cheia,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/categoria.dart';
 import '../../services/banco_palavras.dart';
 import '../estudo/estudo_screen.dart';
+import 'alimentos_temas_screen.dart';
 
 class AlimentosMenuScreen extends StatelessWidget {
   const AlimentosMenuScreen({super.key});
@@ -19,19 +20,9 @@ class AlimentosMenuScreen extends StatelessWidget {
     );
   }
 
-  void _abrirTodos(BuildContext context) {
-    final todas = [
-      ...palavrasDe(Categoria.alimentos, Nivel.facil),
-      ...palavrasDe(Categoria.alimentos, Nivel.media),
-      ...palavrasDe(Categoria.alimentos, Nivel.dificil),
-    ];
+  void _abrirTemas(BuildContext context) {
     Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => EstudoScreen(
-          titulo: '${Categoria.alimentos.emoji}  ${Categoria.alimentos.rotulo} · Todos',
-          palavras: todas,
-        ),
-      ),
+      MaterialPageRoute(builder: (_) => const AlimentosTemasScreen()),
     );
   }
 
@@ -81,9 +72,9 @@ class AlimentosMenuScreen extends StatelessWidget {
                 flex: 4,
                 child: _CenaBotao(
                   asset: 'assets/alimentos/alimentos_temas.png',
-                  legenda: 'Todos',
+                  legenda: 'Temas',
                   cor: Categoria.alimentos.cor,
-                  onTap: () => _abrirTodos(context),
+                  onTap: () => _abrirTemas(context),
                 ),
               ),
             ],

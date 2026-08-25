@@ -2,6 +2,19 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-24 — v0.31.0 (Temas Alimentos: 5 faixas na foto da fazenda)
+- **Renomeado "Todos" → "Temas" em `alimentos_menu_screen.dart`:** `_abrirTodos`
+  virou `_abrirTemas` → `AlimentosTemasScreen`. A nova foto `1787617182584.png`
+  (1376×768, mercado+rio+plantação) copiada para `assets/alimentos/alimentos_temas_foto.png`.
+- **Novo `models/alimentos_tema.dart`:** enum `AlimentosTema` (mercado/pomar/horta/roca/arrozal,
+  5 valores) + `kAlimentosTemasFotoAspect`. Nova `features/alimentos/alimentos_temas_screen.dart`
+  espelha `TemasScreen` mas com `Rect` por tema (mercado centro 0.30/0.30 0.38×0.42, pomar
+  topo-esq, horta baixo-dir, roça topo-dir, arrozal baixo-esq) usando a matemática de cover
+  (dW/dH/dx/dy) igual à cidade.
+- **60 palavras novas em `banco_palavras.dart`:** 12 por tema, `Categoria.alimentos` com `tema`,
+  2–5 sílabas, sem duplicar as dos níveis normais. Teste `banco_palavras_test` atualizado
+  para validar chaves de `Tema` + `AlimentosTema` e checar 10+ palavras por alimentos tema.
+
 ## 2026-08-24 — v0.30.0 (Alimentos com foto 1376×768 em 4 cenas)
 - **Imagem `1787616789192.png` (2.1 MB, 1376×768) no root:** detectei os vãos pelas
   quebras de média por coluna/linha (dif >30): verticais ~458 e ~917, horizontal
