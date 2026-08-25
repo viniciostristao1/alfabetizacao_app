@@ -8,6 +8,7 @@ import '../config/config_screen.dart';
 import '../contas/contas_menu_screen.dart';
 import '../colecao/colecao_screen.dart';
 import '../escrever/escrever_screen.dart';
+import '../alimentos/alimentos_menu_screen.dart';
 import '../habitat/habitat_map_screen.dart';
 import '../nivel/nivel_screen.dart';
 import '../objetos/objetos_menu_screen.dart';
@@ -51,8 +52,8 @@ class _HomeScreenState extends State<HomeScreen> {
           // Animais viram um JOGO: mapa de habitats (paisagem), sem escolher
           // nível — cada habitat roda do mais fácil ao mais difícil.
           Categoria.animais => const HabitatMapScreen(),
-          // Objetos = foto com 4 cenas: 3 níveis de sempre + "Temas".
           Categoria.objetos => const ObjetosMenuScreen(),
+          Categoria.alimentos => const AlimentosMenuScreen(),
           // Escrever = palavras do próprio usuário (digitadas na tela).
           Categoria.escrever => const EscreverScreen(),
           // Contas = matemática (soma/subtração), tela própria.

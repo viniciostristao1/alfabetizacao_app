@@ -3,6 +3,12 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.30.0 (2026-08-24)
+- **Alimentos em tela cheia com foto nova 🍎🎮:** ao tocar em **Alimentos** abre
+  agora a foto enviada (4 cenas: Fácil/Médio/Difícil + Todos) em tela cheia,
+  sem título nem bordas — padrão do Objetos/Temas. O botão largo abaixo abre
+  todas as palavras de Alimentos.
+
 ## v0.29.0 (2026-08-24)
 - **Temas também 100% tela cheia 🎮:** o título "Temas" saiu, igual ao menu
   Objetos — a foto da cidade agora ocupa a tela toda sem barra superior,

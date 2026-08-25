@@ -2,6 +2,18 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-24 — v0.30.0 (Alimentos com foto 1376×768 em 4 cenas)
+- **Imagem `1787616789192.png` (2.1 MB, 1376×768) no root:** detectei os vãos pelas
+  quebras de média por coluna/linha (dif >30): verticais ~458 e ~917, horizontal
+  ~423. Recortei em `assets/alimentos/`: `alimentos_facil` (456×421), `medio`
+  (455×421), `dificil` (457×421) e `temas` (1376×343, cena larga). Declarados no
+  `pubspec.yaml`.
+- **Nova `features/alimentos/alimentos_menu_screen.dart`:** espelha `ObjetosMenuScreen`
+  (Scaffold preto sem AppBar, Stack + voltar flutuante, 3 + 1 `_CenaBotao` com
+  degradê). Rota na home: `Categoria.alimentos => AlimentosMenuScreen` (antes caía
+  no `NivelScreen` genérico). O botão largo "Todos" abre `EstudoScreen` com a união
+  dos 3 níveis de Alimentos.
+
 ## 2026-08-24 — v0.29.0 (Temas sem AppBar, 100% tela cheia)
 - **`temas_screen.dart` sem `AppBar`/`SafeArea`:** removidos `AppBar("Temas")` e o
   `SafeArea` que envolvia o `LayoutBuilder`. Agora `Scaffold(body: Stack[LayoutBuilder(cover),
