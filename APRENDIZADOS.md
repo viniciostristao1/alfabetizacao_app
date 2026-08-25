@@ -2,6 +2,12 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-24 — v0.42.0 (Coleções 3 vias)
+- **3 coleções cruzadas:** `colecao_screen.dart` (animais) agora importa alimentos/objetos
+  e tem 2 `TextButton.icon` extras (ALIMENTOS 🍎, OBJETOS 🧸) ao lado de MAPA;
+  `colecao_alimentos_screen.dart` tem OBJETOS + ANIMAIS 🐾; `colecao_objetos_screen.dart`
+  tem ALIMENTOS + ANIMAIS. Ciclo de imports `alimentos ↔ objetos ↔ animais` ok (`analyze` limpo).
+
 ## 2026-08-24 — v0.41.0 (Coleções cruzadas Alimentos ↔ Objetos)
 - **`colecao_alimentos_screen.dart`:** `FAZENDA` (agriculture_rounded + `AlimentosTemasScreen`)
   → `OBJETOS` (🧸 + `ColecaoObjetosScreen`), método `_abrirObjetos`.

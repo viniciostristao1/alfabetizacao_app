@@ -3,6 +3,11 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.42.0 (2026-08-24)
+- **Coleções interligadas 3 vias 🔄🐾🍎🧸:** cada coleção agora tem 2 botões para
+  as outras: **Animais ↔ Alimentos ↔ Objetos** (ex.: Alimentos tem 🧸 e 🐾;
+  Objetos tem 🍎 e 🐾; Animais tem 🍎 e 🧸) — navegação direta sem voltar.
+
 ## v0.41.0 (2026-08-24)
 - **Coleções cruzadas 🔄🍎🧸:** dentro da **Coleção de Alimentos** o botão
   "FAZENDA" virou **"OBJETOS" 🧸** (vai direto para a coleção de Objetos); na

@@ -4,6 +4,7 @@ import '../../models/tema.dart';
 import '../../services/progresso_objetos_temas_fases.dart';
 import '../../theme/app_colors.dart';
 import 'colecao_alimentos_screen.dart';
+import 'colecao_screen.dart';
 
 class ColecaoObjetosScreen extends StatefulWidget {
   const ColecaoObjetosScreen({super.key});
@@ -31,6 +32,11 @@ class _ColecaoObjetosScreenState extends State<ColecaoObjetosScreen> {
     if (mounted) _carregar();
   }
 
+  Future<void> _abrirAnimais() async {
+    await Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ColecaoScreen()));
+    if (mounted) _carregar();
+  }
+
   @override
   Widget build(BuildContext context) {
     final temas = Tema.values;
@@ -42,12 +48,22 @@ class _ColecaoObjetosScreenState extends State<ColecaoObjetosScreen> {
         title: Text('Coleção de objetos 🧸  ($ganhas/${temas.length})'),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 8),
+            padding: const EdgeInsets.only(right: 4),
             child: Center(
               child: TextButton.icon(
                 onPressed: _abrirAlimentos,
-                icon: const Text('🍎', style: TextStyle(fontSize: 18)),
-                label: const Text('ALIMENTOS', style: TextStyle(fontWeight: FontWeight.w800)),
+                icon: const Text('🍎', style: TextStyle(fontSize: 16)),
+                label: const Text('ALIMENTOS', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12)),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Center(
+              child: TextButton.icon(
+                onPressed: _abrirAnimais,
+                icon: const Icon(Icons.pets_rounded, size: 16),
+                label: const Text('ANIMAIS', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12)),
               ),
             ),
           ),

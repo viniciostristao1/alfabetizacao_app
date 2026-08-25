@@ -4,6 +4,8 @@ import '../../models/regiao.dart';
 import '../../services/progresso_fases.dart';
 import '../../theme/app_colors.dart';
 import '../mapa_mundi/mapa_mundi_screen.dart';
+import 'colecao_alimentos_screen.dart';
+import 'colecao_objetos_screen.dart';
 
 /// Coleção de animais 🐾: cada região do mapa-múndi vira um animalzinho
 /// colecionável. Concluiu a fase no mapa → o animal dela entra na coleção
@@ -38,6 +40,20 @@ class _ColecaoScreenState extends State<ColecaoScreen> {
     if (mounted) _carregar();
   }
 
+  Future<void> _abrirAlimentos() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const ColecaoAlimentosScreen()),
+    );
+    if (mounted) _carregar();
+  }
+
+  Future<void> _abrirObjetos() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const ColecaoObjetosScreen()),
+    );
+    if (mounted) _carregar();
+  }
+
   @override
   Widget build(BuildContext context) {
     final regioes = Regiao.regioes;
@@ -48,16 +64,35 @@ class _ColecaoScreenState extends State<ColecaoScreen> {
       appBar: AppBar(
         title: Text('Coleção de animais 🐾  ($ganhas/${regioes.length})'),
         actions: [
-          // MAPA MUNDI no canto superior direito.
+          Padding(
+            padding: const EdgeInsets.only(right: 4),
+            child: Center(
+              child: TextButton.icon(
+                onPressed: _abrirAlimentos,
+                icon: const Text('🍎', style: TextStyle(fontSize: 16)),
+                label: const Text('ALIMENTOS', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12)),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 4),
+            child: Center(
+              child: TextButton.icon(
+                onPressed: _abrirObjetos,
+                icon: const Text('🧸', style: TextStyle(fontSize: 16)),
+                label: const Text('OBJETOS', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12)),
+              ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: Center(
               child: TextButton.icon(
                 onPressed: _abrirMapaMundi,
-                icon: const Icon(Icons.public_rounded),
+                icon: const Icon(Icons.public_rounded, size: 18),
                 label: const Text(
-                  'MAPA MUNDI',
-                  style: TextStyle(fontWeight: FontWeight.w800),
+                  'MAPA',
+                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12),
                 ),
               ),
             ),
