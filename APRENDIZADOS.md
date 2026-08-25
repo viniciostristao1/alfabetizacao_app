@@ -2,6 +2,16 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-24 — v0.36.0 (Caminhos Alimentos + ajuste anéis + botões Objetos)
+- **CAJU/SOJA mais baixo de novo:** `pomar/roca top 0.22` (centro y≈0.42) — longe da serra.
+- **`alimentos_temas_screen.dart` caminho:** novo `_CaminhoAlimentosPainter`
+  (usa `_rectStatic` + `dW/dH/dx/dy` para centro de cada tema, desenha linha
+  neon 14/5 se anterior concluída senão branca 3, igual `MapaMundiScreen`).
+- **`objetos/temas_screen.dart` botões inferiores:** `TemasScreen` com 5
+  `_BotaoObjetos` (VOLTAR ALIMENTOS, REINICIAR, VOLTAR INÍCIO, COLEÇÃO 🍎,
+  INICIAR JOGO branco) no `SafeArea Align bottomCenter FittedBox Row` — mesma
+  UX dos Alimentos. Importa `AppColors` e `ColecaoAlimentosScreen`.
+
 ## 2026-08-24 — v0.35.0 (Coleção Alimentos + baú por fase)
 - **`models/alimentos_tema.dart`:** `AlimentosTema` ganhou `premioEmoji/premioNome`
   (pizza/sushi/hamburguer/macarrão/iogurte) para a coleção.

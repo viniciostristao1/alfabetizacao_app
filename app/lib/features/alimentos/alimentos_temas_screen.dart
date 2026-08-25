@@ -136,6 +136,19 @@ class _AlimentosTemasScreenState extends State<AlimentosTemasScreen> {
                       errorBuilder: (_, _, _) => const ColoredBox(color: Colors.black),
                     ),
                   ),
+                  Positioned.fill(
+                    child: IgnorePointer(
+                      child: CustomPaint(
+                        painter: _CaminhoAlimentosPainter(
+                          concluidas: _concluidas,
+                          dW: dW,
+                          dH: dH,
+                          dx: dx,
+                          dy: dy,
+                        ),
+                      ),
+                    ),
+                  ),
                   for (final tema in AlimentosTema.values)
                     Positioned(
                       left: _rect(tema).left * dW - dx,
@@ -447,4 +460,85 @@ class _BotaoAlimentos extends StatelessWidget {
       ),
     );
   }
+}
+
+class _CaminhoAlimentosPainter extends CustomPainter {
+  _CaminhoAlimentosPainter({
+    required this.concluidas,
+    required this.dW,
+    required this.dH,
+    required this.dx,
+    required this.dy,
+  });
+
+  final List<String> concluidas;
+  final double dW;
+  final double dH;
+  final double dx;
+  final double dy;
+
+  Offset _centro(AlimentosTema t) {
+    final r = _rectStatic(t);
+    return Offset(r.left * dW - dx + r.width * dW / 2, r.top * dH - dy + r.height * dH / 2);
+  }
+
+  static Rect _rectStatic(AlimentosTema t) {
+    switch (t) {
+      case AlimentosTema.mercado:
+        return const Rect.fromLTWH(0.30, 0.30, 0.38, 0.42);
+      case AlimentosTema.pomar:
+        return const Rect.fromLTWH(0.00, 0.22, 0.30, 0.40);
+      case AlimentosTema.horta:
+        return const Rect.fromLTWH(0.55, 0.58, 0.45, 0.42);
+      case AlimentosTema.roca:
+        return const Rect.fromLTWH(0.62, 0.22, 0.38, 0.40);
+      case AlimentosTema.arrozal:
+        return const Rect.fromLTWH(0.00, 0.52, 0.32, 0.48);
+    }
+  }
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final fases = AlimentosTema.values;
+    for (var i = 0; i < fases.length - 1; i++) {
+      final a = _centro(fases[i]);
+      final b = _centro(fases[i + 1]);
+      final aceso = concluidas.contains(fases[i].chave);
+      if (aceso) {
+        canvas.drawLine(
+          a,
+          b,
+          Paint()
+            ..color = const Color(0xFF3DF5E4).withValues(alpha: 0.25)
+            ..strokeWidth = 14
+            ..strokeCap = StrokeCap.round,
+        );
+        canvas.drawLine(
+          a,
+          b,
+          Paint()
+            ..color = const Color(0xFF3DF5E4)
+            ..strokeWidth = 5
+            ..strokeCap = StrokeCap.round,
+        );
+      } else {
+        canvas.drawLine(
+          a,
+          b,
+          Paint()
+            ..color = Colors.white.withValues(alpha: 0.22)
+            ..strokeWidth = 3
+            ..strokeCap = StrokeCap.round,
+        );
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _CaminhoAlimentosPainter oldDelegate) =>
+      oldDelegate.concluidas != concluidas ||
+      oldDelegate.dW != dW ||
+      oldDelegate.dH != dH ||
+      oldDelegate.dx != dx ||
+      oldDelegate.dy != dy;
 }

@@ -3,6 +3,13 @@
 Mudanças visíveis para o usuário. Topo = mais recente.
 
 
+## v0.36.0 (2026-08-24)
+- **Caminhos nos Alimentos + anéis ajustados + botões Objetos 💍➖🎮:** CAJU e
+  SOJA desceram mais um pouco (plantação). Fases concluídas nos Alimentos agora
+  se **ligam com linha neon** (igual animais). Em **Objetos → Temas** (cidade)
+  entraram os 5 botões inferiores: **VOLTAR ALIMENTOS · REINICIAR AVENTURA ·
+  VOLTAR INÍCIO · COLEÇÃO 🍎 · INICIAR JOGO** (branco).
+
 ## v0.35.0 (2026-08-24)
 - **Coleção de alimentos saborosos 🍎🍕 + baú nas fases 🧰:** a COLEÇÃO dos
   Alimentos deixou de mostrar bichos e agora mostra **comidas**: 🍕 Pizza,

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 import '../../models/tema.dart';
 import '../../services/banco_palavras.dart';
+import '../../theme/app_colors.dart';
+import '../colecao/colecao_alimentos_screen.dart';
 import '../estudo/estudo_screen.dart';
 
 /// Tela de TEMAS: a foto `assets/objetos/objetos_temas_foto.png` preenche a
@@ -28,6 +30,34 @@ class TemasScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _abrirColecao(BuildContext context) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const ColecaoAlimentosScreen()),
+    );
+  }
+
+  Future<void> _reiniciarAventura(BuildContext context) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Reiniciar aventura?'),
+        content: const Text('As fases voltarão ao início. As palavras continuam todas lá.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancelar')),
+          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Reiniciar')),
+        ],
+      ),
+    );
+    if (ok != true || !context.mounted) return;
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Aventura reiniciada!')));
+    }
+  }
+
+  void _iniciarJogo(BuildContext context) {
+    _abrirTema(context, Tema.values.first);
   }
 
   @override
@@ -93,6 +123,53 @@ class TemasScreen extends StatelessWidget {
                       color: Colors.white,
                       size: 22,
                     ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SafeArea(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _BotaoObjetos(
+                        icon: Icons.undo_rounded,
+                        texto: 'VOLTAR ALIMENTOS',
+                        onTap: () => Navigator.of(context).pop(),
+                      ),
+                      const SizedBox(width: 10),
+                      _BotaoObjetos(
+                        icon: Icons.refresh_rounded,
+                        texto: 'REINICIAR AVENTURA',
+                        onTap: () => _reiniciarAventura(context),
+                      ),
+                      const SizedBox(width: 10),
+                      _BotaoObjetos(
+                        icon: Icons.home_rounded,
+                        texto: 'VOLTAR INÍCIO',
+                        onTap: () => Navigator.of(context).popUntil((r) => r.isFirst),
+                      ),
+                      const SizedBox(width: 10),
+                      _BotaoObjetos(
+                        texto: 'COLEÇÃO',
+                        emoji: '🍎',
+                        onTap: () => _abrirColecao(context),
+                      ),
+                      const SizedBox(width: 10),
+                      _BotaoObjetos(
+                        icon: Icons.play_arrow_rounded,
+                        texto: 'INICIAR JOGO',
+                        fundo: Colors.white,
+                        letra: AppColors.bg,
+                        onTap: () => _iniciarJogo(context),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -195,6 +272,52 @@ class _AnelTemaState extends State<_AnelTema>
           ),
         );
       },
+    );
+  }
+}
+
+class _BotaoObjetos extends StatelessWidget {
+  const _BotaoObjetos({
+    required this.texto,
+    required this.onTap,
+    this.icon,
+    this.emoji,
+    this.fundo = const Color(0x8C000000),
+    this.letra = Colors.white,
+  });
+
+  final String texto;
+  final VoidCallback onTap;
+  final IconData? icon;
+  final String? emoji;
+  final Color fundo;
+  final Color letra;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: fundo,
+      borderRadius: BorderRadius.circular(22),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(22),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(color: Colors.white24),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (icon != null) Icon(icon, color: letra, size: 18),
+              if (emoji != null) Text(emoji!, style: TextStyle(fontSize: 16, color: letra)),
+              if (icon != null || emoji != null) const SizedBox(width: 8),
+              Text(texto, style: TextStyle(color: letra, fontSize: 13, fontWeight: FontWeight.w800, letterSpacing: 0.3)),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
