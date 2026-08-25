@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.49.0 (2026-08-25)
+- **Baú 3D verificado visualmente ✅🧰:** reescrita completa do `BauPainter` com modelo 3D consistente (mesma projeção cavalier `kx=0.55, ky=0.30` para corpo/interior/moedas/tampa), tampa semicilíndrica girando na dobradiça traseira (`y=y0·cosθ-dz0·sinθ`, `z=_prof+y0·sinθ+dz0·cosθ`, `θ=eff·π/2`, `eff=easeOutCubic+overshoot` sutil) — verificado em 5 frames headless (fechado/25%/50%/75%/aberto) — pivô traseiro correto, 90°, perspectiva/volume/iluminação/sombras coerentes, moedas estáveis com volume metálico.
+
 ## v0.48.0 (2026-08-25)
 - **Baú de tesouro 3D de videogame final 🎮🧰:** reconstruído em **perspectiva 3/4 real** (frente + lateral + topo/interior) com volumes e oclusão: corpo com espessura visível, tampa curva arqueada clássica (paralelepípedo + barril cilíndrico `Ht+barrelR`) com espessura própria, interior escuro com contraste e moedas douradas metálicas sobrepostas em monte com highlights/volumes. **Abertura a 90°** com pivô correto na dobradiça traseira (rotação Y-Z `angle=-eff*π/2`, `eff=easeOutCubic+overshoot` sutil), 750 ms `easeOutCubic` + acomodação, corpo parado e moedas estáveis, sombras dinâmicas (chão e interior) e iluminação de jogo (luz topo/lateral, interior mais evidente ao abrir).
 
