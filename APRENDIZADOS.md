@@ -2,6 +2,9 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-25 — v0.47.0 (Baú 3D: tampa com rotação Y-Z real na dobradiça traseira)
+- **`_tampaCubo` reescrita com rotação 3D:** `W=frontR-frontL, D=sideW, boxHt=7.5, barrelR=D*0.46`, `hinge=(frontL+W/2+sideW, topo-sideUp)`, `angle=-p*1.92`, `proj(X,Y,Z): yr=Y*cosA-Z*sinA, zr=Y*sinA+Z*cosA, screen=hinge+X+zr*(-sideW/D), hingeY-yr+zr*(sideUp/D)`. 8 cantos do paralelepípedo `(±W/2,0/HT,0/D)` + arco do barril `Y=Ht+barrelR*sin t, Z=D/2+barrelR*cos t` (10 segmentos) projetados; polígonos `bottom/front/sideLeft/sideRight/top` + `barrelFill` com gradiente madeira + `stroke` nítido; frisos em `Path` L, faixas com `proj` e rebites 3D, brasão no `ridge`. Corrige dobradiça traseira fixa e arco real da tampa — impressão 3D convincente com volume e profundidade. Limpeza de warnings `unused` e `non_constant`.
+
 ## 2026-08-25 — v0.46.0 (Baú cubo 90°: frente + lateral, tampa dupla articulada)
 - **`_BauPainter` → cubo 90°:** `_corpo` virou `_corpoCubo` com `sideW=w*0.14, sideUp=h*0.058`: frente `RRect 0.08→0.72` + lado `Path 0.72→0.86` com gradiente escuro e veios próprios; friso/rodapé em L, 2 faixas frontais + 1 lateral. `_interiorETesouro` com `clip` hexagonal (`frontL/frontR/sideR/sideUp`) e parede lateral `Path` `0x1A0E06`, friso dourado em L. `_tampaCubo`: `lidFrontW=0.64w, lidSideW=0.14w`, centrada em `(frontL+frontR+sideW)/2`, `visH=lidH*cosA + thickness*sinA` + `sideUp*cosA` na aresta superior lateral; frente `RRect` + lado `Path` trapezoidal com gradiente; vinco/friso/faixas duplos (front e side), `_cadeado` deslocado para `w*0.40` (centro da frente cubo). Mantida animação `1100ms easeInOutCubic`.
 

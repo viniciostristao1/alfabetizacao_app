@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.47.0 (2026-08-25)
+- **Baú 3D real com tampa articulada em dobradiça 🔩🧰:** refiz a tampa do cubo 90° com **rotação 3D genuína em torno da dobradiça traseira** (`angle=-p*1.92`, rotação Y-Z com `cos/sin` e projeção cavalier `sideW/sideUp`): a tampa é um paralelepípedo `W×D×Ht` com barril cilíndrico (`barrelR=D*0.46`) — ao abrir, a face frontal levanta desenhando arco real para trás, a lateral acompanha, e o barril arqueado aparece com volume; dobradiça traseira fica visível, interior mostra espessura e brilho da madeira, com nitidez e sombra oclusiva. Profundidade e volume agora convencem.
+
 ## v0.46.0 (2026-08-25)
 - **Baú em cubo 90° com tampa visível 🧊🧰:** o baú agora aparece em perspectiva de cubo (frente + lateral a 90°): corpo com face lateral distinta à direita, interior com parede lateral e friso dourado em L, e **tampa dupla** (frente + lateral de 90°) que abre uniformemente para trás com `cos/sin` — dá para ver claramente a espessura da tampa, a dobradiça traseira e o interior enquanto levanta, sem inclinar só de um lado. Mantém moedas elípticas 3D e animação lenta.
 
