@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.62.0 (2026-08-26)
+- **Contas com botões preenchidos vivos 🧮🎨:** `ContasMenuScreen` agora com **cards preenchidos sólidos S3 swap** — `Soma #4CAF50, Sub #F44336, Mistas #2196F3, Até 20 #9C27B0, Escrever #FF9800` (texto branco, `Material cor` direto, sem borda) — grade 4×2 mantida.
+
 ## v0.61.0 (2026-08-26)
 - **Alimentos > Temas +1% ⬆️:** círculos `h*0.72` → `h*0.71` (sobe 1%).
 

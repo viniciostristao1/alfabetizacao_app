@@ -12,11 +12,11 @@ import 'escrever_contas_screen.dart';
 class ContasMenuScreen extends StatelessWidget {
   const ContasMenuScreen({super.key});
 
-  static const _verde = Color(0xFF54C08A);
-  static const _laranja = Color(0xFFFF8A5B);
-  static const _azul = Color(0xFF5B9CFF);
-  static const _teal = Color(0xFF2DD4BF);
-  static const _rosa = Color(0xFFF472B6);
+  static const _verde = Color(0xFF4CAF50);
+  static const _laranja = Color(0xFFF44336);
+  static const _azul = Color(0xFF2196F3);
+  static const _teal = Color(0xFF9C27B0);
+  static const _rosa = Color(0xFFFF9800);
 
   void _estudo(BuildContext context, String titulo, List<Conta> contas) {
     Navigator.of(context).push(
@@ -100,7 +100,7 @@ class _ContaCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppColors.surface,
+      color: cor,
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
@@ -108,7 +108,6 @@ class _ContaCard extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: cor.withValues(alpha: 0.55), width: 1.5),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -119,13 +118,13 @@ class _ContaCard extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w800,
-                  color: AppColors.text,
+                  color: Colors.white,
                 ),
               ),
               const SizedBox(height: 2),
               Text(
                 sub,
-                style: const TextStyle(fontSize: 12, color: AppColors.dim),
+                style: const TextStyle(fontSize: 12, color: Colors.white70),
               ),
             ],
           ),
