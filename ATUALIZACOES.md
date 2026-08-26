@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.58.0 (2026-08-26)
+- **Alimentos > Temas — círculos 10% mais baixos 🛒⬇️:** em `AlimentosTemasScreen` os 4 anéis (`_pos` e `_CaminhoAlimentosPainter._centro`) desceram de `h*0.50` para `h*0.60` (+10% da altura) para ficarem próximos da vitrine do mercado.
+
 ## v0.57.0 (2026-08-26)
 - **Alimentos > Temas agora é supermercado 🛒🏪:** foto `file_000000004db8820eb74210682d50195d.png` (1536×1024) em `assets/alimentos/alimentos_temas_foto.png` (`kAlimentosTemasFotoAspect` 1536/1024) com **4 círculos centralizados lado a lado** em `y=50%` (`step=w/5*(idx+1)`) — **🍎 Hortifruti | 🍞 Padaria | 🥛 Laticínios | 🥩 Açougue** (12 palavras cada, curtas→longas esq→dir: uva→abacate, bolo→brigadeiro, leite→provolone, carne→calabresa) — Nomes > Temas revertido ao original **🏁 Curtos/Médios/Longos/Compostos** com foto de chegada.
 

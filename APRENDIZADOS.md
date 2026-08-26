@@ -2,6 +2,9 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-26 — v0.58.0 (Alimentos > Temas — círculos 10% mais baixos)
+- **`AlimentosTemasScreen`:** `y` de `0.50` → `0.60` (+10% `h`) em `_pos` e `_centro` — anéis agora na vitrine.
+
 ## 2026-08-26 — v0.57.0 (Alimentos > Temas supermercado — 4 círculos centralizados)
 - **`AlimentosTema` agora 4+5:** 4 fases de supermercado **hortifruti 🍎 / padaria 🍞 / laticinios 🥛 / acougue 🥩** (cores verde/azul/laranja/roxo) foram movidas de `NomesTema` para `AlimentosTema` — `AlimentosTema.values` agora tem 9 (4 novos + 5 legados mercado/pomar/horta/roca/arrozal mantidos só para validar as 60 palavras antigas, mas **`AlimentosTemasScreen._fases` filtra só os 4 novos**). `NomesTema` revertido ao original **curtos/medios/longos/compostos** com foto de chegada `file_000000009cb...` (2.7 MB) e `_pos` reto `h*0.58`. **Foto:** `file_000000004db8820eb74210682d50195d.png` (3.0 MB, 1536×1024) copiada para `assets/alimentos/alimentos_temas_foto.png` (`kAlimentosTemasFotoAspect` 1536/1024). **Tela:** `AlimentosTemasScreen` agora **4 círculos centralizados** (`_pos` com `y=h*0.50`, `step=w/5`, `_centro` refatorado para `fases` fixas) e `_CaminhoAlimentosPainter` só entre os 4 novos. **Banco:** as 48 palavras hortifruti/padaria/laticinios/acougue continuam `Categoria.alimentos` mas agora validadas via `AlimentosTema` (não `NomesTema`). `versao.dart`/`pubspec` → `0.57.0+87`.
 

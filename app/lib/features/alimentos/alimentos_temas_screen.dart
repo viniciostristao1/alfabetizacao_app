@@ -274,7 +274,7 @@ class _AlimentosTemasScreenState extends State<AlimentosTemasScreen> {
     final total = fases.length;
     final step = w / (total + 1);
     final x = step * (idx + 1);
-    final y = h * 0.50;
+    final y = h * 0.60;
     return Offset(x, y);
   }
 }
@@ -512,7 +512,7 @@ class _CaminhoAlimentosPainter extends CustomPainter {
     final total = fases.length;
     final step = w / (total + 1);
     final x = step * (idx + 1);
-    final y = h * 0.50;
+    final y = h * 0.60;
     return Offset(x, y);
   }
 
