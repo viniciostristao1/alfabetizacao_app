@@ -300,6 +300,62 @@ const List<Palavra> bancoPalavras = [
   Palavra(['Ma', 'ri', 'a', 'Ce', 'cí', 'lia'], Categoria.nomes, tema: 'compostos', texto: 'Maria Cecília'),
   Palavra(['Jo', 'ão', 'Mi', 'guel'], Categoria.nomes, tema: 'compostos', texto: 'João Miguel'),
 
+  // ───────────────────── NOMES > TEMAS (SUPERMERCADO) ─────────────────────
+  // 4 categorias de supermercado — palavras pequenas na esquerda (Hortifruti)
+  // → maiores na direita (Açougue). Foto `nomes_temas_foto.png` (supermercado).
+  // 🍎 Hortifruti — frutas/verduras curtas (2-3 sílabas, 3-7 letras)
+  Palavra(['u', 'va'], Categoria.alimentos, tema: 'hortifruti'),
+  Palavra(['pe', 'ra'], Categoria.alimentos, tema: 'hortifruti'),
+  Palavra(['ma', 'çã'], Categoria.alimentos, tema: 'hortifruti'),
+  Palavra(['fi', 'go'], Categoria.alimentos, tema: 'hortifruti'),
+  Palavra(['ca', 'qui'], Categoria.alimentos, tema: 'hortifruti'),
+  Palavra(['li', 'mão'], Categoria.alimentos, tema: 'hortifruti'),
+  Palavra(['man', 'ga'], Categoria.alimentos, tema: 'hortifruti'),
+  Palavra(['me', 'lão'], Categoria.alimentos, tema: 'hortifruti'),
+  Palavra(['ma', 'mão'], Categoria.alimentos, tema: 'hortifruti'),
+  Palavra(['ba', 'na', 'na'], Categoria.alimentos, tema: 'hortifruti'),
+  Palavra(['la', 'ran', 'ja'], Categoria.alimentos, tema: 'hortifruti'),
+  Palavra(['a', 'ba', 'ca', 'te'], Categoria.alimentos, tema: 'hortifruti'),
+  // 🍞 Padaria — pães e doces (2-4 sílabas)
+  Palavra(['bo', 'lo'], Categoria.alimentos, tema: 'padaria'),
+  Palavra(['ros', 'ca'], Categoria.alimentos, tema: 'padaria'),
+  Palavra(['piz', 'za'], Categoria.alimentos, tema: 'padaria'),
+  Palavra(['so', 'nho'], Categoria.alimentos, tema: 'padaria'),
+  Palavra(['pas', 'tel'], Categoria.alimentos, tema: 'padaria'),
+  Palavra(['es', 'fir', 'ra'], Categoria.alimentos, tema: 'padaria'),
+  Palavra(['tor', 'ra', 'da'], Categoria.alimentos, tema: 'padaria'),
+  Palavra(['bis', 'coi', 'to'], Categoria.alimentos, tema: 'padaria'),
+  Palavra(['bo', 'la', 'cha'], Categoria.alimentos, tema: 'padaria'),
+  Palavra(['pa', 'mo', 'nha'], Categoria.alimentos, tema: 'padaria'),
+  Palavra(['ta', 'pi', 'o', 'ca'], Categoria.alimentos, tema: 'padaria'),
+  Palavra(['bri', 'ga', 'dei', 'ro'], Categoria.alimentos, tema: 'padaria'),
+  // 🥛 Laticínios — leite e derivados (2-4 sílabas)
+  Palavra(['lei', 'te'], Categoria.alimentos, tema: 'laticinios'),
+  Palavra(['quei', 'jo'], Categoria.alimentos, tema: 'laticinios'),
+  Palavra(['cre', 'me'], Categoria.alimentos, tema: 'laticinios'),
+  Palavra(['na', 'ta'], Categoria.alimentos, tema: 'laticinios'),
+  Palavra(['ri', 'co', 'ta'], Categoria.alimentos, tema: 'laticinios'),
+  Palavra(['man', 'tei', 'ga'], Categoria.alimentos, tema: 'laticinios'),
+  Palavra(['re', 'quei', 'jão'], Categoria.alimentos, tema: 'laticinios'),
+  Palavra(['i', 'o', 'gur', 'te'], Categoria.alimentos, tema: 'laticinios'),
+  Palavra(['co', 'a', 'lha', 'da'], Categoria.alimentos, tema: 'laticinios'),
+  Palavra(['mu', 'ça', 're', 'la'], Categoria.alimentos, tema: 'laticinios'),
+  Palavra(['par', 'me', 'são'], Categoria.alimentos, tema: 'laticinios'),
+  Palavra(['pro', 'vo', 'lo', 'ne'], Categoria.alimentos, tema: 'laticinios'),
+  // 🥩 Açougue — carnes (2-4 sílabas, maiores na direita)
+  Palavra(['car', 'ne'], Categoria.alimentos, tema: 'acougue'),
+  Palavra(['fran', 'go'], Categoria.alimentos, tema: 'acougue'),
+  Palavra(['ba', 'con'], Categoria.alimentos, tema: 'acougue'),
+  Palavra(['pei', 'xe'], Categoria.alimentos, tema: 'acougue'),
+  Palavra(['cos', 'te', 'la'], Categoria.alimentos, tema: 'acougue'),
+  Palavra(['bis', 'te', 'ca'], Categoria.alimentos, tema: 'acougue'),
+  Palavra(['lin', 'gui', 'ça'], Categoria.alimentos, tema: 'acougue'),
+  Palavra(['sal', 'si', 'cha'], Categoria.alimentos, tema: 'acougue'),
+  Palavra(['pre', 'sun', 'to'], Categoria.alimentos, tema: 'acougue'),
+  Palavra(['pi', 'ca', 'nha'], Categoria.alimentos, tema: 'acougue'),
+  Palavra(['mor', 'ta', 'de', 'la'], Categoria.alimentos, tema: 'acougue'),
+  Palavra(['ca', 'la', 'bre', 'sa'], Categoria.alimentos, tema: 'acougue'),
+
   // ───────────────────────── TEMAS (CIDADE) ─────────────────────────
   // Palavras dos lugares da foto dos Temas (Objetos → Temas). Vivem na categoria
   // `objetos` só por herança de banco: NÃO entram nos níveis normais (palavrasDe

@@ -2,6 +2,12 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.56.0 (2026-08-26)
+- **Nomes > Temas virou supermercado 🛒🍎🍞🥛🥩:** `NomesTemasScreen` agora usa foto de **supermercado** em `assets/nomes/nomes_temas_foto.png` (1536×1024, da mesma imagem `alimentos_temas.png` esticada) com **4 círculos reposicionados em zigue-zague** (Hortifruti 70% esq → Padaria 56% → Laticínios 67% → Açougue 54% dir, com caminho neon entre eles) e **4 categorias de supermercado** esq→dir por tamanho da palavra: **🍎 Hortifruti** (uva, pera, maçã, figo, caqui, limão, manga, melão, mamão, banana, laranja, abacate), **🍞 Padaria** (bolo, rosca, pizza, sonho, pastel, esfirra, torrada, biscoito, bolacha, pamonha, tapioca, brigadeiro), **🥛 Laticínios** (leite, queijo, creme, nata, ricota, manteiga, requeijão, iogurte, coalhada, muçarela, parmesão, provolone) e **🥩 Açougue** (carne, frango, bacon, peixe, costela, bisteca, linguiça, salsicha, presunto, picanha, mortadela, calabresa) — cada fase abre `EstudoScreen` com `palavrasDoTema` e baú.
+
+## v0.55.0 (2026-08-25)
+- **Alimentos com nova imagem 🌽🏪🐄:** ao clicar em **Alimentos** na Home, `AlimentosMenuScreen` agora usa a imagem enviada `file_000000006ee8820ebe063e4bfb147152.png` (1536×1024, horta/fazenda/ordenha/supermercado) recortada em `assets/alimentos/` (3× 495-523×525 no topo **Fácil/Médio/Difícil** esq→dir + 1529×489 largo **Temas** embaixo) — cada cena abre `EstudoScreen` com `palavrasDe(Alimentos, nivel)` e `Temas` abre `AlimentosTemasScreen`.
+
 ## v0.54.0 (2026-08-25)
 - **Configurações: Ordem das fases colapsável 🔽:** em **Configurações > Ordem das fases no mapa-múndi** a lista de continentes agora começa fechada com seta para baixo — ocupa pouco espaço; ao tocar no cabeçalho expande/colapsa (`_ordemExpandida`), `ReorderableListView` com `itemCount` condicional.
 
