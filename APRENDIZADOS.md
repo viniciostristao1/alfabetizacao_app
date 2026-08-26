@@ -2,6 +2,9 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-26 — v0.59.0 (Alimentos > Temas — círculos +10% extra, y 0.70)
+- **`AlimentosTemasScreen`:** `y` `0.60` → `0.70` em `_pos`/`_centro`.
+
 ## 2026-08-26 — v0.58.0 (Alimentos > Temas — círculos 10% mais baixos)
 - **`AlimentosTemasScreen`:** `y` de `0.50` → `0.60` (+10% `h`) em `_pos` e `_centro` — anéis agora na vitrine.
 

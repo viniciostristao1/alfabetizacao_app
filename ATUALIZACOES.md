@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.59.0 (2026-08-26)
+- **Alimentos > Temas — círculos mais baixos 🛒⬇️:** `h*0.60` → `h*0.70` (+10% extra, total +20% vs centro) — vitrine bem próxima.
+
 ## v0.58.0 (2026-08-26)
 - **Alimentos > Temas — círculos 10% mais baixos 🛒⬇️:** em `AlimentosTemasScreen` os 4 anéis (`_pos` e `_CaminhoAlimentosPainter._centro`) desceram de `h*0.50` para `h*0.60` (+10% da altura) para ficarem próximos da vitrine do mercado.
 
