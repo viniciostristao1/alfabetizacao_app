@@ -182,8 +182,8 @@ class _NomesTemasScreenState extends State<NomesTemasScreen> {
                   customBorder: const CircleBorder(),
                   onTap: () => Navigator.of(context).pop(),
                   child: const Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Icon(Icons.arrow_back_rounded, color: Colors.white, size: 22),
+                    padding: EdgeInsets.all(12),
+                    child: Icon(Icons.arrow_back_rounded, color: Colors.white, size: 28),
                   ),
                 ),
               ),

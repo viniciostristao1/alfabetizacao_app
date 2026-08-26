@@ -228,7 +228,7 @@ class _HabitatMapScreenState extends State<HabitatMapScreen> {
                   ),
                   child: IconButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(Icons.arrow_back_rounded),
+                    icon: const Icon(Icons.arrow_back_rounded, size: 28),
                     color: Colors.white,
                     tooltip: 'Voltar',
                   ),

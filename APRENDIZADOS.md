@@ -2,6 +2,9 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-26 — v0.60.0 (Alimentos > Temas -2% + voltar maior)
+- **Voltar maior:** 6 telas `EdgeInsets 8→12`, `size 22→28` + 2 `IconButton size 28` (Habitat/Mapa-múndi) — área +30%. **Círculos:** `y 0.70→0.72`. `versao 0.60.0+90`.
+
 ## 2026-08-26 — v0.59.0 (Alimentos > Temas — círculos +10% extra, y 0.70)
 - **`AlimentosTemasScreen`:** `y` `0.60` → `0.70` em `_pos`/`_centro`.
 

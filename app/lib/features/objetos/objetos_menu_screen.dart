@@ -133,11 +133,11 @@ class _ObjetosMenuScreenState extends State<ObjetosMenuScreen> {
                   customBorder: const CircleBorder(),
                   onTap: () => Navigator.of(context).pop(),
                   child: const Padding(
-                    padding: EdgeInsets.all(8),
+                    padding: EdgeInsets.all(12),
                     child: Icon(
                       Icons.arrow_back_rounded,
                       color: Colors.white,
-                      size: 22,
+                      size: 28,
                     ),
                   ),
                 ),

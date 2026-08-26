@@ -189,8 +189,8 @@ class _AlimentosTemasScreenState extends State<AlimentosTemasScreen> {
                   customBorder: const CircleBorder(),
                   onTap: () => Navigator.of(context).pop(),
                   child: const Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Icon(Icons.arrow_back_rounded, color: Colors.white, size: 22),
+                    padding: EdgeInsets.all(12),
+                    child: Icon(Icons.arrow_back_rounded, color: Colors.white, size: 28),
                   ),
                 ),
               ),
@@ -274,7 +274,7 @@ class _AlimentosTemasScreenState extends State<AlimentosTemasScreen> {
     final total = fases.length;
     final step = w / (total + 1);
     final x = step * (idx + 1);
-    final y = h * 0.70;
+    final y = h * 0.72;
     return Offset(x, y);
   }
 }
@@ -512,7 +512,7 @@ class _CaminhoAlimentosPainter extends CustomPainter {
     final total = fases.length;
     final step = w / (total + 1);
     final x = step * (idx + 1);
-    final y = h * 0.70;
+    final y = h * 0.72;
     return Offset(x, y);
   }
 

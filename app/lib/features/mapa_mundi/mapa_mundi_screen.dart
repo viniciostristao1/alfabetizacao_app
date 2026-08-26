@@ -273,7 +273,7 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
                   ),
                   child: IconButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(Icons.arrow_back_rounded),
+                    icon: const Icon(Icons.arrow_back_rounded, size: 28),
                     color: Colors.white,
                     tooltip: 'Voltar',
                   ),
