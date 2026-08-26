@@ -112,24 +112,65 @@ class _ContaCard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                titulo,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w900,
-                  color: Colors.white,
-                ),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: _TituloComSimbolo(titulo: titulo),
               ),
               const SizedBox(height: 1),
               Text(
                 sub,
-                style: const TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.w600),
+                style: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w600),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _TituloComSimbolo extends StatelessWidget {
+  const _TituloComSimbolo({required this.titulo});
+  final String titulo;
+  @override
+  Widget build(BuildContext context) {
+    if (titulo.startsWith('+−') || titulo.startsWith('+-')) {
+      return RichText(
+        textAlign: TextAlign.center,
+        text: const TextSpan(
+          children: [
+            TextSpan(text: '+− ', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: Colors.white)),
+            TextSpan(text: 'Mistas', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w900, color: Colors.white)),
+          ],
+        ),
+      );
+    }
+    if (titulo.startsWith('+ ')) {
+      return RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          children: [
+            const TextSpan(text: '+ ', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: Colors.white)),
+            TextSpan(text: titulo.substring(2), style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w900, color: Colors.white)),
+          ],
+        ),
+      );
+    }
+    if (titulo.startsWith('− ')) {
+      return RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          children: [
+            const TextSpan(text: '− ', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: Colors.white)),
+            TextSpan(text: titulo.substring(2), style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w900, color: Colors.white)),
+          ],
+        ),
+      );
+    }
+    return Text(
+      titulo,
+      textAlign: TextAlign.center,
+      style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w900, color: Colors.white),
     );
   }
 }
