@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.61.0 (2026-08-26)
+- **Alimentos > Temas +1% ⬆️:** círculos `h*0.72` → `h*0.71` (sobe 1%).
+
 ## v0.60.0 (2026-08-26)
 - **Alimentos > Temas -2% ⬇️ + botão VOLTAR maior ↩️:** círculos `h*0.70` → `h*0.72` (+2% vitrine) e **botão voltar** no canto sup-esq aumentado em **Animais/Habitat/Mapa-múndi/Objetos/Temas/Alimentos/Nomes** — `EdgeInsets 8→12` e `ícone 22→28` (área ~52px, fácil de acertar), `IconButton` 28px.
 
