@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>S3 viva — swap Até20/Escrever + gradiente</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;background:#111;color:#fff;padding:20px}
+h1{margin:0 0 6px;font-size:18px}.sub{color:#aaa;font-size:12px;margin-bottom:16px}
+.box{background:#1c1c1c;border:1px solid #333;border-radius:14px;padding:14px;margin-bottom:16px}
+.box h2{margin:0 0 8px;font-size:13px;color:#ffd54f}
+.row{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.btn{border-radius:11px;padding:10px 4px;text-align:center;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px}
+.s{font-size:10px;font-weight:600;opacity:.85}
+.tag{font-size:10px;background:#222;border:1px solid #333;border-radius:99px;padding:2px 7px;color:#aaa;display:inline-block;margin-bottom:8px}
+</style>
+</head>
+<body>
+<h1>S3 Primárias Vivas — Swap Até 20 ↔ Escrever</h1>
+<div class="sub">S3 original: Até 20 #FF9800 / Escrever #9C27B0 → <b>swap</b>: Até 20 #9C27B0 / Escrever #FF9800. Abaixo: preenchido sólido e gradiente com as mesmas cores.</div>
+
+<div class="box">
+<h2>Preenchido sólido — S3 swap</h2>
+<span class="tag">Soma #4CAF50 · Sub #F44336 · Mistas #2196F3 · Até 20 #9C27B0 · Escrever #FF9800 (texto branco)</span>
+<div class="row">
+<div class="btn" style="background:#4CAF50;color:#fff">➕ Soma<div class="s">1 dígito</div></div>
+<div class="btn" style="background:#4CAF50;color:#fff">➕ Soma<div class="s">2 dígitos</div></div>
+<div class="btn" style="background:#F44336;color:#fff">➖ Sub<div class="s">1 dígito</div></div>
+<div class="btn" style="background:#F44336;color:#fff">➖ Sub<div class="s">2 dígitos</div></div>
+<div class="btn" style="background:#2196F3;color:#fff">🔀 Mistas<div class="s">1 dígito</div></div>
+<div class="btn" style="background:#2196F3;color:#fff">🔀 Mistas<div class="s">2 dígitos</div></div>
+<div class="btn" style="background:#9C27B0;color:#fff">🔟 Até 20</div>
+<div class="btn" style="background:#FF9800;color:#fff">✏️ Escrever</div>
+</div>
+</div>
+
+<div class="box">
+<h2>Gradiente — S3 swap (mesmas cores em degradê)</h2>
+<span class="tag">Soma 4CAF50→81C784 · Sub F44336→EF5350 · Mistas 2196F3→64B5F6 · Até20 9C27B0→BA68C8 · Escrever FF9800→FFB74D</span>
+<div class="row">
+<div class="btn" style="background:linear-gradient(135deg,#4CAF50,#81C784);color:#fff">➕ Soma<div class="s">1 dígito</div></div>
+<div class="btn" style="background:linear-gradient(135deg,#4CAF50,#81C784);color:#fff">➕ Soma<div class="s">2 dígitos</div></div>
+<div class="btn" style="background:linear-gradient(135deg,#F44336,#EF5350);color:#fff">➖ Sub<div class="s">1 dígito</div></div>
+<div class="btn" style="background:linear-gradient(135deg,#F44336,#EF5350);color:#fff">➖ Sub<div class="s">2 dígitos</div></div>
+<div class="btn" style="background:linear-gradient(135deg,#2196F3,#64B5F6);color:#fff">🔀 Mistas<div class="s">1 dígito</div></div>
+<div class="btn" style="background:linear-gradient(135deg,#2196F3,#64B5F6);color:#fff">🔀 Mistas<div class="s">2 dígitos</div></div>
+<div class="btn" style="background:linear-gradient(135deg,#9C27B0,#BA68C8);color:#fff">🔟 Até 20</div>
+<div class="btn" style="background:linear-gradient(135deg,#FF9800,#FFB74D);color:#111">✏️ Escrever</div>
+</div>
+</div>
+
+<p style="color:#aaa;font-size:11px">Qual prefere? Responda “sólido”, “gradiente” ou “os dois” que eu aplico.</p>
+</body>
+</html>
