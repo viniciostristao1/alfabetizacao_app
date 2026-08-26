@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Contas — 8 ideias de botões</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;background:#111;color:#fff;padding:24px}
+h1{margin:0 0 8px;font-size:22px} .sub{color:#aaa;margin-bottom:20px;font-size:13px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:800px){.grid{grid-template-columns:1fr}}
+.card{background:#1a1a1a;border:1px solid #333;border-radius:16px;padding:14px}
+.card h2{margin:0 0 10px;font-size:14px;color:#ffd54f}
+.mock{background:#0e0e0e;border-radius:12px;padding:12px;min-height:140px;display:grid;gap:8px}
+.btn{border-radius:12px;padding:10px 8px;text-align:center;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px}
+.small{font-size:11px;font-weight:600;opacity:.8}
+/* Ideia 1 */
+.i1 .btn{background:#222;border:1.5px solid #54c08a;color:#fff}
+/* Ideia 2 preenchido */
+.i2 .btn{color:#111}
+.i2 .b1{background:#54c08a}.i2 .b2{background:#ff8a5b}.i2 .b3{background:#5b9cff}.i2 .b4{background:#2dd4bf}
+/* Ideia 3 icon gigante */
+.i3 .btn{background:#222;border:1px solid #444}.i3 .ico{font-size:26px}
+/* Ideia 4 pílula */
+.i4 .btn{border-radius:999px;background:#222;border:1px solid #555}
+/* Ideia 5 gradiente */
+.i5 .btn{color:#111;background:linear-gradient(135deg,#ffd54f,#ff8a5b);border:none}
+/* Ideia 6 dark neon */
+.i6 .btn{background:#0a0a0a;border:1.5px solid #3df5e4;box-shadow:0 0 8px rgba(61,245,228,.35);color:#3df5e4}
+/* Ideia 7 bloco colorido com emoji à esquerda */
+.i7 .btn{flex-direction:row;justify-content:flex-start;padding-left:14px;gap:10px;background:#222;border-left:6px solid #54c08a}.i7 .ico{font-size:20px}
+/* Ideia 8 3D */
+.i8 .btn{background:#2a2a2a;border:1px solid #444;box-shadow:0 4px 0 #000, 0 2px 8px rgba(0,0,0,.5)}
+.grid8{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+</style>
+</head>
+<body>
+<h1>Contas — 8 ideias de botões</h1>
+<div class="sub">grade 4×2 (8 botões: Soma 1d/2d, Subtração 1d/2d, Mistas 1d/2d, Até 20, Escrever). Escolha o número.</div>
+<div class="grid">
+<div class="card"><h2>1 — Outline atual (ref)</h2><div class="mock grid8 i1"><div class="btn">➕ Soma<div class="small">1 dígito</div></div><div class="btn">➕ Soma<div class="small">2 dígitos</div></div><div class="btn">➖ Sub<div class="small">1 dígito</div></div><div class="btn">➖ Sub<div class="small">2 dígitos</div></div><div class="btn">➕➖ Mistas<div class="small">1 dígito</div></div><div class="btn">➕➖ Mistas<div class="small">2 dígitos</div></div><div class="btn">🔟 Até 20<div class="small">soma até 20</div></div><div class="btn">✏️ Escrever<div class="small">suas contas</div></div></div></div>
+<div class="card"><h2>2 — Preenchido sólido (cor forte)</h2><div class="mock grid8 i2"><div class="btn b1">➕ Soma<div class="small">1 dígito</div></div><div class="btn b1">➕ Soma<div class="small">2 dígitos</div></div><div class="btn b2">➖ Sub<div class="small">1 dígito</div></div><div class="btn b2">➖ Sub<div class="small">2 dígitos</div></div><div class="btn b3">➕➖ Mistas<div class="small">1d</div></div><div class="btn b3">➕➖ Mistas<div class="small">2d</div></div><div class="btn b4">🔟 Até 20</div><div class="btn" style="background:#f472b6">✏️ Escrever</div></div></div>
+<div class="card"><h2>3 — Ícone gigante + label</h2><div class="mock grid8 i3"><div class="btn"><span class="ico">➕</span>Soma<div class="small">1 dígito</div></div><div class="btn"><span class="ico">➕</span>Soma<div class="small">2 dígitos</div></div><div class="btn"><span class="ico">➖</span>Sub<div class="small">1 dígito</div></div><div class="btn"><span class="ico">➖</span>Sub<div class="small">2 dígitos</div></div><div class="btn"><span class="ico">🔀</span>Mistas<div class="small">1d</div></div><div class="btn"><span class="ico">🔀</span>Mistas<div class="small">2d</div></div><div class="btn"><span class="ico">🔟</span>Até 20</div><div class="btn"><span class="ico">✏️</span>Escrever</div></div></div>
+<div class="card"><h2>4 — Pílula (arredondado total)</h2><div class="mock grid8 i4"><div class="btn">➕ Soma · 1d</div><div class="btn">➕ Soma · 2d</div><div class="btn">➖ Sub · 1d</div><div class="btn">➖ Sub · 2d</div><div class="btn">🔀 Mistas 1d</div><div class="btn">🔀 Mistas 2d</div><div class="btn">🔟 Até 20</div><div class="btn">✏️ Escrever</div></div></div>
+<div class="card"><h2>5 — Gradiente (jogo)</h2><div class="mock grid8 i5"><div class="btn">➕ Soma<div class="small">1 dígito</div></div><div class="btn">➕ Soma<div class="small">2 dígitos</div></div><div class="btn">➖ Sub<div class="small">1 dígito</div></div><div class="btn">➖ Sub<div class="small">2 dígitos</div></div><div class="btn">➕➖ Mistas<div class="small">1d</div></div><div class="btn">➕➖ Mistas<div class="small">2d</div></div><div class="btn">🔟 Até 20</div><div class="btn">✏️ Escrever</div></div></div>
+<div class="card"><h2>6 — Dark neon (estilo mapa-múndi)</h2><div class="mock grid8 i6"><div class="btn">➕ Soma<div class="small">1 dígito</div></div><div class="btn">➕ Soma<div class="small">2 dígitos</div></div><div class="btn">➖ Sub<div class="small">1 dígito</div></div><div class="btn">➖ Sub<div class="small">2 dígitos</div></div><div class="btn">➕➖ Mistas</div><div class="btn">➕➖ Mistas</div><div class="btn">🔟 Até 20</div><div class="btn">✏️ Escrever</div></div></div>
+<div class="card"><h2>7 — Barra lateral colorida + ícone à esq.</h2><div class="mock" style="grid-template-columns:1fr 1fr;gap:8px;display:grid"><div class="btn i7" style="border-left-color:#54c08a"><span class="ico">➕</span><span>Soma 1 dígito</span></div><div class="btn i7" style="border-left-color:#54c08a"><span class="ico">➕</span>Soma 2 dígitos</div><div class="btn i7" style="border-left-color:#ff8a5b"><span class="ico">➖</span>Sub 1 dígito</div><div class="btn i7" style="border-left-color:#ff8a5b"><span class="ico">➖</span>Sub 2 dígitos</div><div class="btn i7" style="border-left-color:#5b9cff"><span class="ico">🔀</span>Mistas 1d</div><div class="btn i7" style="border-left-color:#5b9cff"><span class="ico">🔀</span>Mistas 2d</div><div class="btn i7" style="border-left-color:#2dd4bf"><span class="ico">🔟</span>Até 20</div><div class="btn i7" style="border-left-color:#f472b6"><span class="ico">✏️</span>Escrever</div></div></div>
+<div class="card"><h2>8 — Botão 3D (sombra embaixo)</h2><div class="mock grid8 i8"><div class="btn">➕ Soma<div class="small">1 dígito</div></div><div class="btn">➕ Soma<div class="small">2 dígitos</div></div><div class="btn">➖ Sub<div class="small">1 dígito</div></div><div class="btn">➖ Sub<div class="small">2 dígitos</div></div><div class="btn">🔀 Mistas</div><div class="btn">🔀 Mistas</div><div class="btn">🔟 Até 20</div><div class="btn">✏️ Escrever</div></div></div>
+</div>
+<p style="margin-top:18px;color:#aaa;font-size:12px">Responda com o número (ex.: 2, 3 e 7) que eu aplico no app.</p>
+</body>
+</html>
