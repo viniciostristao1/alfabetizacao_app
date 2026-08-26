@@ -30,19 +30,19 @@ class ContasMenuScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // Cada item: (rótulo, sub, cor, ação).
     final itens = <(String, String, Color, VoidCallback)>[
-      ('➕ Soma', '1 dígito', _verde, () => _estudo(context, '🧮  Soma · 1 dígito',
+      ('+ Soma', '1 dígito', _verde, () => _estudo(context, '🧮  Soma · 1 dígito',
           gerarContas(operacao: OperacaoConta.soma, digitos: 1))),
-      ('➕ Soma', '2 dígitos', _verde, () => _estudo(context, '🧮  Soma · 2 dígitos',
+      ('+ Soma', '2 dígitos', _verde, () => _estudo(context, '🧮  Soma · 2 dígitos',
           gerarContas(operacao: OperacaoConta.soma, digitos: 2))),
-      ('➖ Subtração', '1 dígito', _laranja, () => _estudo(
+      ('− Subtração', '1 dígito', _laranja, () => _estudo(
           context, '🧮  Subtração · 1 dígito',
           gerarContas(operacao: OperacaoConta.subtracao, digitos: 1))),
-      ('➖ Subtração', '2 dígitos', _laranja, () => _estudo(
+      ('− Subtração', '2 dígitos', _laranja, () => _estudo(
           context, '🧮  Subtração · 2 dígitos',
           gerarContas(operacao: OperacaoConta.subtracao, digitos: 2))),
-      ('➕➖ Mistas', '1 dígito', _azul, () => _estudo(context, '🧮  Mistas · 1 dígito',
+      ('+− Mistas', '1 dígito', _azul, () => _estudo(context, '🧮  Mistas · 1 dígito',
           gerarContas(operacao: OperacaoConta.mistas, digitos: 1))),
-      ('➕➖ Mistas', '2 dígitos', _azul, () => _estudo(context, '🧮  Mistas · 2 dígitos',
+      ('+− Mistas', '2 dígitos', _azul, () => _estudo(context, '🧮  Mistas · 2 dígitos',
           gerarContas(operacao: OperacaoConta.mistas, digitos: 2))),
       ('🔟 Até 20', 'soma até 20', _teal,
           () => _estudo(context, '🧮  Até 20', gerarContasAte(20))),
@@ -116,15 +116,15 @@ class _ContaCard extends StatelessWidget {
                 titulo,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w800,
+                  fontSize: 17,
+                  fontWeight: FontWeight.w900,
                   color: Colors.white,
                 ),
               ),
-              const SizedBox(height: 2),
+              const SizedBox(height: 1),
               Text(
                 sub,
-                style: const TextStyle(fontSize: 12, color: Colors.white70),
+                style: const TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.w600),
               ),
             ],
           ),
