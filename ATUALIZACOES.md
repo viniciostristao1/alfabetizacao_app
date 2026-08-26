@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.53.0 (2026-08-25)
+- **Nomes: Selecionar + Coleção 🏆🔤:** em **Nomes** (Home) botão inferior esquerdo **SELECIONAR NOMES** (igual a *Selecionar Animais*) e em **Nomes > Temas** botão **COLEÇÃO** (5º na barra inferior) — coleção `ColecaoNomesScreen` com 4 prêmios (**⭐ Estrela/Curtos, 🏅 Medalha/Médios, 🏆 Troféu/Longos, 👑 Coroa/Compostos**) + bônus **📜 Diploma** quando todas as 4 fases concluídas; faixas douradas e “Ganho! 🎉”.
+
 ## v0.52.0 (2026-08-25)
 - **Nomes > Temas com 4 fases 🏁👶👨‍👩‍👧:** nova imagem `file_000000009cb8820ea5a8dded3acde31c.png` (1536×1024, chegada da corrida) em `assets/nomes/nomes_temas_foto.png` (1.5 aspect) — em `NomesTemasScreen` 4 círculos clicáveis um pouco abaixo do centro (esq→dir: **Curtos/Médios/Longos/Compostos** = 2/3/4 sílabas e compostos como *Ana Clara, João Antônio*), com caminho neon entre eles, anel pulsante no próximo e borda dourada no concluído. Cada fase abre `EstudoScreen` com baú e moedas; compostos com 12 nomes novos (`tema: 'compostos'`).
 

@@ -9,6 +9,7 @@ import '../../services/banco_palavras.dart';
 import '../../services/progresso_nomes_temas_fases.dart';
 import '../../services/progresso_repository.dart';
 import '../../theme/app_colors.dart';
+import '../colecao/colecao_nomes_screen.dart';
 import '../estudo/estudo_screen.dart';
 
 class NomesTemasScreen extends StatefulWidget {
@@ -99,6 +100,13 @@ class _NomesTemasScreenState extends State<NomesTemasScreen> {
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Aventura reiniciada!')));
     }
+  }
+
+  Future<void> _abrirColecao(BuildContext context) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const ColecaoNomesScreen()),
+    );
+    if (mounted) { _carregar(); _carregarPontuacao(); }
   }
 
   Future<void> _iniciarJogo(BuildContext context) async {
@@ -227,6 +235,12 @@ class _NomesTemasScreenState extends State<NomesTemasScreen> {
                         icon: Icons.home_rounded,
                         texto: 'VOLTAR INÍCIO',
                         onTap: () => Navigator.of(context).popUntil((r) => r.isFirst),
+                      ),
+                      const SizedBox(width: 10),
+                      _BotaoNomes(
+                        texto: 'COLEÇÃO',
+                        emoji: '🔤',
+                        onTap: () => _abrirColecao(context),
                       ),
                       const SizedBox(width: 10),
                       _BotaoNomes(
@@ -395,8 +409,8 @@ class _CaminhoNomesPainter extends CustomPainter {
 }
 
 class _BotaoNomes extends StatelessWidget {
-  const _BotaoNomes({required this.texto, required this.onTap, this.icon, this.fundo = const Color(0x8C000000), this.letra = Colors.white});
-  final String texto; final VoidCallback onTap; final IconData? icon; final Color fundo; final Color letra;
+  const _BotaoNomes({required this.texto, required this.onTap, this.icon, this.emoji, this.fundo = const Color(0x8C000000), this.letra = Colors.white});
+  final String texto; final VoidCallback onTap; final IconData? icon; final String? emoji; final Color fundo; final Color letra;
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -408,7 +422,8 @@ class _BotaoNomes extends StatelessWidget {
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(22), border: Border.all(color: Colors.white24)),
           child: Row(mainAxisSize: MainAxisSize.min, children: [
             if (icon != null) Icon(icon, color: letra, size: 18),
-            if (icon != null) const SizedBox(width: 8),
+            if (emoji != null) Text(emoji!, style: TextStyle(fontSize: 16, color: letra)),
+            if (icon != null || emoji != null) const SizedBox(width: 8),
             Text(texto, style: TextStyle(color: letra, fontSize: 13, fontWeight: FontWeight.w800, letterSpacing: 0.3)),
           ]),
         ),

@@ -563,6 +563,14 @@ List<Palavra> todosOsObjetos() {
   return lista;
 }
 
+/// Todos os nomes do app (para "Selecionar nomes"), em ordem alfabética.
+List<Palavra> todosOsNomes() {
+  final lista =
+      bancoPalavras.where((p) => p.categoria == Categoria.nomes).toList();
+  lista.sort((a, b) => semAcento(a.texto).compareTo(semAcento(b.texto)));
+  return lista;
+}
+
 /// Palavras de um TEMA da cidade (foto dos Temas: 'casa' | 'museu' | 'escola' |
 /// 'cafeteria' | 'bombeiros'), ordenadas do MENOS para o MAIS sílabas — a
 /// criança começa pelas mais fáceis e vai passando (mesma ideia dos habitats).
