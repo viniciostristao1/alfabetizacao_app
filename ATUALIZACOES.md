@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.54.0 (2026-08-25)
+- **Configurações: Ordem das fases colapsável 🔽:** em **Configurações > Ordem das fases no mapa-múndi** a lista de continentes agora começa fechada com seta para baixo — ocupa pouco espaço; ao tocar no cabeçalho expande/colapsa (`_ordemExpandida`), `ReorderableListView` com `itemCount` condicional.
+
 ## v0.53.0 (2026-08-25)
 - **Nomes: Selecionar + Coleção 🏆🔤:** em **Nomes** (Home) botão inferior esquerdo **SELECIONAR NOMES** (igual a *Selecionar Animais*) e em **Nomes > Temas** botão **COLEÇÃO** (5º na barra inferior) — coleção `ColecaoNomesScreen` com 4 prêmios (**⭐ Estrela/Curtos, 🏅 Medalha/Médios, 🏆 Troféu/Longos, 👑 Coroa/Compostos**) + bônus **📜 Diploma** quando todas as 4 fases concluídas; faixas douradas e “Ganho! 🎉”.
 

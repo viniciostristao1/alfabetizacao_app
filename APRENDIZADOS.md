@@ -2,6 +2,9 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-08-25 — v0.54.0 (Config: Ordem das fases colapsável)
+- **`ConfigScreen`:** adicionado `bool _ordemExpandida = false`; cabeçalho `Ordem das fases no mapa-múndi` virado `InkWell` com `Row[Expanded Text + Icon(expand_more/less)]` que faz `setState(() => _ordemExpandida = !_ordemExpandida)`; `ReorderableListView` com `itemCount: _ordemExpandida ? fases.length+1 : 1` (quando fechado só o cabeçalho `pontuacao` aparece, sem ocupar espaço). Mantém `onReorderItem` guard (`velho==0||novo==0`).
+
 ## 2026-08-25 — v0.53.0 (Nomes: Selecionar nomes + Coleção 4+1)
 - **`NomesMenuScreen`:** adicionado `SafeArea Align bottomLeft` com `_BotaoTransparente` **SELECIONAR NOMES** e método `_selecionarNomes` (`push(SelecaoNomesScreen)` → `push(EstudoScreen '🔤 Meus nomes')`); novo `todosOsNomes()` em `banco_palavras.dart` e `SelecaoNomesScreen` espelhando `SelecaoAlimentos/Objetos`. **`ColecaoNomesScreen`:** grid 3×2 com 4 `NomesTema` (`curtos ⭐, medios 🏅, longos 🏆, compostos 👑`) + bônus 📜 Diploma (todos concluídos) — espelho de `ColecaoAlimentosScreen` com navegação cruzada para as outras coleções. **`NomesTemasScreen`:** adicionado `import` da coleção, método `_abrirColecao` e 5º botão **COLEÇÃO 🔤** na barra inferior (FittedBox Row). **Modelo** `NomesTema` teve prêmios trocados para Estrela/Medalha/Troféu/Coroa para a coleção fazer sentido.
 

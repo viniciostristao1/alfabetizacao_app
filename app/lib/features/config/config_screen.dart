@@ -29,6 +29,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
   int _xp = 0;
   ModoLeitura _modo = ModoLeitura.maiuscula;
   bool _falar = true;
+  bool _ordemExpandida = false;
 
   @override
   void initState() {
@@ -254,9 +255,23 @@ class _ConfigScreenState extends State<ConfigScreen> {
             ),
           ),
           const SizedBox(height: 14),
-          const Text(
-            'Ordem das fases no mapa-múndi',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+          InkWell(
+            onTap: () => setState(() => _ordemExpandida = !_ordemExpandida),
+            borderRadius: BorderRadius.circular(8),
+            child: Row(
+              children: [
+                const Expanded(
+                  child: Text(
+                    'Ordem das fases no mapa-múndi',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+                  ),
+                ),
+                Icon(
+                  _ordemExpandida ? Icons.expand_less_rounded : Icons.expand_more_rounded,
+                  color: AppColors.dim,
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 4),
           const Text(
@@ -279,10 +294,9 @@ class _ConfigScreenState extends State<ConfigScreen> {
           ? const Center(child: CircularProgressIndicator())
           : ReorderableListView.builder(
               padding: const EdgeInsets.fromLTRB(12, 8, 12, 24),
-              // item 0 = seção de pontuação; itens 1..n = fases.
-              itemCount: fases.length + 1,
+              itemCount: _ordemExpandida ? fases.length + 1 : 1,
               onReorderItem: (velho, novo) {
-                if (velho == 0 || novo == 0) return; // não move a pontuação
+                if (velho == 0 || novo == 0) return;
                 _reordenar(velho - 1, novo - 1);
               },
               itemBuilder: (context, i) {
