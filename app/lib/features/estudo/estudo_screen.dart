@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../models/alimentos_tema.dart';
+import '../../models/categoria.dart';
 import '../../models/estudo_opcoes.dart';
 import '../../models/modo_leitura.dart';
 import '../../models/nomes_tema.dart';
@@ -360,10 +361,9 @@ class _EstudoScreenState extends State<EstudoScreen> {
     if (!mounted) return;
     if (jogar == true && proxima != null) {
       final palavras = switch (proxima) {
-        NomesTema.hortifruti => palavrasDoTema('hortifruti'),
-        NomesTema.padaria => palavrasDoTema('padaria'),
-        NomesTema.laticinios => palavrasDoTema('laticinios'),
-        NomesTema.acougue => palavrasDoTema('acougue'),
+        NomesTema.curtos => palavrasDe(Categoria.nomes, Nivel.facil),
+        NomesTema.medios => palavrasDe(Categoria.nomes, Nivel.media),
+        NomesTema.longos => palavrasDe(Categoria.nomes, Nivel.dificil),
         NomesTema.compostos => palavrasDoTema('compostos'),
       };
       await Navigator.of(context).pushReplacement(

@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../models/categoria.dart';
 import '../../models/nomes_tema.dart';
 import '../../models/palavra.dart';
 import '../../services/banco_palavras.dart';
@@ -41,10 +42,8 @@ class _NomesTemasScreenState extends State<NomesTemasScreen> {
     if (mounted) setState(() { _moedas = moedas; _xp = xp; });
   }
 
-  List<NomesTema> get _fases => const [NomesTema.hortifruti, NomesTema.padaria, NomesTema.laticinios, NomesTema.acougue];
-
   String? get _proximaChave {
-    for (final t in _fases) {
+    for (final t in NomesTema.values) {
       if (!_concluidas.contains(t.chave)) return t.chave;
     }
     return null;
@@ -58,14 +57,12 @@ class _NomesTemasScreenState extends State<NomesTemasScreen> {
 
   List<Palavra> _palavrasDoTema(NomesTema tema) {
     switch (tema) {
-      case NomesTema.hortifruti:
-        return palavrasDoTema('hortifruti');
-      case NomesTema.padaria:
-        return palavrasDoTema('padaria');
-      case NomesTema.laticinios:
-        return palavrasDoTema('laticinios');
-      case NomesTema.acougue:
-        return palavrasDoTema('acougue');
+      case NomesTema.curtos:
+        return palavrasDe(Categoria.nomes, Nivel.facil);
+      case NomesTema.medios:
+        return palavrasDe(Categoria.nomes, Nivel.media);
+      case NomesTema.longos:
+        return palavrasDe(Categoria.nomes, Nivel.dificil);
       case NomesTema.compostos:
         return palavrasDoTema('compostos');
     }
@@ -114,9 +111,9 @@ class _NomesTemasScreenState extends State<NomesTemasScreen> {
 
   Future<void> _iniciarJogo(BuildContext context) async {
     final concluidas = await ProgressoNomesTemasFases.carregar();
-    final idx = _fases.indexWhere((t) => !concluidas.contains(t.chave));
+    final idx = NomesTema.values.indexWhere((t) => !concluidas.contains(t.chave));
     final inicio = idx < 0 ? 0 : idx;
-    final tema = _fases[inicio];
+    final tema = NomesTema.values[inicio];
     if (!context.mounted) return;
     _abrirTema(context, tema);
   }
@@ -157,7 +154,7 @@ class _NomesTemasScreenState extends State<NomesTemasScreen> {
                       ),
                     ),
                   ),
-                  for (final tema in _fases)
+                  for (final tema in NomesTema.values)
                     Positioned(
                       left: _pos(tema, w, h, dW, dH, dx, dy).dx - 36,
                       top: _pos(tema, w, h, dW, dH, dx, dy).dy - 12,
@@ -265,12 +262,11 @@ class _NomesTemasScreenState extends State<NomesTemasScreen> {
   }
 
   Offset _pos(NomesTema tema, double w, double h, double dW, double dH, double dx, double dy) {
-    final idx = _fases.indexOf(tema);
-    final total = _fases.length;
+    final idx = NomesTema.values.indexOf(tema);
+    final total = NomesTema.values.length;
     final step = w / (total + 1);
     final x = step * (idx + 1);
-    const ys = [0.70, 0.56, 0.67, 0.54];
-    final y = h * ys[idx.clamp(0, ys.length - 1)];
+    final y = h * 0.58;
     return Offset(x, y);
   }
 }
@@ -383,13 +379,11 @@ class _CaminhoNomesPainter extends CustomPainter {
   final double dW; final double dH; final double dx; final double dy;
 
   Offset _pos(NomesTema t, double w, double h) {
-    const fases = [NomesTema.hortifruti, NomesTema.padaria, NomesTema.laticinios, NomesTema.acougue];
-    final idx = fases.indexOf(t);
-    final total = fases.length;
+    final idx = NomesTema.values.indexOf(t);
+    final total = NomesTema.values.length;
     final step = w / (total + 1);
     final x = step * (idx + 1);
-    const ys = [0.70, 0.56, 0.67, 0.54];
-    final y = h * ys[idx.clamp(0, ys.length - 1)];
+    final y = h * 0.58;
     return Offset(x, y);
   }
 
@@ -397,11 +391,10 @@ class _CaminhoNomesPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final w = size.width;
     final h = size.height;
-    const fases = [NomesTema.hortifruti, NomesTema.padaria, NomesTema.laticinios, NomesTema.acougue];
-    for (var i = 0; i < fases.length - 1; i++) {
-      final a = _pos(fases[i], w, h);
-      final b = _pos(fases[i + 1], w, h);
-      final aceso = concluidas.contains(fases[i].chave);
+    for (var i = 0; i < NomesTema.values.length - 1; i++) {
+      final a = _pos(NomesTema.values[i], w, h);
+      final b = _pos(NomesTema.values[i + 1], w, h);
+      final aceso = concluidas.contains(NomesTema.values[i].chave);
       if (aceso) {
         canvas.drawLine(a, b, Paint()..color = const Color(0xFF3DF5E4).withValues(alpha: 0.25)..strokeWidth = 14..strokeCap = StrokeCap.round);
         canvas.drawLine(a, b, Paint()..color = const Color(0xFF3DF5E4)..strokeWidth = 5..strokeCap = StrokeCap.round);

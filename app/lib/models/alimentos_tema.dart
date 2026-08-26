@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 enum AlimentosTema {
+  hortifruti('hortifruti', 'Hortifruti', '🍎', Color(0xFF54C08A), '🍕', 'Pizza'),
+  padaria('padaria', 'Padaria', '🍞', Color(0xFF5B9CFF), '🍣', 'Sushi'),
+  laticinios('laticinios', 'Laticínios', '🥛', Color(0xFFF5A524), '🍔', 'Hambúrguer'),
+  acougue('acougue', 'Açougue', '🥩', Color(0xFFFF8A5B), '🍝', 'Macarrão'),
   mercado('mercado', 'Mercado', '🏪', Color(0xFFF5A524), '🍕', 'Pizza'),
   pomar('pomar', 'Pomar', '🍎', Color(0xFF54C08A), '🍣', 'Sushi'),
   horta('horta', 'Horta', '🥬', Color(0xFF5B9CFF), '🍔', 'Hambúrguer'),
@@ -24,4 +28,4 @@ enum AlimentosTema {
   }
 }
 
-const double kAlimentosTemasFotoAspect = 1376 / 768;
+const double kAlimentosTemasFotoAspect = 1536 / 1024;

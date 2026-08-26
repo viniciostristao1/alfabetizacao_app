@@ -40,8 +40,10 @@ class _AlimentosTemasScreenState extends State<AlimentosTemasScreen> {
     if (mounted) setState(() { _moedas = moedas; _xp = xp; });
   }
 
+  List<AlimentosTema> get _fases => const [AlimentosTema.hortifruti, AlimentosTema.padaria, AlimentosTema.laticinios, AlimentosTema.acougue];
+
   String? get _proximaChave {
-    for (final t in AlimentosTema.values) {
+    for (final t in _fases) {
       if (!_concluidas.contains(t.chave)) return t.chave;
     }
     return null;
@@ -110,9 +112,9 @@ class _AlimentosTemasScreenState extends State<AlimentosTemasScreen> {
 
   Future<void> _iniciarJogo(BuildContext context) async {
     final concluidas = await ProgressoAlimentosFases.carregar();
-    final idx = AlimentosTema.values.indexWhere((t) => !concluidas.contains(t.chave));
+    final idx = _fases.indexWhere((t) => !concluidas.contains(t.chave));
     final inicio = idx < 0 ? 0 : idx;
-    final tema = AlimentosTema.values[inicio];
+    final tema = _fases[inicio];
     if (!context.mounted) return;
     _abrirTema(context, tema);
   }
@@ -159,12 +161,12 @@ class _AlimentosTemasScreenState extends State<AlimentosTemasScreen> {
                       ),
                     ),
                   ),
-                  for (final tema in AlimentosTema.values)
+                  for (final tema in _fases)
                     Positioned(
-                      left: _rect(tema).left * dW - dx,
-                      top: _rect(tema).top * dH - dy,
-                      width: _rect(tema).width * dW,
-                      height: _rect(tema).height * dH,
+                      left: _pos(tema, w, h, dW, dH, dx, dy).dx - 36,
+                      top: _pos(tema, w, h, dW, dH, dx, dy).dy - 12,
+                      width: 72,
+                      height: 24,
                       child: _FaixaAlimentosTema(
                         tema: tema,
                         isProximo: tema.chave == _proximaChave,
@@ -266,19 +268,14 @@ class _AlimentosTemasScreenState extends State<AlimentosTemasScreen> {
     );
   }
 
-  Rect _rect(AlimentosTema t) {
-    switch (t) {
-      case AlimentosTema.mercado:
-        return const Rect.fromLTWH(0.30, 0.30, 0.38, 0.42);
-      case AlimentosTema.pomar:
-        return const Rect.fromLTWH(0.00, 0.22, 0.30, 0.40);
-      case AlimentosTema.horta:
-        return const Rect.fromLTWH(0.55, 0.58, 0.45, 0.42);
-      case AlimentosTema.roca:
-        return const Rect.fromLTWH(0.62, 0.22, 0.38, 0.40);
-      case AlimentosTema.arrozal:
-        return const Rect.fromLTWH(0.00, 0.52, 0.32, 0.48);
-    }
+  Offset _pos(AlimentosTema tema, double w, double h, double dW, double dH, double dx, double dy) {
+    const fases = [AlimentosTema.hortifruti, AlimentosTema.padaria, AlimentosTema.laticinios, AlimentosTema.acougue];
+    final idx = fases.indexOf(tema);
+    final total = fases.length;
+    final step = w / (total + 1);
+    final x = step * (idx + 1);
+    final y = h * 0.50;
+    return Offset(x, y);
   }
 }
 
@@ -509,32 +506,24 @@ class _CaminhoAlimentosPainter extends CustomPainter {
   final double dx;
   final double dy;
 
-  Offset _centro(AlimentosTema t) {
-    final r = _rectStatic(t);
-    return Offset(r.left * dW - dx + r.width * dW / 2, r.top * dH - dy + r.height * dH / 2);
-  }
-
-  static Rect _rectStatic(AlimentosTema t) {
-    switch (t) {
-      case AlimentosTema.mercado:
-        return const Rect.fromLTWH(0.30, 0.30, 0.38, 0.42);
-      case AlimentosTema.pomar:
-        return const Rect.fromLTWH(0.00, 0.22, 0.30, 0.40);
-      case AlimentosTema.horta:
-        return const Rect.fromLTWH(0.55, 0.58, 0.45, 0.42);
-      case AlimentosTema.roca:
-        return const Rect.fromLTWH(0.62, 0.22, 0.38, 0.40);
-      case AlimentosTema.arrozal:
-        return const Rect.fromLTWH(0.00, 0.52, 0.32, 0.48);
-    }
+  Offset _centro(AlimentosTema t, double w, double h) {
+    const fases = [AlimentosTema.hortifruti, AlimentosTema.padaria, AlimentosTema.laticinios, AlimentosTema.acougue];
+    final idx = fases.indexOf(t);
+    final total = fases.length;
+    final step = w / (total + 1);
+    final x = step * (idx + 1);
+    final y = h * 0.50;
+    return Offset(x, y);
   }
 
   @override
   void paint(Canvas canvas, Size size) {
-    final fases = AlimentosTema.values;
+    final w = size.width;
+    final h = size.height;
+    const fases = [AlimentosTema.hortifruti, AlimentosTema.padaria, AlimentosTema.laticinios, AlimentosTema.acougue];
     for (var i = 0; i < fases.length - 1; i++) {
-      final a = _centro(fases[i]);
-      final b = _centro(fases[i + 1]);
+      final a = _centro(fases[i], w, h);
+      final b = _centro(fases[i + 1], w, h);
       final aceso = concluidas.contains(fases[i].chave);
       if (aceso) {
         canvas.drawLine(
