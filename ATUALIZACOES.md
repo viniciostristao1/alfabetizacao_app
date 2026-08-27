@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.74.0 (2026-08-27)
+- **Barra de canetas ultra à esquerda 🖍️⬅️⬅️:** `Estudo` e `Contas` agora com `Transform.translate(-6)` além de `left 0` — coluna invade a borda e libera +6px de área útil para palavra/conta.
+
 ## v0.73.0 (2026-08-27)
 - **Home com coleção Nomes 🔤:** `HomeScreen` agora tem 4º ícone no topo **`🔤 Nomes`** ao lado de 🐾/🍎/🧸 (antes só 3) — abre `ColecaoNomesScreen`.
 - **Contas mais centralizado 🧮⬇️:** `ContasMenu` `padding top 56→80` — grade 4×2 desce e fica centralizada (sem AppBar).

@@ -488,14 +488,16 @@ class _EstudoScreenState extends State<EstudoScreen> {
   /// Coluna de CANETAS à esquerda (cores + vassoura + desfazer) — usada tanto no
   /// modo normal quanto no "completar" (a criança pode escrever por cima).
   Widget _colunaCaneta(Color ui) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 0, top: 2),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          for (final c in CorCaneta.values)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 9),
+    return Transform.translate(
+      offset: const Offset(-6, 0),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 0, top: 2),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final c in CorCaneta.values)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 9),
               child: BolinhaCor(
                 cor: c.cor,
                 selecionada: c == _caneta,
@@ -521,6 +523,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
           ),
         ],
       ),
+    ),
     );
   }
 
