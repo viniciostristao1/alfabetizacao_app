@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.66.0 (2026-08-27)
+- **Contas com imagem de fundo corrigida 🧮🖼️:** `assets/contas/contas_fundo.png` trocado para `file_000000007ab4820eb2380c8508269598.png` (imagem enviada há ~20 min) — `Stack` + `BoxFit.cover` + véu `0.22`, 8 botões idênticos por cima.
+
 ## v0.65.0 (2026-08-27)
 - **Contas com imagem de fundo 🧮🖼️:** `ContasMenuScreen` agora usa `assets/contas/contas_fundo.png` (`file_000000004db8820eb74210682d50195d.png` 1536×1024) como fundo em `Stack` + `BoxFit.cover` com véu escuro `0.22` e `AppBar` translúcido — os **8 botões coloridos** (`_ContaCard`) permanecem idênticos por cima.
 
