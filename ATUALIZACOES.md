@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.71.0 (2026-08-27)
+- **Barra de canetas colada no canto 🖍️⬅️:** coluna esquerda (azul/vermelho/amarelo/roxo + vassoura/desfazer) em `Estudo` e `Contas` agora `left 0, top 2` (era `12→4→0`) — máxima área útil para palavra/conta.
+
 ## v0.70.0 (2026-08-27)
 - **3 ajustes finos 🎯:** **1)** `ContasMenu` grade mais baixa/centralizada (`padding top 8→32`); **2)** coluna de canetas (azul/vermelho/amarelo/roxo + vassoura/desfazer) em `Estudo` e `Contas` colada mais à esquerda (`left 12→4, top 8→4`) para ganhar área útil; **3)** `AlimentosTemas` anéis subidos `h*0.71→0.69` (2% acima, 4 círculos + caminho).
 
