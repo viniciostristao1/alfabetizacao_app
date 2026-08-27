@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.65.0 (2026-08-27)
+- **Contas com imagem de fundo 🧮🖼️:** `ContasMenuScreen` agora usa `assets/contas/contas_fundo.png` (`file_000000004db8820eb74210682d50195d.png` 1536×1024) como fundo em `Stack` + `BoxFit.cover` com véu escuro `0.22` e `AppBar` translúcido — os **8 botões coloridos** (`_ContaCard`) permanecem idênticos por cima.
+
 ## v0.62.0 (2026-08-26)
 - **Contas com botões preenchidos vivos 🧮🎨:** `ContasMenuScreen` agora com **cards preenchidos sólidos S3 swap** — `Soma #4CAF50, Sub #F44336, Mistas #2196F3, Até 20 #9C27B0, Escrever #FF9800` (texto branco, `Material cor` direto, sem borda) — grade 4×2 mantida.
 

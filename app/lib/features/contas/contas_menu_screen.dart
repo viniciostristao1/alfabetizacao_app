@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../models/conta.dart';
 import '../../services/gerador_contas.dart';
-import '../../theme/app_colors.dart';
 import 'conta_estudo_screen.dart';
 import 'escrever_contas_screen.dart';
 
@@ -51,34 +50,61 @@ class ContasMenuScreen extends StatelessWidget {
     ];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Contas 🧮')),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Escolha o tipo de conta (você seleciona 1 ou 2 dígitos)',
-                style: TextStyle(fontSize: 14, color: AppColors.dim),
-              ),
-              const SizedBox(height: 8),
-              Expanded(
-                child: GridView.count(
-                  crossAxisCount: 4,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                  childAspectRatio: 2.3,
-                  children: [
-                    for (final (rotulo, sub, cor, onTap) in itens)
-                      _ContaCard(
-                          titulo: rotulo, sub: sub, cor: cor, onTap: onTap),
-                  ],
-                ),
-              ),
-            ],
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: const Text('Contas 🧮'),
+        backgroundColor: Colors.black.withValues(alpha: 0.45),
+        foregroundColor: Colors.white,
+        elevation: 0,
+      ),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              'assets/contas/contas_fundo.png',
+              fit: BoxFit.cover,
+              errorBuilder: (_, _, _) => const ColoredBox(color: Colors.black),
+            ),
           ),
-        ),
+          Positioned.fill(
+            child: Container(color: Colors.black.withValues(alpha: 0.22)),
+          ),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.45),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Text(
+                      'Escolha o tipo de conta (você seleciona 1 ou 2 dígitos)',
+                      style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Expanded(
+                    child: GridView.count(
+                      crossAxisCount: 4,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 10,
+                      childAspectRatio: 2.3,
+                      children: [
+                        for (final (rotulo, sub, cor, onTap) in itens)
+                          _ContaCard(
+                              titulo: rotulo, sub: sub, cor: cor, onTap: onTap),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
