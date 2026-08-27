@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.67.0 (2026-08-27)
+- **Contas sem frase 🧹:** removido o balão `"Escolha o tipo de conta (você seleciona 1 ou 2 dígitos)"` de `ContasMenuScreen` — grade 4×2 agora ocupa o topo.
+
 ## v0.66.0 (2026-08-27)
 - **Contas com imagem de fundo corrigida 🧮🖼️:** `assets/contas/contas_fundo.png` trocado para `file_000000007ab4820eb2380c8508269598.png` (imagem enviada há ~20 min) — `Stack` + `BoxFit.cover` + véu `0.22`, 8 botões idênticos por cima.
 
