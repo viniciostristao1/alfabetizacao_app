@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.69.0 (2026-08-27)
+- **Coleções com imagem de fundo 🏆🖼️:** as 4 coleções (`Animais 🐾 / Alimentos 🍎 / Objetos 🧸 / Nomes 🔤`) agora usam `assets/colecao/colecao_fundo.png` (`file_0000000095dc820ead5ca74e8c45cd98.png` 1672×941) em `Stack` + `BoxFit.cover` com véu `0.22` — cards idênticos por cima.
+
 ## v0.68.0 (2026-08-27)
 - **Home com imagem de fundo 🏠🖼️:** `HomeScreen` agora usa `assets/home/home_fundo.png` (`file_000000003ea0820e924a07e70ac3497a.png` 1672×941) em `Stack` + `BoxFit.cover` com véu `0.22` e `AppBar` translúcido — cards de categorias idênticos por cima.
 

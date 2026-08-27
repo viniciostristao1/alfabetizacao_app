@@ -50,8 +50,11 @@ class _ColecaoScreenState extends State<ColecaoScreen> {
     final ganhas =
         regioes.where((r) => _concluidas.contains(r.chave)).length;
     return Scaffold(
-      backgroundColor: AppColors.bg,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
+        backgroundColor: Colors.black.withValues(alpha: 0.45),
+        foregroundColor: Colors.white,
+        elevation: 0,
         title: Text('Coleção de animais 🐾  ($ganhas/${regioes.length})'),
         actions: [
           Padding(
@@ -76,35 +79,51 @@ class _ColecaoScreenState extends State<ColecaoScreen> {
           ),
         ],
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Complete as fases do mapa-múndi para ganhar todos!',
-                style: TextStyle(fontSize: 14, color: AppColors.dim),
-              ),
-              const SizedBox(height: 12),
-              Expanded(
-                child: GridView.count(
-                  crossAxisCount: 4,
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  childAspectRatio: 1.25,
-                  children: [
-                    for (final r in regioes)
-                      _AnimalCard(
-                        regiao: r,
-                        ganho: _concluidas.contains(r.chave),
-                      ),
-                  ],
-                ),
-              ),
-            ],
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              'assets/colecao/colecao_fundo.png',
+              fit: BoxFit.cover,
+              errorBuilder: (_, _, _) => const ColoredBox(color: Colors.black),
+            ),
           ),
-        ),
+          Positioned.fill(child: Container(color: Colors.black.withValues(alpha: 0.22))),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.45), borderRadius: BorderRadius.circular(10)),
+                    child: const Text(
+                      'Complete as fases do mapa-múndi para ganhar todos!',
+                      style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+              const SizedBox(height: 12),
+                  Expanded(
+                    child: GridView.count(
+                      crossAxisCount: 4,
+                      mainAxisSpacing: 12,
+                      crossAxisSpacing: 12,
+                      childAspectRatio: 1.25,
+                      children: [
+                        for (final r in regioes)
+                          _AnimalCard(
+                            regiao: r,
+                            ganho: _concluidas.contains(r.chave),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

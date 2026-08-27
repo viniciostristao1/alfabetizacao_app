@@ -43,8 +43,11 @@ class _ColecaoObjetosScreenState extends State<ColecaoObjetosScreen> {
     final ganhas = temas.where((t) => _concluidas.contains(t.chave)).length;
     final todosGanhos = ganhas == temas.length;
     return Scaffold(
-      backgroundColor: AppColors.bg,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
+        backgroundColor: Colors.black.withValues(alpha: 0.45),
+        foregroundColor: Colors.white,
+        elevation: 0,
         title: Text('Coleção de objetos 🧸  ($ganhas/${temas.length})'),
         actions: [
           Padding(
@@ -69,46 +72,62 @@ class _ColecaoObjetosScreenState extends State<ColecaoObjetosScreen> {
           ),
         ],
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Complete os Temas dos Objetos para ganhar brinquedos!',
-                style: TextStyle(fontSize: 14, color: AppColors.dim),
-              ),
-              const SizedBox(height: 12),
-              Expanded(
-                child: GridView.count(
-                  crossAxisCount: 3,
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  childAspectRatio: 1.15,
-                  children: [
-                    for (final t in temas)
-                      _PremioCard(
-                        emoji: t.premioEmoji,
-                        nome: t.premioNome,
-                        tema: t.rotulo,
-                        ganho: _concluidas.contains(t.chave),
-                        cor: t.cor,
-                      ),
-                    _PremioCard(
-                      emoji: '🎁',
-                      nome: 'Presente',
-                      tema: 'Bônus final',
-                      ganho: todosGanhos,
-                      cor: const Color(0xFFFFD700),
-                      destaque: true,
-                    ),
-                  ],
-                ),
-              ),
-            ],
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              'assets/colecao/colecao_fundo.png',
+              fit: BoxFit.cover,
+              errorBuilder: (_, _, _) => const ColoredBox(color: Colors.black),
+            ),
           ),
-        ),
+          Positioned.fill(child: Container(color: Colors.black.withValues(alpha: 0.22))),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.45), borderRadius: BorderRadius.circular(10)),
+                    child: const Text(
+                      'Complete os Temas dos Objetos para ganhar brinquedos!',
+                      style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+              const SizedBox(height: 12),
+                  Expanded(
+                    child: GridView.count(
+                      crossAxisCount: 3,
+                      mainAxisSpacing: 12,
+                      crossAxisSpacing: 12,
+                      childAspectRatio: 1.15,
+                      children: [
+                        for (final t in temas)
+                          _PremioCard(
+                            emoji: t.premioEmoji,
+                            nome: t.premioNome,
+                            tema: t.rotulo,
+                            ganho: _concluidas.contains(t.chave),
+                            cor: t.cor,
+                          ),
+                        _PremioCard(
+                          emoji: '🎁',
+                          nome: 'Presente',
+                          tema: 'Bônus final',
+                          ganho: todosGanhos,
+                          cor: const Color(0xFFFFD700),
+                          destaque: true,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
