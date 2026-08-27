@@ -2,6 +2,11 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.73.0 (2026-08-27)
+- **Home com coleção Nomes 🔤:** `HomeScreen` agora tem 4º ícone no topo **`🔤 Nomes`** ao lado de 🐾/🍎/🧸 (antes só 3) — abre `ColecaoNomesScreen`.
+- **Contas mais centralizado 🧮⬇️:** `ContasMenu` `padding top 56→80` — grade 4×2 desce e fica centralizada (sem AppBar).
+- **Coleções sem looping 🔄:** navegação entre coleções (botões superiores `ALIMENTOS/OBJETOS/ANIMAIS/NOMES`) agora via `pushReplacement` — `voltar` (◀) sai direto para `Mapa-múndi/Temas/Home` que originou, sem pilha de coleções.
+
 ## v0.72.0 (2026-08-27)
 - **Contas sem barra superior 🧮⬆️:** `ContasMenu` sem `AppBar` (título "Contas 🧮" e barra translúcida removidos) — fundo 100% livre, grade com `padding top 56` e botão voltar flutuante `◀` no canto.
 - **Coleções interligadas com Nomes 🔤:** `ColecaoScreen` (Animais), `ColecaoAlimentos` e `ColecaoObjetos` ganharam 3º botão no topo **`NOMES 🔤`** (igual à `ColecaoNomes` que já tinha 3) — navegação total 4 vias.

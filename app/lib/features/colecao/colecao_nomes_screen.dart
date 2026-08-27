@@ -29,24 +29,24 @@ class _ColecaoNomesScreenState extends State<ColecaoNomesScreen> {
   }
 
   Future<void> _abrirAlimentos() async {
-    await Navigator.of(context).push(
+    if (!mounted) return;
+    await Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (_) => const ColecaoAlimentosScreen()),
     );
-    if (mounted) _carregar();
   }
 
   Future<void> _abrirObjetos() async {
-    await Navigator.of(context).push(
+    if (!mounted) return;
+    await Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (_) => const ColecaoObjetosScreen()),
     );
-    if (mounted) _carregar();
   }
 
   Future<void> _abrirAnimais() async {
-    await Navigator.of(context).push(
+    if (!mounted) return;
+    await Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (_) => const ColecaoScreen()),
     );
-    if (mounted) _carregar();
   }
 
   @override

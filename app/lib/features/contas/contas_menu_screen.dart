@@ -83,7 +83,7 @@ class ContasMenuScreen extends StatelessWidget {
           ),
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 56, 16, 12),
+              padding: const EdgeInsets.fromLTRB(16, 80, 16, 12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

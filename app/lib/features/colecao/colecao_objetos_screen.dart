@@ -29,18 +29,18 @@ class _ColecaoObjetosScreenState extends State<ColecaoObjetosScreen> {
   }
 
   Future<void> _abrirAlimentos() async {
-    await Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ColecaoAlimentosScreen()));
-    if (mounted) _carregar();
+    if (!mounted) return;
+    await Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const ColecaoAlimentosScreen()));
   }
 
   Future<void> _abrirAnimais() async {
-    await Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ColecaoScreen()));
-    if (mounted) _carregar();
+    if (!mounted) return;
+    await Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const ColecaoScreen()));
   }
 
   Future<void> _abrirNomes() async {
-    await Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ColecaoNomesScreen()));
-    if (mounted) _carregar();
+    if (!mounted) return;
+    await Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const ColecaoNomesScreen()));
   }
 
   @override

@@ -7,6 +7,7 @@ import '../../util/versao.dart';
 import '../config/config_screen.dart';
 import '../contas/contas_menu_screen.dart';
 import '../colecao/colecao_alimentos_screen.dart';
+import '../colecao/colecao_nomes_screen.dart';
 import '../colecao/colecao_objetos_screen.dart';
 import '../colecao/colecao_screen.dart';
 import '../escrever/escrever_screen.dart';
@@ -154,6 +155,16 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () async {
               await Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const ColecaoObjetosScreen()),
+              );
+              if (mounted) _carregarPontuacao();
+            },
+          ),
+          IconButton(
+            tooltip: 'Coleção de nomes',
+            icon: const Text('🔤', style: TextStyle(fontSize: 20)),
+            onPressed: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const ColecaoNomesScreen()),
               );
               if (mounted) _carregarPontuacao();
             },
