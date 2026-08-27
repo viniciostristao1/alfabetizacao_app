@@ -50,13 +50,7 @@ class ContasMenuScreen extends StatelessWidget {
     ];
 
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: const Text('Contas 🧮'),
-        backgroundColor: Colors.black.withValues(alpha: 0.45),
-        foregroundColor: Colors.white,
-        elevation: 0,
-      ),
+      backgroundColor: Colors.black,
       body: Stack(
         children: [
           Positioned.fill(
@@ -69,9 +63,27 @@ class ContasMenuScreen extends StatelessWidget {
           Positioned.fill(
             child: Container(color: Colors.black.withValues(alpha: 0.22)),
           ),
+          Positioned(
+            top: 6,
+            left: 6,
+            child: SafeArea(
+              child: Material(
+                color: Colors.black.withValues(alpha: 0.45),
+                shape: const CircleBorder(),
+                child: InkWell(
+                  customBorder: const CircleBorder(),
+                  onTap: () => Navigator.of(context).pop(),
+                  child: const Padding(
+                    padding: EdgeInsets.all(12),
+                    child: Icon(Icons.arrow_back_rounded, color: Colors.white, size: 28),
+                  ),
+                ),
+              ),
+            ),
+          ),
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 32, 16, 12),
+              padding: const EdgeInsets.fromLTRB(16, 56, 16, 12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

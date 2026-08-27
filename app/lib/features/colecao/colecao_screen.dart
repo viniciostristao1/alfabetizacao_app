@@ -4,6 +4,7 @@ import '../../models/regiao.dart';
 import '../../services/progresso_fases.dart';
 import '../../theme/app_colors.dart';
 import 'colecao_alimentos_screen.dart';
+import 'colecao_nomes_screen.dart';
 import 'colecao_objetos_screen.dart';
 
 /// Coleção de animais 🐾: cada região do mapa-múndi vira um animalzinho
@@ -44,6 +45,13 @@ class _ColecaoScreenState extends State<ColecaoScreen> {
     if (mounted) _carregar();
   }
 
+  Future<void> _abrirNomes() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const ColecaoNomesScreen()),
+    );
+    if (mounted) _carregar();
+  }
+
   @override
   Widget build(BuildContext context) {
     final regioes = Regiao.regioes;
@@ -68,12 +76,22 @@ class _ColecaoScreenState extends State<ColecaoScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(right: 8),
+            padding: const EdgeInsets.only(right: 4),
             child: Center(
               child: TextButton.icon(
                 onPressed: _abrirObjetos,
                 icon: const Text('🧸', style: TextStyle(fontSize: 16)),
                 label: const Text('OBJETOS', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12)),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Center(
+              child: TextButton.icon(
+                onPressed: _abrirNomes,
+                icon: const Text('🔤', style: TextStyle(fontSize: 16)),
+                label: const Text('NOMES', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12)),
               ),
             ),
           ),

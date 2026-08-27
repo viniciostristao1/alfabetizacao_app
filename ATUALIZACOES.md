@@ -2,6 +2,10 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.72.0 (2026-08-27)
+- **Contas sem barra superior 🧮⬆️:** `ContasMenu` sem `AppBar` (título "Contas 🧮" e barra translúcida removidos) — fundo 100% livre, grade com `padding top 56` e botão voltar flutuante `◀` no canto.
+- **Coleções interligadas com Nomes 🔤:** `ColecaoScreen` (Animais), `ColecaoAlimentos` e `ColecaoObjetos` ganharam 3º botão no topo **`NOMES 🔤`** (igual à `ColecaoNomes` que já tinha 3) — navegação total 4 vias.
+
 ## v0.71.0 (2026-08-27)
 - **Barra de canetas colada no canto 🖍️⬅️:** coluna esquerda (azul/vermelho/amarelo/roxo + vassoura/desfazer) em `Estudo` e `Contas` agora `left 0, top 2` (era `12→4→0`) — máxima área útil para palavra/conta.
 
