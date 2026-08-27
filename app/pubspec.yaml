@@ -4,7 +4,7 @@ publish_to: 'none'
 
 # versionName+versionCode. Ex.: 0.1.0+1 → versionName "0.1.0", versionCode 1.
 # O +N (versionCode) TEM de crescer a cada release.
-version: 0.74.0+104
+version: 0.75.0+105
 
 environment:
   sdk: ^3.12.2
@@ -30,6 +30,12 @@ flutter:
   assets:
     - assets/habitats/mapa_animais.jpg
     - assets/habitats/mapa_mundi.jpg
+    - assets/habitats/habitat_artico.jpg
+    - assets/habitats/habitat_savana.jpg
+    - assets/habitats/habitat_selva.jpg
+    - assets/habitats/habitat_aquatico.jpg
+    - assets/habitats/habitat_aves.jpg
+    - assets/habitats/habitat_mapa.jpg
     - assets/icon/logo.png
     - assets/objetos/objetos_facil.png
     - assets/objetos/objetos_medio.png

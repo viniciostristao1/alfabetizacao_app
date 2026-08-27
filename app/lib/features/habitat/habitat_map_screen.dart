@@ -131,62 +131,44 @@ class _HabitatMapScreenState extends State<HabitatMapScreen> {
     }
   }
 
+  String _assetFor(int col, int row) {
+    if (col == 0 && row == 0) return 'assets/habitats/habitat_artico.jpg';
+    if (col == 1 && row == 0) return 'assets/habitats/habitat_savana.jpg';
+    if (col == 2 && row == 0) return 'assets/habitats/habitat_selva.jpg';
+    if (col == 0 && row == 1) return 'assets/habitats/habitat_aquatico.jpg';
+    if (col == 1 && row == 1) return 'assets/habitats/habitat_aves.jpg';
+    return 'assets/habitats/habitat_mapa.jpg';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kAgua,
+      backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // imagem enche a LARGURA (encosta nas laterais, sem ficar quadrada) e
-          // é esticada de leve (BoxFit.fill = nada cortado); água (kAgua)
-          // preenche o que sobra em cima/embaixo. Grade 3×2 divide a MESMA box,
-          // então segue alinhada à imagem em qualquer tela.
-          Positioned.fill(
-            child: LayoutBuilder(
-              builder: (context, c) {
-                final w = c.maxWidth;
-                final boxH = (w / kMapaDisplayAspect).clamp(0.0, c.maxHeight);
-                return Center(
-                  child: SizedBox(
-                    width: w,
-                    height: boxH,
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        Image.asset(
-                          'assets/habitats/mapa_animais.jpg',
-                          fit: BoxFit.fill,
-                          filterQuality: FilterQuality.medium,
-                          errorBuilder: (_, _, _) =>
-                              const ColoredBox(color: kAgua),
+          Column(
+            children: [
+              for (int row = 0; row < kHabitatLinhas; row++) ...[
+                Expanded(
+                  child: Row(
+                    children: [
+                      for (int col = 0; col < kHabitatColunas; col++) ...[
+                        Expanded(
+                          child: _CenaHabitat(
+                            asset: _assetFor(col, row),
+                            habitat: _habitatEm(col, row),
+                            onHabitat: _abrirHabitat,
+                            onMapaMundi: _abrirMapaMundi,
+                          ),
                         ),
-                        Column(
-                          children: [
-                            for (int row = 0; row < kHabitatLinhas; row++)
-                              Expanded(
-                                child: Row(
-                                  children: [
-                                    for (int col = 0;
-                                        col < kHabitatColunas;
-                                        col++)
-                                      Expanded(
-                                        child: _Celula(
-                                          habitat: _habitatEm(col, row),
-                                          onHabitat: _abrirHabitat,
-                                          onMapaMundi: _abrirMapaMundi,
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                          ],
-                        ),
+                        if (col < kHabitatColunas - 1) const SizedBox(width: 4),
                       ],
-                    ),
+                    ],
                   ),
-                );
-              },
-            ),
+                ),
+                if (row < kHabitatLinhas - 1) const SizedBox(height: 4),
+              ],
+            ],
           ),
           // pontuação (moedas · nível) — canto superior direito, ao lado da
           // célula "Selva" (o usuário pediu).
@@ -256,15 +238,15 @@ class _HabitatMapScreenState extends State<HabitatMapScreen> {
   }
 }
 
-/// Célula sobre a imagem. Com [habitat] = botão do habitat (com o nome). Sem
-/// habitat = mapa-múndi (abre a tela de fases).
-class _Celula extends StatelessWidget {
-  const _Celula({
+class _CenaHabitat extends StatelessWidget {
+  const _CenaHabitat({
+    required this.asset,
     required this.habitat,
     required this.onHabitat,
     required this.onMapaMundi,
   });
 
+  final String asset;
   final Habitat? habitat;
   final ValueChanged<Habitat> onHabitat;
   final VoidCallback onMapaMundi;
@@ -276,23 +258,31 @@ class _Celula extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: h == null ? onMapaMundi : () => onHabitat(h),
-        splashColor: Colors.white24,
-        highlightColor: Colors.white10,
-        child: Align(
-          alignment: Alignment.topCenter,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 10),
-            // "Selva" (célula sup. direita) sai para a esquerda: senão fica por
-            // baixo da caixinha de moedas (canto sup. direito).
-            child: Transform.translate(
-              offset: h == Habitat.selva ? const Offset(-38, 0) : Offset.zero,
-              child: _Nome(
-                emoji: h?.emoji ?? '🗺️',
-                rotulo: h == null
-                    ? 'Mapa-múndi'
-                    : (h == Habitat.aves ? 'Aves e Fazenda' : h.rotulo),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(14),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Image.asset(
+                asset,
+                fit: BoxFit.cover,
+                filterQuality: FilterQuality.medium,
+                errorBuilder: (_, _, _) => const ColoredBox(color: Colors.black),
               ),
-            ),
+              Align(
+                alignment: Alignment.topCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Transform.translate(
+                    offset: h == Habitat.selva ? const Offset(-38, 0) : Offset.zero,
+                    child: _Nome(
+                      emoji: h?.emoji ?? '🗺️',
+                      rotulo: h == null ? 'Mapa-múndi' : (h == Habitat.aves ? 'Aves e Fazenda' : h.rotulo),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

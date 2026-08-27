@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.75.0 (2026-08-27)
+- **Animais sem divisória branca 🦁✨:** `HabitatMapScreen` refeito igual a `Objetos/Alimentos` — 6 tiles recortados de `mapa_animais_fonte.png` (`habitat_artico/savana/selva/aquatico/aves/mapa.jpg` 512×512) com `ClipRRect 14` e gaps `4px` pretos, sem linhas brancas.
+
 ## v0.74.0 (2026-08-27)
 - **Barra de canetas ultra à esquerda 🖍️⬅️⬅️:** `Estudo` e `Contas` agora com `Transform.translate(-6)` além de `left 0` — coluna invade a borda e libera +6px de área útil para palavra/conta.
 
