@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.76.0 (2026-08-27)
+- **Animais com imagem nova sem divisória branca 🦁✨:** `file_00000000ff68820e9e7731c40e35d12c.png` (1536×1024, 3×2) recortada em 6 `habitat_*.jpg` 512×512 sem bordas brancas (gutters 4-5px removidos) — `HabitatMapScreen` com `ClipRRect 14` e gaps `4px` pretos igual a `Objetos/Alimentos`.
+
 ## v0.75.0 (2026-08-27)
 - **Animais sem divisória branca 🦁✨:** `HabitatMapScreen` refeito igual a `Objetos/Alimentos` — 6 tiles recortados de `mapa_animais_fonte.png` (`habitat_artico/savana/selva/aquatico/aves/mapa.jpg` 512×512) com `ClipRRect 14` e gaps `4px` pretos, sem linhas brancas.
 

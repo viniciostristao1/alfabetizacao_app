@@ -18,6 +18,7 @@ Não são usadas diretamente pelo app — são a **fonte** para gerar os assets 
 | `file_000000007ab4820eb2380c8508269598.png` (1672×941) | `assets/contas/contas_fundo.png` | **Contas** fundo |
 | `file_000000003ea0820e924a07e70ac3497a.png` (1672×941) | `assets/home/home_fundo.png` | **Home** fundo |
 | `file_0000000095dc820ead5ca74e8c45cd98.png` (1672×941) | `assets/colecao/colecao_fundo.png` | **Coleções** fundo (4 telas) |
+| `file_00000000ff68820e9e7731c40e35d12c.png` (1536×1024) | `assets/habitats/habitat_*.jpg` (6× 512×512) | **Animais** habitats com gutters removidos |
 
 > Fluxo: original → recorte PIL em `app/assets/<feature>/` → declarado em `app/pubspec.yaml` → `Image.asset` com `BoxFit.cover` + véu `0.22`.
 > Não apague os originais — servem de backup para re-corte.
