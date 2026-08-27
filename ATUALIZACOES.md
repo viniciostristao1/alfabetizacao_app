@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.68.0 (2026-08-27)
+- **Home com imagem de fundo 🏠🖼️:** `HomeScreen` agora usa `assets/home/home_fundo.png` (`file_000000003ea0820e924a07e70ac3497a.png` 1672×941) em `Stack` + `BoxFit.cover` com véu `0.22` e `AppBar` translúcido — cards de categorias idênticos por cima.
+
 ## v0.67.0 (2026-08-27)
 - **Contas sem frase 🧹:** removido o balão `"Escolha o tipo de conta (você seleciona 1 ou 2 dígitos)"` de `ContasMenuScreen` — grade 4×2 agora ocupa o topo.
 

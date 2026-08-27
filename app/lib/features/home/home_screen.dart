@@ -67,12 +67,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
+        backgroundColor: Colors.black.withValues(alpha: 0.45),
+        foregroundColor: Colors.white,
+        elevation: 0,
         titleSpacing: 16,
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // logo do app antes do título
             Padding(
               padding: const EdgeInsets.only(right: 10),
               child: ClipRRect(
@@ -96,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: const TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w500,
-                  color: AppColors.dim,
+                  color: Colors.white70,
                 ),
               ),
             ),
@@ -167,37 +170,56 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Escolha um tema',
-                style: TextStyle(fontSize: 16, color: AppColors.dim),
-              ),
-              const SizedBox(height: 10),
-              // Grade COMPACTA em paisagem: os 4 temas numa linha, "Escrever"
-              // embaixo — cartões baixos, tudo visível sem rolar.
-              Expanded(
-                child: GridView.count(
-                  crossAxisCount: 4,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                  childAspectRatio: 2.6,
-                  children: [
-                    for (final c in Categoria.values)
-                      _CategoriaCard(
-                        categoria: c,
-                        onTap: () => _abrirCategoria(c),
-                      ),
-                  ],
-                ),
-              ),
-            ],
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              'assets/home/home_fundo.png',
+              fit: BoxFit.cover,
+              errorBuilder: (_, _, _) => const ColoredBox(color: Colors.black),
+            ),
           ),
-        ),
+          Positioned.fill(
+            child: Container(color: Colors.black.withValues(alpha: 0.22)),
+          ),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.45),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Text(
+                      'Escolha um tema',
+                      style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Expanded(
+                    child: GridView.count(
+                      crossAxisCount: 4,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 10,
+                      childAspectRatio: 2.6,
+                      children: [
+                        for (final c in Categoria.values)
+                          _CategoriaCard(
+                            categoria: c,
+                            onTap: () => _abrirCategoria(c),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
