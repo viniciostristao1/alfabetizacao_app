@@ -489,7 +489,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
   /// modo normal quanto no "completar" (a criança pode escrever por cima).
   Widget _colunaCaneta(Color ui) {
     return Padding(
-      padding: const EdgeInsets.only(left: 12, top: 8),
+      padding: const EdgeInsets.only(left: 4, top: 4),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

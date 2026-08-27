@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.70.0 (2026-08-27)
+- **3 ajustes finos 🎯:** **1)** `ContasMenu` grade mais baixa/centralizada (`padding top 8→32`); **2)** coluna de canetas (azul/vermelho/amarelo/roxo + vassoura/desfazer) em `Estudo` e `Contas` colada mais à esquerda (`left 12→4, top 8→4`) para ganhar área útil; **3)** `AlimentosTemas` anéis subidos `h*0.71→0.69` (2% acima, 4 círculos + caminho).
+
 ## v0.69.0 (2026-08-27)
 - **Coleções com imagem de fundo 🏆🖼️:** as 4 coleções (`Animais 🐾 / Alimentos 🍎 / Objetos 🧸 / Nomes 🔤`) agora usam `assets/colecao/colecao_fundo.png` (`file_0000000095dc820ead5ca74e8c45cd98.png` 1672×941) em `Stack` + `BoxFit.cover` com véu `0.22` — cards idênticos por cima.
 

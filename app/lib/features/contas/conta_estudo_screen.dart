@@ -318,7 +318,7 @@ class _ContaEstudoScreenState extends State<ContaEstudoScreen> {
   /// Coluna de canetas à esquerda (cores + vassoura + desfazer).
   Widget _colunaCaneta(Color ui) {
     return Padding(
-      padding: const EdgeInsets.only(left: 12, top: 8),
+      padding: const EdgeInsets.only(left: 4, top: 4),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
