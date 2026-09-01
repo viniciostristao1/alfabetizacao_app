@@ -2,6 +2,19 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-09-01 — v0.80.0 (barra "estou te ouvindo" + escuta mais paciente)
+- **Contexto:** usuário quer testar o mic sem falar alto e perguntou por "ajuste de volume". Não
+  existe ganho/sensibilidade exponível — o Android faz AGC. O que ajuda é **feedback visual** e
+  **paciência** na escuta.
+- **`voz.dart`:** `ouvir()` ganhou `onNivel` opcional, ligado ao `onSoundLevelChange` do `listen`
+  (é PARÂMETRO direto do `listen`, não vai em `SpeechListenOptions`). Normalizo o nível (Android
+  ≈ dB, ~-2..10) para 0..1 com `((l+2)/12).clamp(0,1)`. `pauseFor` 3→**4s** e `listenFor` 8→**12s**
+  (fala devagar não corta); o timeout de segurança subiu p/ **18s** (> listenFor).
+- **`EstudoScreen`:** estado `_nivelMic`; `_MedidorNivel` (barra 0..1, cinza < 0.06 senão verde,
+  `AnimatedContainer` 120ms) aparece na área de status **enquanto `_ouvindo`**. Reseto `_nivelMic`
+  em fim/resultado. Mensagem de ouvindo virou const `_msgOuvindo` (o `_fimMic` compara com ela).
+- **Sem novos testes** (é UI/plugin, no-op em teste); `analyze` limpo, suíte verde.
+
 ## 2026-09-01 — v0.79.0 (fix: mic dava "Não entendi" mesmo falando certo)
 - **Sintoma (no aparelho do usuário):** mic ligado, permissão concedida, falando claro → sempre
   "Não entendi". Ou seja: `onFim` disparava com `_micRespondeu == false` (nenhum resultado).

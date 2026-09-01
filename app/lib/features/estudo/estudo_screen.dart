@@ -103,12 +103,16 @@ class _EstudoScreenState extends State<EstudoScreen> {
   // ── Modo Microfone (o Davi FALA a palavra e o app decide) ──
   int _tentativas = 0; // erros seguidos NA PALAVRA ATUAL (zera ao trocar)
   bool _ouvindo = false; // está gravando/ouvindo agora
+  double _nivelMic = 0; // 0..1 — volume captado (barra "estou te ouvindo")
   String? _statusMic; // "🎤 Ouvindo…" / "Tenta de novo!" / "Não entendi"
   bool _micAtivado = true; // o pai/mãe ligou o mic nas Configurações?
   int _micTolerancia = kTolerancia; // ajuste fino escolhido nas Configurações
 
   /// Máximo de tentativas por palavra antes de o app falar a resposta e passar.
   static const _maxTentativas = 3;
+
+  /// Texto do status enquanto está ouvindo (constante p/ o _fimMic comparar).
+  static const _msgOuvindo = '🎤 Ouvindo… fala pertinho do celular';
 
   @override
   void initState() {
@@ -282,9 +286,16 @@ class _EstudoScreenState extends State<EstudoScreen> {
     HapticFeedback.selectionClick();
     setState(() {
       _ouvindo = true;
-      _statusMic = '🎤 Ouvindo…';
+      _nivelMic = 0;
+      _statusMic = _msgOuvindo;
     });
-    await Voz.instance.ouvir(onResultado: _resultadoMic, onFim: _fimMic);
+    await Voz.instance.ouvir(
+      onResultado: _resultadoMic,
+      onFim: _fimMic,
+      onNivel: (n) {
+        if (mounted && _ouvindo) setState(() => _nivelMic = n);
+      },
+    );
   }
 
   /// Chegou o que a criança falou (principal + alternativas do motor; **vazio**
@@ -296,11 +307,15 @@ class _EstudoScreenState extends State<EstudoScreen> {
     if (limpas.isEmpty) {
       setState(() {
         _ouvindo = false;
+        _nivelMic = 0;
         _statusMic = 'Não entendi 🤔 Toca no 🎤 e fala de novo.';
       });
       return;
     }
-    setState(() => _ouvindo = false);
+    setState(() {
+      _ouvindo = false;
+      _nivelMic = 0;
+    });
     final alvo = widget.palavras[_i].texto;
     if (reconheceu(alvo, limpas, tolerancia: _micTolerancia)) {
       setState(() => _statusMic = null);
@@ -324,7 +339,8 @@ class _EstudoScreenState extends State<EstudoScreen> {
     if (!mounted) return;
     setState(() {
       _ouvindo = false;
-      if (_statusMic == '🎤 Ouvindo…') {
+      _nivelMic = 0;
+      if (_statusMic == _msgOuvindo) {
         _statusMic = 'Não entendi 🤔 Toca no 🎤 e fala de novo.';
       }
     });
@@ -927,17 +943,28 @@ class _EstudoScreenState extends State<EstudoScreen> {
               ),
             ),
             // status do microfone ("Ouvindo…", "Tenta de novo", "Não entendi")
-            if (_statusMic != null)
+            // + barra "estou te ouvindo" (mexe conforme o volume captado).
+            if (_statusMic != null || _ouvindo)
               Padding(
                 padding: const EdgeInsets.fromLTRB(12, 0, 12, 2),
-                child: Text(
-                  _statusMic!,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: ui.withValues(alpha: 0.88),
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                  ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (_statusMic != null)
+                      Text(
+                        _statusMic!,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: ui.withValues(alpha: 0.88),
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    if (_ouvindo) ...[
+                      const SizedBox(height: 4),
+                      _MedidorNivel(nivel: _nivelMic, ui: ui),
+                    ],
+                  ],
                 ),
               ),
             // ── embaixo: botões baixos ──
@@ -2859,6 +2886,48 @@ class _OpcaoSilaba extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Barra "estou te ouvindo": enche conforme o volume captado (0..1). Serve pra
+/// ver, na hora, se o microfone está pegando a voz — mesmo falando baixinho.
+class _MedidorNivel extends StatelessWidget {
+  const _MedidorNivel({required this.nivel, required this.ui});
+
+  final double nivel; // 0..1
+  final Color ui;
+
+  @override
+  Widget build(BuildContext context) {
+    final n = nivel.clamp(0.0, 1.0);
+    // verde quando há sinal, cinza quando quase nada — dica visual clara.
+    final cor = n < 0.06 ? ui.withValues(alpha: 0.35) : AppColors.acerto;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.graphic_eq_rounded, size: 16, color: ui.withValues(alpha: 0.6)),
+        const SizedBox(width: 6),
+        Container(
+          width: 200,
+          height: 10,
+          decoration: BoxDecoration(
+            color: ui.withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(6),
+          ),
+          alignment: Alignment.centerLeft,
+          child: FractionallySizedBox(
+            widthFactor: n < 0.02 ? 0.02 : n,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 120),
+              decoration: BoxDecoration(
+                color: cor,
+                borderRadius: BorderRadius.circular(6),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

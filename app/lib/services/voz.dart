@@ -100,9 +100,14 @@ class Voz {
   /// Começa a ouvir. Ao concluir, chama [onResultado] com as transcrições
   /// (principal + alternativas do motor; **vazia** se não entendeu) e depois
   /// [onFim].
+  /// Converte o nível de som do reconhecedor (Android ≈ dB, ~-2..10) para 0..1,
+  /// pra tela mostrar uma barrinha de "estou te ouvindo".
+  double _normalizarNivel(double level) => ((level + 2) / 12).clamp(0.0, 1.0);
+
   Future<void> ouvir({
     required void Function(List<String> ditas) onResultado,
     required void Function() onFim,
+    void Function(double nivel)? onNivel,
   }) async {
     if (!await _init()) {
       onResultado(const []);
@@ -123,18 +128,20 @@ class Voz {
           if (ditas.isNotEmpty) _melhor = ditas; // guarda a melhor até agora
           if (resultado.finalResult) _concluir();
         },
+        onSoundLevelChange:
+            onNivel == null ? null : (l) => onNivel(_normalizarNivel(l)),
         listenOptions: SpeechListenOptions(
           localeId: _localeId,
           partialResults: true, // mais robusto no Android que 'false'
           cancelOnError: true,
           listenMode: ListenMode.confirmation,
-          listenFor: const Duration(seconds: 8),
-          pauseFor: const Duration(seconds: 3),
+          listenFor: const Duration(seconds: 12), // janela maior (fala devagar)
+          pauseFor: const Duration(seconds: 4), // mais paciente com o silêncio
         ),
       );
       // rede de segurança: se nenhum evento concluir, encerra sozinho.
       _timeout?.cancel();
-      _timeout = Timer(const Duration(seconds: 12), _concluir);
+      _timeout = Timer(const Duration(seconds: 18), _concluir);
     } catch (_) {
       _concluir();
     }

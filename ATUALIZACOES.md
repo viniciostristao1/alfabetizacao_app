@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.80.0 (2026-09-01)
+- **Barra "estou te ouvindo" 🎤📊:** enquanto o mic está ligado, aparece uma barrinha que mexe conforme o volume captado — dá pra ver na hora se está pegando a voz, mesmo falando baixinho (não precisa gritar). A escuta também ficou **mais paciente** (espera mais o silêncio, pra não cortar fala devagar).
+
 ## v0.79.0 (2026-09-01)
 - **Correção do microfone 🎤:** estava dando "Não entendi" mesmo falando certo — o app concluía a escuta cedo demais (antes de o texto chegar). Agora espera o reconhecimento terminar, escolhe o idioma português do aparelho automaticamente e **mostra o que ouviu** (ex.: `Ouvi "gato"`) pra ajudar a calibrar.
 
