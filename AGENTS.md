@@ -44,8 +44,22 @@ Rodar como root só emite um aviso; funciona. **Não** rode `flutter build apk` 
    **cresce**) e o `kVersao` em `app/lib/util/versao.dart`.
 2. 1 linha em [`ATUALIZACOES.md`](ATUALIZACOES.md) (se visível) + nota técnica em
    [`APRENDIZADOS.md`](APRENDIZADOS.md). Planos → [`IDEIAS.md`](IDEIAS.md).
-3. **CI/loja:** ainda NÃO montado. Quando for distribuir, replicar o padrão do `carlog_app`
-   (GitHub Actions compila o APK na nuvem; `scripts/release.sh` corta o release). Ver INICIO.
+3. **CI montado** (`.github/workflows/build-apk.yml`): todo push no `main` que toca `app/**`
+   compila o APK release universal **na nuvem** (a VPS é fraca — NUNCA `flutter build apk` local)
+   e publica no release rolling `ci-latest` (asset de nome fixo `primeiras-palavras.apk`).
+4. **⭐ REGRA DO USUÁRIO (2026-09-01): SEMPRE que concluir uma versão nova, ENTREGAR a ele o
+   link direto do APK.** Passos (o `gh` já está autenticado como `viniciostristao1`):
+   ```bash
+   git add -A && git commit -m "vX.Y.Z — <resumo>"
+   git push                                    # dispara o CI
+   # espera o CI ficar VERDE (publica em ci-latest) antes de cortar o release:
+   gh run watch "$(gh run list -L1 --json databaseId -q '.[0].databaseId')" --exit-status
+   scripts/release.sh vX.Y.Z "<nota de 1 linha>"   # cria o release nomeado a partir do ci-latest
+   ```
+   **Link perene pra mandar (aponta SEMPRE pro APK mais novo, sem trocar de URL):**
+   `https://github.com/viniciostristao1/alfabetizacao_app/releases/latest/download/primeiras-palavras.apk`
+5. **Play Store:** ainda não — falta a keystore de upload via secrets (o CI hoje assina com a
+   chave de DEBUG, que instala mas não serve pra loja). Ver IDEIAS.
 
 ## 5. Definition of Done (checklist)
 - [ ] `flutter analyze lib/ test/` limpo e `flutter test` verde.

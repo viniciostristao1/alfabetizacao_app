@@ -2,6 +2,12 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.78.0 (2026-09-01)
+- **Ligar/desligar o microfone + ajuste de tolerância nas Configurações ⚙️🎤:** nova seção "Modo microfone" na engrenagem — um botão pra **mostrar/esconder** o 🎤 e um seletor **Exato / Tolerante / Bem tolerante** pra calibrar quanto o app perdoa a pronúncia (sem precisar recompilar).
+
+## v0.77.0 (2026-09-01)
+- **Modo Microfone 🎤 — o Davi joga sozinho:** botão **🎤 Falar** na barra de baixo da tela de palavras. Ele toca, fala a palavra, e o app decide **sozinho** (sem o pai marcar): acertou → sobe as moedas e passa pra próxima; errou 3× seguidas → perde pontos (o "-2"), o app **fala a palavra certa** e passa. Comparação **tolerante** (ignora acento e ~1 letrinha). _Precisa testar/calibrar no celular com a voz dele._
+
 ## v0.76.0 (2026-08-27)
 - **Animais com imagem nova sem divisória branca 🦁✨:** `file_00000000ff68820e9e7731c40e35d12c.png` (1536×1024, 3×2) recortada em 6 `habitat_*.jpg` 512×512 sem bordas brancas (gutters 4-5px removidos) — `HabitatMapScreen` com `ClipRRect 14` e gaps `4px` pretos igual a `Objetos/Alimentos`.
 

@@ -4,6 +4,7 @@ import '../../models/modo_leitura.dart';
 import '../../models/regiao.dart';
 import '../../services/config_fala.dart';
 import '../../services/config_leitura.dart';
+import '../../services/config_mic.dart';
 import '../../services/config_ordem.dart';
 import '../../services/progresso_repository.dart';
 import '../../theme/app_colors.dart';
@@ -29,6 +30,8 @@ class _ConfigScreenState extends State<ConfigScreen> {
   int _xp = 0;
   ModoLeitura _modo = ModoLeitura.maiuscula;
   bool _falar = true;
+  bool _mic = true;
+  int _micTol = 1;
   bool _ordemExpandida = false;
 
   @override
@@ -43,6 +46,8 @@ class _ConfigScreenState extends State<ConfigScreen> {
     final xp = await ProgressoRepository.xp();
     final modo = await ConfigLeitura.carregar();
     final falar = await ConfigFala.ativado();
+    final mic = await ConfigMic.ativado();
+    final micTol = await ConfigMic.tolerancia();
     if (mounted) {
       setState(() {
         _fases = fases;
@@ -50,6 +55,8 @@ class _ConfigScreenState extends State<ConfigScreen> {
         _xp = xp;
         _modo = modo;
         _falar = falar;
+        _mic = mic;
+        _micTol = micTol;
       });
     }
   }
@@ -62,6 +69,16 @@ class _ConfigScreenState extends State<ConfigScreen> {
   void _mudarFalar(bool valor) {
     setState(() => _falar = valor);
     ConfigFala.salvar(valor);
+  }
+
+  void _mudarMic(bool valor) {
+    setState(() => _mic = valor);
+    ConfigMic.salvarAtivado(valor);
+  }
+
+  void _mudarMicTol(int valor) {
+    setState(() => _micTol = valor);
+    ConfigMic.salvarTolerancia(valor);
   }
 
   void _reordenar(int velho, int novo) {
@@ -253,6 +270,60 @@ class _ConfigScreenState extends State<ConfigScreen> {
               value: _falar,
               onChanged: _mudarFalar,
             ),
+          ),
+          const SizedBox(height: 14),
+          const Text(
+            'Modo microfone 🎤',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+          ),
+          const SizedBox(height: 4),
+          const Text(
+            'O Davi lê falando: toca no 🎤 na tela das palavras, fala, e o app '
+            'decide sozinho (acerta → sobe moeda e passa; erra 3× → o app fala '
+            'a palavra e passa).',
+            style: TextStyle(color: AppColors.dim),
+          ),
+          const SizedBox(height: 8),
+          Card(
+            color: AppColors.surface,
+            margin: EdgeInsets.zero,
+            child: SwitchListTile(
+              secondary: const Text('🎤', style: TextStyle(fontSize: 24)),
+              title: const Text(
+                'Ler falando (microfone)',
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+              ),
+              subtitle: const Text(
+                'Mostra o botão 🎤 na tela das palavras.',
+                style: TextStyle(color: AppColors.dim),
+              ),
+              value: _mic,
+              onChanged: _mudarMic,
+            ),
+          ),
+          const SizedBox(height: 10),
+          const Text(
+            'Ajuste fino: tolerância',
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+          ),
+          const SizedBox(height: 4),
+          const Text(
+            'Quanto mais tolerante, mais o app perdoa a pronúncia (voz de '
+            'criança erra mais no reconhecimento). "Exato" só aceita a palavra '
+            'certinha.',
+            style: TextStyle(color: AppColors.dim),
+          ),
+          const SizedBox(height: 8),
+          SegmentedButton<int>(
+            segments: const [
+              ButtonSegment(value: 0, label: Text('Exato')),
+              ButtonSegment(value: 1, label: Text('Tolerante')),
+              ButtonSegment(value: 2, label: Text('Bem tolerante')),
+            ],
+            selected: {_micTol},
+            showSelectedIcon: false,
+            // desabilita (fica cinza) quando o microfone está desligado
+            onSelectionChanged: _mic ? (s) => _mudarMicTol(s.first) : null,
           ),
           const SizedBox(height: 14),
           InkWell(

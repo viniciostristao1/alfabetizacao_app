@@ -15,8 +15,11 @@ import '../../models/tema.dart';
 import '../../services/banco_palavras.dart';
 import '../../services/completar_silaba.dart';
 import '../../services/config_leitura.dart';
+import '../../services/config_mic.dart';
 import '../../services/config_ordem.dart';
 import '../../services/fala.dart';
+import '../../services/reconhecimento.dart';
+import '../../services/voz.dart';
 import '../../services/progresso_alimentos_fases.dart';
 import '../../services/progresso_fases.dart';
 import '../../services/progresso_nomes_temas_fases.dart';
@@ -97,6 +100,17 @@ class _EstudoScreenState extends State<EstudoScreen> {
   static const _sequenciaAlvo = 3;
   int get _bonusSequencia => (_sequencia ~/ _sequenciaAlvo) * 2;
 
+  // ── Modo Microfone (o Davi FALA a palavra e o app decide) ──
+  int _tentativas = 0; // erros seguidos NA PALAVRA ATUAL (zera ao trocar)
+  bool _ouvindo = false; // está gravando/ouvindo agora
+  bool _micRespondeu = false; // veio um resultado nesta escuta?
+  String? _statusMic; // "🎤 Ouvindo…" / "Tenta de novo!" / "Não entendi"
+  bool _micAtivado = true; // o pai/mãe ligou o mic nas Configurações?
+  int _micTolerancia = kTolerancia; // ajuste fino escolhido nas Configurações
+
+  /// Máximo de tentativas por palavra antes de o app falar a resposta e passar.
+  static const _maxTentativas = 3;
+
   @override
   void initState() {
     super.initState();
@@ -112,11 +126,15 @@ class _EstudoScreenState extends State<EstudoScreen> {
     final moedas = await ProgressoRepository.moedas();
     final xp = await ProgressoRepository.xp();
     final modo = await ConfigLeitura.carregar();
+    final micAtivado = await ConfigMic.ativado();
+    final micTolerancia = await ConfigMic.tolerancia();
     if (mounted) {
       setState(() {
         _moedas = moedas;
         _xp = xp;
         _modo = modo;
+        _micAtivado = micAtivado;
+        _micTolerancia = micTolerancia;
       });
       _prepararIncompleta();
       _falarPalavraAtual();
@@ -185,6 +203,8 @@ class _EstudoScreenState extends State<EstudoScreen> {
       _moedas += pontos + bonus;
       _xp += pontos + bonus;
       _tracos.clear();
+      _tentativas = 0; // acertou → zera as tentativas do microfone
+      _statusMic = null;
       _confeteSeq++;
       if (bonus > 0) {
         _mostrarFeedback('🔥 $_sequencia seguidas! +$bonus');
@@ -192,7 +212,15 @@ class _EstudoScreenState extends State<EstudoScreen> {
         _mostrarFeedback('+$pontos');
       }
     });
+    await _avancarAposResposta();
+  }
+
+  /// Fecha a fase (baú) ou avança para a próxima palavra. Compartilhado pelo
+  /// acerto (V/microfone) e pelo fim das 3 tentativas do microfone — evita
+  /// duplicar o switch de conclusão de fases.
+  Future<void> _avancarAposResposta() async {
     final ultima = _i == widget.palavras.length - 1;
+    final habitat = widget.habitatConcluivel;
     final alimentosTema = widget.alimentosTemaConcluivel;
     final objetosTema = widget.objetosTemaConcluivel;
     final nomesTema = widget.nomesTemaConcluivel;
@@ -207,7 +235,10 @@ class _EstudoScreenState extends State<EstudoScreen> {
     } else if (ultima) {
       await _fimDeCategoria(); // pode ter SAÍDO da tela ("Sair")
     } else if (_temProximo) {
-      setState(() => _i++);
+      setState(() {
+        _i++;
+        _tentativas = 0;
+      });
       _falarPalavraAtual();
     }
     if (!mounted) return;
@@ -229,6 +260,79 @@ class _EstudoScreenState extends State<EstudoScreen> {
       _tracos.clear();
       _mostrarFeedback('-$pontos');
     });
+  }
+
+  // ── Modo Microfone: o Davi toca no 🎤, FALA a palavra e o app decide ──
+
+  /// Toca no microfone: começa a ouvir a criança dizer a palavra atual. Se já
+  /// estiver ouvindo, para. Se o aparelho não tiver microfone/reconhecedor,
+  /// avisa sem travar.
+  Future<void> _ouvirMic() async {
+    if (_ouvindo) {
+      await Voz.instance.parar();
+      return;
+    }
+    final ok = await Voz.instance.disponivel();
+    if (!mounted) return;
+    if (!ok) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Microfone não disponível neste aparelho.')),
+      );
+      return;
+    }
+    HapticFeedback.selectionClick();
+    setState(() {
+      _ouvindo = true;
+      _micRespondeu = false;
+      _statusMic = '🎤 Ouvindo…';
+    });
+    await Voz.instance.ouvir(onResultado: _resultadoMic, onFim: _fimMic);
+  }
+
+  /// Chegou o que a criança falou (a transcrição principal + as alternativas do
+  /// motor). Acertou → mesmo efeito do V. Errou → conta tentativa; na 3ª, falha.
+  Future<void> _resultadoMic(List<String> ditas) async {
+    if (!mounted) return;
+    _micRespondeu = true;
+    setState(() => _ouvindo = false);
+    final alvo = widget.palavras[_i].texto;
+    if (reconheceu(alvo, ditas, tolerancia: _micTolerancia)) {
+      setState(() => _statusMic = null);
+      await _acertou();
+      return;
+    }
+    _tentativas++;
+    if (_tentativas >= _maxTentativas) {
+      await _falharPalavra(alvo);
+    } else {
+      final faltam = _maxTentativas - _tentativas;
+      setState(() => _statusMic =
+          'Quase! Tenta de novo 🙂  (falta${faltam == 1 ? '' : 'm'} $faltam)');
+    }
+  }
+
+  /// A escuta terminou (silêncio/timeout/erro). Reabilita o botão; se nada foi
+  /// entendido, avisa SEM gastar tentativa.
+  void _fimMic() {
+    if (!mounted) return;
+    setState(() {
+      _ouvindo = false;
+      if (!_micRespondeu) {
+        _statusMic = 'Não entendi. Toca no 🎤 e tenta de novo.';
+      }
+    });
+  }
+
+  /// Errou [_maxTentativas] vezes seguidas: mesmo efeito do X (perde pontos,
+  /// "-N"), o app FALA a palavra certa (vira aprendizado) e passa para a próxima.
+  Future<void> _falharPalavra(String alvo) async {
+    setState(() => _statusMic = null);
+    await _errou(); // desconta pontos, mostra "-N", zera a sequência
+    if (!mounted) return;
+    _tentativas = 0;
+    await Fala.instance.falar(alvo); // ex.: fala "gato"
+    if (!mounted) return;
+    await _avancarAposResposta();
   }
 
   /// Fim de fase no mapa-múndi: o BAÚ (fechado) com bônus de moedas + medalha
@@ -395,6 +499,8 @@ class _EstudoScreenState extends State<EstudoScreen> {
         _i = 0;
         _tracos.clear();
         _sequencia = 0;
+        _tentativas = 0;
+        _statusMic = null;
       });
       _prepararIncompleta();
       _falarPalavraAtual();
@@ -425,6 +531,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
 
   @override
   void dispose() {
+    unawaited(Voz.instance.parar()); // se estava ouvindo, para ao sair
     // O app é todo PAISAGEM — garante ao sair (redundante, mas seguro).
     SystemChrome.setPreferredOrientations(const [
       DeviceOrientation.landscapeLeft,
@@ -448,6 +555,8 @@ class _EstudoScreenState extends State<EstudoScreen> {
     setState(() {
       _i--;
       _tracos.clear();
+      _tentativas = 0;
+      _statusMic = null;
     });
     _prepararIncompleta();
     _falarPalavraAtual();
@@ -458,6 +567,8 @@ class _EstudoScreenState extends State<EstudoScreen> {
     setState(() {
       _i++;
       _tracos.clear();
+      _tentativas = 0;
+      _statusMic = null;
     });
     _talvezConcluir();
     _prepararIncompleta();
@@ -468,6 +579,8 @@ class _EstudoScreenState extends State<EstudoScreen> {
     setState(() {
       _i = 0;
       _tracos.clear();
+      _tentativas = 0;
+      _statusMic = null;
     });
     _prepararIncompleta();
     _falarPalavraAtual();
@@ -806,6 +919,20 @@ class _EstudoScreenState extends State<EstudoScreen> {
                 ],
               ),
             ),
+            // status do microfone ("Ouvindo…", "Tenta de novo", "Não entendi")
+            if (_statusMic != null)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(12, 0, 12, 2),
+                child: Text(
+                  _statusMic!,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: ui.withValues(alpha: 0.88),
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
             // ── embaixo: botões baixos ──
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 2, 12, 10),
@@ -829,6 +956,11 @@ class _EstudoScreenState extends State<EstudoScreen> {
                     ui: ui,
                     onTap: _i == 0 ? null : _recomecar,
                   ),
+                  // 🎤 Falar — o Davi toca, fala a palavra, o app decide sozinho.
+                  // Só se ligado nas Configurações e nos modos de palavra inteira
+                  // (no "completar" é por toque).
+                  if (_micAtivado && _modo != ModoLeitura.incompleta)
+                    _BotaoMic(ouvindo: _ouvindo, onTap: _ouvirMic),
                   _Botao(
                     icon: Icons.chevron_right_rounded,
                     label: 'Próximo',
@@ -2716,6 +2848,59 @@ class _OpcaoSilaba extends StatelessWidget {
               fontWeight: FontWeight.w900,
               letterSpacing: 1,
               color: errada ? Colors.white : ui,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Botão 🎤 da barra inferior (Modo Microfone): o Davi toca e FALA a palavra.
+/// Verde quando pronto; vermelho quando está ouvindo. Mesma altura/estilo do
+/// [_Botao] (também `Expanded`) para ficar "junto dos demais".
+class _BotaoMic extends StatelessWidget {
+  const _BotaoMic({required this.ouvindo, required this.onTap});
+
+  final bool ouvindo;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final cor = ouvindo ? AppColors.danger : AppColors.acerto;
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5),
+        child: Material(
+          color: cor,
+          borderRadius: BorderRadius.circular(14),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(14),
+            onTap: onTap,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 9),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    ouvindo ? Icons.mic_rounded : Icons.mic_none_rounded,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 6),
+                  Flexible(
+                    child: Text(
+                      ouvindo ? 'Ouvindo…' : 'Falar',
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

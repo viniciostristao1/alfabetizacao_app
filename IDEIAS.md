@@ -2,9 +2,19 @@
 
 Ordem ≈ prioridade conversada. Nada aqui está pronto; é roteiro.
 
-## 🎤 Fase 2 — Modo Microfone (próximo grande passo)
+## 🎤 Fase 2 — Modo Microfone — FEITO (v0.77.0), calibração pendente no aparelho
 A criança **fala** a palavra; o app reconhece se **acertou**.
-- **Como:** `speech_to_text` (voz → texto, do Android/Google) + `flutter_tts` (o app fala).
+- ✅ **v0.77.0:** botão **🎤 Falar** na `EstudoScreen` (só nos modos de palavra inteira). O mic
+  automatiza o V/X: acerto → `_acertou()`; 3 erros seguidos → `_errou()` + o app fala a palavra
+  + avança. Comparação **pura e tolerante** em `services/reconhecimento.dart` (reusa `semAcento`,
+  Levenshtein, "mesma inicial") + wrapper `services/voz.dart` (`speech_to_text` 7.4.0, pt-BR).
+  Permissões `RECORD_AUDIO`/`INTERNET` + `queries` no `AndroidManifest`. Ver APRENDIZADOS.
+- ✅ **v0.78.0:** nas Configurações dá pra **ligar/desligar** o mic e **calibrar a tolerância**
+  (Exato/Tolerante/Bem tolerante) sem recompilar (`services/config_mic.dart`).
+- **⏳ Pendente (no celular, com a voz do Davi):** conferir permissão/reconhecimento e
+  **calibrar** a tolerância na engrenagem (voz infantil erra mais). Um **fallback offline**
+  segue em aberto (o reconhecedor Google costuma pedir internet).
+- **Como (referência):** `speech_to_text` (voz → texto, do Android/Google) + `flutter_tts` (o app fala).
 - **Regras (decisão do usuário):** **3 tentativas**. Se errar as 3, o app **fala a palavra**
   (TTS) e segue. Erro **nunca trava** a criança.
 - **Matching tolerante:** ignorar acento e aceitar diferença pequena (1 letra / distância curta)

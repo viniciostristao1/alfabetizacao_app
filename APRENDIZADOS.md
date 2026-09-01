@@ -2,6 +2,52 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-09-01 — v0.78.0 (Configurações: ligar/desligar mic + tolerância)
+- **`services/config_mic.dart`:** `ConfigMic` (padrão `ativado()` LIGADO; `tolerancia()` 0..2,
+  padrão = `kTolerancia` de `reconhecimento.dart`; `salvar*` com clamp). Chaves
+  `mic_ativado_v1` / `mic_tolerancia_v1`. Espelha `ConfigFala`/`ConfigLeitura`.
+- **`ConfigScreen`:** nova seção "Modo microfone 🎤" (após "Falar a palavra"): `SwitchListTile`
+  liga/desliga + `SegmentedButton<int>` **Exato/Tolerante/Bem tolerante** (0/1/2). Truque:
+  `onSelectionChanged: _mic ? (...) : null` → o seletor fica **cinza/desabilitado** quando o
+  mic está desligado (padrão do próprio widget).
+- **`EstudoScreen`:** carrega `_micAtivado`/`_micTolerancia` no `_carregarGamificacao`; o botão
+  `_BotaoMic` agora só aparece com `_micAtivado && _modo != incompleta`; `reconheceu(...)` recebe
+  `tolerancia: _micTolerancia` (o "ajuste fino" vale sem recompilar).
+- **Testes:** `config_mic_test.dart` (padrão + save/load + clamp) e caso novo em
+  `mic_botao_test.dart` (mic off → botão some). `analyze` limpo, suíte verde.
+
+## 2026-09-01 — v0.77.0 (Modo Microfone 🎤 — o Davi lê falando)
+- **Objetivo:** a criança **fala** a palavra e o app decide certo/errado sozinho (jogar sem o
+  pai marcar V/X). **Decisão do usuário:** NÃO é placar novo — o mic só dispara o MESMO
+  efeito do V/X de hoje (acerto = `_acertou()`; 3 erros seguidos = `_errou()` "-N" + o app
+  fala a palavra + avança). Toleância **calibrável no aparelho**.
+- **Dependência:** `speech_to_text: ^7.0.0` (resolveu **7.4.0**). Na 7.4.0, `localeId`,
+  `listenFor`, `pauseFor` estão **deprecados no `listen()`** → tem de ir DENTRO de
+  `SpeechListenOptions(...)` (senão `analyze` acusa `deprecated_member_use` e quebra o "No
+  issues found!"). Uso `partialResults:false` + `ListenMode.confirmation`.
+- **Permissões (`AndroidManifest.xml`):** `RECORD_AUDIO` + `INTERNET` (o reconhecedor
+  Google costuma pedir rede) e, no `<queries>` já existente, o intent
+  `android.speech.RecognitionService` (Android 11+ precisa pra achar o serviço de voz).
+- **`services/reconhecimento.dart` (PURO, testável sem plugin):** `reconheceu(alvo, ditas,
+  {tolerancia})` reusa **`semAcento()`** (`banco_palavras.dart`), normaliza tirando
+  espaço/hífen (cobre "urso polar"/"beija-flor"), testa a frase inteira **e cada palavra**
+  dita (artigo grudado "o gato" → "gato"), e aceita por Levenshtein. Regra p/ evitar
+  `gato`↔`pato`: só perdoa a diferença se **a 1ª letra bate** (`kExigeMesmaInicial`) e
+  tamanho/dist ≤ `kTolerancia` (=1). Constantes no topo p/ **calibrar no aparelho**.
+- **`services/voz.dart`:** singleton espelhando `Fala` (try/catch, silencioso se indisponível).
+  `initialize()` uma vez com `onStatus`/`onError`; guardo um `_onFim` que a tela usa p/
+  reabilitar o botão. `onResult` só age no `finalResult`, mandando principal + `alternates`.
+- **`EstudoScreen`:** extraí `_avancarAposResposta()` do rabo do `_acertou()` (o switch de
+  conclusão de fase/`_temProximo`) e reuso no fim das 3 tentativas — **sem duplicar** o
+  switch. Estado novo `_tentativas/_ouvindo/_micRespondeu/_statusMic`; `_tentativas` zera em
+  acerto e em toda troca de palavra (anterior/próximo/recomeçar/jogar de novo). Botão
+  `_BotaoMic` (`Expanded`, verde/vermelho) só quando `_modo != incompleta` (no "completar" é
+  por toque); linha de status acima dos botões.
+- **Não testável na VPS:** sem microfone/emulador; o plugin é no-op em `flutter test` (igual
+  haptics/TTS) — a lógica de acerto está coberta por `reconhecimento_test.dart` (puro) e a
+  presença do botão por `mic_botao_test.dart` (com `textScaleFactor 0.5` p/ 5 botões não
+  estourarem a linha). **Validar/calibrar no celular** com a voz do Davi.
+
 ## 2026-08-26 — v0.60.0 (Alimentos > Temas -2% + voltar maior)
 - **Voltar maior:** 6 telas `EdgeInsets 8→12`, `size 22→28` + 2 `IconButton size 28` (Habitat/Mapa-múndi) — área +30%. **Círculos:** `y 0.70→0.72`. `versao 0.60.0+90`.
 

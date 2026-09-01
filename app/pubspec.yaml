@@ -4,7 +4,7 @@ publish_to: 'none'
 
 # versionName+versionCode. Ex.: 0.1.0+1 → versionName "0.1.0", versionCode 1.
 # O +N (versionCode) TEM de crescer a cada release.
-version: 0.76.0+106
+version: 0.78.0+108
 
 environment:
   sdk: ^3.12.2
@@ -16,7 +16,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_riverpod: ^3.3.2       # estado (pronto p/ gamificação: moedas/troféus)
   shared_preferences: ^2.3.2     # persistência local (sem login/nuvem por enquanto)
-  flutter_tts: ^4.2.5
+  flutter_tts: ^4.2.5            # voz do app fala a palavra (saída)
+  speech_to_text: ^7.0.0        # Modo Microfone: ouve a criança falar (entrada)
 
 dev_dependencies:
   flutter_test:
