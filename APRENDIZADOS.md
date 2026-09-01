@@ -2,6 +2,26 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-09-01 — v0.79.0 (fix: mic dava "Não entendi" mesmo falando certo)
+- **Sintoma (no aparelho do usuário):** mic ligado, permissão concedida, falando claro → sempre
+  "Não entendi". Ou seja: `onFim` disparava com `_micRespondeu == false` (nenhum resultado).
+- **Causa raiz:** no `voz.dart` eu concluía a escuta no status **`notListening` E `done`**. No
+  Android o `notListening` dispara **antes** do texto (o mic parou de captar, mas o reconhecedor
+  ainda vai transcrever) → eu disparava o "fim" cedo e descartava o resultado. Somado a
+  `partialResults:false` (menos confiável no Android) e `localeId:'pt_BR'` fixo (se o id do
+  aparelho não for exatamente esse, dá `error_no_match`).
+- **Fix (`voz.dart`):** (1) concluir **só** no `done` / `finalResult` / `onError` / **timeout de
+  12s** (nunca no `notListening`); (2) `partialResults: true`, guardando a **melhor** transcrição
+  até o fim; (3) **detectar o locale pt** via `_stt.locales()` (prefere `pt_br`, senão qualquer
+  `pt*`, senão `null` = padrão do aparelho); (4) contrato novo: `onResultado` é chamado **uma vez**
+  com a melhor lista (**vazia** = não entendeu) e depois `onFim`.
+- **`EstudoScreen`:** removido `_micRespondeu`; `_resultadoMic` trata lista vazia como "não
+  entendi" (sem gastar tentativa) e, quando erra com texto, **mostra o que ouviu**
+  (`Ouvi "gato"…`) — ajuda a criança e a calibrar a tolerância. `_fimMic` só reseta o botão.
+- **Ainda não testável na VPS** (sem mic). É a correção mais provável; se persistir, o `Ouvi "…"`
+  na tela dirá se o reconhecedor está ouvindo algo (aí o problema é locale/rede) ou nada (aí é
+  permissão/serviço de voz do aparelho).
+
 ## 2026-09-01 — v0.78.0 (Configurações: ligar/desligar mic + tolerância)
 - **`services/config_mic.dart`:** `ConfigMic` (padrão `ativado()` LIGADO; `tolerancia()` 0..2,
   padrão = `kTolerancia` de `reconhecimento.dart`; `salvar*` com clamp). Chaves

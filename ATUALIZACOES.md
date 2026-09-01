@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.79.0 (2026-09-01)
+- **Correção do microfone 🎤:** estava dando "Não entendi" mesmo falando certo — o app concluía a escuta cedo demais (antes de o texto chegar). Agora espera o reconhecimento terminar, escolhe o idioma português do aparelho automaticamente e **mostra o que ouviu** (ex.: `Ouvi "gato"`) pra ajudar a calibrar.
+
 ## v0.78.0 (2026-09-01)
 - **Ligar/desligar o microfone + ajuste de tolerância nas Configurações ⚙️🎤:** nova seção "Modo microfone" na engrenagem — um botão pra **mostrar/esconder** o 🎤 e um seletor **Exato / Tolerante / Bem tolerante** pra calibrar quanto o app perdoa a pronúncia (sem precisar recompilar).
 

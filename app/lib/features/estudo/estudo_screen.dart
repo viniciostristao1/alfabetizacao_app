@@ -103,7 +103,6 @@ class _EstudoScreenState extends State<EstudoScreen> {
   // ── Modo Microfone (o Davi FALA a palavra e o app decide) ──
   int _tentativas = 0; // erros seguidos NA PALAVRA ATUAL (zera ao trocar)
   bool _ouvindo = false; // está gravando/ouvindo agora
-  bool _micRespondeu = false; // veio um resultado nesta escuta?
   String? _statusMic; // "🎤 Ouvindo…" / "Tenta de novo!" / "Não entendi"
   bool _micAtivado = true; // o pai/mãe ligou o mic nas Configurações?
   int _micTolerancia = kTolerancia; // ajuste fino escolhido nas Configurações
@@ -283,20 +282,27 @@ class _EstudoScreenState extends State<EstudoScreen> {
     HapticFeedback.selectionClick();
     setState(() {
       _ouvindo = true;
-      _micRespondeu = false;
       _statusMic = '🎤 Ouvindo…';
     });
     await Voz.instance.ouvir(onResultado: _resultadoMic, onFim: _fimMic);
   }
 
-  /// Chegou o que a criança falou (a transcrição principal + as alternativas do
-  /// motor). Acertou → mesmo efeito do V. Errou → conta tentativa; na 3ª, falha.
+  /// Chegou o que a criança falou (principal + alternativas do motor; **vazio**
+  /// se não entendeu). Acertou → mesmo efeito do V. Errou → conta tentativa; na
+  /// 3ª, falha. Não entendeu → avisa SEM gastar tentativa (mostra o que ouviu).
   Future<void> _resultadoMic(List<String> ditas) async {
     if (!mounted) return;
-    _micRespondeu = true;
+    final limpas = ditas.where((s) => s.trim().isNotEmpty).toList();
+    if (limpas.isEmpty) {
+      setState(() {
+        _ouvindo = false;
+        _statusMic = 'Não entendi 🤔 Toca no 🎤 e fala de novo.';
+      });
+      return;
+    }
     setState(() => _ouvindo = false);
     final alvo = widget.palavras[_i].texto;
-    if (reconheceu(alvo, ditas, tolerancia: _micTolerancia)) {
+    if (reconheceu(alvo, limpas, tolerancia: _micTolerancia)) {
       setState(() => _statusMic = null);
       await _acertou();
       return;
@@ -306,19 +312,20 @@ class _EstudoScreenState extends State<EstudoScreen> {
       await _falharPalavra(alvo);
     } else {
       final faltam = _maxTentativas - _tentativas;
+      // mostra o que ele ouviu — ajuda a criança e a calibrar a tolerância
       setState(() => _statusMic =
-          'Quase! Tenta de novo 🙂  (falta${faltam == 1 ? '' : 'm'} $faltam)');
+          'Ouvi "${limpas.first}" 🙂 Tenta de novo (falta${faltam == 1 ? '' : 'm'} $faltam)');
     }
   }
 
-  /// A escuta terminou (silêncio/timeout/erro). Reabilita o botão; se nada foi
-  /// entendido, avisa SEM gastar tentativa.
+  /// A escuta terminou. Reabilita o botão; se ainda estava "Ouvindo…" (nenhum
+  /// resultado processado), avisa que não entendeu.
   void _fimMic() {
     if (!mounted) return;
     setState(() {
       _ouvindo = false;
-      if (!_micRespondeu) {
-        _statusMic = 'Não entendi. Toca no 🎤 e tenta de novo.';
+      if (_statusMic == '🎤 Ouvindo…') {
+        _statusMic = 'Não entendi 🤔 Toca no 🎤 e fala de novo.';
       }
     });
   }
