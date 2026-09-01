@@ -103,6 +103,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
   // ── Modo Microfone (o Davi FALA a palavra e o app decide) ──
   int _tentativas = 0; // erros seguidos NA PALAVRA ATUAL (zera ao trocar)
   bool _ouvindo = false; // está gravando/ouvindo agora
+  bool _micAceito = false; // já aceitou o acerto NESTA escuta (via parcial)?
   double _nivelMic = 0; // 0..1 — volume captado (barra "estou te ouvindo")
   String? _statusMic; // "🎤 Ouvindo…" / "Tenta de novo!" / "Não entendi"
   bool _micAtivado = true; // o pai/mãe ligou o mic nas Configurações?
@@ -286,11 +287,13 @@ class _EstudoScreenState extends State<EstudoScreen> {
     HapticFeedback.selectionClick();
     setState(() {
       _ouvindo = true;
+      _micAceito = false;
       _nivelMic = 0;
       _statusMic = _msgOuvindo;
     });
     await Voz.instance.ouvir(
       onResultado: _resultadoMic,
+      onParcial: _parcialMic,
       onFim: _fimMic,
       onNivel: (n) {
         if (mounted && _ouvindo) setState(() => _nivelMic = n);
@@ -298,11 +301,27 @@ class _EstudoScreenState extends State<EstudoScreen> {
     );
   }
 
+  /// Resultado PARCIAL (enquanto fala): se já bater com a palavra, ACEITA na
+  /// hora — não espera o silêncio → acerto quase instantâneo.
+  Future<void> _parcialMic(List<String> ditas) async {
+    if (_micAceito || !mounted) return;
+    final alvo = widget.palavras[_i].texto;
+    if (!reconheceu(alvo, ditas, tolerancia: _micTolerancia)) return;
+    _micAceito = true;
+    unawaited(Voz.instance.parar()); // para de ouvir imediatamente
+    setState(() {
+      _ouvindo = false;
+      _nivelMic = 0;
+      _statusMic = null;
+    });
+    await _acertou();
+  }
+
   /// Chegou o que a criança falou (principal + alternativas do motor; **vazio**
   /// se não entendeu). Acertou → mesmo efeito do V. Errou → conta tentativa; na
   /// 3ª, falha. Não entendeu → avisa SEM gastar tentativa (mostra o que ouviu).
   Future<void> _resultadoMic(List<String> ditas) async {
-    if (!mounted) return;
+    if (!mounted || _micAceito) return; // já aceito no parcial → ignora o final
     final limpas = ditas.where((s) => s.trim().isNotEmpty).toList();
     if (limpas.isEmpty) {
       setState(() {

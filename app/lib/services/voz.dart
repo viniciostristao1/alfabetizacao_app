@@ -107,6 +107,7 @@ class Voz {
   Future<void> ouvir({
     required void Function(List<String> ditas) onResultado,
     required void Function() onFim,
+    void Function(List<String> ditas)? onParcial,
     void Function(double nivel)? onNivel,
   }) async {
     if (!await _init()) {
@@ -126,22 +127,27 @@ class Voz {
             for (final alt in resultado.alternates) alt.recognizedWords,
           ]..removeWhere((s) => s.trim().isEmpty);
           if (ditas.isNotEmpty) _melhor = ditas; // guarda a melhor até agora
-          if (resultado.finalResult) _concluir();
+          if (resultado.finalResult) {
+            _concluir();
+          } else if (ditas.isNotEmpty) {
+            // parcial: deixa a tela ACEITAR já se bater (sem esperar o silêncio)
+            onParcial?.call(ditas);
+          }
         },
         onSoundLevelChange:
             onNivel == null ? null : (l) => onNivel(_normalizarNivel(l)),
         listenOptions: SpeechListenOptions(
           localeId: _localeId,
-          partialResults: true, // mais robusto no Android que 'false'
+          partialResults: true, // parciais rápidos → acerto quase instantâneo
           cancelOnError: true,
           listenMode: ListenMode.confirmation,
-          listenFor: const Duration(seconds: 12), // janela maior (fala devagar)
-          pauseFor: const Duration(seconds: 4), // mais paciente com o silêncio
+          listenFor: const Duration(seconds: 8),
+          pauseFor: const Duration(seconds: 2), // menos espera pra finalizar
         ),
       );
       // rede de segurança: se nenhum evento concluir, encerra sozinho.
       _timeout?.cancel();
-      _timeout = Timer(const Duration(seconds: 18), _concluir);
+      _timeout = Timer(const Duration(seconds: 12), _concluir);
     } catch (_) {
       _concluir();
     }

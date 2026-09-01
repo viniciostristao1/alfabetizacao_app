@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.81.0 (2026-09-01)
+- **Microfone quase instantâneo ⚡:** o acerto agora é reconhecido **na hora** que a criança fala, sem esperar aqueles ~3 segundos de silêncio (o app aceita assim que o resultado parcial bate com a palavra). A espera do "tenta de novo" também caiu (4s → 2s).
+
 ## v0.80.0 (2026-09-01)
 - **Barra "estou te ouvindo" 🎤📊:** enquanto o mic está ligado, aparece uma barrinha que mexe conforme o volume captado — dá pra ver na hora se está pegando a voz, mesmo falando baixinho (não precisa gritar). A escuta também ficou **mais paciente** (espera mais o silêncio, pra não cortar fala devagar).
 

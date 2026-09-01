@@ -2,6 +2,20 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-09-01 — v0.81.0 (mic quase instantâneo — aceita no resultado parcial)
+- **Sintoma:** usuário falava em <1s mas o acerto só registrava ~3s depois. Causa: o `pauseFor`
+  (silêncio pós-fala antes de finalizar) estava em 4s → o `finalResult` (onde eu aceitava)
+  demorava.
+- **Fix principal (early-accept):** `voz.dart` `ouvir()` ganhou `onParcial` — no `onResult` com
+  `finalResult == false` eu encaminho os parciais. A `EstudoScreen._parcialMic` roda `reconheceu`
+  em cada parcial e, se bater, **aceita na hora**: `_micAceito = true`, `Voz.instance.parar()` e
+  `_acertou()` — sem esperar o silêncio/`finalResult`. Guardas: `_micAceito` bloqueia o
+  `_resultadoMic` (final) de reprocessar; resetado no início de cada `_ouvirMic`.
+- **Secundário:** `pauseFor` 4→**2s** e `listenFor` 12→**8s** (timeout de segurança 18→**12s**) —
+  acelera também o caminho de "errou/não entendi" (que ainda depende do final).
+- Errar/again ainda espera o final (correto: só declaramos erro quando o reconhecedor fecha).
+  `analyze` limpo, suíte verde (a lógica de match é a mesma, já coberta por `reconhecimento_test`).
+
 ## 2026-09-01 — v0.80.0 (barra "estou te ouvindo" + escuta mais paciente)
 - **Contexto:** usuário quer testar o mic sem falar alto e perguntou por "ajuste de volume". Não
   existe ganho/sensibilidade exponível — o Android faz AGC. O que ajuda é **feedback visual** e
