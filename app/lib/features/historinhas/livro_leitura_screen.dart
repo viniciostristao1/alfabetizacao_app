@@ -165,8 +165,8 @@ class _LivroLeituraScreenState extends State<LivroLeituraScreen> {
                               texto,
                               textAlign: TextAlign.center,
                               style: const TextStyle(
-                                fontSize: 28,
-                                height: 1.35,
+                                fontSize: 22,
+                                height: 1.4,
                                 fontWeight: FontWeight.w700,
                                 color: Color(0xFF1A1D24),
                                 letterSpacing: 0.2,
