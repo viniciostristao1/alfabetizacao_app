@@ -29,4 +29,6 @@ class Livro {
   final List<String> paginas;
 
   int get totalPaginas => paginas.length;
+
+  String imagemDaPagina(int i) => 'assets/historinhas/${chave}_${i + 1}.jpg';
 }

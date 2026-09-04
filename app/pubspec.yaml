@@ -4,7 +4,7 @@ publish_to: 'none'
 
 # versionName+versionCode. Ex.: 0.1.0+1 → versionName "0.1.0", versionCode 1.
 # O +N (versionCode) TEM de crescer a cada release.
-version: 0.82.2+114
+version: 0.83.0+115
 
 environment:
   sdk: ^3.12.2
@@ -56,6 +56,46 @@ flutter:
     - assets/contas/contas_fundo.png
     - assets/home/home_fundo.png
     - assets/colecao/colecao_fundo.png
+    - assets/historinhas/gato_esperto_1.jpg
+    - assets/historinhas/gato_esperto_2.jpg
+    - assets/historinhas/gato_esperto_3.jpg
+    - assets/historinhas/gato_esperto_4.jpg
+    - assets/historinhas/gato_esperto_5.jpg
+    - assets/historinhas/pato_lagoa_1.jpg
+    - assets/historinhas/pato_lagoa_2.jpg
+    - assets/historinhas/pato_lagoa_3.jpg
+    - assets/historinhas/pato_lagoa_4.jpg
+    - assets/historinhas/pato_lagoa_5.jpg
+    - assets/historinhas/sapo_feliz_1.jpg
+    - assets/historinhas/sapo_feliz_2.jpg
+    - assets/historinhas/sapo_feliz_3.jpg
+    - assets/historinhas/sapo_feliz_4.jpg
+    - assets/historinhas/sapo_feliz_5.jpg
+    - assets/historinhas/casa_vovo_1.jpg
+    - assets/historinhas/casa_vovo_2.jpg
+    - assets/historinhas/casa_vovo_3.jpg
+    - assets/historinhas/casa_vovo_4.jpg
+    - assets/historinhas/casa_vovo_5.jpg
+    - assets/historinhas/sol_lua_1.jpg
+    - assets/historinhas/sol_lua_2.jpg
+    - assets/historinhas/sol_lua_3.jpg
+    - assets/historinhas/sol_lua_4.jpg
+    - assets/historinhas/sol_lua_5.jpg
+    - assets/historinhas/tesouro_davi_1.jpg
+    - assets/historinhas/tesouro_davi_2.jpg
+    - assets/historinhas/tesouro_davi_3.jpg
+    - assets/historinhas/tesouro_davi_4.jpg
+    - assets/historinhas/tesouro_davi_5.jpg
+    - assets/historinhas/coelho_cenoura_1.jpg
+    - assets/historinhas/coelho_cenoura_2.jpg
+    - assets/historinhas/coelho_cenoura_3.jpg
+    - assets/historinhas/coelho_cenoura_4.jpg
+    - assets/historinhas/coelho_cenoura_5.jpg
+    - assets/historinhas/aviao_azul_1.jpg
+    - assets/historinhas/aviao_azul_2.jpg
+    - assets/historinhas/aviao_azul_3.jpg
+    - assets/historinhas/aviao_azul_4.jpg
+    - assets/historinhas/aviao_azul_5.jpg
 
 # Ícone do app. Arte original: assets/icon/logo_fonte.png (fundo âmbar) —
 # logo.png = quadrado âmbar (legado); logo_foreground.png = arte sem o âmbar

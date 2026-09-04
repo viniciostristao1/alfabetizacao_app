@@ -136,8 +136,8 @@ class _LivroLeituraScreenState extends State<LivroLeituraScreen> {
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(28, 12, 28, 12),
                   child: Container(
+                    clipBehavior: Clip.antiAlias,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFFF8E7),
                       borderRadius: BorderRadius.circular(18),
                       border: Border.all(color: livro.cor.withValues(alpha: 0.35), width: 1.5),
                       boxShadow: [
@@ -149,7 +149,25 @@ class _LivroLeituraScreenState extends State<LivroLeituraScreen> {
                       ],
                     ),
                     child: Stack(
+                      fit: StackFit.expand,
                       children: [
+                        Image.asset(
+                          livro.imagemDaPagina(i),
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => Container(color: const Color(0xFFFFF8E7)),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.white.withValues(alpha: 0.88),
+                                Colors.white.withValues(alpha: 0.92),
+                              ],
+                            ),
+                          ),
+                        ),
                         Positioned(
                           top: 12,
                           left: 14,
@@ -170,6 +188,10 @@ class _LivroLeituraScreenState extends State<LivroLeituraScreen> {
                                 fontWeight: FontWeight.w800,
                                 color: Color(0xFF1A1D24),
                                 letterSpacing: 0.2,
+                                shadows: [
+                                  Shadow(color: Colors.white, blurRadius: 6),
+                                  Shadow(color: Colors.white, blurRadius: 12),
+                                ],
                               ),
                             ),
                           ),
@@ -177,12 +199,19 @@ class _LivroLeituraScreenState extends State<LivroLeituraScreen> {
                         Positioned(
                           bottom: 10,
                           right: 14,
-                          child: Text(
-                            'p. ${i + 1}',
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.black.withValues(alpha: 0.35),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withValues(alpha: 0.45),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              'p. ${i + 1}',
+                              style: const TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
