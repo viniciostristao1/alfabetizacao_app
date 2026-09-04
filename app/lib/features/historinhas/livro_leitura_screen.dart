@@ -162,8 +162,8 @@ class _LivroLeituraScreenState extends State<LivroLeituraScreen> {
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                               colors: [
-                                Colors.white.withValues(alpha: 0.88),
-                                Colors.white.withValues(alpha: 0.92),
+                                Colors.white.withValues(alpha: 0.55),
+                                Colors.white.withValues(alpha: 0.68),
                               ],
                             ),
                           ),
