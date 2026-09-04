@@ -162,8 +162,8 @@ class _LivroLeituraScreenState extends State<LivroLeituraScreen> {
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                               colors: [
-                                Colors.white.withValues(alpha: 0.55),
-                                Colors.white.withValues(alpha: 0.68),
+                                Colors.white.withValues(alpha: 0.20),
+                                Colors.white.withValues(alpha: 0.20),
                               ],
                             ),
                           ),
@@ -189,8 +189,9 @@ class _LivroLeituraScreenState extends State<LivroLeituraScreen> {
                                 color: Color(0xFF1A1D24),
                                 letterSpacing: 0.2,
                                 shadows: [
-                                  Shadow(color: Colors.white, blurRadius: 6),
-                                  Shadow(color: Colors.white, blurRadius: 12),
+                                  Shadow(color: Colors.white, blurRadius: 8),
+                                  Shadow(color: Colors.white, blurRadius: 16),
+                                  Shadow(color: Colors.white, blurRadius: 24),
                                 ],
                               ),
                             ),
