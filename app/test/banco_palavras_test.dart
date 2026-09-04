@@ -41,7 +41,7 @@ void main() {
       for (final c in Categoria.values) {
         // "Escrever" é a categoria DO USUÁRIO (palavras digitadas na tela) —
         // não tem banco próprio.
-        if (c == Categoria.escrever || c == Categoria.contas) continue;
+        if (c == Categoria.escrever || c == Categoria.contas || c == Categoria.historinhas) continue;
         for (final n in Nivel.values) {
           expect(
             contarPalavras(c, n),

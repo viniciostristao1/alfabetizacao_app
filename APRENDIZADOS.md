@@ -2,6 +2,13 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-09-04 — v0.82.0 (Historinhas 📚 — livrinhos infantis com páginas e fonte)
+- **Categoria nova `Historinhas` (`Categoria.historinhas`, 📚 #FBBF24):** entra na Home como 7º card (grid 4 colunas). É **categoria especial** sem banco de palavras (igual Escrever/Contas) — os testes `banco_palavras_test` ignoram-na. Roteada em `HomeScreen._abrirCategoria` → `HistorinhasMenuScreen`.
+- **Modelo `Livro` (`models/livro.dart`):** `Livro(chave,titulo,emoji,cor,paginas)` + `FonteHistorinha` (maiuscula/normal com `aplicar`). `totalPaginas` getter. Texto guardado em **sentence case** ("Era uma vez…") — `maiuscula` faz `toUpperCase()`, `normal` mostra como está (Aa).
+- **Banco `banco_historinhas.dart`:** 8 livros infantis, 4–6 páginas cada, frases curtas infantis: Gato Esperto, Pato na Lagoa, Sapo Feliz, Casa da Vovó, Sol e Lua, Davi e o Tesouro, Coelho e Cenoura, Avião Azul. Cores distintas por livro.
+- **Telas `features/historinhas/`:** `HistorinhasMenuScreen` grid 3 colunas com cards (emoji + título + "N páginas", borda na cor do livro). `LivroLeituraScreen` com `PageView` (PageController + animação 280ms), `SegmentedButton<FonteHistorinha>` (MAIÚSCULA/Aa) salvo em `ConfigHistorinhaFonte` (`shared_preferences` chave `fonte_historinha_v1`), botão 🔊 (Fala.instance.falar da página), página estilo "livro" (fundo creme #FFF8E7, borda na cor, sombra, emoji topo, "p. N" rodapé, texto 28px centralizado), navegação Anterior/Próxima + bolinhas indicadoras + Voltar.
+- **Versão:** `pubspec 0.82.0+112`, `kVersao 0.82.0`, linha em `ATUALIZACOES.md`.
+
 ## 2026-09-01 — v0.81.0 (mic quase instantâneo — aceita no resultado parcial)
 - **Sintoma:** usuário falava em <1s mas o acerto só registrava ~3s depois. Causa: o `pauseFor`
   (silêncio pós-fala antes de finalizar) estava em 4s → o `finalResult` (onde eu aceitava)

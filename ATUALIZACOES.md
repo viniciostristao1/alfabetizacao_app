@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.82.0 (2026-09-04)
+- **Nova categoria Historinhas 📚:** entrou **Historinhas** na Home com **8 livrinhos infantis** (O Gato Esperto, O Pato na Lagoa, O Sapo Feliz, A Casa da Vovó, O Sol e a Lua, Davi e o Tesouro, O Coelho e a Cenoura, O Avião Azul) — cada um com **4 a 6 páginas**. Na leitura dá pra **folhear** (Anterior/Próxima), ver o **progresso** (bolinhas), **ouvir a página** (🔊) e escolher a **fonte**: **MAIÚSCULA** ou **Aa (maiúscula e minúscula)** — salva automaticamente.
+
 ## v0.81.0 (2026-09-01)
 - **Microfone quase instantâneo ⚡:** o acerto agora é reconhecido **na hora** que a criança fala, sem esperar aqueles ~3 segundos de silêncio (o app aceita assim que o resultado parcial bate com a palavra). A espera do "tenta de novo" também caiu (4s → 2s).
 

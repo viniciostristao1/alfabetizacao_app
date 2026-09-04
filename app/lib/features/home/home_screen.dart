@@ -13,6 +13,7 @@ import '../colecao/colecao_screen.dart';
 import '../escrever/escrever_screen.dart';
 import '../alimentos/alimentos_menu_screen.dart';
 import '../habitat/habitat_map_screen.dart';
+import '../historinhas/historinhas_menu_screen.dart';
 import '../nomes/nomes_menu_screen.dart';
 import '../objetos/objetos_menu_screen.dart';
 
@@ -58,6 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Categoria.nomes => const NomesMenuScreen(),
           Categoria.escrever => const EscreverScreen(),
           Categoria.contas => const ContasMenuScreen(),
+          Categoria.historinhas => const HistorinhasMenuScreen(),
         },
       ),
     );
