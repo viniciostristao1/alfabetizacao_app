@@ -134,7 +134,7 @@ class _LivroLeituraScreenState extends State<LivroLeituraScreen> {
               itemBuilder: (context, i) {
                 final texto = _fonte.aplicar(livro.paginas[i]);
                 return Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+                  padding: const EdgeInsets.fromLTRB(28, 12, 28, 12),
                   child: Container(
                     decoration: BoxDecoration(
                       color: const Color(0xFFFFF8E7),
@@ -160,14 +160,14 @@ class _LivroLeituraScreenState extends State<LivroLeituraScreen> {
                         ),
                         Center(
                           child: Padding(
-                            padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
+                            padding: const EdgeInsets.fromLTRB(28, 44, 28, 24),
                             child: Text(
                               texto,
                               textAlign: TextAlign.center,
                               style: const TextStyle(
-                                fontSize: 22,
-                                height: 1.4,
-                                fontWeight: FontWeight.w700,
+                                fontSize: 26,
+                                height: 1.45,
+                                fontWeight: FontWeight.w800,
                                 color: Color(0xFF1A1D24),
                                 letterSpacing: 0.2,
                               ),
