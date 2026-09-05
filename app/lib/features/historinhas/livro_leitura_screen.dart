@@ -154,46 +154,21 @@ class _LivroLeituraScreenState extends State<LivroLeituraScreen> {
                         Image.asset(
                           livro.imagemDaPagina(i),
                           fit: BoxFit.cover,
+                          filterQuality: FilterQuality.high,
                           errorBuilder: (_, _, _) => Container(color: const Color(0xFFFFF8E7)),
                         ),
-                        Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Colors.white.withValues(alpha: 0.05),
-                                Colors.white.withValues(alpha: 0.05),
-                              ],
-                            ),
-                          ),
-                        ),
                         Positioned(
-                          top: 12,
-                          left: 14,
-                          child: Text(
-                            livro.emoji,
-                            style: const TextStyle(fontSize: 26),
-                          ),
-                        ),
-                        Center(
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(28, 44, 28, 24),
+                          top: 10,
+                          left: 10,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withValues(alpha: 0.38),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                             child: Text(
-                              texto,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 26,
-                                height: 1.45,
-                                fontWeight: FontWeight.w800,
-                                color: Color(0xFF1A1D24),
-                                letterSpacing: 0.2,
-                                shadows: [
-                                  Shadow(color: Colors.white, blurRadius: 8),
-                                  Shadow(color: Colors.white, blurRadius: 16),
-                                  Shadow(color: Colors.white, blurRadius: 24),
-                                ],
-                              ),
+                              livro.emoji,
+                              style: const TextStyle(fontSize: 22),
                             ),
                           ),
                         ),
@@ -212,6 +187,36 @@ class _LivroLeituraScreenState extends State<LivroLeituraScreen> {
                                 fontSize: 11,
                                 fontWeight: FontWeight.w700,
                                 color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            margin: const EdgeInsets.fromLTRB(18, 0, 18, 18),
+                            padding: const EdgeInsets.fromLTRB(22, 16, 22, 16),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.88),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(color: Colors.white, width: 1.2),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.22),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: Text(
+                              texto,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 22,
+                                height: 1.4,
+                                fontWeight: FontWeight.w800,
+                                color: Color(0xFF1A1D24),
+                                letterSpacing: 0.2,
                               ),
                             ),
                           ),
