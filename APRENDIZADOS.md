@@ -2,6 +2,10 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-09-06 — v0.84.0 (Jogo da Velha ⭕ — categoria nova ao lado de Historinhas)
+- **Categoria `jogoDaVelha` (`Categoria.jogoDaVelha`, ⭕ #6C5CE7):** 8ª categoria na Home (grid 4×2, `CrossAxisCount 4`). Especial sem banco de palavras (igual Historinhas/Escrever/Contas). Roteada em `HomeScreen._abrirCategoria` → `JogoDaVelhaScreen`.
+- **`JogoDaVelhaScreen` (`features/jogo_da_velha/jogo_da_velha_screen.dart`):** `StatefulWidget` com `AnimationController 550ms`. Estado: `List<String?> _tab` 9, `_histTab/_histVez` pilhas para Voltar (desfaz 1 jogada), `_linhaVitoriosa`/`_fim`/`_vencedor`. `_vitorias` 8 combos, `_checarFim` detecta linha ou velha (sem `null`). `GridView 3×3` com `InkWell` (bloqueia se `_fim` ou célula ocupada), `AnimatedSwitcher` nos X/O, `Stack+CustomPaint _LinhaVitoriaPainter` (animado via `Offset.lerp` + `easeOutCubic`, traço dourado `AppColors.confete.first` com sombra e glow `MaskFilter.blur`). Botões abaixo: `OutlinedButton Voltar` (disable se `hist` vazio) e `FilledButton Recomeçar` (limpa tudo, `reset` anim). Mensagem `Vez do X/O` ou `Venceu!/Deu velha!`. Versão `0.84.0+120`.
+
 ## 2026-09-04 — v0.82.0 (Historinhas 📚 — livrinhos infantis com páginas e fonte)
 - **Categoria nova `Historinhas` (`Categoria.historinhas`, 📚 #FBBF24):** entra na Home como 7º card (grid 4 colunas). É **categoria especial** sem banco de palavras (igual Escrever/Contas) — os testes `banco_palavras_test` ignoram-na. Roteada em `HomeScreen._abrirCategoria` → `HistorinhasMenuScreen`.
 - **Modelo `Livro` (`models/livro.dart`):** `Livro(chave,titulo,emoji,cor,paginas)` + `FonteHistorinha` (maiuscula/normal com `aplicar`). `totalPaginas` getter. Texto guardado em **sentence case** ("Era uma vez…") — `maiuscula` faz `toUpperCase()`, `normal` mostra como está (Aa).

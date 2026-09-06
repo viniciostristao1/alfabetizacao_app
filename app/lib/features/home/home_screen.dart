@@ -14,6 +14,7 @@ import '../escrever/escrever_screen.dart';
 import '../alimentos/alimentos_menu_screen.dart';
 import '../habitat/habitat_map_screen.dart';
 import '../historinhas/historinhas_menu_screen.dart';
+import '../jogo_da_velha/jogo_da_velha_screen.dart';
 import '../nomes/nomes_menu_screen.dart';
 import '../objetos/objetos_menu_screen.dart';
 
@@ -60,6 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Categoria.escrever => const EscreverScreen(),
           Categoria.contas => const ContasMenuScreen(),
           Categoria.historinhas => const HistorinhasMenuScreen(),
+          Categoria.jogoDaVelha => const JogoDaVelhaScreen(),
         },
       ),
     );
@@ -213,12 +215,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Expanded(
+                    Expanded(
                     child: GridView.count(
                       crossAxisCount: 4,
                       mainAxisSpacing: 10,
                       crossAxisSpacing: 10,
-                      childAspectRatio: 2.6,
+                      childAspectRatio: 2.2,
                       children: [
                         for (final c in Categoria.values)
                           _CategoriaCard(
@@ -263,14 +265,21 @@ class _CategoriaCard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(categoria.emoji, style: const TextStyle(fontSize: 30)),
-              const SizedBox(height: 4),
-              Text(
-                categoria.rotulo,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.text,
+              Text(categoria.emoji, style: const TextStyle(fontSize: 28)),
+              const SizedBox(height: 2),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: Text(
+                  categoria.rotulo,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.text,
+                    height: 1.1,
+                  ),
                 ),
               ),
             ],

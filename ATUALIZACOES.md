@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.84.0 (2026-09-06)
+- **Nova categoria Jogo da Velha ⭕:** entrou **Jogo da Velha** na Home (ao lado de Historinhas, 8ª categoria). Tabuleiro **3×3** com **X vs O** alternando, vitória detecta **3 em linha** (horizontal/vertical/diagonal) e mostra um **traço animado** dourado. Abaixo do tabuleiro: **Voltar** (desfaz 1 jogada) e **Recomeçar** (zera o jogo). Ao vencer ou dar velha, o jogo trava até Recomeçar (ou Voltar para desfazer).
+
 ## v0.82.0 (2026-09-04)
 - **Nova categoria Historinhas 📚:** entrou **Historinhas** na Home com **8 livrinhos infantis** (O Gato Esperto, O Pato na Lagoa, O Sapo Feliz, A Casa da Vovó, O Sol e a Lua, Davi e o Tesouro, O Coelho e a Cenoura, O Avião Azul) — cada um com **4 a 6 páginas**. Na leitura dá pra **folhear** (Anterior/Próxima), ver o **progresso** (bolinhas), **ouvir a página** (🔊) e escolher a **fonte**: **MAIÚSCULA** ou **Aa (maiúscula e minúscula)** — salva automaticamente.
 
