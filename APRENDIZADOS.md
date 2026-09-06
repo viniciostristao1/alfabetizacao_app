@@ -2,6 +2,9 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-09-06 — v0.87.1 (Jogo da Velha ⭕ — VELHA compacta + FittedBox)
+- **Fix estouro VELHA:** `Container` do placar envolvido em `FittedBox(scaleDown)` + `_PlacarChip(compact:true)` para VELHA (`18px` vs 26px X/O, `padding 12`), evita overflow em telas estreitas. Versão `0.87.1+124`.
+
 ## 2026-09-06 — v0.87.0 (Jogo da Velha ⭕ — X/O 84px + placar 26px, tabuleiro igual)
 - **`Text X/O` 72→84px** no `GridView` (`Center AnimatedSwitcher`), `cell 120px` comporta; **placar `_PlacarChip` 22→26px**, `padding 14×6→16×7`, tabuleiro `360` inalterado. Versão `0.87.0+123`.
 

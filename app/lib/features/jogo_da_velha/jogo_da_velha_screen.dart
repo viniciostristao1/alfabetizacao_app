@@ -179,26 +179,29 @@ class _JogoDaVelhaScreenState extends State<JogoDaVelhaScreen>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                decoration: BoxDecoration(
-                  color: AppColors.surface,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.lineStrong, width: 1.2),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _PlacarChip(label: 'X', valor: _placarX, cor: AppColors.accent),
-                    const SizedBox(width: 10),
-                    const Text('·', style: TextStyle(color: AppColors.dim, fontWeight: FontWeight.w800, fontSize: 18)),
-                    const SizedBox(width: 10),
-                    _PlacarChip(label: 'O', valor: _placarO, cor: AppColors.danger),
-                    const SizedBox(width: 10),
-                    const Text('·', style: TextStyle(color: AppColors.dim, fontWeight: FontWeight.w800, fontSize: 18)),
-                    const SizedBox(width: 10),
-                    _PlacarChip(label: 'VELHA', valor: _placarVelha, cor: AppColors.dim),
-                  ],
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: AppColors.surface,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: AppColors.lineStrong, width: 1.2),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _PlacarChip(label: 'X', valor: _placarX, cor: AppColors.accent),
+                      const SizedBox(width: 10),
+                      const Text('·', style: TextStyle(color: AppColors.dim, fontWeight: FontWeight.w800, fontSize: 18)),
+                      const SizedBox(width: 10),
+                      _PlacarChip(label: 'O', valor: _placarO, cor: AppColors.danger),
+                      const SizedBox(width: 10),
+                      const Text('·', style: TextStyle(color: AppColors.dim, fontWeight: FontWeight.w800, fontSize: 18)),
+                      const SizedBox(width: 10),
+                      _PlacarChip(label: 'VELHA', valor: _placarVelha, cor: AppColors.dim, compact: true),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 8),
@@ -364,14 +367,15 @@ class _JogoDaVelhaScreenState extends State<JogoDaVelhaScreen>
 }
 
 class _PlacarChip extends StatelessWidget {
-  const _PlacarChip({required this.label, required this.valor, required this.cor});
+  const _PlacarChip({required this.label, required this.valor, required this.cor, this.compact = false});
   final String label;
   final int valor;
   final Color cor;
+  final bool compact;
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
+      padding: EdgeInsets.symmetric(horizontal: compact ? 12 : 16, vertical: 7),
       decoration: BoxDecoration(
         color: AppColors.bg,
         borderRadius: BorderRadius.circular(12),
@@ -379,7 +383,7 @@ class _PlacarChip extends StatelessWidget {
       ),
       child: Text(
         '$label $valor',
-        style: TextStyle(fontSize: 26, fontWeight: FontWeight.w900, color: cor, height: 1),
+        style: TextStyle(fontSize: compact ? 18 : 26, fontWeight: FontWeight.w900, color: cor, height: 1),
       ),
     );
   }

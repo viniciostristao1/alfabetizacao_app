@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.87.1 (2026-09-06)
+- **Jogo da Velha — VELHA sem estouro ⭕:** placar com `FittedBox scaleDown` + **VELHA compacta 18px** (X/O 26px) — não sai mais da caixa.
+
 ## v0.87.0 (2026-09-06)
 - **Jogo da Velha — X/O e placar maiores ⭕:** **X/O 72→84px** (tabuleiro mesmo tamanho) e **placar 22→26px** (bem visível).
 
