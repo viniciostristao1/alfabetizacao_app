@@ -267,7 +267,7 @@ class _JogoDaVelhaScreenState extends State<JogoDaVelhaScreen>
                                                 v,
                                                 key: ValueKey('$i-$v'),
                                                 style: TextStyle(
-                                                  fontSize: 72,
+                                                  fontSize: 84,
                                                   fontWeight: FontWeight.w900,
                                                   color: v == 'X' ? AppColors.accent : AppColors.danger,
                                                   height: 1,
@@ -371,7 +371,7 @@ class _PlacarChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
       decoration: BoxDecoration(
         color: AppColors.bg,
         borderRadius: BorderRadius.circular(12),
@@ -379,7 +379,7 @@ class _PlacarChip extends StatelessWidget {
       ),
       child: Text(
         '$label $valor',
-        style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: cor, height: 1),
+        style: TextStyle(fontSize: 26, fontWeight: FontWeight.w900, color: cor, height: 1),
       ),
     );
   }
