@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.85.0 (2026-09-06)
+- **Jogo da Velha melhorado ⭕:** **placar** (X / O / Velha) no topo com persistência + botão **Zerar placar** embaixo (Volta também desconta do placar), **X/O bem maiores (72px)** e agora em **tela vertical (retrato)** só no Jogo da Velha.
+
 ## v0.84.0 (2026-09-06)
 - **Nova categoria Jogo da Velha ⭕:** entrou **Jogo da Velha** na Home (ao lado de Historinhas, 8ª categoria). Tabuleiro **3×3** com **X vs O** alternando, vitória detecta **3 em linha** (horizontal/vertical/diagonal) e mostra um **traço animado** dourado. Abaixo do tabuleiro: **Voltar** (desfaz 1 jogada) e **Recomeçar** (zera o jogo). Ao vencer ou dar velha, o jogo trava até Recomeçar (ou Voltar para desfazer).
 
