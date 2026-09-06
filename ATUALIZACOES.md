@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.86.0 (2026-09-06)
+- **Jogo da Velha — placar GIGANTE + ícone XO ⭕:** **placar X/O/VELHA** no topo agora com **fonte 22px** e destaque (bem maior que o "Vez do X" que ficou menor e discreto 15px), e o ícone da categoria na Home virou **X azul + O vermelho** lado a lado (antes só ⭕).
+
 ## v0.85.0 (2026-09-06)
 - **Jogo da Velha melhorado ⭕:** **placar** (X / O / Velha) no topo com persistência + botão **Zerar placar** embaixo (Volta também desconta do placar), **X/O bem maiores (72px)** e agora em **tela vertical (retrato)** só no Jogo da Velha.
 

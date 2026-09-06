@@ -265,7 +265,17 @@ class _CategoriaCard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(categoria.emoji, style: const TextStyle(fontSize: 28)),
+              if (categoria == Categoria.jogoDaVelha)
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('X', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: AppColors.accent, height: 1)),
+                    SizedBox(width: 2),
+                    Text('O', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: AppColors.danger, height: 1)),
+                  ],
+                )
+              else
+                Text(categoria.emoji, style: const TextStyle(fontSize: 28)),
               const SizedBox(height: 2),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4),

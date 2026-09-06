@@ -2,6 +2,10 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-09-06 — v0.86.0 (Jogo da Velha ⭕ — placar gigante + ícone XO)
+- **`_CategoriaCard` ícone XO:** `Categoria.jogoDaVelha` agora renderiza `Row[X azul (AppColors.accent) + O vermelho (AppColors.danger)]` em 28px w900 lado a lado, em vez de `Text(emoji)` único ⭕.
+- **Placar maior que "Vez":** `_PlacarChip` `font 14→22`, `padding 10×4→14×6`, borda 1.5, container externo `padding 10×8→16×10` com `lineStrong 1.2`; "Vez do X" reduzido para `15px w700 dim` em `surface2` (antes 20px w900), hierarquia visual correta. Versão `0.86.0+122`.
+
 ## 2026-09-06 — v0.85.0 (Jogo da Velha ⭕ — placar + Zerar + fonte 72px + retrato)
 - **Placar (`shared_preferences` `velha_placar_*_v1`):** `_placarX/_placarO/_placarVelha` no topo em `_PlacarChip` (X azul, O vermelho, VELHA cinza), carrega em `initState`, salva em `_salvarPlacar`, incrementa em `_checarFim`, **Voltar desconta** do vencedor/velha (clamp 0), **Zerar placar** (`OutlinedButton.icon` largura total, desabilitado se 0) zera tudo.
 - **Fonte X/O:** `fontSize 56→72` (bem visível para criança), `Text` com `FontWeight.w900`.

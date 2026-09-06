@@ -180,33 +180,33 @@ class _JogoDaVelhaScreenState extends State<JogoDaVelhaScreen>
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 decoration: BoxDecoration(
                   color: AppColors.surface,
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: AppColors.line),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: AppColors.lineStrong, width: 1.2),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     _PlacarChip(label: 'X', valor: _placarX, cor: AppColors.accent),
-                    const SizedBox(width: 8),
-                    const Text('·', style: TextStyle(color: AppColors.dim, fontWeight: FontWeight.w800)),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 10),
+                    const Text('·', style: TextStyle(color: AppColors.dim, fontWeight: FontWeight.w800, fontSize: 18)),
+                    const SizedBox(width: 10),
                     _PlacarChip(label: 'O', valor: _placarO, cor: AppColors.danger),
-                    const SizedBox(width: 8),
-                    const Text('·', style: TextStyle(color: AppColors.dim, fontWeight: FontWeight.w800)),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 10),
+                    const Text('·', style: TextStyle(color: AppColors.dim, fontWeight: FontWeight.w800, fontSize: 18)),
+                    const SizedBox(width: 10),
                     _PlacarChip(label: 'VELHA', valor: _placarVelha, cor: AppColors.dim),
                   ],
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                 decoration: BoxDecoration(
-                  color: AppColors.surface,
-                  borderRadius: BorderRadius.circular(14),
+                  color: AppColors.surface2,
+                  borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: AppColors.line),
                 ),
                 child: Text(
@@ -214,11 +214,11 @@ class _JogoDaVelhaScreenState extends State<JogoDaVelhaScreen>
                       ? (_vencedor != null ? 'Venceu $_vencedor! 🎉' : 'Deu velha! 😅')
                       : 'Vez do $_vez',
                   style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w900,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
                     color: _fim && _vencedor != null
                         ? (_vencedor == 'X' ? AppColors.accent : AppColors.danger)
-                        : AppColors.text,
+                        : AppColors.dim,
                   ),
                 ),
               ),
@@ -371,15 +371,15 @@ class _PlacarChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
       decoration: BoxDecoration(
         color: AppColors.bg,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: cor.withValues(alpha: 0.5)),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: cor.withValues(alpha: 0.55), width: 1.5),
       ),
       child: Text(
         '$label $valor',
-        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: cor),
+        style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: cor, height: 1),
       ),
     );
   }
