@@ -2,6 +2,9 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-09-07 — v0.88.1 (Remoção Baús — volta a 8 categorias)
+- **Revert:** removida `Categoria.baus` e `features/baus/` (BausScreen + BauBausPainter). `HomeScreen` sem import/case `baus`. Versão `0.88.1+126`.
+
 ## 2026-09-07 — v0.88.0 (Baús 🧰 — 10 baús com pivô real, só baú+moedas)
 - **Categoria `baus` (`Categoria.baus`, 🧰 #E8B84A):** 9ª categoria na Home (grid CrossAxisCount 4). Especial sem banco (igual Historinhas/JogoDaVelha). Rota `BausScreen` em `HomeScreen._abrirCategoria`.
 - **`BausScreen` (`features/baus/baus_screen.dart`):** grid 2 colunas com 10 `_BauCard` (Clássico/Pirata/Real/Rubi/Safira/Esmeralda/Galáxia/Gelo/Mel/Toy). Cada card `StatefulWidget` com `AnimationController 900ms`, `Curves.easeInOutCubic`, `HapticFeedback.mediumImpact`, `CustomPaint(168×112)` + `BauBausPainter(p, estilo)` e label "toque para abrir/aberto". Fundo `Colors.black`, AppBar preta, aviso "Só o baú + moedas, sem cenário".

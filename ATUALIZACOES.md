@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.88.1 (2026-09-07)
+- **Removida categoria Baús 🧰:** ateliê de teste com 10 baús retirado da Home — o app volta ao estado anterior (8 categorias).
+
 ## v0.88.0 (2026-09-07)
 - **Nova categoria Baús 🧰 — Ateliê com 10 baús:** na Home entrou **Baús** (9ª categoria, ao lado do Jogo da Velha). Grid **2 colunas** com **10 baús 3D** (Clássico, Pirata, Real, Rubi, Safira, Esmeralda, Galáxia, Gelo, Mel, Toy) — cada um com **madeira/metal diferentes**, **tampa com pivô real na dobradiça traseira (110°)**, **interior com fundo visível** e **tesouro (moedas empilhadas + joias)**. Toque para **abrir/fechar** com animação **900 ms natural** e vibração. Só o baú + moedas, sem cenário — para testar qual fica melhor.
 

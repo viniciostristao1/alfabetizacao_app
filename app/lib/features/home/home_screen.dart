@@ -17,7 +17,6 @@ import '../historinhas/historinhas_menu_screen.dart';
 import '../jogo_da_velha/jogo_da_velha_screen.dart';
 import '../nomes/nomes_menu_screen.dart';
 import '../objetos/objetos_menu_screen.dart';
-import '../baus/baus_screen.dart';
 
 /// Tela principal (PAISAGEM): as modalidades de palavras.
 /// O emoji/cor de cada card é só apoio visual — a criança que ainda não lê
@@ -63,7 +62,6 @@ class _HomeScreenState extends State<HomeScreen> {
           Categoria.contas => const ContasMenuScreen(),
           Categoria.historinhas => const HistorinhasMenuScreen(),
           Categoria.jogoDaVelha => const JogoDaVelhaScreen(),
-          Categoria.baus => const BausScreen(),
         },
       ),
     );
