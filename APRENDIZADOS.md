@@ -2,6 +2,12 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-09-07 — v0.88.0 (Baús 🧰 — 10 baús com pivô real, só baú+moedas)
+- **Categoria `baus` (`Categoria.baus`, 🧰 #E8B84A):** 9ª categoria na Home (grid CrossAxisCount 4). Especial sem banco (igual Historinhas/JogoDaVelha). Rota `BausScreen` em `HomeScreen._abrirCategoria`.
+- **`BausScreen` (`features/baus/baus_screen.dart`):** grid 2 colunas com 10 `_BauCard` (Clássico/Pirata/Real/Rubi/Safira/Esmeralda/Galáxia/Gelo/Mel/Toy). Cada card `StatefulWidget` com `AnimationController 900ms`, `Curves.easeInOutCubic`, `HapticFeedback.mediumImpact`, `CustomPaint(168×112)` + `BauBausPainter(p, estilo)` e label "toque para abrir/aberto". Fundo `Colors.black`, AppBar preta, aviso "Só o baú + moedas, sem cenário".
+- **`BauBausPainter` (`features/baus/bau_variante_painter.dart`):** cópia parametrizada do `BauPainter` (cavalier `_kx 0.55 _ky 0.30`, `_larg 98 _prof 32 _alt 42 _raioT 16`, dobradiça `Z=_prof Y=0`, `_theta=(p+0.06 sin(p pi)(1-p)) pi/2` 90° + overshoot). Cores via `BauEstilo(madeira/madeiraEscura/ouro/ouroEscuro/interior)` — 10 presets. Mantém `_sombraChao`, `_glow` dourado, `_interior` (piso/paredes), `_tesouro` (moedas elípticas + joias), `_corpo` (frente+lateral+faixas/rebites), `_tampa` (semicilindro 12 segmentos, pivô traseiro, interior visível). Só o baú+moedas, sem Ground/Wall — fundo transparente.
+- **Versão `0.88.0+125`, `kVersao 0.88.0`**. `analyze` limpo, testes ~8 ok (timeout SIGTERM infra, não lógico).
+
 ## 2026-09-06 — v0.87.1 (Jogo da Velha ⭕ — VELHA compacta + FittedBox)
 - **Fix estouro VELHA:** `Container` do placar envolvido em `FittedBox(scaleDown)` + `_PlacarChip(compact:true)` para VELHA (`18px` vs 26px X/O, `padding 12`), evita overflow em telas estreitas. Versão `0.87.1+124`.
 
