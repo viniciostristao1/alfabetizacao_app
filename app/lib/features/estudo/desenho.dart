@@ -88,12 +88,16 @@ class BotaoIconeDesenho extends StatelessWidget {
     required this.cor,
     required this.onTap,
     required this.tooltip,
+    this.ativo = false,
   });
 
   final IconData icon;
   final Color cor;
   final VoidCallback? onTap;
   final String tooltip;
+
+  /// Destaca o botão quando a opção está ligada (ex.: bolinhas visíveis).
+  final bool ativo;
 
   @override
   Widget build(BuildContext context) {
@@ -107,8 +111,10 @@ class BotaoIconeDesenho extends StatelessWidget {
           height: 30,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
+            color: ativo ? cor.withValues(alpha: 0.22) : null,
             border: Border.all(
-              color: cor.withValues(alpha: habilitado ? 0.5 : 0.2),
+              color: cor.withValues(alpha: habilitado ? (ativo ? 0.9 : 0.5) : 0.2),
+              width: ativo ? 2 : 1,
             ),
           ),
           child: Icon(

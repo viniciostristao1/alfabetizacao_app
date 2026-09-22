@@ -6,6 +6,7 @@ import '../../services/progresso_repository.dart';
 import '../../theme/app_colors.dart';
 import '../estudo/desenho.dart';
 import '../estudo/feedback_pontos.dart';
+import 'bolinhas_conta.dart';
 
 /// Tela de estudo das CONTAS (PAISAGEM): mostra uma conta grande (ex.: "12 + 7 ="),
 /// a criança digita o resultado num teclado numérico e o app diz se acertou. Cada
@@ -40,6 +41,21 @@ class _ContaEstudoScreenState extends State<ContaEstudoScreen> {
   FundoTela _fundo = FundoTela.preto;
   CorCaneta _caneta = CorCaneta.azul;
   final List<Traco> _tracos = [];
+
+  // ── contar com bolinhas (botão da coluna esquerda) ──
+  bool _mostrarBolinhas = false;
+
+  /// Bolinhas cabem na faixa embaixo da conta? Senão, abre a janela central.
+  bool get _bolinhasCabemInline => totalBolinhas(_conta) <= kMaxBolinhasInline;
+
+  void _aoTocarBolinhas(Color ui) {
+    if (_bolinhasCabemInline) {
+      setState(() => _mostrarBolinhas = !_mostrarBolinhas);
+    } else {
+      if (_mostrarBolinhas) setState(() => _mostrarBolinhas = false);
+      mostrarBolinhasDialogo(context, _conta, ui);
+    }
+  }
 
   void _inicioTraco(PointerDownEvent e) {
     setState(() => _tracos.add(Traco(_caneta.cor)..pontos.add(e.localPosition)));
@@ -273,6 +289,27 @@ class _ContaEstudoScreenState extends State<ContaEstudoScreen> {
                             ),
                           ),
                         ),
+                        // faixa de bolinhas para contar (abaixo da conta)
+                        if (_mostrarBolinhas && _bolinhasCabemInline)
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+                            child: SizedBox(
+                              height: 110,
+                              child: Center(
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: SizedBox(
+                                    width: 460,
+                                    child: BolinhasConta(
+                                      conta: _conta,
+                                      contraste: ui,
+                                      diametro: 22,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
                           child: Row(
@@ -347,6 +384,17 @@ class _ContaEstudoScreenState extends State<ContaEstudoScreen> {
             cor: ui,
             onTap: _tracos.isEmpty ? null : _desfazer,
             tooltip: 'Apagar o último rabisco',
+          ),
+          const SizedBox(height: 8),
+          // contar com bolinhas: verdes = fica, vermelhas = sai na subtração
+          BotaoIconeDesenho(
+            icon: Icons.circle_outlined,
+            cor: ui,
+            onTap: () => _aoTocarBolinhas(ui),
+            tooltip: _mostrarBolinhas && _bolinhasCabemInline
+                ? 'Esconder as bolinhas'
+                : 'Contar com bolinhas',
+            ativo: _mostrarBolinhas && _bolinhasCabemInline,
           ),
         ],
       ),

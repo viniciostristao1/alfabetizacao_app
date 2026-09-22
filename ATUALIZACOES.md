@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.89.0 (2026-09-22)
+- **Contas — Contar com bolinhas ⚪:** na tela de contas entrou um **botão de bolinha** na coluna esquerda (abaixo do desfazer). Ao tocar, aparecem **bolinhas verdes** embaixo da conta para a criança contar com o dedo: na **soma**, as bolinhas do primeiro número + o sinal + as do segundo; na **subtração**, as últimas bolinhas ficam **vermelhas** (o que sai) e as verdes são o que fica (o resultado). Contas com muitas bolinhas abrem numa **janela central** maior.
+
 ## v0.88.1 (2026-09-07)
 - **Removida categoria Baús 🧰:** ateliê de teste com 10 baús retirado da Home — o app volta ao estado anterior (8 categorias).
 

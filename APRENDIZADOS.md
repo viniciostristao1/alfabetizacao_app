@@ -2,6 +2,12 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-09-22 — v0.89.0 (Contas — contar com bolinhas ⚪)
+- **`BolinhasConta` (`features/contas/bolinhas_conta.dart`):** `Wrap` de `BolinhaContagem` (círculo colorido com borda `contraste` 35%); soma = `a` verdes + `Text(sinal)` + `b` verdes; subtração = `a-b` verdes + `b` vermelhas (`AppColors.danger`). `totalBolinhas()` → soma `a+b`, subtração `a`.
+- **Faixa inline vs janela:** botão `Icons.circle_outlined` na coluna esquerda (`_colunaCaneta`), abaixo do desfazer. Até `kMaxBolinhasInline = 40` bolinhas → faixa de 110px abaixo da conta (`FittedBox scaleDown`, largura 460); acima disso → `mostrarBolinhasDialogo()` (Dialog 760×85%, rolagem, título `enunciado = resultado`, botão Fechar).
+- **`BotaoIconeDesenho.ativo` (`desenho.dart`):** fundo `cor` 22% + borda w2 90% quando ligado (estado do botão de bolinhas).
+- **Testes:** `bolinhas_conta_test.dart` (contagem de cores por operação + diálogo) e 2 casos em `conta_estudo_test.dart` (toggle inline + abertura do diálogo > 40). Versão `0.89.0+127`. `analyze` limpo, 84 testes ok.
+
 ## 2026-09-07 — v0.88.1 (Remoção Baús — volta a 8 categorias)
 - **Revert:** removida `Categoria.baus` e `features/baus/` (BausScreen + BauBausPainter). `HomeScreen` sem import/case `baus`. Versão `0.88.1+126`.
 
