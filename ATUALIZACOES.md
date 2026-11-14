@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.90.0 (2026-11-14)
+- **Modo Frases 💬:** nas Configurações entrou **Palavra ou frases** (🔤 Palavra | 💬 Frases). No Modo Frases cada palavra vira 1 frase curta e criativa (ex.: LEÃO vira O LEÃO MORA NA SAVANA, MAÇÃ vira A MAÇÃ TEM CASCA) — 449 frases únicas cobrindo todas as categorias, habitats, temas e nomes. O app fala a frase inteira, o microfone continua ouvindo só a palavra, e o completar-sílaba fica desligado nesse modo.
+
 ## v0.89.0 (2026-09-22)
 - **Contas — Contar com bolinhas ⚪:** na tela de contas entrou um **botão de bolinha** na coluna esquerda (abaixo do desfazer). Ao tocar, aparecem **bolinhas verdes** embaixo da conta para a criança contar com o dedo: na **soma**, as bolinhas do primeiro número + o sinal + as do segundo; na **subtração**, as últimas bolinhas ficam **vermelhas** (o que sai) e as verdes são o que fica (o resultado). Contas com muitas bolinhas abrem numa **janela central** maior.
 

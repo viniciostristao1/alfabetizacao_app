@@ -2,6 +2,12 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-11-14 — v0.90.0 (Modo Frases 💬 — 449 frases)
+- **`ModoJogo` (`models/modo_jogo.dart`) + `ConfigModo` (`services/config_modo.dart`):** `palavra | frase`, `shared_preferences` chave `modo_jogo_v1`, padrão `palavra`. Seletor `SegmentedButton` 🔤/💬 na `ConfigScreen` (vale global, sem mexer em Nivel/menus/habitat/mapa-múndi/temas).
+- **`banco_frases.dart`:** `kFrases` (449 entradas) + `chaveFrase(p)` = `categoria|texto|tema|habitat|regiao` (o mesmo texto repete em temas: `banana` base vs `pomar`, `quadro` `museu` vs `escola`). `fraseDe()`/`fraseOuPalavra()` (fallback = palavra pura, ex.: categoria `Escrever`). Frases 3–7 palavras, sem duplicata, com a palavra-alvo dentro.
+- **`EstudoScreen`:** carrega `_jogo`; se `frase` + `incompleta` salva → cai pra `maiuscula` (`_prepararIncompleta` sai cedo). Frase renderiza em `FittedBox scaleDown` `fontSize 72` `maxLines 3` centralizada (palavra segue `200` 1 linha). TTS fala a frase inteira (`_falarPalavraAtual`, `_falharPalavra`); mic segue avaliando `palavra.texto` (o reconhecedor aceita a palavra dita dentro da frase). Pontos/XP inalterados (base na palavra).
+- **Testes:** `config_modo_test.dart` + `banco_frases_test.dart` (cobertura total, sem vazio/duplicata, contém alvo, 3–7 palavras). Versão `0.90.0+128`. `analyze` limpo, 90 testes ok.
+
 ## 2026-09-22 — v0.89.0 (Contas — contar com bolinhas ⚪)
 - **`BolinhasConta` (`features/contas/bolinhas_conta.dart`):** `Wrap` de `BolinhaContagem` (círculo colorido com borda `contraste` 35%); soma = `a` verdes + `Text(sinal)` + `b` verdes; subtração = `a-b` verdes + `b` vermelhas (`AppColors.danger`). `totalBolinhas()` → soma `a+b`, subtração `a`.
 - **Faixa inline vs janela:** botão `Icons.circle_outlined` na coluna esquerda (`_colunaCaneta`), abaixo do desfazer. Até `kMaxBolinhasInline = 40` bolinhas → faixa de 110px abaixo da conta (`FittedBox scaleDown`, largura 460); acima disso → `mostrarBolinhasDialogo()` (Dialog 760×85%, rolagem, título `enunciado = resultado`, botão Fechar).

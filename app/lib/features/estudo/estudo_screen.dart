@@ -7,15 +7,18 @@ import 'package:flutter/services.dart';
 import '../../models/alimentos_tema.dart';
 import '../../models/categoria.dart';
 import '../../models/estudo_opcoes.dart';
+import '../../models/modo_jogo.dart';
 import '../../models/modo_leitura.dart';
 import '../../models/nomes_tema.dart';
 import '../../models/palavra.dart';
 import '../../models/regiao.dart';
 import '../../models/tema.dart';
+import '../../services/banco_frases.dart';
 import '../../services/banco_palavras.dart';
 import '../../services/completar_silaba.dart';
 import '../../services/config_leitura.dart';
 import '../../services/config_mic.dart';
+import '../../services/config_modo.dart';
 import '../../services/config_ordem.dart';
 import '../../services/fala.dart';
 import '../../services/reconhecimento.dart';
@@ -84,6 +87,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
   int _moedas = 0;
   int _xp = 0;
   ModoLeitura _modo = ModoLeitura.maiuscula; // MAIÚSCULAS / minúsculas / completar
+  ModoJogo _jogo = ModoJogo.palavra; // Palavra isolada ou Frases (Configurações)
 
   // ── modo "completar a sílaba que falta" (múltipla escolha) ──
   int _blankIdx = -1; // sílaba que falta (-1 = palavra sem desafio: <2 sílabas)
@@ -130,13 +134,18 @@ class _EstudoScreenState extends State<EstudoScreen> {
     final moedas = await ProgressoRepository.moedas();
     final xp = await ProgressoRepository.xp();
     final modo = await ConfigLeitura.carregar();
+    final jogo = await ConfigModo.carregar();
     final micAtivado = await ConfigMic.ativado();
     final micTolerancia = await ConfigMic.tolerancia();
     if (mounted) {
       setState(() {
         _moedas = moedas;
         _xp = xp;
-        _modo = modo;
+        // No Modo Frases não há "completar a sílaba": cai para MAIÚSCULAS.
+        _modo = (jogo == ModoJogo.frase && modo == ModoLeitura.incompleta)
+            ? ModoLeitura.maiuscula
+            : modo;
+        _jogo = jogo;
         _micAtivado = micAtivado;
         _micTolerancia = micTolerancia;
       });
@@ -145,15 +154,19 @@ class _EstudoScreenState extends State<EstudoScreen> {
     }
   }
 
-  /// Fala a palavra atual em voz alta (voz do celular) — a criança ouve o som
-  /// enquanto vê a escrita. Disparada ao abrir e ao trocar de palavra.
+  /// Fala o conteúdo atual em voz alta (a voz do celular) — a criança ouve o
+  /// som enquanto vê a escrita. No Modo Frases fala a FRASE inteira; no Modo
+  /// Palavra, só a palavra. Disparada ao abrir e ao trocar de palavra.
   void _falarPalavraAtual() {
-    unawaited(Fala.instance.falar(widget.palavras[_i].texto));
+    final p = widget.palavras[_i];
+    unawaited(Fala.instance
+        .falar(_jogo == ModoJogo.frase ? fraseOuPalavra(p) : p.texto));
   }
 
   /// Monta o desafio "completar a sílaba" da palavra atual (se o modo for esse).
+  /// No Modo Frases não há completar — sai sem montar.
   void _prepararIncompleta() {
-    if (_modo != ModoLeitura.incompleta) return;
+    if (_modo != ModoLeitura.incompleta || _jogo == ModoJogo.frase) return;
     final d = montarDesafio(widget.palavras[_i]);
     setState(() {
       _blankIdx = d?.blankIndex ?? -1;
@@ -366,13 +379,17 @@ class _EstudoScreenState extends State<EstudoScreen> {
   }
 
   /// Errou [_maxTentativas] vezes seguidas: mesmo efeito do X (perde pontos,
-  /// "-N"), o app FALA a palavra certa (vira aprendizado) e passa para a próxima.
+  /// "-N"), o app FALA a resposta certa (vira aprendizado) e passa para a próxima.
+  /// No Modo Frases fala a FRASE inteira; senão, só a palavra.
   Future<void> _falharPalavra(String alvo) async {
     setState(() => _statusMic = null);
     await _errou(); // desconta pontos, mostra "-N", zera a sequência
     if (!mounted) return;
     _tentativas = 0;
-    await Fala.instance.falar(alvo); // ex.: fala "gato"
+    final fala = _jogo == ModoJogo.frase
+        ? fraseOuPalavra(widget.palavras[_i])
+        : alvo;
+    await Fala.instance.falar(fala); // ex.: fala "gato" (ou a frase dele)
     if (!mounted) return;
     await _avancarAposResposta();
   }
@@ -916,18 +933,39 @@ class _EstudoScreenState extends State<EstudoScreen> {
                               child: Padding(
                                 padding:
                                     const EdgeInsets.fromLTRB(8, 4, 20, 4),
-                                child: FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    _modo.aplicar(palavra.texto),
-                                    style: TextStyle(
-                                      fontSize: 200,
-                                      fontWeight: FontWeight.w800,
-                                      letterSpacing: 2,
-                                      color: letra,
-                                    ),
-                                  ),
-                                ),
+                                child: _jogo == ModoJogo.frase
+                                    // ── Modo Frases: frase simples centralizada,
+                                    // menor e com quebra de linha (até 3 linhas;
+                                    // encolhe se precisar).
+                                    ? FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          _modo.aplicar(
+                                              fraseOuPalavra(palavra)),
+                                          textAlign: TextAlign.center,
+                                          softWrap: true,
+                                          maxLines: 3,
+                                          style: TextStyle(
+                                            fontSize: 72,
+                                            height: 1.2,
+                                            fontWeight: FontWeight.w800,
+                                            letterSpacing: 1,
+                                            color: letra,
+                                          ),
+                                        ),
+                                      )
+                                    : FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          _modo.aplicar(palavra.texto),
+                                          style: TextStyle(
+                                            fontSize: 200,
+                                            fontWeight: FontWeight.w800,
+                                            letterSpacing: 2,
+                                            color: letra,
+                                          ),
+                                        ),
+                                      ),
                               ),
                             ),
                           ),

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../../models/modo_jogo.dart';
 import '../../models/modo_leitura.dart';
 import '../../models/regiao.dart';
 import '../../services/config_fala.dart';
 import '../../services/config_leitura.dart';
 import '../../services/config_mic.dart';
+import '../../services/config_modo.dart';
 import '../../services/config_ordem.dart';
 import '../../services/progresso_repository.dart';
 import '../../theme/app_colors.dart';
@@ -13,7 +15,8 @@ import '../../theme/app_colors.dart';
 ///  - **Pontuação:** o pai/mãe ajusta as moedas 🪙 e o nível ⭐ do Davi
 ///    (ex.: começar de novo, acertar a contagem);
 ///  - **Como mostrar as palavras** (MAIÚSCULAS / minúsculas) e se o app deve
-///    **falar** as palavras em voz alta;
+///    **falar** em voz alta;
+///  - **Palavra ou frases** (Modo Frases: cada palavra vira 1 frase);
 ///  - **Ordem das fases** do mapa-múndi — arrasta pra decidir em que sequência
 ///    as categorias de animais rodam (Ártico, Fazenda, Aves…).
 /// Salvo local (ConfigOrdem / ConfigLeitura / ConfigFala / ProgressoRepository).
@@ -29,6 +32,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
   int _moedas = 0;
   int _xp = 0;
   ModoLeitura _modo = ModoLeitura.maiuscula;
+  ModoJogo _jogo = ModoJogo.palavra;
   bool _falar = true;
   bool _mic = true;
   int _micTol = 1;
@@ -45,6 +49,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
     final moedas = await ProgressoRepository.moedas();
     final xp = await ProgressoRepository.xp();
     final modo = await ConfigLeitura.carregar();
+    final jogo = await ConfigModo.carregar();
     final falar = await ConfigFala.ativado();
     final mic = await ConfigMic.ativado();
     final micTol = await ConfigMic.tolerancia();
@@ -54,6 +59,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
         _moedas = moedas;
         _xp = xp;
         _modo = modo;
+        _jogo = jogo;
         _falar = falar;
         _mic = mic;
         _micTol = micTol;
@@ -64,6 +70,11 @@ class _ConfigScreenState extends State<ConfigScreen> {
   void _mudarModo(ModoLeitura modo) {
     setState(() => _modo = modo);
     ConfigLeitura.salvar(modo);
+  }
+
+  void _mudarJogo(ModoJogo jogo) {
+    setState(() => _jogo = jogo);
+    ConfigModo.salvar(jogo);
   }
 
   void _mudarFalar(bool valor) {
@@ -253,6 +264,28 @@ class _ConfigScreenState extends State<ConfigScreen> {
             showSelectedIcon: false,
             onSelectionChanged: (s) => _mudarModo(s.first),
           ),
+          const SizedBox(height: 14),
+          const Text(
+            'Palavra ou frases',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+          ),
+          const SizedBox(height: 4),
+          const Text(
+            'Palavra mostra 1 palavra por vez. Frases mostra 1 frase por '
+            'palavra (ex.: LEÃO vira O LEÃO MORA NA SAVANA). No modo frases o '
+            'microfone continua ouvindo só a palavra.',
+            style: TextStyle(color: AppColors.dim),
+          ),
+          const SizedBox(height: 8),
+          SegmentedButton<ModoJogo>(
+            segments: const [
+              ButtonSegment(value: ModoJogo.palavra, label: Text('🔤 Palavra')),
+              ButtonSegment(value: ModoJogo.frase, label: Text('💬 Frases')),
+            ],
+            selected: {_jogo},
+            showSelectedIcon: false,
+            onSelectionChanged: (s) => _mudarJogo(s.first),
+          ),
           const SizedBox(height: 4),
           Card(
             color: AppColors.surface,
@@ -264,7 +297,8 @@ class _ConfigScreenState extends State<ConfigScreen> {
                 style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
               ),
               subtitle: const Text(
-                'O celular lê a palavra em voz alta quando ela aparece.',
+                'O celular lê em voz alta quando aparece (a frase inteira, '
+                'no Modo Frases).',
                 style: TextStyle(color: AppColors.dim),
               ),
               value: _falar,
