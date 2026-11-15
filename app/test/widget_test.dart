@@ -54,6 +54,19 @@ void main() {
     expect(find.text('Temas'), findsOneWidget);
   });
 
+  testWidgets('tocar em Espaço abre o menu (3 níveis + Temas)',
+      (tester) async {
+    await _pumpApp(tester);
+
+    await tester.tap(find.text('Espaço'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Fácil'), findsOneWidget);
+    expect(find.text('Médio'), findsOneWidget);
+    expect(find.text('Difícil'), findsOneWidget);
+    expect(find.text('Temas'), findsOneWidget);
+  });
+
   testWidgets('tocar em Animais abre o mapa de habitats', (tester) async {
     await _pumpApp(tester);
 

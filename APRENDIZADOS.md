@@ -2,6 +2,10 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-11-15 — v0.94.0 (Menu do Espaço com capa 🚀)
+- **Capa do Espaço fatiada:** `file_000000006fc0820...png` (1536×1024, raiz, removida) → `assets/espaco/espaco_{facil,medio,dificil,temas}.png` (topo y 0–548, base y 552–1024; 3 painéis ~485–500px + hangar 1536×472). `pubspec` + `EspacoMenuScreen` (molde Alimentos: `Row` 3 em cima `flex 5` + larga embaixo `flex 4`, `BoxFit.cover`, legenda com gradiente) + `SelecaoEspacoScreen` (molde Alimentos, `todosOsEspaco()`). `HomeScreen`: `espaco → EspacoMenuScreen` (aposenta `NivelScreen` genérico). Sem temas no Espaço: botão "Temas" abre o selecionar (provisório). Teste widget "Espaço abre o menu" adicionado.
+- Versão `0.94.0+132`. `analyze` limpo, 93 testes ok.
+
 ## 2026-11-15 — v0.93.0 (Frase minúscula com inicial maiúscula 🔤)
 - **`ModoLeitura.aplicarFrase()`:** em `minuscula` retorna `frase[0].toUpperCase() + resto` (preserva nomes próprios: "Saturno", "Davi", "Ana Clara"); demais modos seguem `aplicar()` (tudo MAIÚSCULAS). `EstudoScreen` (Modo Frases) trocou `aplicar` → `aplicarFrase`; palavra isolada segue `aplicar` (toda minúscula).
 - Versão `0.93.0+131`. `analyze` limpo, 92 testes ok.

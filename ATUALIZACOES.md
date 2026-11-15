@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.94.0 (2026-11-15)
+- **Espaço com capa igual às outras categorias 🚀:** o Espaço agora tem menu com foto (3 em cima: Fácil / Médio / Difícil, 1 larga embaixo: Temas) como Alimentos/Objetos/Nomes — funciona bem com o celular na horizontal. O botão **Temas** abre o **Selecionar palavras do Espaço** (a categoria ainda não tem temas).
+
 ## v0.93.0 (2026-11-15)
 - **Modo minúsculas: frase com maiúscula no início 🔤:** no **Modo Frases** com letras minúsculas, a frase agora começa com maiúscula ("Os anéis de Saturno são lindos" em vez de "os anéis..."). Palavra isolada continua toda minúscula.
 
