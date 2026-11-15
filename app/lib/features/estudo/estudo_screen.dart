@@ -940,7 +940,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
                                     ? FittedBox(
                                         fit: BoxFit.scaleDown,
                                         child: Text(
-                                          _modo.aplicar(
+                                          _modo.aplicarFrase(
                                               fraseOuPalavra(palavra)),
                                           textAlign: TextAlign.center,
                                           softWrap: true,

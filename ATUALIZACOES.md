@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.93.0 (2026-11-15)
+- **Modo minúsculas: frase com maiúscula no início 🔤:** no **Modo Frases** com letras minúsculas, a frase agora começa com maiúscula ("Os anéis de Saturno são lindos" em vez de "os anéis..."). Palavra isolada continua toda minúscula.
+
 ## v0.92.0 (2026-11-15)
 - **Espaço ganha Saturno 🪐:** nova palavra **SATURNO** no **Médio (3 sílabas: Sa-tur-no)** — no **Modo Frases** vira OS ANÉIS DE SATURNO SÃO LINDOS. A categoria agora tem 15 palavras.
 

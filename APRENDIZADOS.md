@@ -2,6 +2,10 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-11-15 — v0.93.0 (Frase minúscula com inicial maiúscula 🔤)
+- **`ModoLeitura.aplicarFrase()`:** em `minuscula` retorna `frase[0].toUpperCase() + resto` (preserva nomes próprios: "Saturno", "Davi", "Ana Clara"); demais modos seguem `aplicar()` (tudo MAIÚSCULAS). `EstudoScreen` (Modo Frases) trocou `aplicar` → `aplicarFrase`; palavra isolada segue `aplicar` (toda minúscula).
+- Versão `0.93.0+131`. `analyze` limpo, 92 testes ok.
+
 ## 2026-11-15 — v0.92.0 (Espaço + Saturno 🪐)
 - **Saturno no Espaço:** `Palavra(['Sa', 'tur', 'no'], Categoria.espaco)` (Médio, 3 sílabas, nome próprio com maiúscula como `Marte`) + frase `espaco|Saturno|||` → `Os anéis de Saturno são lindos` (6 palavras, contém alvo, sem duplicata). Banco Espaço 14→15 (Fácil 8 / Médio 4 / Difícil 3), `kFrases` 449→450. Teste `categoria Espaço` atualizado.
 - Versão `0.92.0+130`. `analyze` limpo, 91 testes ok.

@@ -17,4 +17,14 @@ enum ModoLeitura {
         ModoLeitura.minuscula => texto.toLowerCase(),
         _ => texto.toUpperCase(),
       };
+
+  /// Aplica o caixa da FRASE conforme o modo: em minúsculas a frase fica
+  /// como no livro — 1ª letra maiúscula e o resto como está (preserva
+  /// nomes próprios: "Os anéis de Saturno são lindos", "O Davi sabe ler");
+  /// nos demais modos, tudo em MAIÚSCULAS.
+  String aplicarFrase(String frase) {
+    if (this != ModoLeitura.minuscula) return aplicar(frase);
+    if (frase.isEmpty) return frase;
+    return frase[0].toUpperCase() + frase.substring(1);
+  }
 }
