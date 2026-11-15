@@ -15,6 +15,7 @@ import '../alimentos/alimentos_menu_screen.dart';
 import '../habitat/habitat_map_screen.dart';
 import '../historinhas/historinhas_menu_screen.dart';
 import '../jogo_da_velha/jogo_da_velha_screen.dart';
+import '../nivel/nivel_screen.dart';
 import '../nomes/nomes_menu_screen.dart';
 import '../objetos/objetos_menu_screen.dart';
 
@@ -58,6 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Categoria.objetos => const ObjetosMenuScreen(),
           Categoria.alimentos => const AlimentosMenuScreen(),
           Categoria.nomes => const NomesMenuScreen(),
+          Categoria.espaco => const NivelScreen(categoria: Categoria.espaco),
           Categoria.escrever => const EscreverScreen(),
           Categoria.contas => const ContasMenuScreen(),
           Categoria.historinhas => const HistorinhasMenuScreen(),

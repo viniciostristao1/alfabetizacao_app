@@ -8,8 +8,8 @@ import '../models/palavra.dart';
 /// bater com o nível desejado. A subcategoria (`sub`) é opcional e já vem
 /// preenchida para o futuro (aquatico/terrestre/voador, menino/menina, casa/rua).
 ///
-/// Um teste (`test/banco_palavras_test.dart`) garante que toda palavra tem 2, 3
-/// ou 4 sílabas, sem vazios e sem duplicatas.
+/// Um teste (`test/banco_palavras_test.dart`) garante que toda palavra tem de 1 a
+/// 6 sílabas, sem vazios e sem duplicatas. O Fácil aceita 1–2 sílabas.
 const List<Palavra> bancoPalavras = [
   // ─────────────────────────── ANIMAIS ───────────────────────────
   // DUAS classificações independentes por bicho:
@@ -300,6 +300,25 @@ const List<Palavra> bancoPalavras = [
   Palavra(['Ma', 'ri', 'a', 'Ce', 'cí', 'lia'], Categoria.nomes, tema: 'compostos', texto: 'Maria Cecília'),
   Palavra(['Jo', 'ão', 'Mi', 'guel'], Categoria.nomes, tema: 'compostos', texto: 'João Miguel'),
 
+  // ──────────────────────────── ESPAÇO ────────────────────────────
+  // fácil (1–2 sílabas; "luz" tem 1 sílaba e entra no Fácil)
+  Palavra(['lu', 'a'], Categoria.espaco),
+  Palavra(['ter', 'ra'], Categoria.espaco),
+  Palavra(['Mar', 'te'], Categoria.espaco),
+  Palavra(['as', 'tro'], Categoria.espaco),
+  Palavra(['na', 've'], Categoria.espaco),
+  Palavra(['ro', 'bô'], Categoria.espaco),
+  Palavra(['pou', 'so'], Categoria.espaco),
+  Palavra(['luz'], Categoria.espaco),
+  // média (3 sílabas)
+  Palavra(['fo', 'gue', 'te'], Categoria.espaco),
+  Palavra(['de', 'co', 'lar'], Categoria.espaco),
+  Palavra(['vi', 'a', 'gem'], Categoria.espaco),
+  // difícil (4 sílabas)
+  Palavra(['as', 'tro', 'nau', 'ta'], Categoria.espaco),
+  Palavra(['me', 'te', 'o', 'ro'], Categoria.espaco),
+  Palavra(['ca', 'pa', 'ce', 'te'], Categoria.espaco),
+
   // ───────────────────── NOMES > TEMAS (SUPERMERCADO) ─────────────────────
   // 4 categorias de supermercado — palavras pequenas na esquerda (Hortifruti)
   // → maiores na direita (Açougue). Foto `nomes_temas_foto.png` (supermercado).
@@ -543,6 +562,9 @@ List<String> poolSilabasMaiusculas() {
 /// Palavras de uma categoria + nível, ordenadas por dificuldade (menos letras
 /// primeiro; ver [Palavra.porDificuldade]).
 ///
+/// O Fácil aceita 1–2 sílabas (ex.: "luz", do Espaço); Médio/Difícil seguem o
+/// nº exato de sílabas.
+///
 /// Palavras de TEMA da cidade (`tema != null`) ficam de fora: elas NÃO rodam nos
 /// níveis normais de Objetos — só no estudo do tema ([palavrasDoTema]).
 List<Palavra> palavrasDe(Categoria categoria, Nivel nivel) {
@@ -550,7 +572,8 @@ List<Palavra> palavrasDe(Categoria categoria, Nivel nivel) {
       .where((p) =>
           p.categoria == categoria &&
           p.tema == null &&
-          p.nivelSilabas == nivel.silabas)
+          (p.nivelSilabas == nivel.silabas ||
+              (nivel == Nivel.facil && p.nivelSilabas == 1)))
       .toList();
   lista.sort(Palavra.porDificuldade);
   return lista;
@@ -623,6 +646,15 @@ List<Palavra> todosOsObjetos() {
 List<Palavra> todosOsNomes() {
   final lista =
       bancoPalavras.where((p) => p.categoria == Categoria.nomes).toList();
+  lista.sort((a, b) => semAcento(a.texto).compareTo(semAcento(b.texto)));
+  return lista;
+}
+
+/// Todas as palavras do Espaço, em ordem alfabética (para o futuro
+/// "Selecionar" do espaço).
+List<Palavra> todosOsEspaco() {
+  final lista =
+      bancoPalavras.where((p) => p.categoria == Categoria.espaco).toList();
   lista.sort((a, b) => semAcento(a.texto).compareTo(semAcento(b.texto)));
   return lista;
 }

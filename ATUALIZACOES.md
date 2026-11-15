@@ -2,6 +2,10 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.91.0 (2026-11-14)
+- **Nova categoria Espaço 🚀:** entrou na Home com **14 palavras** (lua, terra, Marte, astronauta, meteoro, astro, nave, foguete, robô, capacete, pouso, decolar, luz, viagem) em **Fácil / Médio / Difícil** — e já funciona no **Modo Frases** (ex.: FOGUETE vira O FOGUETE DECOLA RÁPIDO). A "luz" (1 sílaba) conta como Fácil.
+- **Historinhas com cards iguais aos da Home 📚:** as caixinhas dos livrinhos diminuíram para o mesmo tamanho das categorias (4 colunas, ícone e título menores).
+
 ## v0.90.0 (2026-11-14)
 - **Modo Frases 💬:** nas Configurações entrou **Palavra ou frases** (🔤 Palavra | 💬 Frases). No Modo Frases cada palavra vira 1 frase curta e criativa (ex.: LEÃO vira O LEÃO MORA NA SAVANA, MAÇÃ vira A MAÇÃ TEM CASCA) — 449 frases únicas cobrindo todas as categorias, habitats, temas e nomes. O app fala a frase inteira, o microfone continua ouvindo só a palavra, e o completar-sílaba fica desligado nesse modo.
 

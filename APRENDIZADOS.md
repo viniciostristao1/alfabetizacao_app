@@ -2,6 +2,13 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-11-14 — v0.91.0 (Espaço 🚀 + Historinhas compactas)
+- **Categoria `espaco` (`Categoria.espaco`, 🚀 #7C3AED):** 9ª categoria na Home (grid 4 colunas). 14 `Palavra` no banco (Fácil 8 / Médio 3 / Difícil 3) + 14 frases no `kFrases` (ex.: `espaco|foguete|||` → `O foguete decola rápido`). Rota `HomeScreen → NivelScreen(categoria: espaco)` (o `NivelScreen` genérico, até então sem uso).
+- **1 sílaba no Fácil:** `palavrasDe` aceita `nivelSilabas == 1` no `Nivel.facil` (só o Espaço tem: "luz"); `Nivel.facil.descricao` virou `1–2 sílabas`; teste do banco agora exige 1–6 sílabas + grupo novo `categoria Espaço` (14 palavras, níveis certos). `montarDesafio` já trata <2 sílabas (só avança) e `_pontosPalavra` dá 1 ponto (clamp).
+- **`todosOsEspaco()`** criado (ordem alfabética, para o futuro "Selecionar" do espaço).
+- **Historinhas (`historinhas_menu_screen.dart`):** grid 3→4 colunas, aspecto 1.35→2.2, raio 18→20, emoji 42→28, título 14→12 — espelho do `_CategoriaCard` da Home (a linha "N páginas" saiu para caber).
+- Versão `0.91.0+129`. `analyze` limpo, 91 testes ok.
+
 ## 2026-11-14 — v0.90.0 (Modo Frases 💬 — 449 frases)
 - **`ModoJogo` (`models/modo_jogo.dart`) + `ConfigModo` (`services/config_modo.dart`):** `palavra | frase`, `shared_preferences` chave `modo_jogo_v1`, padrão `palavra`. Seletor `SegmentedButton` 🔤/💬 na `ConfigScreen` (vale global, sem mexer em Nivel/menus/habitat/mapa-múndi/temas).
 - **`banco_frases.dart`:** `kFrases` (449 entradas) + `chaveFrase(p)` = `categoria|texto|tema|habitat|regiao` (o mesmo texto repete em temas: `banana` base vs `pomar`, `quadro` `museu` vs `escola`). `fraseDe()`/`fraseOuPalavra()` (fallback = palavra pura, ex.: categoria `Escrever`). Frases 3–7 palavras, sem duplicata, com a palavra-alvo dentro.

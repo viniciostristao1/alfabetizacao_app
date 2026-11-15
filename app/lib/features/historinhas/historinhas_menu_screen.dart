@@ -17,19 +17,19 @@ class HistorinhasMenuScreen extends StatelessWidget {
       body: GridView.builder(
         padding: const EdgeInsets.all(14),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          mainAxisSpacing: 12,
-          crossAxisSpacing: 12,
-          childAspectRatio: 1.35,
+          crossAxisCount: 4,
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
+          childAspectRatio: 2.2,
         ),
         itemCount: bancoHistorinhas.length,
         itemBuilder: (context, i) {
           final livro = bancoHistorinhas[i];
           return Material(
             color: AppColors.surface,
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(20),
             child: InkWell(
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(20),
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -39,7 +39,7 @@ class HistorinhasMenuScreen extends StatelessWidget {
               },
               child: Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(18),
+                  borderRadius: BorderRadius.circular(20),
                   border: Border.all(
                     color: livro.cor.withValues(alpha: 0.55),
                     width: 1.5,
@@ -48,29 +48,21 @@ class HistorinhasMenuScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(livro.emoji, style: const TextStyle(fontSize: 42)),
-                    const SizedBox(height: 6),
+                    Text(livro.emoji, style: const TextStyle(fontSize: 28)),
+                    const SizedBox(height: 2),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
                       child: Text(
                         livro.titulo,
                         textAlign: TextAlign.center,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                          fontSize: 14,
+                          fontSize: 12,
                           fontWeight: FontWeight.w800,
                           color: AppColors.text,
+                          height: 1.1,
                         ),
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${livro.totalPaginas} páginas',
-                      style: const TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.dim,
                       ),
                     ),
                   ],

@@ -290,6 +290,22 @@ const Map<String, String> kFrases = {
   'nomes|Maria Cecília|compostos||': 'A Maria Cecília abraça bonecas',
   'nomes|João Miguel|compostos||': 'O João Miguel desenha casas',
 
+  // ──────────────────────────── ESPAÇO ────────────────────────────
+  'espaco|lua|||': 'A lua brilha à noite',
+  'espaco|terra|||': 'A terra é o nosso lar',
+  'espaco|Marte|||': 'Marte é o planeta vermelho',
+  'espaco|astro|||': 'O astro brilha longe',
+  'espaco|nave|||': 'A nave voa alto',
+  'espaco|robô|||': 'O robô ajuda o astronauta',
+  'espaco|pouso|||': 'O pouso é suave',
+  'espaco|luz|||': 'A luz viaja rápido',
+  'espaco|foguete|||': 'O foguete decola rápido',
+  'espaco|decolar|||': 'O foguete vai decolar',
+  'espaco|viagem|||': 'A viagem é espacial',
+  'espaco|astronauta|||': 'O astronauta viaja ao espaço',
+  'espaco|meteoro|||': 'O meteoro risca o céu',
+  'espaco|capacete|||': 'O capacete protege o astronauta',
+
   // ───────────────────── NOMES > TEMAS (SUPERMERCADO) ─────────────────────
   // 🍎 Hortifruti
   'alimentos|uva|hortifruti||': 'A uva vem da parreira',

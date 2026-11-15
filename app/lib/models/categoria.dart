@@ -12,6 +12,7 @@ enum Categoria {
   objetos('Objetos', '🧸', Color(0xFF5B9CFF)),
   alimentos('Alimentos', '🍎', Color(0xFFFF8A5B)),
   nomes('Nomes', '🔤', Color(0xFFB98BFF)),
+  espaco('Espaço', '🚀', Color(0xFF7C3AED)),
   contas('Contas', '🧮', Color(0xFF2DD4BF)),
   escrever('Escrever', '✏️', Color(0xFFF472B6)),
   historinhas('Historinhas', '📚', Color(0xFFFBBF24)),
@@ -25,9 +26,10 @@ enum Categoria {
 }
 
 /// Nível = quantidade de sílabas da palavra (o "difícil/fácil" pediido).
-/// `silabas` é o número exato usado para filtrar o banco de palavras.
+/// `silabas` é o número exato usado para filtrar o banco de palavras — o
+/// Fácil aceita também 1 sílaba (ex.: "luz", do Espaço).
 enum Nivel {
-  facil('Fácil', '2 sílabas', 2, Color(0xFF54C08A)),
+  facil('Fácil', '1–2 sílabas', 2, Color(0xFF54C08A)),
   media('Média', '3 sílabas', 3, Color(0xFFF5A524)),
   dificil('Difícil', '4 sílabas', 4, Color(0xFFFF6B6B));
 

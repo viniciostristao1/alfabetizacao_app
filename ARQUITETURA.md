@@ -24,7 +24,7 @@ Tudo em `services/banco_palavras.dart`. Uma palavra = uma lista de sílabas:
 ```dart
 Palavra(['ca', 'va', 'lo'], Categoria.animais, sub: 'terrestre'),
 ```
-- O **nível** sai do nº de sílabas (2 = fácil, 3 = média, 4 = difícil). Não há campo de nível.
+- O **nível** sai do nº de sílabas (1–2 = fácil, 3 = média, 4 = difícil). Não há campo de nível.
 - Nomes próprios: inicial maiúscula nas sílabas (`['Da', 'vi']`) — a tela deixa tudo em
   CAIXA ALTA na exibição, mas o dado guarda a forma correta (útil p/ o futuro).
 - Rode `flutter test` — o teste reprova sílaba vazia, palavra com nº de sílabas fora de 2–4,

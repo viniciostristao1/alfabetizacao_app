@@ -10,13 +10,13 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('banco de palavras', () {
-    test('toda palavra tem de 2 a 6 sílabas, sem vazios', () {
+    test('toda palavra tem de 1 a 6 sílabas, sem vazios', () {
       for (final p in bancoPalavras) {
         expect(p.silabas, isNotEmpty, reason: 'palavra sem sílabas');
         expect(
-          p.nivelSilabas >= 2 && p.nivelSilabas <= 6,
+          p.nivelSilabas >= 1 && p.nivelSilabas <= 6,
           isTrue,
-          reason: '"${p.texto}" tem ${p.nivelSilabas} sílabas (fora de 2–6)',
+          reason: '"${p.texto}" tem ${p.nivelSilabas} sílabas (fora de 1–6)',
         );
         for (final s in p.silabas) {
           expect(s.trim(), isNotEmpty, reason: 'sílaba vazia em "${p.texto}"');
@@ -233,6 +233,34 @@ void main() {
       expect(regiaoDe('alce'), 'norte'); // alce nos EUA (pedido do usuário)
       expect(regiaoDe('golfinho'), 'oceano');
       expect(regiaoDe('águia'), 'ceu');
+    });
+  });
+
+  group('categoria Espaço', () {
+    test('tem as 14 palavras pedidas, nos níveis certos', () {
+      final todas = todosOsEspaco();
+      expect(todas.length, 14);
+      final facil =
+          palavrasDe(Categoria.espaco, Nivel.facil).map((p) => p.texto).toSet();
+      expect(
+        facil,
+        containsAll(
+            {'lua', 'terra', 'Marte', 'astro', 'nave', 'robô', 'pouso', 'luz'}),
+      );
+      // "luz" tem 1 sílaba e entra no Fácil
+      expect(
+        palavrasDe(Categoria.espaco, Nivel.facil)
+            .any((p) => p.texto == 'luz' && p.nivelSilabas == 1),
+        isTrue,
+      );
+      expect(
+        palavrasDe(Categoria.espaco, Nivel.media).map((p) => p.texto).toSet(),
+        containsAll({'foguete', 'decolar', 'viagem'}),
+      );
+      expect(
+        palavrasDe(Categoria.espaco, Nivel.dificil).map((p) => p.texto).toSet(),
+        containsAll({'astronauta', 'meteoro', 'capacete'}),
+      );
     });
   });
 }
