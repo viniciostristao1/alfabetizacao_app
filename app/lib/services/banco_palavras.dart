@@ -314,6 +314,7 @@ const List<Palavra> bancoPalavras = [
   Palavra(['fo', 'gue', 'te'], Categoria.espaco),
   Palavra(['de', 'co', 'lar'], Categoria.espaco),
   Palavra(['vi', 'a', 'gem'], Categoria.espaco),
+  Palavra(['Sa', 'tur', 'no'], Categoria.espaco),
   // difícil (4 sílabas)
   Palavra(['as', 'tro', 'nau', 'ta'], Categoria.espaco),
   Palavra(['me', 'te', 'o', 'ro'], Categoria.espaco),

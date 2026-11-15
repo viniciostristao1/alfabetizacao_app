@@ -2,6 +2,10 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-11-15 — v0.92.0 (Espaço + Saturno 🪐)
+- **Saturno no Espaço:** `Palavra(['Sa', 'tur', 'no'], Categoria.espaco)` (Médio, 3 sílabas, nome próprio com maiúscula como `Marte`) + frase `espaco|Saturno|||` → `Os anéis de Saturno são lindos` (6 palavras, contém alvo, sem duplicata). Banco Espaço 14→15 (Fácil 8 / Médio 4 / Difícil 3), `kFrases` 449→450. Teste `categoria Espaço` atualizado.
+- Versão `0.92.0+130`. `analyze` limpo, 91 testes ok.
+
 ## 2026-11-14 — v0.91.0 (Espaço 🚀 + Historinhas compactas)
 - **Categoria `espaco` (`Categoria.espaco`, 🚀 #7C3AED):** 9ª categoria na Home (grid 4 colunas). 14 `Palavra` no banco (Fácil 8 / Médio 3 / Difícil 3) + 14 frases no `kFrases` (ex.: `espaco|foguete|||` → `O foguete decola rápido`). Rota `HomeScreen → NivelScreen(categoria: espaco)` (o `NivelScreen` genérico, até então sem uso).
 - **1 sílaba no Fácil:** `palavrasDe` aceita `nivelSilabas == 1` no `Nivel.facil` (só o Espaço tem: "luz"); `Nivel.facil.descricao` virou `1–2 sílabas`; teste do banco agora exige 1–6 sílabas + grupo novo `categoria Espaço` (14 palavras, níveis certos). `montarDesafio` já trata <2 sílabas (só avança) e `_pontosPalavra` dá 1 ponto (clamp).

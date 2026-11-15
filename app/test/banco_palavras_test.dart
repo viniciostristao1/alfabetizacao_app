@@ -237,9 +237,9 @@ void main() {
   });
 
   group('categoria Espaço', () {
-    test('tem as 14 palavras pedidas, nos níveis certos', () {
+    test('tem as 15 palavras pedidas, nos níveis certos', () {
       final todas = todosOsEspaco();
-      expect(todas.length, 14);
+      expect(todas.length, 15);
       final facil =
           palavrasDe(Categoria.espaco, Nivel.facil).map((p) => p.texto).toSet();
       expect(
@@ -255,7 +255,7 @@ void main() {
       );
       expect(
         palavrasDe(Categoria.espaco, Nivel.media).map((p) => p.texto).toSet(),
-        containsAll({'foguete', 'decolar', 'viagem'}),
+        containsAll({'foguete', 'decolar', 'viagem', 'Saturno'}),
       );
       expect(
         palavrasDe(Categoria.espaco, Nivel.dificil).map((p) => p.texto).toSet(),

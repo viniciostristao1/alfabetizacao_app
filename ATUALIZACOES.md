@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.92.0 (2026-11-15)
+- **Espaço ganha Saturno 🪐:** nova palavra **SATURNO** no **Médio (3 sílabas: Sa-tur-no)** — no **Modo Frases** vira OS ANÉIS DE SATURNO SÃO LINDOS. A categoria agora tem 15 palavras.
+
 ## v0.91.0 (2026-11-14)
 - **Nova categoria Espaço 🚀:** entrou na Home com **14 palavras** (lua, terra, Marte, astronauta, meteoro, astro, nave, foguete, robô, capacete, pouso, decolar, luz, viagem) em **Fácil / Médio / Difícil** — e já funciona no **Modo Frases** (ex.: FOGUETE vira O FOGUETE DECOLA RÁPIDO). A "luz" (1 sílaba) conta como Fácil.
 - **Historinhas com cards iguais aos da Home 📚:** as caixinhas dos livrinhos diminuíram para o mesmo tamanho das categorias (4 colunas, ícone e título menores).

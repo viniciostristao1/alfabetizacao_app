@@ -302,6 +302,7 @@ const Map<String, String> kFrases = {
   'espaco|foguete|||': 'O foguete decola rápido',
   'espaco|decolar|||': 'O foguete vai decolar',
   'espaco|viagem|||': 'A viagem é espacial',
+  'espaco|Saturno|||': 'Os anéis de Saturno são lindos',
   'espaco|astronauta|||': 'O astronauta viaja ao espaço',
   'espaco|meteoro|||': 'O meteoro risca o céu',
   'espaco|capacete|||': 'O capacete protege o astronauta',
