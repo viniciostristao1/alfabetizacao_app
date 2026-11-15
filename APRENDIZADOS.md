@@ -2,6 +2,11 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-11-15 — v0.96.0 (Temas do Espaço 🚀)
+- **Temas do Espaço:** `EspacoTema` (planetas/naves/astros/missao, `kEspacoTemasFotoAspect = 1672/941`) + `ProgressoEspacoTemasFases` (`fases_espaco_concluidas_v1`) + `kPalavrasPorTemaEspaco` em `banco_palavras` (cada palavra-base em 1 tema: 9/11/10/8 = 38, sem duplicar banco nem frases) + `palavrasDoTemaEspaco()` (filtra + ordena). `EspacoTemasScreen` (molde Nomes: foto `espaco_temas_foto.png` + 4 anéis em zigue-zague + caminho neon + VOLTAR ESPAÇO/REINICIAR/VOLTAR INÍCIO/COLEÇÃO/INICIAR) + `ColecaoEspacoScreen` (prêmios + bônus 🌌) + cross-link ESPAÇO nas 4 coleções. `EstudoScreen`: `espacoTemaConcluivel` + `_concluirFaseEspacoTemas` + `_BauEspacoDialog`. Menu: Temas → `EspacoTemasScreen` (Selecionar segue no botão transparente). Foto vinda da raiz → `assets/espaco/espaco_temas_foto.png`.
+- **Gotcha de teste:** anel pulsante impede `pumpAndSettle` (usar `pump` com duração fixa, 2 passos p/ concluir a transição) e `late final` + `dispose` do controlador quebra no teardown dos testes — controlador criado sempre no `initState` (mesmo sem pulsar).
+- Versão `0.96.0+134`. `analyze` limpo, 96 testes ok.
+
 ## 2026-11-15 — v0.95.0 (Espaço 15→38 palavras 🚀)
 - **23 novas (7 da lista já existiam: nave, astronauta, foguete, robô, Marte, Saturno, lua):** Fácil +5 (cosmos, traje, radar, sonda, vácuo), Médio +7 (galáxia, estrela, planeta, cometa, órbita, estação, eclipse), Difícil +8 (asteroide, gravidade, telescópio, satélite, nebulosa, supernova, universo, constelação), 5 sílabas +3 (meteorito, buraco-negro com `textoOverride`, espaçonave — "Espaçocaixa" da lista não existe; assumido `espaçonave`). `kFrases` 450→473 (frases 3–7 palavras, únicas, com alvo). 5 sílabas sem nível próprio (`palavrasDe` filtra 1/2/3/4): jogáveis via Selecionar/`todosOsEspaco` — viram temas de verdade quando o Espaço ganhar temas. Teste `categoria Espaço` atualizado (38).
 - Versão `0.95.0+133`. `analyze` limpo, 93 testes ok.

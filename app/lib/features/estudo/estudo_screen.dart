@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 
 import '../../models/alimentos_tema.dart';
 import '../../models/categoria.dart';
+import '../../models/espaco_tema.dart';
 import '../../models/estudo_opcoes.dart';
 import '../../models/modo_jogo.dart';
 import '../../models/modo_leitura.dart';
@@ -24,6 +25,7 @@ import '../../services/fala.dart';
 import '../../services/reconhecimento.dart';
 import '../../services/voz.dart';
 import '../../services/progresso_alimentos_fases.dart';
+import '../../services/progresso_espaco_temas_fases.dart';
 import '../../services/progresso_fases.dart';
 import '../../services/progresso_nomes_temas_fases.dart';
 import '../../services/progresso_objetos_temas_fases.dart';
@@ -52,6 +54,7 @@ class EstudoScreen extends StatefulWidget {
     this.alimentosTemaConcluivel,
     this.objetosTemaConcluivel,
     this.nomesTemaConcluivel,
+    this.espacoTemaConcluivel,
   });
 
   /// Cabeçalho da tela, ex.: "🍎  Alimentos · Fácil" ou "🐶  Animais · Ártico".
@@ -72,6 +75,8 @@ class EstudoScreen extends StatefulWidget {
   final String? objetosTemaConcluivel;
 
   final String? nomesTemaConcluivel;
+
+  final String? espacoTemaConcluivel;
 
   @override
   State<EstudoScreen> createState() => _EstudoScreenState();
@@ -241,6 +246,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
     final alimentosTema = widget.alimentosTemaConcluivel;
     final objetosTema = widget.objetosTemaConcluivel;
     final nomesTema = widget.nomesTemaConcluivel;
+    final espacoTema = widget.espacoTemaConcluivel;
     if (ultima && habitat != null) {
       await _concluirFase();
     } else if (ultima && alimentosTema != null) {
@@ -249,6 +255,8 @@ class _EstudoScreenState extends State<EstudoScreen> {
       await _concluirFaseObjetosTemas();
     } else if (ultima && nomesTema != null) {
       await _concluirFaseNomesTemas();
+    } else if (ultima && espacoTema != null) {
+      await _concluirFaseEspacoTemas();
     } else if (ultima) {
       await _fimDeCategoria(); // pode ter SAÍDO da tela ("Sair")
     } else if (_temProximo) {
@@ -544,6 +552,40 @@ class _EstudoScreenState extends State<EstudoScreen> {
     }
   }
 
+  Future<void> _concluirFaseEspacoTemas() async {
+    final tema = EspacoTema.porChave(widget.espacoTemaConcluivel!);
+    await ProgressoRepository.registrarBonusFase();
+    await ProgressoEspacoTemasFases.marcarConcluido(widget.espacoTemaConcluivel!);
+    if (!mounted) return;
+    HapticFeedback.mediumImpact();
+    setState(() => _moedas += ProgressoRepository.bonusFase);
+    final fases = EspacoTema.values;
+    final i = fases.indexWhere((t) => t.chave == widget.espacoTemaConcluivel);
+    final proxima = (i >= 0 && i < fases.length - 1) ? fases[i + 1] : null;
+    final jogar = await showDialog<bool>(
+      context: context,
+      builder: (_) => _BauEspacoDialog(
+        tema: tema,
+        proxima: proxima,
+      ),
+    );
+    if (!mounted) return;
+    if (jogar == true && proxima != null) {
+      await Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => EstudoScreen(
+            titulo: '${proxima.emoji}  ${proxima.rotulo}',
+            palavras: palavrasDoTemaEspaco(proxima.chave),
+            manterPaisagemAoSair: true,
+            espacoTemaConcluivel: proxima.chave,
+          ),
+        ),
+      );
+    } else if (jogar == false) {
+      Navigator.of(context).pop();
+    }
+  }
+
   /// Última palavra de uma categoria FORA do mapa-múndi (habitats, níveis,
   /// meus animais…): parabéns com "Jogar de novo" / "Sair". O "Sair" tem a
   /// MESMA função do Voltar — fecha a categoria e volta para os cenários.
@@ -585,6 +627,10 @@ class _EstudoScreenState extends State<EstudoScreen> {
     if (widget.nomesTemaConcluivel != null &&
         _i == widget.palavras.length - 1) {
       ProgressoNomesTemasFases.marcarConcluido(widget.nomesTemaConcluivel!);
+    }
+    if (widget.espacoTemaConcluivel != null &&
+        _i == widget.palavras.length - 1) {
+      ProgressoEspacoTemasFases.marcarConcluido(widget.espacoTemaConcluivel!);
     }
   }
 
@@ -1792,6 +1838,211 @@ class _CardNovaFaseNomes extends StatelessWidget {
         child: ehUltima
             ? const Column(mainAxisSize: MainAxisSize.min, children: [Text('🏁', style: TextStyle(fontSize: 34)), SizedBox(height: 2), Text('AVENTURA CONCLUÍDA!', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900)), Text('Todos os nomes! 🎉', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700))])
             : Column(mainAxisSize: MainAxisSize.min, children: [Text(proxima!.premioEmoji, style: const TextStyle(fontSize: 34)), const SizedBox(height: 2), const Text('NOVA FASE! 🔓', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900)), Text(proxima!.rotulo, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800))]),
+      ),
+    );
+  }
+}
+
+class _BauEspacoDialog extends StatefulWidget {
+  const _BauEspacoDialog({required this.tema, required this.proxima});
+
+  final EspacoTema? tema;
+  final EspacoTema? proxima;
+
+  @override
+  State<_BauEspacoDialog> createState() => _BauEspacoDialogState();
+}
+
+class _BauEspacoDialogState extends State<_BauEspacoDialog>
+    with TickerProviderStateMixin {
+  late final AnimationController _abertura = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 750),
+  );
+  late final AnimationController _card = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 650),
+  );
+
+  bool get _aberto => _abertura.isCompleted;
+
+  @override
+  void initState() {
+    super.initState();
+    unawaited(Fala.instance.falar('Fase concluída!'));
+    _abertura.addStatusListener((s) {
+      if (s == AnimationStatus.completed && mounted) setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _abertura.dispose();
+    _card.dispose();
+    super.dispose();
+  }
+
+  void _abrirBau() {
+    if (_aberto) return;
+    HapticFeedback.mediumImpact();
+    _abertura.forward();
+    _card.forward(from: 0.2);
+    final proxima = widget.proxima;
+    unawaited(
+      proxima == null
+          ? Fala.instance.falar('Parabéns! Você completou a aventura do espaço!')
+          : Fala.instance.falar(
+              'Você desbloqueou ${proxima.rotulo}!',
+            ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ehUltima = widget.proxima == null;
+    return AlertDialog(
+      scrollable: true,
+      insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+      constraints: const BoxConstraints(maxWidth: 360),
+      contentPadding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '+${ProgressoRepository.bonusFase} moedas!',
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w800,
+              color: AppColors.accent,
+            ),
+          ),
+          const SizedBox(height: 2),
+          SizedBox(
+            height: _aberto ? 200 : 124,
+            child: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.bottomCenter,
+              children: [
+                if (_aberto)
+                  const Positioned.fill(child: ConfeteBurst(muito: true)),
+                AnimatedBuilder(
+                  animation: _abertura,
+                  builder: (_, _) => _Bau(
+                    p: Curves.easeOutCubic.transform(_abertura.value),
+                    onTap: _abrirBau,
+                  ),
+                ),
+                if (_aberto)
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 82,
+                    child: AnimatedBuilder(
+                      animation: _card,
+                      builder: (_, _) {
+                        final t = Curves.elasticOut.transform(_card.value);
+                        return Opacity(
+                          opacity: _card.value.clamp(0.0, 1.0),
+                          child: Transform.scale(
+                            scale: 0.15 + 0.85 * t,
+                            child: _CardNovaFaseEspaco(
+                              proxima: widget.proxima,
+                              ehUltima: ehUltima,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 2),
+          if (widget.tema != null) ...[
+            const SizedBox(height: 2),
+            Text(
+              '${widget.tema!.premioEmoji} Novo tesouro desbloqueado: ${widget.tema!.premioNome}!',
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+          if (!_aberto) ...[
+            const SizedBox(height: 4),
+            const Text(
+              'Toque no baú para abrir! 🗝️',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: AppColors.bauOuro,
+              ),
+            ),
+          ],
+        ],
+      ),
+      actionsPadding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
+      actions: _aberto
+          ? (ehUltima
+              ? [
+                  FilledButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: const Text('Voltar ao espaço'),
+                  ),
+                ]
+              : [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: const Text('Espaço'),
+                  ),
+                  FilledButton.icon(
+                    onPressed: () => Navigator.pop(context, true),
+                    icon: const Icon(Icons.play_arrow_rounded),
+                    label: const Text('JOGAR AGORA'),
+                  ),
+                ])
+          : const [],
+    );
+  }
+}
+
+class _CardNovaFaseEspaco extends StatelessWidget {
+  const _CardNovaFaseEspaco({required this.proxima, required this.ehUltima});
+  final EspacoTema? proxima;
+  final bool ehUltima;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.surface,
+      elevation: 8,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.lineStrong),
+        ),
+        child: ehUltima
+            ? const Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('🌌', style: TextStyle(fontSize: 34)),
+                  SizedBox(height: 2),
+                  Text('AVENTURA CONCLUÍDA!', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900)),
+                  Text('Todos os tesouros! 🎉', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
+                ],
+              )
+            : Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(proxima!.premioEmoji, style: const TextStyle(fontSize: 34)),
+                  const SizedBox(height: 2),
+                  const Text('NOVA FASE! 🔓', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900)),
+                  Text(proxima!.rotulo, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
+                ],
+              ),
       ),
     );
   }

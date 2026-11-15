@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.96.0 (2026-11-15)
+- **Espaço ganha Temas 🚀:** o botão **Temas** agora abre o jogo do hangar com 4 fases em zigue-zague (**Planetas → Naves → Astros → Missão**, 38 palavras no total) — com baú de bônus, **Coleção do espaço** (Anel de Saturno, Foguete, Estrela, Astronauta + Galáxia final) e botões **Voltar Espaço, Reiniciar Aventura, Voltar Início, Coleção e Iniciar Jogo**, igual às outras categorias. Funciona com o celular na horizontal.
+
 ## v0.95.0 (2026-11-15)
 - **Espaço com 23 palavras novas 🚀:** entram **cosmos, traje, radar, sonda, vácuo** (Fácil), **galáxia, estrela, planeta, cometa, órbita, estação, eclipse** (Médio), **asteroide, gravidade, telescópio, satélite, nebulosa, supernova, universo, constelação** (Difícil) e **meteorito, buraco-negro, espaçonave** (5 sílabas, jogáveis no Selecionar). Nave, astronauta, foguete, robô, Marte, Saturno e lua já existiam. A categoria agora tem 38 palavras, todas com frase no Modo Frases.
 

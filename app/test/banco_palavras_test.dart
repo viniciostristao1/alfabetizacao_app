@@ -305,4 +305,30 @@ void main() {
       );
     });
   });
+
+  group('temas do Espaço (foto do hangar)', () {
+    test('cada tema tem palavras, ordenadas por dificuldade (letras→sílabas)',
+        () {
+      for (final chave in kPalavrasPorTemaEspaco.keys) {
+        final lista = palavrasDoTemaEspaco(chave);
+        expect(lista, isNotEmpty, reason: 'tema $chave sem palavras');
+        for (var i = 1; i < lista.length; i++) {
+          expect(Palavra.porDificuldade(lista[i - 1], lista[i]) <= 0, isTrue,
+              reason: 'tema $chave fora de ordem: '
+                  '${lista.map((p) => "${p.texto}(${p.nivelLetras}L/${p.nivelSilabas}s)").toList()}');
+        }
+      }
+    });
+
+    test('os 4 temas cobrem as 38 palavras, sem sobreposição', () {
+      final todas = todosOsEspaco().map((p) => p.texto).toSet();
+      final nosTemas = <String>[];
+      for (final chave in kPalavrasPorTemaEspaco.keys) {
+        nosTemas.addAll(palavrasDoTemaEspaco(chave).map((p) => p.texto));
+      }
+      expect(nosTemas.length, equals(todas.length),
+          reason: 'palavra fora de tema ou repetida em 2 temas');
+      expect(nosTemas.toSet(), equals(todas));
+    });
+  });
 }

@@ -696,6 +696,71 @@ List<Palavra> palavrasDoTema(String temaChave) {
   return lista;
 }
 
+/// Temas do Espaço (foto do hangar): cada palavra-base do Espaço mora em UM
+/// tema — sem duplicar o banco (as frases já existem, a chave não muda).
+/// `Missao` concentra os equipamentos e as palavras de 5 sílabas (sem nível).
+const Map<String, List<String>> kPalavrasPorTemaEspaco = {
+  'planetas': [
+    'lua',
+    'terra',
+    'Marte',
+    'Saturno',
+    'planeta',
+    'órbita',
+    'eclipse',
+    'universo',
+    'cosmos',
+  ],
+  'naves': [
+    'nave',
+    'foguete',
+    'astronauta',
+    'robô',
+    'capacete',
+    'traje',
+    'estação',
+    'satélite',
+    'sonda',
+    'espaçonave',
+    'decolar',
+  ],
+  'astros': [
+    'astro',
+    'estrela',
+    'galáxia',
+    'nebulosa',
+    'supernova',
+    'cometa',
+    'meteoro',
+    'meteorito',
+    'asteroide',
+    'luz',
+  ],
+  'missao': [
+    'radar',
+    'telescópio',
+    'gravidade',
+    'constelação',
+    'viagem',
+    'pouso',
+    'buraco-negro',
+    'vácuo',
+  ],
+};
+
+/// Palavras de um TEMA do Espaço, ordenadas do MENOS para o MAIS sílabas.
+List<Palavra> palavrasDoTemaEspaco(String temaChave) {
+  final textos = kPalavrasPorTemaEspaco[temaChave] ?? const <String>[];
+  final lista = bancoPalavras
+      .where((p) =>
+          p.categoria == Categoria.espaco &&
+          p.tema == null &&
+          textos.contains(p.texto))
+      .toList();
+  lista.sort(Palavra.porDificuldade);
+  return lista;
+}
+
 /// Remove acentos e baixa a caixa — para busca "amigável" (ex.: "aguia" acha
 /// "águia"). Cobre os acentos comuns do português.
 String semAcento(String s) {

@@ -4,6 +4,7 @@ import '../../models/nomes_tema.dart';
 import '../../services/progresso_nomes_temas_fases.dart';
 import '../../theme/app_colors.dart';
 import 'colecao_alimentos_screen.dart';
+import 'colecao_espaco_screen.dart';
 import 'colecao_objetos_screen.dart';
 import 'colecao_screen.dart';
 
@@ -49,6 +50,13 @@ class _ColecaoNomesScreenState extends State<ColecaoNomesScreen> {
     );
   }
 
+  Future<void> _abrirEspaco() async {
+    if (!mounted) return;
+    await Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => const ColecaoEspacoScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final temas = NomesTema.values;
@@ -83,12 +91,22 @@ class _ColecaoNomesScreenState extends State<ColecaoNomesScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(right: 8),
+            padding: const EdgeInsets.only(right: 4),
             child: Center(
               child: TextButton.icon(
                 onPressed: _abrirAnimais,
                 icon: const Icon(Icons.pets_rounded, size: 16),
                 label: const Text('ANIMAIS', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12)),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Center(
+              child: TextButton.icon(
+                onPressed: _abrirEspaco,
+                icon: const Text('🚀', style: TextStyle(fontSize: 16)),
+                label: const Text('ESPAÇO', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12)),
               ),
             ),
           ),

@@ -6,14 +6,13 @@ import '../../services/banco_palavras.dart';
 import '../../services/progresso_repository.dart';
 import '../estudo/estudo_screen.dart';
 import '../selecao/selecao_espaco_screen.dart';
+import 'espaco_temas_screen.dart';
 
 /// Menu do Espaço (PAISAGEM): 3 cenas em cima (Fácil/Médio/Difícil) + 1
 /// cena larga embaixo (Temas) — mesmo molde de Alimentos/Objetos/Nomes.
 /// A imagem original (`file_000000006fc0820...png`, 1536×1024) já vem nesse
 /// recorte: 3 painéis em cima + hangar embaixo; aqui ela entra fatiada em
 /// `assets/espaco/espaco_{facil,medio,dificil,temas}.png`.
-/// O Espaço ainda não tem temas cadastrados: o botão "Temas" abre o
-/// "Selecionar palavras do Espaço" (provisório até existirem temas).
 class EspacoMenuScreen extends StatefulWidget {
   const EspacoMenuScreen({super.key});
 
@@ -46,6 +45,13 @@ class _EspacoMenuScreenState extends State<EspacoMenuScreen> {
           palavras: palavrasDe(Categoria.espaco, nivel),
         ),
       ),
+    );
+    if (mounted) _carregar();
+  }
+
+  void _abrirTemas(BuildContext context) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const EspacoTemasScreen()),
     );
     if (mounted) _carregar();
   }
@@ -116,7 +122,7 @@ class _EspacoMenuScreenState extends State<EspacoMenuScreen> {
                   asset: 'assets/espaco/espaco_temas.png',
                   legenda: 'Temas',
                   cor: Categoria.espaco.cor,
-                  onTap: _selecionarEspaco,
+                  onTap: () => _abrirTemas(context),
                 ),
               ),
             ],

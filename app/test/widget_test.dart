@@ -67,6 +67,25 @@ void main() {
     expect(find.text('Temas'), findsOneWidget);
   });
 
+  testWidgets('Espaço > Temas abre as fases (foto do hangar)',
+      (tester) async {
+    await _pumpApp(tester);
+
+    await tester.tap(find.text('Espaço'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Temas'));
+    // SEM pumpAndSettle: o anel da próxima fase fica PULSANDO para sempre
+    // (animação contínua de guia visual) — pumps com duração fixa resolvem
+    // (o 1º registra o toque, o 2º conclui a transição de rota).
+    await tester.pump(const Duration(milliseconds: 100));
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(find.text('VOLTAR ESPAÇO'), findsOneWidget);
+    expect(find.text('REINICIAR AVENTURA'), findsOneWidget);
+    expect(find.text('COLEÇÃO'), findsOneWidget);
+    expect(find.text('INICIAR JOGO'), findsOneWidget);
+  });
+
   testWidgets('tocar em Animais abre o mapa de habitats', (tester) async {
     await _pumpApp(tester);
 
