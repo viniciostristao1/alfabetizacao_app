@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.95.0 (2026-11-15)
+- **Espaço com 23 palavras novas 🚀:** entram **cosmos, traje, radar, sonda, vácuo** (Fácil), **galáxia, estrela, planeta, cometa, órbita, estação, eclipse** (Médio), **asteroide, gravidade, telescópio, satélite, nebulosa, supernova, universo, constelação** (Difícil) e **meteorito, buraco-negro, espaçonave** (5 sílabas, jogáveis no Selecionar). Nave, astronauta, foguete, robô, Marte, Saturno e lua já existiam. A categoria agora tem 38 palavras, todas com frase no Modo Frases.
+
 ## v0.94.0 (2026-11-15)
 - **Espaço com capa igual às outras categorias 🚀:** o Espaço agora tem menu com foto (3 em cima: Fácil / Médio / Difícil, 1 larga embaixo: Temas) como Alimentos/Objetos/Nomes — funciona bem com o celular na horizontal. O botão **Temas** abre o **Selecionar palavras do Espaço** (a categoria ainda não tem temas).
 

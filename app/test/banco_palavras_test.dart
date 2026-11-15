@@ -237,15 +237,28 @@ void main() {
   });
 
   group('categoria Espaço', () {
-    test('tem as 15 palavras pedidas, nos níveis certos', () {
+    test('tem as 38 palavras pedidas, nos níveis certos', () {
       final todas = todosOsEspaco();
-      expect(todas.length, 15);
+      expect(todas.length, 38);
       final facil =
           palavrasDe(Categoria.espaco, Nivel.facil).map((p) => p.texto).toSet();
       expect(
         facil,
-        containsAll(
-            {'lua', 'terra', 'Marte', 'astro', 'nave', 'robô', 'pouso', 'luz'}),
+        containsAll({
+          'lua',
+          'terra',
+          'Marte',
+          'astro',
+          'nave',
+          'robô',
+          'pouso',
+          'luz',
+          'cosmos',
+          'traje',
+          'radar',
+          'sonda',
+          'vácuo'
+        }),
       );
       // "luz" tem 1 sílaba e entra no Fácil
       expect(
@@ -255,11 +268,40 @@ void main() {
       );
       expect(
         palavrasDe(Categoria.espaco, Nivel.media).map((p) => p.texto).toSet(),
-        containsAll({'foguete', 'decolar', 'viagem', 'Saturno'}),
+        containsAll({
+          'foguete',
+          'decolar',
+          'viagem',
+          'Saturno',
+          'galáxia',
+          'estrela',
+          'planeta',
+          'cometa',
+          'órbita',
+          'estação',
+          'eclipse'
+        }),
       );
       expect(
         palavrasDe(Categoria.espaco, Nivel.dificil).map((p) => p.texto).toSet(),
-        containsAll({'astronauta', 'meteoro', 'capacete'}),
+        containsAll({
+          'astronauta',
+          'meteoro',
+          'capacete',
+          'asteroide',
+          'gravidade',
+          'telescópio',
+          'satélite',
+          'nebulosa',
+          'supernova',
+          'universo',
+          'constelação'
+        }),
+      );
+      // 5 sílabas não têm nível próprio: jogáveis via Selecionar
+      expect(
+        todas.map((p) => p.texto).toSet(),
+        containsAll({'meteorito', 'buraco-negro', 'espaçonave'}),
       );
     });
   });

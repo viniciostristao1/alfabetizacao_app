@@ -2,6 +2,10 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-11-15 — v0.95.0 (Espaço 15→38 palavras 🚀)
+- **23 novas (7 da lista já existiam: nave, astronauta, foguete, robô, Marte, Saturno, lua):** Fácil +5 (cosmos, traje, radar, sonda, vácuo), Médio +7 (galáxia, estrela, planeta, cometa, órbita, estação, eclipse), Difícil +8 (asteroide, gravidade, telescópio, satélite, nebulosa, supernova, universo, constelação), 5 sílabas +3 (meteorito, buraco-negro com `textoOverride`, espaçonave — "Espaçocaixa" da lista não existe; assumido `espaçonave`). `kFrases` 450→473 (frases 3–7 palavras, únicas, com alvo). 5 sílabas sem nível próprio (`palavrasDe` filtra 1/2/3/4): jogáveis via Selecionar/`todosOsEspaco` — viram temas de verdade quando o Espaço ganhar temas. Teste `categoria Espaço` atualizado (38).
+- Versão `0.95.0+133`. `analyze` limpo, 93 testes ok.
+
 ## 2026-11-15 — v0.94.0 (Menu do Espaço com capa 🚀)
 - **Capa do Espaço fatiada:** `file_000000006fc0820...png` (1536×1024, raiz, removida) → `assets/espaco/espaco_{facil,medio,dificil,temas}.png` (topo y 0–548, base y 552–1024; 3 painéis ~485–500px + hangar 1536×472). `pubspec` + `EspacoMenuScreen` (molde Alimentos: `Row` 3 em cima `flex 5` + larga embaixo `flex 4`, `BoxFit.cover`, legenda com gradiente) + `SelecaoEspacoScreen` (molde Alimentos, `todosOsEspaco()`). `HomeScreen`: `espaco → EspacoMenuScreen` (aposenta `NivelScreen` genérico). Sem temas no Espaço: botão "Temas" abre o selecionar (provisório). Teste widget "Espaço abre o menu" adicionado.
 - Versão `0.94.0+132`. `analyze` limpo, 93 testes ok.
