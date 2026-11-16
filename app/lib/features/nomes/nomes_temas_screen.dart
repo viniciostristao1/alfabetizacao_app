@@ -76,6 +76,7 @@ class _NomesTemasScreenState extends State<NomesTemasScreen> {
           palavras: _palavrasDoTema(tema),
           manterPaisagemAoSair: true,
           nomesTemaConcluivel: tema.chave,
+          fundoImagem: 'assets/nomes/nomes_temas_foto.png',
         ),
       ),
     );

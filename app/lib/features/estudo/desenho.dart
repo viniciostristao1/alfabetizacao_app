@@ -80,6 +80,46 @@ class BolinhaCor extends StatelessWidget {
   }
 }
 
+/// Bolinha do fundo IMAGEM: mesmo tamanho da [BolinhaCor] (28×28) e mesmo anel
+/// de seleção, mas preenchida com degradê diagonal azul → vermelho.
+class BolinhaDegrade extends StatelessWidget {
+  const BolinhaDegrade({
+    super.key,
+    required this.selecionada,
+    required this.contraste,
+    required this.onTap,
+  });
+
+  final bool selecionada;
+  final Color contraste;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 28,
+        height: 28,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF2F6BFF), Color(0xFFE23B3B)],
+          ),
+          border: Border.all(
+            color: selecionada
+                ? contraste
+                : contraste.withValues(alpha: 0.35),
+            width: selecionada ? 3.5 : 1.5,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 /// Botão de ícone só (o "limpar"/"desfazer" da coluna de canetas).
 class BotaoIconeDesenho extends StatelessWidget {
   const BotaoIconeDesenho({

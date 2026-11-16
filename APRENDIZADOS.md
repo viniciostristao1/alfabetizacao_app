@@ -2,6 +2,10 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-11-16 — v0.99.0 (Fundo imagem 🖼️)
+- **`FundoTela.imagem` + `BolinhaDegrade` + `ConfigFundo` (`fundo_tela_v1`):** 5º botão (28×28, degradê diagonal azul→vermelho, mesmo anel de seleção), mutuamente exclusivo (um `_fundo` só). `EstudoScreen(fundoImagem:)` recebe a cena do fluxo (menus passam a cena do nível/Temas; Temas passam a foto; mapa/escrever passam nada → cai no preto). Render: preto + `Image` `cover` opacidade 0.22 + scrim preto 0.30, letra branca; `errorBuilder` vazio. Repasse `widget.fundoImagem` nas 5 continuações de fase. Contas excluído do loop (`where != imagem`, fundo próprio). Testes: `config_fundo_test` + 3 widgets (mostra/persiste/reabre, sem cena, branco segue letra preta).
+- Versão `0.99.0+137`. `analyze` limpo, 103 testes ok.
+
 ## 2026-11-16 — v0.98.0 (Config em acordeão ⚙️)
 - **`_SecaoAcordeao` (config_screen.dart):** 7 seções (Pontuação, Como mostrar, Palavra ou frases, Falar, Microfone, Tolerância, Ordem) começam fechadas (flags no State — sobrevivem a setState/rolagem, zeram a cada entrada). Setinha ❯→❯-pra-baixo (`AnimatedRotation` 220 ms), área 48×48, controles com dobra+fade (`SizeTransition`+`FadeTransition`, 220 ms) e **desmontados quando fechados** (somem da árvore — `AnimatedCrossFade` mantém os dois filhos montados e quebra o `findsNothing`). Teste da Config abre a seção antes dos steppers e confere recolher no fim.
 - Versão `0.98.0+136`. `analyze` limpo, 98 testes ok.

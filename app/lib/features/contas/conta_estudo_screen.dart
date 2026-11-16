@@ -492,7 +492,9 @@ class _TopoContas extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 12),
-                for (final f in FundoTela.values)
+                // Só as 4 cores: o modo imagem é da tela de palavras/frases.
+                for (final f in FundoTela.values
+                    .where((f) => f != FundoTela.imagem))
                   Padding(
                     padding: const EdgeInsets.only(right: 8),
                     child: BolinhaCor(

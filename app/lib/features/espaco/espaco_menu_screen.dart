@@ -37,12 +37,18 @@ class _EspacoMenuScreenState extends State<EspacoMenuScreen> {
   }
 
   void _abrirNivel(BuildContext context, Nivel nivel) async {
+    final asset = switch (nivel) {
+      Nivel.facil => 'assets/espaco/espaco_facil.png',
+      Nivel.media => 'assets/espaco/espaco_medio.png',
+      Nivel.dificil => 'assets/espaco/espaco_dificil.png',
+    };
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => EstudoScreen(
           titulo: '${Categoria.espaco.emoji}  '
               '${Categoria.espaco.rotulo} · ${nivel.rotulo}',
           palavras: palavrasDe(Categoria.espaco, nivel),
+          fundoImagem: asset,
         ),
       ),
     );
@@ -68,6 +74,7 @@ class _EspacoMenuScreenState extends State<EspacoMenuScreen> {
           titulo: '🚀  Meu espaço',
           palavras: escolhidos,
           manterPaisagemAoSair: true,
+          fundoImagem: 'assets/espaco/espaco_temas.png',
         ),
       ),
     );

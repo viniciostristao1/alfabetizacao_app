@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.99.0 (2026-11-16)
+- **Fundo com a imagem da categoria 🖼️:** quinto botão ao lado das bolinhas (degradê azul→vermelho) — a cena do nível (astronauta no Fácil do Espaço, por ex.) vira fundo apagado da tela de palavras, com o branco legível. A escolha é salva e vale em todo o app.
+
 ## v0.98.0 (2026-11-16)
 - **Configurações em acordeão ⚙️:** cada seção (Pontuação, Palavra ou frases, Microfone…) agora começa recolhida — só título, descrição e setinha. Toque abre com animação suave, e o resumo (ex.: "Nv 1", "Frases", "Tolerante") aparece sem precisar abrir.
 

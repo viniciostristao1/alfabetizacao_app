@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 
 /// Cor de fundo da tela de estudo (bolinhas HORIZONTAIS ao lado do título).
-/// `corLetra` = cor da palavra para contraste: **só o preto usa letra branca**;
-/// os demais (branco/bege) usam letra preta (regra do usuário).
+/// `corLetra` = cor da palavra para contraste: **preto e imagem usam letra
+/// branca**; os demais (branco/bege) usam letra preta (regra do usuário).
+/// `imagem` usa a cena da categoria/nível como fundo apagado (ver
+/// `EstudoScreen.fundoImagem`); sem imagem, cai no preto.
 enum FundoTela {
   preto('Preto', Color(0xFF000000), Colors.white),
   branco('Branco', Color(0xFFFFFFFF), Colors.black),
   begeEscuro('Bege escuro', Color(0xFFC7B08A), Colors.black),
-  begeClaro('Bege claro', Color(0xFFF4EAD5), Colors.black);
+  begeClaro('Bege claro', Color(0xFFF4EAD5), Colors.black),
+  imagem('Imagem', Color(0xFF000000), Colors.white);
 
   const FundoTela(this.rotulo, this.cor, this.corLetra);
 

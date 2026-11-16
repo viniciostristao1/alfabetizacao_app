@@ -63,6 +63,7 @@ class _AlimentosTemasScreenState extends State<AlimentosTemasScreen> {
           palavras: palavrasDoTema(tema.chave),
           manterPaisagemAoSair: true,
           alimentosTemaConcluivel: tema.chave,
+          fundoImagem: 'assets/alimentos/alimentos_temas_foto.png',
         ),
       ),
     );

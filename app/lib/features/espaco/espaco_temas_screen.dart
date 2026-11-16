@@ -64,6 +64,7 @@ class _EspacoTemasScreenState extends State<EspacoTemasScreen> {
           palavras: palavrasDoTemaEspaco(tema.chave),
           manterPaisagemAoSair: true,
           espacoTemaConcluivel: tema.chave,
+          fundoImagem: 'assets/espaco/espaco_temas_foto.png',
         ),
       ),
     );

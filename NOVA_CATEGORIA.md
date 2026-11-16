@@ -47,8 +47,10 @@ Não comece sem isso (foi o que travou/voltou nas versões do Espaço):
 - Molde `AlimentosMenuScreen`: `Column` com `Row` de 3 em cima (`flex 5`) +
   cena larga embaixo (`flex 4`), `BoxFit.cover`, legenda com gradiente —
   funciona com o celular na horizontal.
-- Botões: Fácil/Médio/Difícil → `EstudoScreen(palavrasDe(...))`;
-  **Temas (largo) → `XxxTemasScreen`**; transparente **SELECIONAR XXX** → Selecionar.
+- Botões: Fácil/Médio/Difícil → `EstudoScreen(palavrasDe(...), fundoImagem:
+  <asset da cena tocada>)`; **Temas (largo) → `XxxTemasScreen`**; transparente
+  **SELECIONAR XXX** → Selecionar (com `fundoImagem` da cena larga). Sem
+  `fundoImagem`, o modo imagem cai no preto (ver passo 10).
 - Rota na `HomeScreen`: `Categoria.xxx => const XxxMenuScreen()`.
   (O `NivelScreen` genérico está **aposentado** — categoria nova tem menu próprio.)
 
@@ -93,6 +95,8 @@ Não comece sem isso (foi o que travou/voltou nas versões do Espaço):
    com próxima fase via `palavrasDoTemaXxx`) + classes `_BauXxxDialog` /
    `_CardNovaFaseXxx` (molde Alimentos: textos "Novo tesouro", "Voltar a..." etc.).
 5. Branch em `_talvezConcluir`.
+6. Repassar `fundoImagem: widget.fundoImagem` nas continuações de fase
+   (`pushReplacement`); fluxos de Temas passam a foto (`xxx_temas_foto.png`).
 
 ## 11. Testes (obrigatórios)
 - `banco_palavras_test.dart` → grupo `categoria Xxx`: total + `containsAll` por

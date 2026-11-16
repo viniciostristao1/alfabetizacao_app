@@ -32,12 +32,18 @@ class _NomesMenuScreenState extends State<NomesMenuScreen> {
   }
 
   void _abrirNivel(BuildContext context, Nivel nivel) async {
+    final asset = switch (nivel) {
+      Nivel.facil => 'assets/nomes/nomes_facil.png',
+      Nivel.media => 'assets/nomes/nomes_medio.png',
+      Nivel.dificil => 'assets/nomes/nomes_dificil.png',
+    };
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => EstudoScreen(
           titulo: '${Categoria.nomes.emoji}  '
               '${Categoria.nomes.rotulo} · ${nivel.rotulo}',
           palavras: palavrasDe(Categoria.nomes, nivel),
+          fundoImagem: asset,
         ),
       ),
     );
@@ -63,6 +69,7 @@ class _NomesMenuScreenState extends State<NomesMenuScreen> {
           titulo: '🔤  Meus nomes',
           palavras: escolhidos,
           manterPaisagemAoSair: true,
+          fundoImagem: 'assets/nomes/nomes_temas.png',
         ),
       ),
     );

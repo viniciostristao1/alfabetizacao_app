@@ -31,18 +31,24 @@ class _AlimentosMenuScreenState extends State<AlimentosMenuScreen> {
     if (mounted) setState(() { _moedas = moedas; _xp = xp; });
   }
 
-  void _abrirNivel(BuildContext context, Nivel nivel) async {
-    await Navigator.of(context).push(
+  void _abrirNivel(BuildContext context, Nivel nivel) async {    await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => EstudoScreen(
           titulo: '${Categoria.alimentos.emoji}  '
               '${Categoria.alimentos.rotulo} · ${nivel.rotulo}',
           palavras: palavrasDe(Categoria.alimentos, nivel),
+          fundoImagem: _assetNivel(nivel),
         ),
       ),
     );
     if (mounted) _carregar();
   }
+  /// Cena do nível tocado — vira o fundoImagem da EstudoScreen no modo imagem.
+  String _assetNivel(Nivel nivel) => switch (nivel) {
+        Nivel.facil => 'assets/alimentos/alimentos_facil.png',
+        Nivel.media => 'assets/alimentos/alimentos_medio.png',
+        Nivel.dificil => 'assets/alimentos/alimentos_dificil.png',
+      };
 
   void _abrirTemas(BuildContext context) async {
     await Navigator.of(context).push(
@@ -63,6 +69,7 @@ class _AlimentosMenuScreenState extends State<AlimentosMenuScreen> {
           titulo: '🍎  Meus alimentos',
           palavras: escolhidos,
           manterPaisagemAoSair: true,
+          fundoImagem: 'assets/alimentos/alimentos_temas.png',
         ),
       ),
     );

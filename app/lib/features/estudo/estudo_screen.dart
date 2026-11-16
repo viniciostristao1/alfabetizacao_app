@@ -17,6 +17,7 @@ import '../../models/tema.dart';
 import '../../services/banco_frases.dart';
 import '../../services/banco_palavras.dart';
 import '../../services/completar_silaba.dart';
+import '../../services/config_fundo.dart';
 import '../../services/config_leitura.dart';
 import '../../services/config_mic.dart';
 import '../../services/config_modo.dart';
@@ -55,6 +56,7 @@ class EstudoScreen extends StatefulWidget {
     this.objetosTemaConcluivel,
     this.nomesTemaConcluivel,
     this.espacoTemaConcluivel,
+    this.fundoImagem,
   });
 
   /// Cabeçalho da tela, ex.: "🍎  Alimentos · Fácil" ou "🐶  Animais · Ártico".
@@ -77,6 +79,11 @@ class EstudoScreen extends StatefulWidget {
   final String? nomesTemaConcluivel;
 
   final String? espacoTemaConcluivel;
+
+  /// Asset da cena da categoria/nível (ex.: `assets/espaco/espaco_facil.png`)
+  /// usado quando o fundo é [FundoTela.imagem]. Sem imagem, o modo cai no
+  /// preto sem quebrar.
+  final String? fundoImagem;
 
   @override
   State<EstudoScreen> createState() => _EstudoScreenState();
@@ -142,6 +149,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
     final jogo = await ConfigModo.carregar();
     final micAtivado = await ConfigMic.ativado();
     final micTolerancia = await ConfigMic.tolerancia();
+    final fundo = await ConfigFundo.carregar();
     if (mounted) {
       setState(() {
         _moedas = moedas;
@@ -153,6 +161,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
         _jogo = jogo;
         _micAtivado = micAtivado;
         _micTolerancia = micTolerancia;
+        _fundo = fundo;
       });
       _prepararIncompleta();
       _falarPalavraAtual();
@@ -166,6 +175,13 @@ class _EstudoScreenState extends State<EstudoScreen> {
     final p = widget.palavras[_i];
     unawaited(Fala.instance
         .falar(_jogo == ModoJogo.frase ? fraseOuPalavra(p) : p.texto));
+  }
+
+  /// Troca o fundo (mutuamente exclusivo entre as 5 bolinhas) e salva a
+  /// escolha — vale entre sessões e entre categorias.
+  void _mudarFundo(FundoTela fundo) {
+    setState(() => _fundo = fundo);
+    ConfigFundo.salvar(fundo);
   }
 
   /// Monta o desafio "completar a sílaba" da palavra atual (se o modo for esse).
@@ -436,6 +452,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
             palavras: palavrasDaRegiao(proxima.chave),
             manterPaisagemAoSair: true,
             habitatConcluivel: proxima.chave,
+            fundoImagem: widget.fundoImagem,
           ),
         ),
       );
@@ -470,6 +487,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
             palavras: palavrasDoTema(proxima.chave),
             manterPaisagemAoSair: true,
             alimentosTemaConcluivel: proxima.chave,
+            fundoImagem: widget.fundoImagem,
           ),
         ),
       );
@@ -504,6 +522,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
             palavras: palavrasDoTema(proxima.chave),
             manterPaisagemAoSair: true,
             objetosTemaConcluivel: proxima.chave,
+            fundoImagem: widget.fundoImagem,
           ),
         ),
       );
@@ -544,6 +563,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
             palavras: palavras,
             manterPaisagemAoSair: true,
             nomesTemaConcluivel: proxima.chave,
+            fundoImagem: widget.fundoImagem,
           ),
         ),
       );
@@ -578,6 +598,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
             palavras: palavrasDoTemaEspaco(proxima.chave),
             manterPaisagemAoSair: true,
             espacoTemaConcluivel: proxima.chave,
+            fundoImagem: widget.fundoImagem,
           ),
         ),
       );
@@ -854,10 +875,31 @@ class _EstudoScreenState extends State<EstudoScreen> {
     final letra = _fundo.corLetra; // cor da palavra (contraste)
     final ui = _fundo.corLetra; // cor base da UI sobre o fundo
 
+    // Modo imagem: a cena da categoria/nível bem apagada sobre o preto, com
+    // scrim por cima para o branco seguir legível. Sem imagem (fluxos sem
+    // cena: mapa, escrever…), cai no preto sem quebrar.
+    final mostrarImagem =
+        _fundo == FundoTela.imagem && widget.fundoImagem != null;
+
     return Scaffold(
       backgroundColor: _fundo.cor,
       body: Stack(
         children: [
+          if (mostrarImagem)
+            Positioned.fill(
+              child: Image.asset(
+                widget.fundoImagem!,
+                fit: BoxFit.cover,
+                filterQuality: FilterQuality.medium,
+                opacity: const AlwaysStoppedAnimation(0.22),
+                errorBuilder: (_, _, _) => const SizedBox.shrink(),
+              ),
+            ),
+          if (mostrarImagem)
+            Positioned.fill(
+              child:
+                  Container(color: Colors.black.withValues(alpha: 0.30)),
+            ),
           Column(
             children: [
               // Linha do topo FORA do SafeArea. O padding direito (104)
@@ -893,12 +935,18 @@ class _EstudoScreenState extends State<EstudoScreen> {
                             for (final f in FundoTela.values)
                               Padding(
                                 padding: const EdgeInsets.only(right: 8),
-                                child: BolinhaCor(
-                                  cor: f.cor,
-                                  selecionada: f == _fundo,
-                                  contraste: ui,
-                                  onTap: () => setState(() => _fundo = f),
-                                ),
+                                child: f == FundoTela.imagem
+                                    ? BolinhaDegrade(
+                                        selecionada: f == _fundo,
+                                        contraste: ui,
+                                        onTap: () => _mudarFundo(f),
+                                      )
+                                    : BolinhaCor(
+                                        cor: f.cor,
+                                        selecionada: f == _fundo,
+                                        contraste: ui,
+                                        onTap: () => _mudarFundo(f),
+                                      ),
                               ),
                           ],
                         ),

@@ -61,6 +61,7 @@ class _TemasScreenState extends State<TemasScreen> {
           palavras: palavrasDoTema(tema.chave),
           manterPaisagemAoSair: true,
           objetosTemaConcluivel: tema.chave,
+          fundoImagem: 'assets/objetos/objetos_temas_foto.png',
         ),
       ),
     );

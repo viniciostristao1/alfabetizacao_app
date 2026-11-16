@@ -38,12 +38,18 @@ class _FutebolMenuScreenState extends State<FutebolMenuScreen> {
   }
 
   void _abrirNivel(BuildContext context, Nivel nivel) async {
+    final asset = switch (nivel) {
+      Nivel.facil => 'assets/futebol/futebol_facil.png',
+      Nivel.media => 'assets/futebol/futebol_medio.png',
+      Nivel.dificil => 'assets/futebol/futebol_dificil.png',
+    };
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => EstudoScreen(
           titulo: '${Categoria.futebol.emoji}  '
               '${Categoria.futebol.rotulo} · ${nivel.rotulo}',
           palavras: palavrasDe(Categoria.futebol, nivel),
+          fundoImagem: asset,
         ),
       ),
     );
@@ -62,6 +68,7 @@ class _FutebolMenuScreenState extends State<FutebolMenuScreen> {
           titulo: '⚽  Meu futebol',
           palavras: escolhidos,
           manterPaisagemAoSair: true,
+          fundoImagem: 'assets/futebol/futebol_temas.png',
         ),
       ),
     );

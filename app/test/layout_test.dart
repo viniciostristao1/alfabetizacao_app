@@ -1,7 +1,10 @@
+import 'package:alfabetizacao/features/estudo/desenho.dart';
 import 'package:alfabetizacao/features/estudo/estudo_screen.dart';
 import 'package:alfabetizacao/features/mapa_mundi/mapa_mundi_screen.dart';
 import 'package:alfabetizacao/models/categoria.dart';
+import 'package:alfabetizacao/models/estudo_opcoes.dart';
 import 'package:alfabetizacao/models/palavra.dart';
+import 'package:alfabetizacao/services/config_fundo.dart';
 import 'package:alfabetizacao/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -150,5 +153,92 @@ void main() {
     expect(find.text('🦁'), findsNothing);
     expect(find.text('🦅'), findsNothing);
     expect(find.text('🐧'), findsNothing);
+  });
+
+  Future<void> pumpEstudo(
+    WidgetTester tester, {
+    String? fundoImagem,
+  }) async {
+    SharedPreferences.setMockInitialValues({});
+    tester.view.physicalSize = const Size(800, 360);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: EstudoScreen(
+          titulo: '🚀  Espaço · Fácil',
+          palavras: const [
+            Palavra(['lu', 'a'], Categoria.espaco),
+            Palavra(['ter', 'ra'], Categoria.espaco),
+          ],
+          fundoImagem: fundoImagem,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+  }
+
+  testWidgets('fundo imagem: botão degradê mostra a cena apagada e persiste',
+      (tester) async {
+    await pumpEstudo(tester, fundoImagem: 'assets/espaco/espaco_facil.png');
+
+    // começa no preto: sem imagem, botão degradê presente
+    expect(find.byType(BolinhaDegrade), findsOneWidget);
+    expect(find.byType(Image), findsNothing);
+
+    // texto branco legível no preto
+    expect(
+      tester.widget<Text>(find.text('LUA')).style?.color,
+      Colors.white,
+    );
+
+    await tester.tap(find.byType(BolinhaDegrade));
+    await tester.pumpAndSettle();
+
+    // cena aparece + texto segue branco (contraste alto)
+    expect(find.byType(Image), findsOneWidget);
+    expect(
+      tester.widget<Text>(find.text('LUA')).style?.color,
+      Colors.white,
+    );
+
+    // escolha salva: vale entre sessões
+    expect(await ConfigFundo.carregar(), FundoTela.imagem);
+
+    // reabre a tela: o modo imagem já vem selecionado
+    await pumpEstudo(tester, fundoImagem: 'assets/espaco/espaco_facil.png');
+    expect(find.byType(Image), findsOneWidget);
+  });
+
+  testWidgets('fundo imagem sem cena cai no preto sem quebrar',
+      (tester) async {
+    await pumpEstudo(tester);
+
+    await tester.tap(find.byType(BolinhaDegrade));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(Image), findsNothing);
+    expect(
+      tester.widget<Text>(find.text('LUA')).style?.color,
+      Colors.white,
+    );
+    expect(await ConfigFundo.carregar(), FundoTela.imagem);
+  });
+
+  testWidgets('fundos coloridos seguem funcionando (branco = letra preta)',
+      (tester) async {
+    await pumpEstudo(tester, fundoImagem: 'assets/espaco/espaco_facil.png');
+
+    await tester.tap(find.byWidgetPredicate(
+      (w) => w is BolinhaCor && w.cor == Colors.white,
+    ));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(Image), findsNothing);
+    expect(
+      tester.widget<Text>(find.text('LUA')).style?.color,
+      Colors.black,
+    );
+    expect(await ConfigFundo.carregar(), FundoTela.branco);
   });
 }
