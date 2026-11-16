@@ -216,7 +216,14 @@ void main() {
     );
     await tester.pumpAndSettle();
 
+    // seções começam recolhidas: título + resumo visíveis, controles escondidos
     expect(find.text('Pontuação'), findsOneWidget);
+    expect(find.text('Moedas'), findsNothing);
+    expect(find.text('Nível'), findsNothing);
+
+    // abre tocando no título
+    await tester.tap(find.text('Pontuação'));
+    await tester.pumpAndSettle();
     expect(find.text('Moedas'), findsOneWidget);
     expect(find.text('Nível'), findsOneWidget);
 
@@ -230,5 +237,11 @@ void main() {
     await tester.pumpAndSettle();
     expect(await ProgressoRepository.xp(), 25);
     expect(find.text('Nv 2'), findsOneWidget);
+
+    // tocar de novo recolhe (setinha sincronizada)
+    await tester.tap(find.text('Pontuação'));
+    await tester.pumpAndSettle();
+    expect(find.text('Moedas'), findsNothing);
+    expect(find.text('Nível'), findsNothing);
   });
 }

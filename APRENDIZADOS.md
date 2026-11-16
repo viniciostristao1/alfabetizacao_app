@@ -2,6 +2,10 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-11-16 — v0.98.0 (Config em acordeão ⚙️)
+- **`_SecaoAcordeao` (config_screen.dart):** 7 seções (Pontuação, Como mostrar, Palavra ou frases, Falar, Microfone, Tolerância, Ordem) começam fechadas (flags no State — sobrevivem a setState/rolagem, zeram a cada entrada). Setinha ❯→❯-pra-baixo (`AnimatedRotation` 220 ms), área 48×48, controles com dobra+fade (`SizeTransition`+`FadeTransition`, 220 ms) e **desmontados quando fechados** (somem da árvore — `AnimatedCrossFade` mantém os dois filhos montados e quebra o `findsNothing`). Teste da Config abre a seção antes dos steppers e confere recolher no fim.
+- Versão `0.98.0+136`. `analyze` limpo, 98 testes ok.
+
 ## 2026-11-16 — v0.97.0 (Categoria Futebol ⚽ — 1ª leva, NOVA_CATEGORIA na prática)
 - **Futebol (30 palavras):** `Categoria.futebol` (⚽ `0xFF2E9D44`) + banco (Fácil 13 com `gol` 1 sílaba / Médio 12 / Difícil 4 / `arquibancada` 5 síl só via Selecionar) + 30 frases + `todosOsFutebol()`. Das 21 pedidas completei 9 (trave, campo, chute, drible, apito, goleiro, pênalti, vitória, bicicleta). **"campeonato" tem 5 sílabas** (cam-pe-o-na-to) — entrou `bicicleta` (bi-ci-cle-ta, "Fez gol de bicicleta") no lugar. Menu `FutebolMenuScreen` + `SelecaoFutebolScreen` (molde Espaço; Temas → Selecionar até chegarem foto/nomes dos temas). Foto da raiz fatiada em `assets/futebol/` (3 + larga). Home com 10 cards: grade rola — teste widget usa `scrollUntilVisible` + `pumpAndSettle` antes do toque (toque pós-rolagem sem assentar erra o alvo).
 - Versão `0.97.0+135`. `analyze` limpo, 98 testes ok.

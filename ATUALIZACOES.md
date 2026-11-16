@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.98.0 (2026-11-16)
+- **Configurações em acordeão ⚙️:** cada seção (Pontuação, Palavra ou frases, Microfone…) agora começa recolhida — só título, descrição e setinha. Toque abre com animação suave, e o resumo (ex.: "Nv 1", "Frases", "Tolerante") aparece sem precisar abrir.
+
 ## v0.97.0 (2026-11-16)
 - **Nova categoria Futebol ⚽:** entrou na Home com **30 palavras** (gol, bola, time, zagueiro, atacante, escanteio, arquibancada e mais) em **Fácil / Médio / Difícil** — com menu de fotos como o do Espaço (várzea, estádio e torcida em cima; Temas embaixo, que por enquanto abre o Selecionar). Todas com frase no Modo Frases.
 
