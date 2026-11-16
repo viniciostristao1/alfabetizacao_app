@@ -2,6 +2,10 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-11-16 — v0.97.0 (Categoria Futebol ⚽ — 1ª leva, NOVA_CATEGORIA na prática)
+- **Futebol (30 palavras):** `Categoria.futebol` (⚽ `0xFF2E9D44`) + banco (Fácil 13 com `gol` 1 sílaba / Médio 12 / Difícil 4 / `arquibancada` 5 síl só via Selecionar) + 30 frases + `todosOsFutebol()`. Das 21 pedidas completei 9 (trave, campo, chute, drible, apito, goleiro, pênalti, vitória, bicicleta). **"campeonato" tem 5 sílabas** (cam-pe-o-na-to) — entrou `bicicleta` (bi-ci-cle-ta, "Fez gol de bicicleta") no lugar. Menu `FutebolMenuScreen` + `SelecaoFutebolScreen` (molde Espaço; Temas → Selecionar até chegarem foto/nomes dos temas). Foto da raiz fatiada em `assets/futebol/` (3 + larga). Home com 10 cards: grade rola — teste widget usa `scrollUntilVisible` + `pumpAndSettle` antes do toque (toque pós-rolagem sem assentar erra o alvo).
+- Versão `0.97.0+135`. `analyze` limpo, 98 testes ok.
+
 ## 2026-11-15 — v0.96.0 (Temas do Espaço 🚀)
 - **Temas do Espaço:** `EspacoTema` (planetas/naves/astros/missao, `kEspacoTemasFotoAspect = 1672/941`) + `ProgressoEspacoTemasFases` (`fases_espaco_concluidas_v1`) + `kPalavrasPorTemaEspaco` em `banco_palavras` (cada palavra-base em 1 tema: 9/11/10/8 = 38, sem duplicar banco nem frases) + `palavrasDoTemaEspaco()` (filtra + ordena). `EspacoTemasScreen` (molde Nomes: foto `espaco_temas_foto.png` + 4 anéis em zigue-zague + caminho neon + VOLTAR ESPAÇO/REINICIAR/VOLTAR INÍCIO/COLEÇÃO/INICIAR) + `ColecaoEspacoScreen` (prêmios + bônus 🌌) + cross-link ESPAÇO nas 4 coleções. `EstudoScreen`: `espacoTemaConcluivel` + `_concluirFaseEspacoTemas` + `_BauEspacoDialog`. Menu: Temas → `EspacoTemasScreen` (Selecionar segue no botão transparente). Foto vinda da raiz → `assets/espaco/espaco_temas_foto.png`.
 - **Gotcha de teste:** anel pulsante impede `pumpAndSettle` (usar `pump` com duração fixa, 2 passos p/ concluir a transição) e `late final` + `dispose` do controlador quebra no teardown dos testes — controlador criado sempre no `initState` (mesmo sem pulsar).

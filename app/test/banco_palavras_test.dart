@@ -331,4 +331,63 @@ void main() {
       expect(nosTemas.toSet(), equals(todas));
     });
   });
+
+  group('categoria Futebol', () {
+    test('tem as 30 palavras pedidas, nos níveis certos', () {
+      final todas = todosOsFutebol();
+      expect(todas.length, 30);
+      expect(
+        palavrasDe(Categoria.futebol, Nivel.facil).map((p) => p.texto).toSet(),
+        containsAll({
+          'gol',
+          'time',
+          'canto',
+          'juiz',
+          'pontos',
+          'bola',
+          'meia',
+          'bumbo',
+          'faixa',
+          'trave',
+          'campo',
+          'chute',
+          'drible'
+        }),
+      );
+      // "gol" tem 1 sílaba e entra no Fácil
+      expect(
+        palavrasDe(Categoria.futebol, Nivel.facil)
+            .any((p) => p.texto == 'gol' && p.nivelSilabas == 1),
+        isTrue,
+      );
+      expect(
+        palavrasDe(Categoria.futebol, Nivel.media).map((p) => p.texto).toSet(),
+        containsAll({
+          'jogador',
+          'torcida',
+          'bandeira',
+          'estádio',
+          'arena',
+          'zagueiro',
+          'lateral',
+          'ingresso',
+          'apito',
+          'goleiro',
+          'pênalti',
+          'vitória'
+        }),
+      );
+      expect(
+        palavrasDe(Categoria.futebol, Nivel.dificil)
+            .map((p) => p.texto)
+            .toSet(),
+        containsAll({'escanteio', 'camiseta', 'atacante', 'bicicleta'}),
+      );
+      // 5 sílabas não têm nível próprio: jogáveis via Selecionar
+      expect(
+        todas.map((p) => p.texto).toSet(),
+        containsAll({'arquibancada'}),
+      );
+    });
+  });
 }

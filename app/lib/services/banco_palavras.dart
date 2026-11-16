@@ -345,6 +345,42 @@ const List<Palavra> bancoPalavras = [
       texto: 'buraco-negro'),
   Palavra(['es', 'pa', 'ço', 'na', 've'], Categoria.espaco),
 
+  // ──────────────────────────── FUTEBOL ────────────────────────────
+  // fácil (1–2 sílabas; "gol" tem 1 sílaba e entra no Fácil)
+  Palavra(['gol'], Categoria.futebol),
+  Palavra(['ti', 'me'], Categoria.futebol),
+  Palavra(['can', 'to'], Categoria.futebol),
+  Palavra(['ju', 'iz'], Categoria.futebol),
+  Palavra(['pon', 'tos'], Categoria.futebol),
+  Palavra(['bo', 'la'], Categoria.futebol),
+  Palavra(['mei', 'a'], Categoria.futebol),
+  Palavra(['bum', 'bo'], Categoria.futebol),
+  Palavra(['fai', 'xa'], Categoria.futebol),
+  Palavra(['tra', 've'], Categoria.futebol),
+  Palavra(['cam', 'po'], Categoria.futebol),
+  Palavra(['chu', 'te'], Categoria.futebol),
+  Palavra(['dri', 'ble'], Categoria.futebol),
+  // média (3 sílabas)
+  Palavra(['jo', 'ga', 'dor'], Categoria.futebol),
+  Palavra(['tor', 'ci', 'da'], Categoria.futebol),
+  Palavra(['ban', 'dei', 'ra'], Categoria.futebol),
+  Palavra(['es', 'tá', 'dio'], Categoria.futebol),
+  Palavra(['a', 're', 'na'], Categoria.futebol),
+  Palavra(['za', 'guei', 'ro'], Categoria.futebol),
+  Palavra(['la', 'te', 'ral'], Categoria.futebol),
+  Palavra(['in', 'gres', 'so'], Categoria.futebol),
+  Palavra(['a', 'pi', 'to'], Categoria.futebol),
+  Palavra(['go', 'lei', 'ro'], Categoria.futebol),
+  Palavra(['pê', 'nal', 'ti'], Categoria.futebol),
+  Palavra(['vi', 'tó', 'ria'], Categoria.futebol),
+  // difícil (4 sílabas)
+  Palavra(['es', 'can', 'tei', 'o'], Categoria.futebol),
+  Palavra(['ca', 'mi', 'se', 'ta'], Categoria.futebol),
+  Palavra(['a', 'ta', 'can', 'te'], Categoria.futebol),
+  Palavra(['bi', 'ci', 'cle', 'ta'], Categoria.futebol),
+  // 5 sílabas (sem nível próprio: jogáveis via Selecionar/Temas)
+  Palavra(['ar', 'qui', 'ban', 'ca', 'da'], Categoria.futebol),
+
   // ───────────────────── NOMES > TEMAS (SUPERMERCADO) ─────────────────────
   // 4 categorias de supermercado — palavras pequenas na esquerda (Hortifruti)
   // → maiores na direita (Açougue). Foto `nomes_temas_foto.png` (supermercado).
@@ -681,6 +717,15 @@ List<Palavra> todosOsNomes() {
 List<Palavra> todosOsEspaco() {
   final lista =
       bancoPalavras.where((p) => p.categoria == Categoria.espaco).toList();
+  lista.sort((a, b) => semAcento(a.texto).compareTo(semAcento(b.texto)));
+  return lista;
+}
+
+/// Todas as palavras do Futebol, em ordem alfabética (para o futuro
+/// "Selecionar" do futebol).
+List<Palavra> todosOsFutebol() {
+  final lista =
+      bancoPalavras.where((p) => p.categoria == Categoria.futebol).toList();
   lista.sort((a, b) => semAcento(a.texto).compareTo(semAcento(b.texto)));
   return lista;
 }

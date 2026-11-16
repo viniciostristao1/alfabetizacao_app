@@ -67,6 +67,22 @@ void main() {
     expect(find.text('Temas'), findsOneWidget);
   });
 
+  testWidgets('tocar em Futebol abre o menu (3 níveis + Temas)',
+      (tester) async {
+    await _pumpApp(tester);
+
+    // 10º card: rola a grade até aparecer (a grade tem rolagem).
+    await tester.scrollUntilVisible(find.text('Futebol'), 300);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Futebol'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Fácil'), findsOneWidget);
+    expect(find.text('Médio'), findsOneWidget);
+    expect(find.text('Difícil'), findsOneWidget);
+    expect(find.text('Temas'), findsOneWidget);
+  });
+
   testWidgets('Espaço > Temas abre as fases (foto do hangar)',
       (tester) async {
     await _pumpApp(tester);

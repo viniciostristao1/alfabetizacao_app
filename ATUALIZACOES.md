@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.97.0 (2026-11-16)
+- **Nova categoria Futebol ⚽:** entrou na Home com **30 palavras** (gol, bola, time, zagueiro, atacante, escanteio, arquibancada e mais) em **Fácil / Médio / Difícil** — com menu de fotos como o do Espaço (várzea, estádio e torcida em cima; Temas embaixo, que por enquanto abre o Selecionar). Todas com frase no Modo Frases.
+
 ## v0.96.0 (2026-11-15)
 - **Espaço ganha Temas 🚀:** o botão **Temas** agora abre o jogo do hangar com 4 fases em zigue-zague (**Planetas → Naves → Astros → Missão**, 38 palavras no total) — com baú de bônus, **Coleção do espaço** (Anel de Saturno, Foguete, Estrela, Astronauta + Galáxia final) e botões **Voltar Espaço, Reiniciar Aventura, Voltar Início, Coleção e Iniciar Jogo**, igual às outras categorias. Funciona com o celular na horizontal.
 
