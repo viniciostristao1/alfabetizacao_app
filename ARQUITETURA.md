@@ -5,9 +5,13 @@ Mapa dos padrões recorrentes. Leia junto com [`AGENTS.md`](AGENTS.md).
 ## Fluxo de telas
 ```
 HomeScreen (retrato)         → escolhe Categoria
-   └─ NivelScreen (retrato)  → escolhe Nivel (nº de sílabas)
-        └─ EstudoScreen (PAISAGEM) → uma palavra por vez + botões
+    └─ XxxMenuScreen (paisagem) → Fácil/Médio/Difícil em cima, Temas embaixo
+         ├─ EstudoScreen (PAISAGEM) → uma palavra por vez + botões
+         └─ XxxTemasScreen (paisagem) → foto + 4 anéis de fase + botões
+              └─ EstudoScreen (PAISAGEM, fase concluível + baú)
 ```
+(O `NivelScreen` genérico está aposentado — categoria nova tem menu próprio.
+Ver [`NOVA_CATEGORIA.md`](NOVA_CATEGORIA.md).)
 - Só a **EstudoScreen** gira: força paisagem no `initState`, **restaura retrato no `dispose`**
   (cobre tanto o botão "Voltar" quanto o "voltar" do sistema). O retrato global é travado no `main`.
 
@@ -18,6 +22,14 @@ HomeScreen (retrato)         → escolhe Categoria
   - `texto` = `silabas.join()` (é o que a tela mostra, em CAIXA ALTA);
   - `nivelSilabas` = `silabas.length` (define o nível);
   - `sub` = subcategoria futura (opcional), **já pré-preenchida** no banco.
+
+## ➕ Criar CATEGORIA nova (Fácil/Médio/Difícil + Temas + Coleção)
+Processo fechado em [`NOVA_CATEGORIA.md`](NOVA_CATEGORIA.md) (aprendido no Espaço,
+v0.91.0 → v0.96.0) — **siga-o do início ao fim**. Resumo: enum em `categoria.dart` →
+palavras por sílabas + frases no banco → menu próprio com 4 cenas
+(`NivelScreen` genérico aposentado) + Selecionar → 4 temas com foto, anéis e
+coleção → fiação no `EstudoScreen` → testes (contagem, cobertura dos temas, widget
+sem `pumpAndSettle` nos Temas).
 
 ## ➕ Adicionar/editar PALAVRAS (o mais comum)
 Tudo em `services/banco_palavras.dart`. Uma palavra = uma lista de sílabas:

@@ -7,8 +7,11 @@ Fluxo de trabalho para qualquer agente (ou pessoa) melhorar o app. O repositóri
 1. [`INICIO.md`](INICIO.md) — o que é o app, estado atual, estrutura.
 2. **Este `AGENTS.md`** — regras e fluxo.
 3. [`ARQUITETURA.md`](ARQUITETURA.md) — padrões (como adicionar tela/palavra/subcategoria).
-4. [`APRENDIZADOS.md`](APRENDIZADOS.md) — gotchas técnicos.
-5. O código da feature que vai tocar (`app/lib/features/<feature>/`).
+4. [`NOVA_CATEGORIA.md`](NOVA_CATEGORIA.md) — **processo fechado p/ criar categoria
+   completa** (Fácil/Médio/Difícil + Temas + Selecionar + Coleção). Ler INTEIRO
+   antes de qualquer pedido de "cria a categoria X".
+5. [`APRENDIZADOS.md`](APRENDIZADOS.md) — gotchas técnicos.
+6. O código da feature que vai tocar (`app/lib/features/<feature>/`).
 
 ## 1. Regras de ouro (NÃO violar)
 - **Projeto isolado.** Só `/root/alfabetizacao_app/`. NUNCA tocar em `/root/trading*`,
