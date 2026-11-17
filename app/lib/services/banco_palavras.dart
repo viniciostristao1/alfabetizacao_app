@@ -373,6 +373,8 @@ const List<Palavra> bancoPalavras = [
   Palavra(['go', 'lei', 'ro'], Categoria.futebol),
   Palavra(['pê', 'nal', 'ti'], Categoria.futebol),
   Palavra(['vi', 'tó', 'ria'], Categoria.futebol),
+  Palavra(['vo', 'lan', 'te'], Categoria.futebol),
+  Palavra(['téc', 'ni', 'co'], Categoria.futebol),
   // difícil (4 sílabas)
   Palavra(['es', 'can', 'tei', 'o'], Categoria.futebol),
   Palavra(['ca', 'mi', 'se', 'ta'], Categoria.futebol),

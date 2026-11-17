@@ -83,6 +83,27 @@ void main() {
     expect(find.text('Temas'), findsOneWidget);
   });
 
+  testWidgets('Futebol > Temas abre o quiz das posições',
+      (tester) async {
+    await _pumpApp(tester);
+
+    await tester.scrollUntilVisible(find.text('Futebol'), 300);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Futebol'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Temas'));
+    // SEM pumpAndSettle: a dica dourada pode ficar PULSANDO (animação
+    // contínua) — pumps com duração fixa resolvem.
+    await tester.pump(const Duration(milliseconds: 100));
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(find.text('ONDE FICA?'), findsOneWidget);
+    expect(find.textContaining('GOLEIRO'), findsOneWidget);
+    expect(find.text('VOLTAR FUTEBOL'), findsOneWidget);
+    expect(find.text('REINICIAR JOGO'), findsOneWidget);
+    expect(find.text('VOLTAR INÍCIO'), findsOneWidget);
+  });
+
   testWidgets('Espaço > Temas abre as fases (foto do hangar)',
       (tester) async {
     await _pumpApp(tester);

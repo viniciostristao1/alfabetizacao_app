@@ -333,9 +333,9 @@ void main() {
   });
 
   group('categoria Futebol', () {
-    test('tem as 30 palavras pedidas, nos níveis certos', () {
+    test('tem as 32 palavras pedidas, nos níveis certos', () {
       final todas = todosOsFutebol();
-      expect(todas.length, 30);
+      expect(todas.length, 32);
       expect(
         palavrasDe(Categoria.futebol, Nivel.facil).map((p) => p.texto).toSet(),
         containsAll({
@@ -374,7 +374,9 @@ void main() {
           'apito',
           'goleiro',
           'pênalti',
-          'vitória'
+          'vitória',
+          'volante',
+          'técnico'
         }),
       );
       expect(

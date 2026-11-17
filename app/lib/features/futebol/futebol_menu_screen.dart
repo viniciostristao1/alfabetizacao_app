@@ -6,14 +6,15 @@ import '../../services/banco_palavras.dart';
 import '../../services/progresso_repository.dart';
 import '../estudo/estudo_screen.dart';
 import '../selecao/selecao_futebol_screen.dart';
+import 'futebol_posicoes_screen.dart';
 
 /// Menu do Futebol (PAISAGEM): 3 cenas em cima (Fácil/Médio/Difícil) + 1
 /// cena larga embaixo (Temas) — mesmo molde do Espaço/Alimentos/Objetos/Nomes.
 /// A imagem original (`file_000000005e10820e...png`, 1536×1024) já vem nesse
 /// recorte: várzea + estádio + torcida em cima, show/lanchonete embaixo;
 /// aqui ela entra fatiada em `assets/futebol/futebol_{facil,medio,dificil,temas}.png`.
-/// O Futebol ainda não tem Temas cadastrados: o botão "Temas" abre o
-/// "Selecionar palavras do Futebol" (provisório até existirem temas).
+/// O botão "Temas" abre o quiz das posições (lousa tática do vestiário); o
+/// botão transparente "SELECIONAR FUTEBOL" abre a busca de palavras.
 class FutebolMenuScreen extends StatefulWidget {
   const FutebolMenuScreen({super.key});
 
@@ -52,6 +53,13 @@ class _FutebolMenuScreenState extends State<FutebolMenuScreen> {
           fundoImagem: asset,
         ),
       ),
+    );
+    if (mounted) _carregar();
+  }
+
+  Future<void> _abrirPosicoes() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const FutebolPosicoesScreen()),
     );
     if (mounted) _carregar();
   }
@@ -120,10 +128,10 @@ class _FutebolMenuScreenState extends State<FutebolMenuScreen> {
               Expanded(
                 flex: 4,
                 child: _CenaBotao(
-                  asset: 'assets/futebol/futebol_temas.png',
-                  legenda: 'Temas',
-                  cor: Categoria.futebol.cor,
-                  onTap: _selecionarFutebol,
+                    asset: 'assets/futebol/futebol_temas.png',
+                    legenda: 'Temas',
+                    cor: Categoria.futebol.cor,
+                    onTap: _abrirPosicoes,
                 ),
               ),
             ],

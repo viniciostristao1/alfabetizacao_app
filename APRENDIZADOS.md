@@ -1223,3 +1223,11 @@ Notas técnicas e decisões. Topo = mais recente.
   instala. Publica em `ci-latest`; `scripts/release.sh` corta o release nomeado com asset de
   nome fixo `primeiras-palavras.apk`. APK ~42MB (universal + debug). O filtro `paths: app/**`
   faz commits só-de-docs (raiz) NÃO dispararem build.
+- **Quiz tocar-no-campo (Futebol > Temas, v0.100.0):** pins em fração da imagem
+  (`fx`/`fy` em `models/futebol_posicao.dart`) sobre o `LayoutBuilder` de aspecto
+  (molde do Espaço) — o alvo acompanha qualquer tela. `late final AnimationController`
+  SEMPRE criado no `initState` (nunca lazy): inicializar no `dispose` quebra o
+  teardown dos testes ("deactivated widget's ancestor"). Ordem fixa defesa→ataque
+  (pedagógica e determinística p/ teste); dica dourada após 3 erros; sem perda de
+  moeda no erro (público bem pequeno). `MEI` da lousa = `meia` do banco (documentado
+  no model). Foto 1536×1024 mantida original (2,1 MB, na faixa das fotos de Temas).

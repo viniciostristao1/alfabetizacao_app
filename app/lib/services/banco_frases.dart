@@ -354,6 +354,8 @@ const Map<String, String> kFrases = {
   'futebol|ingresso|||': 'Mostrei meu ingresso',
   'futebol|apito|||': 'Ouvi o apito',
   'futebol|goleiro|||': 'O goleiro defende bem',
+  'futebol|volante|||': 'O volante marca bem',
+  'futebol|técnico|||': 'O técnico grita gol',
   'futebol|pênalti|||': 'É pênalti pro time',
   'futebol|vitória|||': 'A vitória é nossa',
   'futebol|escanteio|||': 'Saiu escanteio pro time',
