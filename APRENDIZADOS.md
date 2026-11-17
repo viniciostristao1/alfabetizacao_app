@@ -1236,3 +1236,9 @@ Notas técnicas e decisões. Topo = mais recente.
   0.35 por baixo da foto nítida (contain); pinos em fração da foto NÍTIDA, nunca
   da tela. Sorteio = `List.of(kOrdemPosicoes)..shuffle()` no `initState` e no
   REINICIAR (permutação: cada posição 1x por jogo, só no futebol).
+- **Arte larga + corte seguro (Futebol > Temas, v0.100.4):** a arte 2:1 casa com
+  a largura da tela; o excedente vertical é cortado com a janela ancorada no
+  centro dos pontos (`kFyCentroPontos` = 0.425, média dos centroides) — o quadro
+  (fy ~0,09–0,76) nunca entra no corte. Pinos = fração da arte + deslocamento do
+  corte (`(fy - fyTop) * dispH`); o `Stack` corta o excedente sozinho (hardEdge
+  padrão). Removido o `ImageFiltered` de blur (e o import `dart:ui`).

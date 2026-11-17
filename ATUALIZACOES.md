@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.100.4 (2026-11-17)
+- **Quiz das posições: arte larga em tela cheia ⚽:** o vestiário agora é uma arte 2:1 que preenche a tela toda na horizontal — sem faixas pretas, sem desfoque e sem esticar. Se a tela for mais larga que a arte, corta só uma faixinha de cima/baixo (o quadro e os círculos nunca entram no corte).
+
 ## v0.100.3 (2026-11-17)
 - **Quiz das posições: tela cheia + sorteio ⚽:** a foto do vestiário agora preenche a tela toda (laterais com desfoque, sem faixas pretas e sem esticar) com os botões grudados na lousa, e a ordem das 6 posições é **sorteada a cada partida** — sem repetir dentro do jogo, e REINICIAR embaralha de novo.
 

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,12 +10,16 @@ import '../../services/progresso_repository.dart';
 import '../../theme/app_colors.dart';
 import '../estudo/confete.dart';
 
-/// Quiz das posições (jogo do Davi — Futebol > Temas, PAISAGEM): a foto do
-/// vestiário com a lousa tática preenche a zona do jogo — a foto nítida
-/// aparece inteira (contain, sem corte nem distorção) e o fundo é a mesma
-/// foto esticada + desfoque (sem faixas pretas). A criança TOCA o ponto
-/// certo do campo. Os pinos são posicionados em fração da foto NÍTIDA, então
-/// acompanham a imagem em qualquer tamanho de tela.
+/// Quiz das posições (jogo do Davi — Futebol > Temas, PAISAGEM): a arte larga
+/// do vestiário com a lousa tática preenche a zona do jogo inteira — sem
+/// faixas, sem blur, sem esticar. A criança TOCA o ponto certo do campo.
+///
+/// Como a arte (2:1) é menos larga que a tela do celular, o excedente é
+/// cortado SÓ na vertical, com a janela ancorada no centro dos pontos
+/// ([kFyCentroPontos]) — o quadro e os círculos nunca entram no corte, em
+/// qualquer tamanho de tela. Os pinos são posicionados em fração da arte
+/// exibida (com o deslocamento do corte aplicado), então acompanham a
+/// imagem, e não a tela.
 ///
 /// - A ordem das 6 posições é SORTEADA a cada partida (sem repetir dentro do
 ///   jogo; REINICIAR embaralha de novo) — só neste jogo, nada muda nas outras
@@ -312,48 +315,26 @@ class _FutebolPosicoesScreenState extends State<FutebolPosicoesScreen> {
                   ),
                 ),
               ),
-              // ── foto INTEIRA (contain: nada cortado, pinos sempre visíveis) ──
+              // ── arte larga: preenche TUDO, corte só vertical e seguro ──
               Expanded(
                 child: LayoutBuilder(
                   builder: (context, c) {
                     final w = c.maxWidth;
                     final h = c.maxHeight;
-                    // contain: a foto inteira cabe na zona, sem cortar nada.
-                    var dispW = w;
-                    var dispH = w / kFutebolCampoAspect;
-                    if (dispH > h) {
-                      dispH = h;
-                      dispW = h * kFutebolCampoAspect;
-                    }
-                    final ox = (w - dispW) / 2;
-                    final oy = (h - dispH) / 2;
+                    // A arte casa SEMPRE com a largura; o excedente vertical
+                    // é cortado com a janela ancorada no centro dos pontos —
+                    // o quadro (fy ~0,09–0,76) nunca entra no corte.
+                    final dispW = w;
+                    final dispH = w / kFutebolCampoAspect;
+                    final double winH = h >= dispH ? 1.0 : h / dispH;
+                    final double fyTop =
+                        ((kFyCentroPontos - winH / 2).clamp(0.0, 1.0 - winH))
+                            .toDouble();
                     return Stack(
                       children: [
-                        // Fundo desfocado: a mesma foto esticada + blur cobre
-                        // a zona inteira (sem faixas pretas) enquanto a foto
-                        // nítida do centro segue intacta, sem distorção.
-                        Positioned.fill(
-                          child: ImageFiltered(
-                            imageFilter: ImageFilter.blur(
-                              sigmaX: 18,
-                              sigmaY: 18,
-                            ),
-                            child: Image.asset(
-                              _assetCampo,
-                              fit: BoxFit.cover,
-                              filterQuality: FilterQuality.low,
-                            ),
-                          ),
-                        ),
-                        Positioned.fill(
-                          child: ColoredBox(
-                            color:
-                                Colors.black.withValues(alpha: 0.35),
-                          ),
-                        ),
                         Positioned(
-                          left: ox,
-                          top: oy,
+                          left: 0,
+                          top: -fyTop * dispH,
                           width: dispW,
                           height: dispH,
                           child: Image.asset(
@@ -366,8 +347,8 @@ class _FutebolPosicoesScreenState extends State<FutebolPosicoesScreen> {
                         ),
                         for (final (i, pino) in kPinosCampo.indexed)
                           Positioned(
-                            left: ox + pino.fx * dispW - 32,
-                            top: oy + pino.fy * dispH - 32,
+                            left: pino.fx * dispW - 32,
+                            top: (pino.fy - fyTop) * dispH - 32,
                             width: 64,
                             height: 64,
                             child: _PinoCampo(

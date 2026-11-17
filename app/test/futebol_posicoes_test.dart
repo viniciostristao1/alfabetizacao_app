@@ -27,4 +27,14 @@ void main() {
       expect(pino.fy, inInclusiveRange(0.0, 1.0));
     }
   });
+
+  test('arte larga 2:1 e pinos na faixa do quadro', () {
+    // A tela preenche a largura e corta SÓ o excedente vertical: os pinos
+    // precisam estar longe das bordas de cima/baixo.
+    expect(kFutebolCampoAspect, closeTo(2.0, 0.01));
+    for (final pino in kPinosCampo) {
+      expect(pino.fy, greaterThan(0.10), reason: pino.palavra);
+      expect(pino.fy, lessThan(0.75), reason: pino.palavra);
+    }
+  });
 }
