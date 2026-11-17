@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,11 +11,14 @@ import '../../theme/app_colors.dart';
 import '../estudo/confete.dart';
 
 /// Quiz das posições (jogo do Davi — Futebol > Temas, PAISAGEM): a foto do
-/// vestiário com a lousa tática ocupa a tela toda e a criança TOCA o ponto
-/// certo do campo.
+/// vestiário com a lousa tática aparece INTEIRA (contain, sem corte — o
+/// `cover` cortava o topo e escondia o pino do atacante) e a criança TOCA o
+/// ponto certo do campo.
 ///
-/// - Topo: pergunta gigante "ONDE FICA O …?" + 🔊 (o app também FALA a
-///   pergunta, pois a criança ainda está aprendendo a ler).
+/// - Topo (faixa compacta, fora da foto): pergunta gigante "ONDE FICA O …?" +
+///   🔊 (o app também FALA a pergunta, pois a criança ainda está aprendendo
+///   a ler). O retorno ("Muito bem! 🎉" / "Tenta de novo! 💪") aparece nessa
+///   mesma faixa — nunca em cima dos pinos.
 /// - Acerto: confete + moeda(s) + o app fala a palavra; erro nunca tira
 ///   moeda e nunca trava — com 3 erros o ponto certo pisca dourado (dica).
 /// - Fim: bônus de fase (baú) + troféu "🏆 Time do Davi".
@@ -204,190 +206,155 @@ class _FutebolPosicoesScreenState extends State<FutebolPosicoesScreen> {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          LayoutBuilder(
-            builder: (context, c) {
-              final w = c.maxWidth;
-              final h = c.maxHeight;
-              final dW = math.max(w, h * kFutebolCampoAspect);
-              final dH = math.max(h, w / kFutebolCampoAspect);
-              final dx = (dW - w) / 2;
-              final dy = (dH - h) / 2;
-              return Stack(
-                fit: StackFit.expand,
-                children: [
-                  Positioned(
-                    left: -dx,
-                    top: -dy,
-                    width: dW,
-                    height: dH,
-                    child: Image.asset(
-                      _assetCampo,
-                      fit: BoxFit.fill,
-                      filterQuality: FilterQuality.high,
-                      errorBuilder: (_, _, _) =>
-                          const ColoredBox(color: Colors.black),
-                    ),
-                  ),
-                  for (final (i, pino) in kPinosCampo.indexed)
-                    Positioned(
-                      left: pino.fx * dW - dx - 40,
-                      top: pino.fy * dH - dy - 40,
-                      width: 80,
-                      height: 80,
-                      child: _PinoCampo(
-                        aceso: pino.palavra == _atual && !_fim,
-                        certo: _pinoCerto == i,
-                        errado: _pinoErrado == i,
-                        dica: _dicaAtiva && pino.palavra == _atual,
-                        onTap: () => _tocarPino(i),
+          Column(
+            children: [
+              // ── faixa da pergunta (compacta, FORA da foto) ──
+              SafeArea(
+                bottom: false,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 8, 8, 4),
+                  child: Row(
+                    children: [
+                      Material(
+                        color: Colors.black.withValues(alpha: 0.55),
+                        shape: const CircleBorder(),
+                        child: InkWell(
+                          customBorder: const CircleBorder(),
+                          onTap: () => Navigator.of(context).pop(),
+                          child: const Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Icon(Icons.arrow_back_rounded,
+                                color: Colors.white, size: 24),
+                          ),
+                        ),
                       ),
-                    ),
-                ],
-              );
-            },
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.62),
+                            borderRadius: BorderRadius.circular(16),
+                            border:
+                                Border.all(color: Colors.white24, width: 1.5),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'ONDE FICA?',
+                                      style: TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w800,
+                                        letterSpacing: 1.2,
+                                      ),
+                                    ),
+                                    Text(
+                                      '${_emojiDe(_atual)}  ${_atual.toUpperCase()}',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w900,
+                                        letterSpacing: 0.5,
+                                      ),
+                                    ),
+                                    Text(
+                                      _feedback ??
+                                          '${_idx + 1} de ${kOrdemPosicoes.length} · 🪙 $_moedas · Nv ${ProgressoRepository.nivelDe(_xp)}',
+                                      style: TextStyle(
+                                        color: _feedback != null
+                                            ? const Color(0xFFFFD54F)
+                                            : Colors.white60,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Material(
+                                color: AppColors.accent,
+                                shape: const CircleBorder(),
+                                child: InkWell(
+                                  customBorder: const CircleBorder(),
+                                  onTap: _falarPergunta,
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Icon(Icons.volume_up_rounded,
+                                        color: Colors.white, size: 24),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              // ── foto INTEIRA (contain: nada cortado, pinos sempre visíveis) ──
+              Expanded(
+                child: LayoutBuilder(
+                  builder: (context, c) {
+                    final w = c.maxWidth;
+                    final h = c.maxHeight;
+                    // contain: a foto inteira cabe na zona, sem cortar nada.
+                    var dispW = w;
+                    var dispH = w / kFutebolCampoAspect;
+                    if (dispH > h) {
+                      dispH = h;
+                      dispW = h * kFutebolCampoAspect;
+                    }
+                    final ox = (w - dispW) / 2;
+                    final oy = (h - dispH) / 2;
+                    return Stack(
+                      children: [
+                        Positioned(
+                          left: ox,
+                          top: oy,
+                          width: dispW,
+                          height: dispH,
+                          child: Image.asset(
+                            _assetCampo,
+                            fit: BoxFit.fill,
+                            filterQuality: FilterQuality.high,
+                            errorBuilder: (_, _, _) =>
+                                const ColoredBox(color: Colors.black),
+                          ),
+                        ),
+                        for (final (i, pino) in kPinosCampo.indexed)
+                          Positioned(
+                            left: ox + pino.fx * dispW - 32,
+                            top: oy + pino.fy * dispH - 32,
+                            width: 64,
+                            height: 64,
+                            child: _PinoCampo(
+                              aceso: pino.palavra == _atual && !_fim,
+                              certo: _pinoCerto == i,
+                              errado: _pinoErrado == i,
+                              dica: _dicaAtiva && pino.palavra == _atual,
+                              onTap: () => _tocarPino(i),
+                            ),
+                          ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
           if (_confeteSeq > 0)
             Positioned.fill(
               child: ConfeteBurst(key: ValueKey(_confeteSeq)),
             ),
-          // ── topo: voltar + pergunta + moedas ──
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Material(
-                    color: Colors.black.withValues(alpha: 0.55),
-                    shape: const CircleBorder(),
-                    child: InkWell(
-                      customBorder: const CircleBorder(),
-                      onTap: () => Navigator.of(context).pop(),
-                      child: const Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Icon(Icons.arrow_back_rounded,
-                            color: Colors.white, size: 26),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Center(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 18, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withValues(alpha: 0.62),
-                          borderRadius: BorderRadius.circular(20),
-                          border:
-                              Border.all(color: Colors.white24, width: 1.5),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Flexible(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Text(
-                                    'ONDE FICA?',
-                                    style: TextStyle(
-                                      color: Colors.white70,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w800,
-                                      letterSpacing: 1.2,
-                                    ),
-                                  ),
-                                  Text(
-                                    '${_emojiDe(_atual)}  ${_atual.toUpperCase()}',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 26,
-                                      fontWeight: FontWeight.w900,
-                                      letterSpacing: 0.5,
-                                    ),
-                                  ),
-                                  Text(
-                                    '${_idx + 1} de ${kOrdemPosicoes.length}',
-                                    style: const TextStyle(
-                                      color: Colors.white60,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Material(
-                              color: AppColors.accent,
-                              shape: const CircleBorder(),
-                              child: InkWell(
-                                customBorder: const CircleBorder(),
-                                onTap: _falarPergunta,
-                                child: const Padding(
-                                  padding: EdgeInsets.all(12),
-                                  child: Icon(Icons.volume_up_rounded,
-                                      color: Colors.white, size: 26),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.55),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.white24),
-                    ),
-                    child: Text(
-                      '🪙 $_moedas · Nv ${ProgressoRepository.nivelDe(_xp)}',
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w800),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          // ── feedback (acerto/erro) ──
-          if (_feedback != null && !_fim)
-            SafeArea(
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 118),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: (_pinoCerto != null
-                              ? const Color(0xFF2E9D44)
-                              : const Color(0xFFE08A00))
-                          .withValues(alpha: 0.92),
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    child: Text(
-                      _feedback!,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          // ── botões de baixo ──
+          // ── botões de baixo (sobre a mesa da foto, sem pinos) ──
           SafeArea(
             child: Align(
               alignment: Alignment.bottomCenter,
@@ -430,6 +397,8 @@ class _FutebolPosicoesScreenState extends State<FutebolPosicoesScreen> {
 
 /// O ponto tocável sobre a lousa: anel azul (igual ao da lousa), verde no
 /// acerto, vermelho no erro e dourado pulsante na dica (após 3 erros).
+/// Caixa de toque 64×64 (anel visual 44): suficiente pro dedo da criança sem
+/// roubar o toque do pino vizinho (pares do mesmo time aceitam qualquer um).
 class _PinoCampo extends StatefulWidget {
   const _PinoCampo({
     required this.aceso,
@@ -496,8 +465,8 @@ class _PinoCampoState extends State<_PinoCampo>
                     ? kCorPinoCampo
                     : kCorPinoCampo.withValues(alpha: 0.45);
     final corpo = Container(
-      width: 46,
-      height: 46,
+      width: 44,
+      height: 44,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: cor.withValues(alpha: 0.85),
@@ -517,7 +486,7 @@ class _PinoCampoState extends State<_PinoCampo>
         ],
       ),
       child: widget.certo
-          ? const Icon(Icons.check_rounded, color: Colors.white, size: 30)
+          ? const Icon(Icons.check_rounded, color: Colors.white, size: 28)
           : null,
     );
     return Material(
@@ -527,8 +496,8 @@ class _PinoCampoState extends State<_PinoCampo>
         customBorder: const CircleBorder(),
         onTap: widget.onTap,
         child: SizedBox(
-          width: 80,
-          height: 80,
+          width: 64,
+          height: 64,
           child: Center(
             child: widget.dica && !widget.certo
                 ? AnimatedBuilder(

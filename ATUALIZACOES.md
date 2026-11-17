@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.100.1 (2026-11-17)
+- **Quiz das posições: imagem inteira + pinos no lugar ⚽:** a foto do vestiário agora aparece toda (antes o topo era cortado e o ATACANTE sumia) e os 9 botões foram medidos ponto a ponto na lousa — cada um cai exatamente no pontinho azul. A pergunta ficou numa faixa compacta em cima, sem cobrir o campo.
+
 ## v0.100.0 (2026-11-17)
 - **Futebol > Temas vira o jogo das posições ⚽:** a foto do vestiário com a lousa tática agora é interativa — o app pergunta **"ONDE FICA O GOLEIRO?"** (mostrando e falando a palavra) e o Davi toca o ponto certo do campo (são 6: goleiro, zagueiro, lateral, volante, meia e atacante). Acerto dá confete + moedas, erro nunca trava (com 3 erros o ponto certo pisca dourado de dica) e no fim tem o troféu **🏆 Time do Davi**. O botão **SELECIONAR FUTEBOL** continua existindo. Novas palavras: **VOLANTE** e **TÉCNICO** (Fácil→Médio, com frases).
 

@@ -34,16 +34,19 @@ const List<String> kOrdemPosicoes = [
 ];
 
 /// Os 9 pontos azuis da lousa (algumas posições têm 2: zagueiro, lateral, meia).
+/// Coordenadas MEDIDAS por script (centroide dos pixels azuis da lousa,
+/// ver `docs/` — chute no olho ficava ~0.07 para a esquerda). A imagem de
+/// debug com os centroides confirma: cada centroide cai no ponto azul.
 const List<FutebolPin> kPinosCampo = [
-  FutebolPin('atacante', 0.654, 0.122, 'ATACANTE'),
-  FutebolPin('meia', 0.509, 0.227, 'MEI'),
-  FutebolPin('meia', 0.782, 0.250, 'MEI'),
-  FutebolPin('volante', 0.635, 0.311, 'VOLANTE'),
-  FutebolPin('lateral', 0.503, 0.367, 'LATERAL ESQUERDO'),
-  FutebolPin('lateral', 0.789, 0.377, 'LATERAL DIREITO'),
-  FutebolPin('zagueiro', 0.596, 0.450, 'ZAGUEIRO'),
-  FutebolPin('zagueiro', 0.699, 0.450, 'ZAGUEIRO'),
-  FutebolPin('goleiro', 0.658, 0.563, 'GOLEIRO'),
+  FutebolPin('atacante', 0.721, 0.152, 'ATACANTE'),
+  FutebolPin('meia', 0.626, 0.232, 'MEI'),
+  FutebolPin('meia', 0.812, 0.255, 'MEI'),
+  FutebolPin('volante', 0.727, 0.320, 'VOLANTE'),
+  FutebolPin('lateral', 0.598, 0.375, 'LATERAL ESQUERDO'),
+  FutebolPin('lateral', 0.845, 0.385, 'LATERAL DIREITO'),
+  FutebolPin('zagueiro', 0.682, 0.460, 'ZAGUEIRO'),
+  FutebolPin('zagueiro', 0.779, 0.464, 'ZAGUEIRO'),
+  FutebolPin('goleiro', 0.731, 0.571, 'GOLEIRO'),
 ];
 
 /// Pins de uma posição (ex.: 'zagueiro' → os 2 da linha de trás).
