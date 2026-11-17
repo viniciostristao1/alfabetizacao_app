@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.100.2 (2026-11-17)
+- **Quiz das posições não gira mais a tela 📱:** ao sair do jogo (INÍCIO, voltar etc.) o app continua deitado como todo o resto — era o único lugar que voltava para retrato.
+
 ## v0.100.1 (2026-11-17)
 - **Quiz das posições: imagem inteira + pinos no lugar ⚽:** a foto do vestiário agora aparece toda (antes o topo era cortado e o ATACANTE sumia) e os 9 botões foram medidos ponto a ponto na lousa — cada um cai exatamente no pontinho azul. A pergunta ficou numa faixa compacta em cima, sem cobrir o campo.
 

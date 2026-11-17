@@ -23,7 +23,9 @@ import '../estudo/confete.dart';
 ///   moeda e nunca trava — com 3 erros o ponto certo pisca dourado (dica).
 /// - Fim: bônus de fase (baú) + troféu "🏆 Time do Davi".
 ///
-/// Força paisagem ao abrir e restaura retrato ao sair (molde da EstudoScreen).
+/// Força paisagem ao abrir e GARANTE paisagem ao sair (o app todo é deitado —
+/// ver `main.dart`; molde do `dispose` da EstudoScreen). Nunca restaura
+/// retrato: era isso que girava a tela no INÍCIO.
 class FutebolPosicoesScreen extends StatefulWidget {
   const FutebolPosicoesScreen({super.key});
 
@@ -77,9 +79,10 @@ class _FutebolPosicoesScreenState extends State<FutebolPosicoesScreen> {
 
   @override
   void dispose() {
+    // O app é todo PAISAGEM — garante ao sair (nunca volta p/ retrato).
     SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
     ]);
     super.dispose();
   }

@@ -12,8 +12,9 @@ HomeScreen (retrato)         → escolhe Categoria
 ```
 (O `NivelScreen` genérico está aposentado — categoria nova tem menu próprio.
 Ver [`NOVA_CATEGORIA.md`](NOVA_CATEGORIA.md).)
-- Só a **EstudoScreen** gira: força paisagem no `initState`, **restaura retrato no `dispose`**
-  (cobre tanto o botão "Voltar" quanto o "voltar" do sistema). O retrato global é travado no `main`.
+- Só a **EstudoScreen** gira: força paisagem no `initState` e **garante paisagem
+  no `dispose`** (o app todo é deitado — ver `main.dart`; nunca restaura retrato).
+  Vale o mesmo para telas de jogo em paisagem (ex.: quiz das posições).
 
 ## Modelo de dados
 - **`Categoria`** e **`Nivel`** são `enum`s (`models/categoria.dart`) que carregam rótulo,
