@@ -1231,3 +1231,8 @@ Notas técnicas e decisões. Topo = mais recente.
   (pedagógica e determinística p/ teste); dica dourada após 3 erros; sem perda de
   moeda no erro (público bem pequeno). `MEI` da lousa = `meia` do banco (documentado
   no model). Foto 1536×1024 mantida original (2,1 MB, na faixa das fotos de Temas).
+- **Tela cheia com blur + sorteio (Futebol > Temas, v0.100.3):** laterais sem
+  faixa preta = `ImageFiltered(blur)` com a mesma foto em `cover` + véu preto
+  0.35 por baixo da foto nítida (contain); pinos em fração da foto NÍTIDA, nunca
+  da tela. Sorteio = `List.of(kOrdemPosicoes)..shuffle()` no `initState` e no
+  REINICIAR (permutação: cada posição 1x por jogo, só no futebol).

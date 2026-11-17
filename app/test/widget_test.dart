@@ -98,7 +98,18 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
 
     expect(find.text('ONDE FICA?'), findsOneWidget);
-    expect(find.textContaining('GOLEIRO'), findsOneWidget);
+    // A 1ª posição é SORTEADA: exatamente uma das 6 aparece na pergunta.
+    const posicoes = [
+      'GOLEIRO',
+      'ZAGUEIRO',
+      'LATERAL',
+      'VOLANTE',
+      'MEIA',
+      'ATACANTE'
+    ];
+    final visiveis =
+        posicoes.where((p) => find.textContaining(p).evaluate().isNotEmpty);
+    expect(visiveis.length, 1);
     expect(find.text('VOLTAR FUTEBOL'), findsOneWidget);
     expect(find.text('REINICIAR JOGO'), findsOneWidget);
     expect(find.text('VOLTAR INÍCIO'), findsOneWidget);

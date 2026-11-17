@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.100.3 (2026-11-17)
+- **Quiz das posições: tela cheia + sorteio ⚽:** a foto do vestiário agora preenche a tela toda (laterais com desfoque, sem faixas pretas e sem esticar) com os botões grudados na lousa, e a ordem das 6 posições é **sorteada a cada partida** — sem repetir dentro do jogo, e REINICIAR embaralha de novo.
+
 ## v0.100.2 (2026-11-17)
 - **Quiz das posições não gira mais a tela 📱:** ao sair do jogo (INÍCIO, voltar etc.) o app continua deitado como todo o resto — era o único lugar que voltava para retrato.
 

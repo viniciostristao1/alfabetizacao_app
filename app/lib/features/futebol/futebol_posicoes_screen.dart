@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,10 +12,15 @@ import '../../theme/app_colors.dart';
 import '../estudo/confete.dart';
 
 /// Quiz das posições (jogo do Davi — Futebol > Temas, PAISAGEM): a foto do
-/// vestiário com a lousa tática aparece INTEIRA (contain, sem corte — o
-/// `cover` cortava o topo e escondia o pino do atacante) e a criança TOCA o
-/// ponto certo do campo.
+/// vestiário com a lousa tática preenche a zona do jogo — a foto nítida
+/// aparece inteira (contain, sem corte nem distorção) e o fundo é a mesma
+/// foto esticada + desfoque (sem faixas pretas). A criança TOCA o ponto
+/// certo do campo. Os pinos são posicionados em fração da foto NÍTIDA, então
+/// acompanham a imagem em qualquer tamanho de tela.
 ///
+/// - A ordem das 6 posições é SORTEADA a cada partida (sem repetir dentro do
+///   jogo; REINICIAR embaralha de novo) — só neste jogo, nada muda nas outras
+///   categorias.
 /// - Topo (faixa compacta, fora da foto): pergunta gigante "ONDE FICA O …?" +
 ///   🔊 (o app também FALA a pergunta, pois a criança ainda está aprendendo
 ///   a ler). O retorno ("Muito bem! 🎉" / "Tenta de novo! 💪") aparece nessa
@@ -23,7 +29,7 @@ import '../estudo/confete.dart';
 ///   moeda e nunca trava — com 3 erros o ponto certo pisca dourado (dica).
 /// - Fim: bônus de fase (baú) + troféu "🏆 Time do Davi".
 ///
-/// Força paisagem ao abrir e GARANTE paisagem ao sair (o app todo é deitado —
+/// Trava paisagem ao abrir e GARANTE paisagem ao sair (o app todo é deitado —
 /// ver `main.dart`; molde do `dispose` da EstudoScreen). Nunca restaura
 /// retrato: era isso que girava a tela no INÍCIO.
 class FutebolPosicoesScreen extends StatefulWidget {
@@ -40,6 +46,7 @@ class _FutebolPosicoesScreenState extends State<FutebolPosicoesScreen> {
   static const _maxErrosSemDica = 3;
 
   int _idx = 0;
+  List<String> _ordem = List.of(kOrdemPosicoes);
   int _errosNoItem = 0;
   int _dePrimeira = 0;
   int _moedas = 0;
@@ -54,7 +61,7 @@ class _FutebolPosicoesScreenState extends State<FutebolPosicoesScreen> {
   bool _fim = false;
   String? _feedback; // "Muito bem! 🎉" / "Tenta de novo! 💪" / null
 
-  String get _atual => kOrdemPosicoes[_idx];
+  String get _atual => _ordem[_idx];
 
   String _emojiDe(String palavra) => switch (palavra) {
         'goleiro' => '🧤',
@@ -73,6 +80,8 @@ class _FutebolPosicoesScreenState extends State<FutebolPosicoesScreen> {
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
+    // Ordem sorteada UMA vez por partida (sem repetir dentro do jogo).
+    _ordem.shuffle();
     _carregarPontuacao();
     WidgetsBinding.instance.addPostFrameCallback((_) => _falarPergunta());
   }
@@ -190,6 +199,7 @@ class _FutebolPosicoesScreenState extends State<FutebolPosicoesScreen> {
   void _reiniciar() {
     setState(() {
       _geracao++;
+      _ordem = List.of(kOrdemPosicoes)..shuffle(); // embaralha de novo
       _idx = 0;
       _errosNoItem = 0;
       _dePrimeira = 0;
@@ -319,6 +329,28 @@ class _FutebolPosicoesScreenState extends State<FutebolPosicoesScreen> {
                     final oy = (h - dispH) / 2;
                     return Stack(
                       children: [
+                        // Fundo desfocado: a mesma foto esticada + blur cobre
+                        // a zona inteira (sem faixas pretas) enquanto a foto
+                        // nítida do centro segue intacta, sem distorção.
+                        Positioned.fill(
+                          child: ImageFiltered(
+                            imageFilter: ImageFilter.blur(
+                              sigmaX: 18,
+                              sigmaY: 18,
+                            ),
+                            child: Image.asset(
+                              _assetCampo,
+                              fit: BoxFit.cover,
+                              filterQuality: FilterQuality.low,
+                            ),
+                          ),
+                        ),
+                        Positioned.fill(
+                          child: ColoredBox(
+                            color:
+                                Colors.black.withValues(alpha: 0.35),
+                          ),
+                        ),
                         Positioned(
                           left: ox,
                           top: oy,
