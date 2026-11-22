@@ -103,6 +103,7 @@ class _MapaMundiScreenState extends State<MapaMundiScreen> {
           palavras: palavras,
           manterPaisagemAoSair: true,
           habitatConcluivel: r.chave,
+          fundoImagem: 'assets/habitats/mapa_mundi.jpg',
         ),
       ),
     );

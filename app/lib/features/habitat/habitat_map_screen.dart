@@ -74,6 +74,17 @@ class _HabitatMapScreenState extends State<HabitatMapScreen> {
     return null; // mapa-múndi
   }
 
+  /// Cena do habitat — vira o fundoImagem da EstudoScreen no modo imagem
+  /// (mesmo molde de Hortifruti/Cafeteria). A Fazenda não tem arte própria:
+  /// usa a das Aves (entram juntas na mesma célula).
+  String _fundoImagemHabitat(Habitat h) => switch (h) {
+        Habitat.artico => 'assets/habitats/habitat_artico.jpg',
+        Habitat.savana => 'assets/habitats/habitat_savana.jpg',
+        Habitat.selva => 'assets/habitats/habitat_selva.jpg',
+        Habitat.aquatico => 'assets/habitats/habitat_aquatico.jpg',
+        Habitat.aves || Habitat.fazenda => 'assets/habitats/habitat_aves.jpg',
+      };
+
   Future<void> _abrirHabitat(Habitat h) async {
     // A célula das Aves abre Aves + Fazenda juntos (a Fazenda não tem célula
     // própria na grade — vive só como fase no mapa-múndi).
@@ -90,6 +101,7 @@ class _HabitatMapScreenState extends State<HabitatMapScreen> {
           titulo: titulo,
           palavras: palavras,
           manterPaisagemAoSair: true,
+          fundoImagem: _fundoImagemHabitat(h),
         ),
       ),
     );
@@ -122,6 +134,7 @@ class _HabitatMapScreenState extends State<HabitatMapScreen> {
           titulo: '🐾  Meus animais',
           palavras: escolhidos,
           manterPaisagemAoSair: true,
+          fundoImagem: 'assets/habitats/mapa_animais.jpg',
         ),
       ),
     );

@@ -2,6 +2,10 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-11-22 — v0.100.5 (Fundo imagem nos Animais 🐾)
+- **Causa raiz:** `EstudoScreen` só mostra a cena quando `fundoImagem != null` (`mostrarImagem = _fundo == imagem && fundoImagem != null`); sem cena cai no preto (`FundoTela.imagem.cor`). Hortifruti (`alimentos_temas_foto.png`) e Cafeteria (`objetos_temas_foto.png`) passavam a cena; `HabitatMapScreen._abrirHabitat`/`_selecionarAnimais` e `MapaMundiScreen._abrirFase` não passavam nada. Fix: `_fundoImagemHabitat()` por chave (artico/savana/selva/aquatico/aves+ fazenda→`habitat_aves.jpg`; todos existem e estão no `pubspec`) + `mapa_animais.jpg` no Selecionar + `mapa_mundi.jpg` nas fases; continuação baú já repassa `widget.fundoImagem`. Sem tocar em cores sólidas, paisagem, letras ou marcadores (fx/fy relativos).
+- Versão `0.100.5+143`.
+
 ## 2026-11-16 — v0.99.0 (Fundo imagem 🖼️)
 - **`FundoTela.imagem` + `BolinhaDegrade` + `ConfigFundo` (`fundo_tela_v1`):** 5º botão (28×28, degradê diagonal azul→vermelho, mesmo anel de seleção), mutuamente exclusivo (um `_fundo` só). `EstudoScreen(fundoImagem:)` recebe a cena do fluxo (menus passam a cena do nível/Temas; Temas passam a foto; mapa/escrever passam nada → cai no preto). Render: preto + `Image` `cover` opacidade 0.22 + scrim preto 0.30, letra branca; `errorBuilder` vazio. Repasse `widget.fundoImagem` nas 5 continuações de fase. Contas excluído do loop (`where != imagem`, fundo próprio). Testes: `config_fundo_test` + 3 widgets (mostra/persiste/reabre, sem cena, branco segue letra preta).
 - Versão `0.99.0+137`. `analyze` limpo, 103 testes ok.

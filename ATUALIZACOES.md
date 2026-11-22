@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.100.5 (2026-11-22)
+- **Fundo com imagem nos Animais 🐾:** o botão degradê agora mostra a cena do habitat (Ártico, Savana, Selva, Aquático, Aves e Fazenda) e do mapa-múndi apagada no fundo — antes ficava preto liso. Cores sólidas seguem iguais; Hortifruti e Cafeteria sem mudança.
+
 ## v0.100.4 (2026-11-17)
 - **Quiz das posições: arte larga em tela cheia ⚽:** o vestiário agora é uma arte 2:1 que preenche a tela toda na horizontal — sem faixas pretas, sem desfoque e sem esticar. Se a tela for mais larga que a arte, corta só uma faixinha de cima/baixo (o quadro e os círculos nunca entram no corte).
 
