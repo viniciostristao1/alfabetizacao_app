@@ -4,6 +4,7 @@ import '../../models/categoria.dart';
 import '../../models/palavra.dart';
 import '../../services/banco_palavras.dart';
 import '../../services/progresso_repository.dart';
+import '../caca_palavras/caca_palavras_screen.dart';
 import '../estudo/estudo_screen.dart';
 import '../selecao/selecao_espaco_screen.dart';
 import 'espaco_temas_screen.dart';
@@ -58,6 +59,20 @@ class _EspacoMenuScreenState extends State<EspacoMenuScreen> {
   void _abrirTemas(BuildContext context) async {
     await Navigator.of(context).push(
       MaterialPageRoute(builder: (_) => const EspacoTemasScreen()),
+    );
+    if (mounted) _carregar();
+  }
+
+  /// Caça-palavras na arte do menu (3 palavras escondidas por rodada).
+  Future<void> _abrirCacaPalavras() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => CacaPalavrasScreen(
+          titulo: '🔎  Caça-palavras · Espaço',
+          imagem: 'assets/espaco/espaco_temas.png',
+          palavras: todosOsEspaco(),
+        ),
+      ),
     );
     if (mounted) _carregar();
   }
@@ -181,10 +196,22 @@ class _EspacoMenuScreenState extends State<EspacoMenuScreen> {
               alignment: Alignment.bottomLeft,
               child: Padding(
                 padding: const EdgeInsets.all(10),
-                child: _BotaoTransparente(
-                  icon: Icons.search,
-                  texto: 'SELECIONAR ESPAÇO',
-                  onTap: _selecionarEspaco,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _BotaoTransparente(
+                      icon: Icons.visibility_rounded,
+                      texto: 'CAÇA-PALAVRAS',
+                      onTap: _abrirCacaPalavras,
+                    ),
+                    const SizedBox(height: 8),
+                    _BotaoTransparente(
+                      icon: Icons.search,
+                      texto: 'SELECIONAR ESPAÇO',
+                      onTap: _selecionarEspaco,
+                    ),
+                  ],
                 ),
               ),
             ),

@@ -19,6 +19,7 @@ import '../../services/banco_frases.dart';
 import '../../services/banco_palavras.dart';
 import '../../services/completar_silaba.dart';
 import '../../services/config_fundo.dart';
+import '../../services/ditado.dart';
 import '../../services/config_leitura.dart';
 import '../../services/config_mic.dart';
 import '../../services/config_modo.dart';
@@ -99,13 +100,19 @@ class _EstudoScreenState extends State<EstudoScreen> {
   // ── gamificação (XP/moedas): carregados no initState e atualizados no V/X ──
   int _moedas = 0;
   int _xp = 0;
-  ModoLeitura _modo = ModoLeitura.maiuscula; // MAIÚSCULAS / minúsculas / completar
+  ModoLeitura _modo = ModoLeitura.maiuscula; // MAIÚSCULAS / minúsculas / completar / ditado
   ModoJogo _jogo = ModoJogo.palavra; // Palavra isolada ou Frases (Configurações)
 
   // ── modo "completar a sílaba que falta" (múltipla escolha) ──
   int _blankIdx = -1; // sílaba que falta (-1 = palavra sem desafio: <2 sílabas)
   List<String> _opcoes = const []; // 4 opções embaralhadas (MAIÚSCULAS)
   String? _erradaSel; // opção errada tocada (fica vermelha até tentar de novo)
+
+  // ── modo "ditado" (o app fala, a criança monta com as sílabas) ──
+  List<String> _ditadoFichas = const []; // sílabas embaralhadas (MAIÚSCULAS)
+  List<bool> _ditadoUsadas = const []; // ficha já colocada? (mesmo índice)
+  List<String> _ditadoFeitas = const []; // sílabas já acertadas, na ordem
+  String? _ditadoErro; // ficha errada tocada (pisca vermelha, sem penalizar)
   String? _feedback; // "+4" / "-4" flutuando sobre a palavra
   int _feedbackSeq = 0; // key nova a cada feedback (reinicia a animação)
 
@@ -155,8 +162,9 @@ class _EstudoScreenState extends State<EstudoScreen> {
       setState(() {
         _moedas = moedas;
         _xp = xp;
-        // No Modo Frases não há "completar a sílaba": cai para MAIÚSCULAS.
-        _modo = (jogo == ModoJogo.frase && modo == ModoLeitura.incompleta)
+        // No Modo Frases não há "completar" nem "ditado": cai para MAIÚSCULAS.
+        _modo = (jogo == ModoJogo.frase &&
+                (modo == ModoLeitura.incompleta || modo == ModoLeitura.ditado))
             ? ModoLeitura.maiuscula
             : modo;
         _jogo = jogo;
@@ -165,6 +173,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
         _fundo = fundo;
       });
       _prepararIncompleta();
+      _prepararDitado();
       _falarPalavraAtual();
     }
   }
@@ -210,6 +219,42 @@ class _EstudoScreenState extends State<EstudoScreen> {
       await _acertou();
     } else {
       setState(() => _erradaSel = opcao);
+    }
+  }
+
+  /// Embaralha as fichas do ditado da palavra atual (se o modo for esse).
+  /// No Modo Frases não há ditado — sai sem montar.
+  void _prepararDitado() {
+    if (_modo != ModoLeitura.ditado || _jogo == ModoJogo.frase) return;
+    final fichas = embaralharSilabas(widget.palavras[_i]);
+    setState(() {
+      _ditadoFichas = fichas;
+      _ditadoUsadas = List<bool>.filled(fichas.length, false);
+      _ditadoFeitas = const [];
+      _ditadoErro = null;
+    });
+  }
+
+  /// Toque numa ficha do ditado: se for a próxima sílaba, ela entra no
+  /// lugar; errada → pisca vermelha e deixa tentar (não penaliza). Quando a
+  /// palavra fica completa, acerta e avança.
+  Future<void> _escolheuDitado(int indice) async {
+    if (indice < 0 || indice >= _ditadoFichas.length) return;
+    if (_ditadoUsadas[indice]) return; // ficha já colocada: ignora
+    final esperada =
+        widget.palavras[_i].silabas[_ditadoFeitas.length].toUpperCase();
+    if (_ditadoFichas[indice] == esperada) {
+      final usadas = List<bool>.from(_ditadoUsadas)..[indice] = true;
+      final feitas = [..._ditadoFeitas, esperada];
+      final completa = feitas.length == widget.palavras[_i].silabas.length;
+      setState(() {
+        _ditadoUsadas = usadas;
+        _ditadoFeitas = feitas;
+        _ditadoErro = null;
+      });
+      if (completa) await _acertou();
+    } else {
+      setState(() => _ditadoErro = _ditadoFichas[indice]);
     }
   }
 
@@ -285,6 +330,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
     }
     if (!mounted) return;
     _prepararIncompleta();
+    _prepararDitado();
   }
 
   /// X vermelho: errou → perde os pontos da palavra (nunca abaixo de zero),
@@ -626,6 +672,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
         _statusMic = null;
       });
       _prepararIncompleta();
+      _prepararDitado();
       _falarPalavraAtual();
     } else {
       Navigator.of(context).pop(); // "Sair" = voltar aos cenários
@@ -686,6 +733,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
       _statusMic = null;
     });
     _prepararIncompleta();
+    _prepararDitado();
     _falarPalavraAtual();
   }
 
@@ -699,6 +747,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
     });
     _talvezConcluir();
     _prepararIncompleta();
+    _prepararDitado();
     _falarPalavraAtual();
   }
 
@@ -710,6 +759,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
       _statusMic = null;
     });
     _prepararIncompleta();
+    _prepararDitado();
     _falarPalavraAtual();
   }
 
@@ -903,6 +953,104 @@ class _EstudoScreenState extends State<EstudoScreen> {
     );
   }
 
+  /// Corpo do modo "ditado": o app FALOU a palavra (🔊 repete) e a criança a
+  /// monta tocando as fichas na ordem certa. O espaço mostra as sílabas já
+  /// colocadas + "＿＿" nas que faltam; ficha errada pisca vermelha (sem
+  /// penalizar). Completa → acerta e avança (V/X escondidos, como no completar).
+  Widget _meioDitado(Color ui) {
+    final palavra = widget.palavras[_i];
+    final total = palavra.silabas.length;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _colunaCaneta(ui),
+        Expanded(
+          child: Column(
+            children: [
+              // 🔊 ouvir de novo + resposta em construção
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8, 2, 12, 6),
+                child: Wrap(
+                  spacing: 10,
+                  runSpacing: 8,
+                  alignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    FilledButton.icon(
+                      onPressed: _falarPalavraAtual,
+                      icon: const Icon(Icons.volume_up_rounded),
+                      label: const Text('Ouvir'),
+                    ),
+                    for (var i = 0; i < total; i++)
+                      Container(
+                        constraints: const BoxConstraints(minWidth: 56),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: i < _ditadoFeitas.length
+                              ? AppColors.accent
+                              : ui.withValues(alpha: 0.08),
+                          border: Border.all(
+                            color: i < _ditadoFeitas.length
+                                ? AppColors.accent
+                                : ui.withValues(alpha: 0.4),
+                            width: 2,
+                          ),
+                        ),
+                        child: Text(
+                          i < _ditadoFeitas.length
+                              ? _ditadoFeitas[i]
+                              : '＿＿',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 26,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 1,
+                            color: i < _ditadoFeitas.length
+                                ? Colors.white
+                                : ui,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              // fichas embaralhadas (as usadas ficam apagadas no lugar)
+              Expanded(
+                child: Center(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 0, 12, 10),
+                      child: Wrap(
+                        spacing: 12,
+                        runSpacing: 10,
+                        alignment: WrapAlignment.center,
+                        children: [
+                          for (var i = 0; i < _ditadoFichas.length; i++)
+                            Opacity(
+                              opacity: _ditadoUsadas[i] ? 0.25 : 1.0,
+                              child: _OpcaoSilaba(
+                                texto: _ditadoFichas[i],
+                                errada: !_ditadoUsadas[i] &&
+                                    _ditadoFichas[i] == _ditadoErro,
+                                ui: ui,
+                                onTap: () => _escolheuDitado(i),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final palavra = widget.palavras[_i];
@@ -1051,7 +1199,9 @@ class _EstudoScreenState extends State<EstudoScreen> {
             Expanded(
               child: _modo == ModoLeitura.incompleta
                   ? _meioIncompleto(ui)
-                  : Row(
+                  : _modo == ModoLeitura.ditado
+                      ? _meioDitado(ui)
+                      : Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _colunaCaneta(ui),
@@ -1202,7 +1352,9 @@ class _EstudoScreenState extends State<EstudoScreen> {
                   // 🎤 Falar — o Davi toca, fala a palavra, o app decide sozinho.
                   // Só se ligado nas Configurações e nos modos de palavra inteira
                   // (no "completar" é por toque).
-                  if (_micAtivado && _modo != ModoLeitura.incompleta)
+                  if (_micAtivado &&
+                      _modo != ModoLeitura.incompleta &&
+                      _modo != ModoLeitura.ditado)
                     _BotaoMic(ouvindo: _ouvindo, onTap: _ouvirMic),
                   _Botao(
                     icon: Icons.chevron_right_rounded,
@@ -1258,9 +1410,10 @@ class _EstudoScreenState extends State<EstudoScreen> {
               ),
             ),
           ),
-          // V/X FLUTUANTES (só nos modos de escrita — no "completar" a criança
-          // toca nas opções). Canto superior direito da TELA, lado a lado.
-          if (_modo != ModoLeitura.incompleta)
+          // V/X FLUTUANTES (só nos modos de escrita — no "completar"/"ditado"
+          // a criança toca nas opções). Canto superior direito da TELA.
+          if (_modo != ModoLeitura.incompleta &&
+              _modo != ModoLeitura.ditado)
             Positioned(
             top: 10,
             right: 12,

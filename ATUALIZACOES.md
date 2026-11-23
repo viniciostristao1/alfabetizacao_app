@@ -2,6 +2,10 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.100.8 (2026-11-23)
+- **Modo Ditado 🔊:** 4ª opção em "Como mostrar as palavras" — o app fala e o Davi monta a palavra tocando as sílabas na ordem (ficha errada só pisca, sem perder ponto). Vale em todas as categorias, com a mesma pontuação e moedas do estudo.
+- **Caça-palavras no cenário 🔎:** botão novo nos menus (Animais, Espaço, Alimentos, Objetos, Nomes e Futebol) — 3 palavras escondidas na arte para achar e tocar, com parabéns e moedas no fim.
+
 ## v0.100.7 (2026-11-23)
 - **Botões legíveis sobre a imagem 🔘:** no modo de fundo com imagem, Voltar, Anterior e Recomeçar ganham pílula escura translúcida com leve desfoque e borda clara — o texto branco segue legível sobre qualquer arte (desabilitado fica mais apagado, mas visível). Falar, Próximo e os fundos de cor cheia não mudam.
 

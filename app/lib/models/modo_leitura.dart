@@ -5,7 +5,8 @@
 enum ModoLeitura {
   maiuscula('MAIÚSCULAS'),
   minuscula('minúsculas'),
-  incompleta('Completar'); // MAIÚSCULAS com uma sílaba faltando (múltipla escolha)
+  incompleta('Completar'), // MAIÚSCULAS com uma sílaba faltando (múltipla escolha)
+  ditado('Ditado'); // o app FALA e a criança monta a palavra com as sílabas
 
   const ModoLeitura(this.rotulo);
 

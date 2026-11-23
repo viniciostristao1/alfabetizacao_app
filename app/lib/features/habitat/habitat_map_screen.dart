@@ -5,6 +5,7 @@ import '../../models/habitat.dart';
 import '../../models/palavra.dart';
 import '../../services/banco_palavras.dart';
 import '../../services/progresso_repository.dart';
+import '../caca_palavras/caca_palavras_screen.dart';
 import '../estudo/estudo_screen.dart';
 import '../mapa_mundi/mapa_mundi_screen.dart';
 import '../selecao/selecao_animais_screen.dart';
@@ -121,6 +122,23 @@ class _HabitatMapScreenState extends State<HabitatMapScreen> {
     }
   }
 
+  /// Caça-palavras na arte do mapa (3 palavras escondidas por rodada).
+  Future<void> _abrirCacaPalavras() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => CacaPalavrasScreen(
+          titulo: '🔎  Caça-palavras · Animais',
+          imagem: 'assets/habitats/mapa_animais.jpg',
+          palavras: todosOsAnimais(),
+        ),
+      ),
+    );
+    if (mounted) {
+      _reaplicarTela();
+      _carregarPontuacao(); // moedas mudaram com acertos
+    }
+  }
+
   Future<void> _selecionarAnimais() async {
     final escolhidos = await Navigator.of(context).push<List<Palavra>>(
       MaterialPageRoute(builder: (_) => const SelecaoAnimaisScreen()),
@@ -231,16 +249,28 @@ class _HabitatMapScreenState extends State<HabitatMapScreen> {
               ),
             ),
           ),
-          // SELECIONAR ANIMAIS (canto inferior esquerdo)
+          // CAÇA-PALAVRAS + SELECIONAR (canto inferior esquerdo)
           SafeArea(
             child: Align(
               alignment: Alignment.bottomLeft,
               child: Padding(
                 padding: const EdgeInsets.all(10),
-                child: _BotaoTransparente(
-                  icon: Icons.search,
-                  texto: 'SELECIONAR ANIMAIS',
-                  onTap: _selecionarAnimais,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _BotaoTransparente(
+                      icon: Icons.visibility_rounded,
+                      texto: 'CAÇA-PALAVRAS',
+                      onTap: _abrirCacaPalavras,
+                    ),
+                    const SizedBox(height: 8),
+                    _BotaoTransparente(
+                      icon: Icons.search,
+                      texto: 'SELECIONAR ANIMAIS',
+                      onTap: _selecionarAnimais,
+                    ),
+                  ],
                 ),
               ),
             ),

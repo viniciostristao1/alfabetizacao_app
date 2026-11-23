@@ -255,8 +255,9 @@ class _ConfigScreenState extends State<ConfigScreen> {
           const SizedBox(height: 14),
           _SecaoAcordeao(
             titulo: 'Como mostrar as palavras',
-            descricao: 'MAIÚSCULAS (mais fácil de começar) ou minúsculas. '
-                '(Em breve: completar a sílaba que falta.)',
+            descricao: 'MAIÚSCULAS (mais fácil de começar), minúsculas, '
+                'Completar (acha a sílaba que falta) ou Ditado (o app fala '
+                'e o Davi monta a palavra).',
             resumo: _modo.rotulo,
             aberta: _leituraAberta,
             onToggle: () => setState(() => _leituraAberta = !_leituraAberta),
