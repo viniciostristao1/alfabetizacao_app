@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.100.6 (2026-11-23)
+- **Fundo com imagem mais vivo 🖼️:** a cena (Espaço, Ártico e demais) aparece nítida e colorida em vez de quase apagada — véu global bem leve + sombra suave e placa discreta só atrás da palavra (texto segue legível). Vale para todas as telas com imagem; botões e controles sem mudança.
+
 ## v0.100.5 (2026-11-22)
 - **Fundo com imagem nos Animais 🐾:** o botão degradê agora mostra a cena do habitat (Ártico, Savana, Selva, Aquático, Aves e Fazenda) e do mapa-múndi apagada no fundo — antes ficava preto liso. Cores sólidas seguem iguais; Hortifruti e Cafeteria sem mudança.
 

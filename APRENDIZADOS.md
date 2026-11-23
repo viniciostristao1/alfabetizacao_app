@@ -2,6 +2,11 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-11-23 — v0.100.6 (Fundo imagem vivo 🖼️)
+- **`EstudoScreen` fundo vivo:** `opacity 0.22 → removida (1.0)` + `filterQuality high`, véu global `0.30 → 0.12`, sem blur (nunca houve `ImageFiltered`; blur = 0 antes e depois). Legibilidade: `_sombraPalavra` (2 Shadows) nos 3 textos da palavra + `_scrimPalavra` (preto 0.45, raio 20, só com imagem) + `_sombraPequena` nos textos pequenos do topo/status; botões/pílulas intactos. Contraste medido na captura (branco × fundo adjacente ao glifo): mediana 13,0–13,5:1, pior decil 7,9–8,5:1 (≥4,5 em todas). Antes: cena ~15% visível (0.22 sobre preto + 0.30); depois: ~88% (1.0 × 0.88). Uma mudança cobre Espaço+Animais+Temas (mesmo widget). Capturas `docs/screenshots-fundo-v100.6/` (800×360 e 864×411dp).
+- **Gotcha de teste:** `toByteData(format: png)` derruba o `flutter_tester` neste ambiente (crash no shutdown) e `writeAsBytes` não completa — capturas via `rawRgba` + encoder PNG em Dart puro + base64 no stdout; 1 captura por processo (`runAsync` + pumps; pump duplo no mesmo teste trava).
+- Versão `0.100.6+144`.
+
 ## 2026-11-22 — v0.100.5 (Fundo imagem nos Animais 🐾)
 - **Causa raiz:** `EstudoScreen` só mostra a cena quando `fundoImagem != null` (`mostrarImagem = _fundo == imagem && fundoImagem != null`); sem cena cai no preto (`FundoTela.imagem.cor`). Hortifruti (`alimentos_temas_foto.png`) e Cafeteria (`objetos_temas_foto.png`) passavam a cena; `HabitatMapScreen._abrirHabitat`/`_selecionarAnimais` e `MapaMundiScreen._abrirFase` não passavam nada. Fix: `_fundoImagemHabitat()` por chave (artico/savana/selva/aquatico/aves+ fazenda→`habitat_aves.jpg`; todos existem e estão no `pubspec`) + `mapa_animais.jpg` no Selecionar + `mapa_mundi.jpg` nas fases; continuação baú já repassa `widget.fundoImagem`. Sem tocar em cores sólidas, paisagem, letras ou marcadores (fx/fy relativos).
 - Versão `0.100.5+143`.

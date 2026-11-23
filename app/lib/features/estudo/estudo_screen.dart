@@ -714,6 +714,29 @@ class _EstudoScreenState extends State<EstudoScreen> {
 
   void _sair() => Navigator.of(context).pop();
 
+  /// Sombra suave atrás da palavra/frase no modo imagem (texto branco sobre
+  /// cena viva): halo escuro que mantém o contraste (≥4,5:1) sem escurecer
+  /// a tela. Fora do modo imagem a sombra é invisível (preto sobre preto).
+  static const _sombraPalavra = [
+    Shadow(color: Color(0xCC000000), blurRadius: 10, offset: Offset(0, 3)),
+    Shadow(color: Color(0x8C000000), blurRadius: 28),
+  ];
+
+  /// Sombra menor p/ textos pequenos do topo/status no modo imagem.
+  static const _sombraPequena = [
+    Shadow(color: Color(0xB3000000), blurRadius: 4, offset: Offset(0, 2)),
+  ];
+
+  /// Scrim local discreto atrás da palavra (só na área do texto): pílula
+  /// escura que eleva o contraste sobre fundos claros (ex.: neve do Ártico).
+  /// `null` fora do modo imagem (fundos sólidos seguem limpos).
+  BoxDecoration? _scrimPalavra(bool comImagem) => comImagem
+      ? BoxDecoration(
+          color: Colors.black.withValues(alpha: 0.45),
+          borderRadius: BorderRadius.circular(20),
+        )
+      : null;
+
   // ── desenho (caneta) ──
   void _inicioTraco(PointerDownEvent e) {
     setState(() => _tracos.add(Traco(_caneta.cor)..pontos.add(e.localPosition)));
@@ -778,6 +801,8 @@ class _EstudoScreenState extends State<EstudoScreen> {
               i == _blankIdx ? '＿＿' : palavra.silabas[i].toUpperCase(),
           ].join()
         : palavra.texto.toUpperCase();
+    final comImagem =
+        _fundo == FundoTela.imagem && widget.fundoImagem != null;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -795,17 +820,25 @@ class _EstudoScreenState extends State<EstudoScreen> {
                     children: [
                       Positioned.fill(
                         child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 4, 12, 4),
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                display,
-                                style: TextStyle(
-                                  fontSize: 150,
-                                  fontWeight: FontWeight.w800,
-                                  letterSpacing: 2,
-                                  color: ui,
+                          child: Container(
+                            decoration: _scrimPalavra(comImagem),
+                            padding: comImagem
+                                ? const EdgeInsets.symmetric(
+                                    horizontal: 24, vertical: 20)
+                                : EdgeInsets.zero,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(8, 4, 12, 4),
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  display,
+                                  style: TextStyle(
+                                    fontSize: 150,
+                                    fontWeight: FontWeight.w800,
+                                    letterSpacing: 2,
+                                    color: ui,
+                                    shadows: comImagem ? _sombraPalavra : null,
+                                  ),
                                 ),
                               ),
                             ),
@@ -875,9 +908,12 @@ class _EstudoScreenState extends State<EstudoScreen> {
     final letra = _fundo.corLetra; // cor da palavra (contraste)
     final ui = _fundo.corLetra; // cor base da UI sobre o fundo
 
-    // Modo imagem: a cena da categoria/nível bem apagada sobre o preto, com
-    // scrim por cima para o branco seguir legível. Sem imagem (fluxos sem
-    // cena: mapa, escrever…), cai no preto sem quebrar.
+    // Modo imagem: a cena aparece VIVA — opacidade total, SEM blur (nenhum
+    // ImageFiltered/BackdropFilter nesta tela; `high` = só reamostragem mais
+    // nítida). Um véu global leve (0.12) unifica a cena; a legibilidade
+    // (≥4,5:1) vem da sombra + do scrim local atrás da palavra — em vez de
+    // escurecer a tela inteira. Sem imagem (fluxos sem cena: mapa,
+    // escrever…), cai no preto sem quebrar.
     final mostrarImagem =
         _fundo == FundoTela.imagem && widget.fundoImagem != null;
 
@@ -890,15 +926,14 @@ class _EstudoScreenState extends State<EstudoScreen> {
               child: Image.asset(
                 widget.fundoImagem!,
                 fit: BoxFit.cover,
-                filterQuality: FilterQuality.medium,
-                opacity: const AlwaysStoppedAnimation(0.22),
+                filterQuality: FilterQuality.high,
                 errorBuilder: (_, _, _) => const SizedBox.shrink(),
               ),
             ),
           if (mostrarImagem)
             Positioned.fill(
               child:
-                  Container(color: Colors.black.withValues(alpha: 0.30)),
+                  Container(color: Colors.black.withValues(alpha: 0.12)),
             ),
           Column(
             children: [
@@ -928,6 +963,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
                                   color: ui.withValues(alpha: 0.65),
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
+                                  shadows: mostrarImagem ? _sombraPequena : null,
                                 ),
                               ),
                             ),
@@ -962,6 +998,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
                           color: ui.withValues(alpha: 0.7),
                           fontSize: 14,
                           fontWeight: FontWeight.w700,
+                          shadows: mostrarImagem ? _sombraPequena : null,
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -972,6 +1009,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
                           color: ui,
                           fontSize: 14,
                           fontWeight: FontWeight.w800,
+                          shadows: mostrarImagem ? _sombraPequena : null,
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -981,6 +1019,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
                           color: ui.withValues(alpha: 0.7),
                           fontSize: 14,
                           fontWeight: FontWeight.w700,
+                          shadows: mostrarImagem ? _sombraPequena : null,
                         ),
                       ),
                       // sequência de acertos 🔥 (visível a partir de 2)
@@ -992,6 +1031,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
                             color: ui,
                             fontSize: 14,
                             fontWeight: FontWeight.w800,
+                            shadows: mostrarImagem ? _sombraPequena : null,
                           ),
                         ),
                       ],
@@ -1024,42 +1064,55 @@ class _EstudoScreenState extends State<EstudoScreen> {
                         children: [
                           Positioned.fill(
                             child: Center(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(8, 4, 20, 4),
-                                child: _jogo == ModoJogo.frase
-                                    // ── Modo Frases: frase simples centralizada,
-                                    // menor e com quebra de linha (até 3 linhas;
-                                    // encolhe se precisar).
-                                    ? FittedBox(
-                                        fit: BoxFit.scaleDown,
-                                        child: Text(
-                                          _modo.aplicarFrase(
-                                              fraseOuPalavra(palavra)),
-                                          textAlign: TextAlign.center,
-                                          softWrap: true,
-                                          maxLines: 3,
-                                          style: TextStyle(
-                                            fontSize: 72,
-                                            height: 1.2,
-                                            fontWeight: FontWeight.w800,
-                                            letterSpacing: 1,
-                                            color: letra,
+                              child: Container(
+                                decoration: _scrimPalavra(mostrarImagem),
+                                padding: mostrarImagem
+                                    ? const EdgeInsets.symmetric(
+                                        horizontal: 24, vertical: 20)
+                                    : EdgeInsets.zero,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(8, 4, 20, 4),
+                                  child: _jogo == ModoJogo.frase
+                                      // ── Modo Frases: frase simples centralizada,
+                                      // menor e com quebra de linha (até 3 linhas;
+                                      // encolhe se precisar).
+                                      ? FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            _modo.aplicarFrase(
+                                                fraseOuPalavra(palavra)),
+                                            textAlign: TextAlign.center,
+                                            softWrap: true,
+                                            maxLines: 3,
+                                            style: TextStyle(
+                                              fontSize: 72,
+                                              height: 1.2,
+                                              fontWeight: FontWeight.w800,
+                                              letterSpacing: 1,
+                                              color: letra,
+                                              shadows: mostrarImagem
+                                                  ? _sombraPalavra
+                                                  : null,
+                                            ),
+                                          ),
+                                        )
+                                      : FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            _modo.aplicar(palavra.texto),
+                                            style: TextStyle(
+                                              fontSize: 200,
+                                              fontWeight: FontWeight.w800,
+                                              letterSpacing: 2,
+                                              color: letra,
+                                              shadows: mostrarImagem
+                                                  ? _sombraPalavra
+                                                  : null,
+                                            ),
                                           ),
                                         ),
-                                      )
-                                    : FittedBox(
-                                        fit: BoxFit.scaleDown,
-                                        child: Text(
-                                          _modo.aplicar(palavra.texto),
-                                          style: TextStyle(
-                                            fontSize: 200,
-                                            fontWeight: FontWeight.w800,
-                                            letterSpacing: 2,
-                                            color: letra,
-                                          ),
-                                        ),
-                                      ),
+                                ),
                               ),
                             ),
                           ),
@@ -1109,6 +1162,7 @@ class _EstudoScreenState extends State<EstudoScreen> {
                           color: ui.withValues(alpha: 0.88),
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
+                          shadows: mostrarImagem ? _sombraPequena : null,
                         ),
                       ),
                     if (_ouvindo) ...[
