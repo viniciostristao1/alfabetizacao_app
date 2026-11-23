@@ -2,6 +2,10 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-11-23 — v0.100.7 (Botões legíveis na imagem 🔘)
+- **`_Botao(comImagem)`:** não-destaque no modo imagem usa fundo preto 0.55 + `ClipRRect(14)` + `BackdropFilter blur 6` + borda branca 0.25; texto/ícone brancos (desab. branco 0.6) + `_sombraBotao` (só com imagem; sólidos/destaque/Falar intactos). Opacidade calibrada em Python (faixa dos botões, blur 6): véu puro 0.50 falha nos clarões (Espaço p95 3.2); 0.55 + sombra passa. Medido no render (branco × fundo adjacente): hab. med 10,9–14,0 / pior decil 4,6–7,5 (≥4,5); desab. med 6,9–8,8 (visível). Capturas `docs/screenshots-botoes-v100.7/` (antes/depois 360+411, Espaço+Ártico, + 4 sólidos).
+- Versão `0.100.7+145`.
+
 ## 2026-11-23 — v0.100.6 (Fundo imagem vivo 🖼️)
 - **`EstudoScreen` fundo vivo:** `opacity 0.22 → removida (1.0)` + `filterQuality high`, véu global `0.30 → 0.12`, sem blur (nunca houve `ImageFiltered`; blur = 0 antes e depois). Legibilidade: `_sombraPalavra` (2 Shadows) nos 3 textos da palavra + `_scrimPalavra` (preto 0.45, raio 20, só com imagem) + `_sombraPequena` nos textos pequenos do topo/status; botões/pílulas intactos. Contraste medido na captura (branco × fundo adjacente ao glifo): mediana 13,0–13,5:1, pior decil 7,9–8,5:1 (≥4,5 em todas). Antes: cena ~15% visível (0.22 sobre preto + 0.30); depois: ~88% (1.0 × 0.88). Uma mudança cobre Espaço+Animais+Temas (mesmo widget). Capturas `docs/screenshots-fundo-v100.6/` (800×360 e 864×411dp).
 - **Gotcha de teste:** `toByteData(format: png)` derruba o `flutter_tester` neste ambiente (crash no shutdown) e `writeAsBytes` não completa — capturas via `rawRgba` + encoder PNG em Dart puro + base64 no stdout; 1 captura por processo (`runAsync` + pumps; pump duplo no mesmo teste trava).

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -1182,18 +1183,21 @@ class _EstudoScreenState extends State<EstudoScreen> {
                     label: 'Voltar',
                     ui: ui,
                     onTap: _sair,
+                    comImagem: mostrarImagem,
                   ),
                   _Botao(
                     icon: Icons.chevron_left_rounded,
                     label: 'Anterior',
                     ui: ui,
                     onTap: _temAnterior ? _anterior : null,
+                    comImagem: mostrarImagem,
                   ),
                   _Botao(
                     icon: Icons.restart_alt_rounded,
                     label: 'Recomeçar',
                     ui: ui,
                     onTap: _i == 0 ? null : _recomecar,
+                    comImagem: mostrarImagem,
                   ),
                   // 🎤 Falar — o Davi toca, fala a palavra, o app decide sozinho.
                   // Só se ligado nas Configurações e nos modos de palavra inteira
@@ -3397,6 +3401,9 @@ class _BotaoMic extends StatelessWidget {
 
 /// Botão da barra inferior — BAIXO (ícone + rótulo lado a lado). `destaque` =
 /// preenchido com o accent (o "Próximo"). Cores adaptam ao fundo via [ui].
+/// No modo imagem ([comImagem]), Voltar/Anterior/Recomeçar ganham pílula
+/// escura translúcida + blur + borda clara (legíveis sobre qualquer arte);
+/// nos fundos sólidos o visual segue exatamente o de antes.
 class _Botao extends StatelessWidget {
   const _Botao({
     required this.icon,
@@ -3404,6 +3411,7 @@ class _Botao extends StatelessWidget {
     required this.ui,
     required this.onTap,
     this.destaque = false,
+    this.comImagem = false,
   });
 
   final IconData icon;
@@ -3412,53 +3420,90 @@ class _Botao extends StatelessWidget {
   final VoidCallback? onTap;
   final bool destaque;
 
+  /// `true` só no modo imagem (não-destaque): fundo escuro + blur + borda.
+  final bool comImagem;
+
+  /// Sombra suave do rótulo/ícone no modo imagem (só aplicada com
+  /// [comImagem]; nos fundos sólidos a sombra seria mudança de estilo).
+  static const _sombraBotao = [
+    Shadow(color: Color(0xB3000000), blurRadius: 3, offset: Offset(0, 1)),
+  ];
+
   @override
   Widget build(BuildContext context) {
     final habilitado = onTap != null;
+    final comSombra = comImagem && !destaque;
     final Color fg;
     final Color bg;
+    final BoxBorder? borda;
     if (destaque) {
       fg = Colors.white;
       bg = habilitado
           ? AppColors.accent
           : AppColors.accent.withValues(alpha: 0.35);
+      borda = null;
+    } else if (comImagem) {
+      fg = habilitado ? Colors.white : Colors.white.withValues(alpha: 0.6);
+      bg = Colors.black.withValues(alpha: 0.55);
+      borda = Border.all(color: Colors.white.withValues(alpha: 0.25));
     } else {
       fg = ui.withValues(alpha: habilitado ? 0.9 : 0.3);
       bg = ui.withValues(alpha: habilitado ? 0.08 : 0.04);
+      borda = null;
+    }
+
+    Widget botao = Material(
+      color: bg,
+      borderRadius: BorderRadius.circular(14),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 9),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            border: borda,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon,
+                  color: fg, size: 20, shadows: comSombra ? _sombraBotao : null),
+              const SizedBox(width: 6),
+              Flexible(
+                child: Text(
+                  label,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: fg,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 13,
+                    shadows: comSombra ? _sombraBotao : null,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    // Blur atrás da pílula (só no modo imagem): desfoca a arte sob o botão,
+    // apagando pontos claros que estourariam o contraste.
+    if (comImagem && !destaque) {
+      botao = ClipRRect(
+        borderRadius: BorderRadius.circular(14),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+          child: botao,
+        ),
+      );
     }
 
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5),
-        child: Material(
-          color: bg,
-          borderRadius: BorderRadius.circular(14),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(14),
-            onTap: onTap,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 9),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(icon, color: fg, size: 20),
-                  const SizedBox(width: 6),
-                  Flexible(
-                    child: Text(
-                      label,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: fg,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
+        child: botao,
       ),
     );
   }

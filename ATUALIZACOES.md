@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.100.7 (2026-11-23)
+- **Botões legíveis sobre a imagem 🔘:** no modo de fundo com imagem, Voltar, Anterior e Recomeçar ganham pílula escura translúcida com leve desfoque e borda clara — o texto branco segue legível sobre qualquer arte (desabilitado fica mais apagado, mas visível). Falar, Próximo e os fundos de cor cheia não mudam.
+
 ## v0.100.6 (2026-11-23)
 - **Fundo com imagem mais vivo 🖼️:** a cena (Espaço, Ártico e demais) aparece nítida e colorida em vez de quase apagada — véu global bem leve + sombra suave e placa discreta só atrás da palavra (texto segue legível). Vale para todas as telas com imagem; botões e controles sem mudança.
 
