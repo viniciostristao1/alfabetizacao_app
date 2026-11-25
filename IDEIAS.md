@@ -67,7 +67,9 @@ A criança **fala** a palavra; o app reconhece se **acertou**.
   (`ConfigOrdem`). A tela pode crescer: escolher quais categorias entram, tema claro, toggle
   maiúsculas/minúsculas, etc.
 - **Contas / matemática — FEITO (v0.12.0):** tema Contas (soma/subtração, 1-2 dígitos, teclado
-  numérico, +1/+2 moedas, escrever contas). **A evoluir:** multiplicação/divisão; "conta em pé"
+  numérico, +1/+2 moedas, escrever contas). ✅ **Multiplicação FEITA:**
+  v0.101.0 (× 1 dígito) → v0.102.0 (× 2 à 7 fácil, 36 ops + × 8 a 15 Médio,
+  64 ops em escala). **A evoluir:** divisão; "conta em pé"
   (armar a conta); contas ilustradas (🍎🍎🍎); dificuldade progressiva; e ler o resultado por voz
   quando o TTS entrar.
 - Nomes/áudio: quando entrar o TTS, o mapa fica ótimo com o nome do habitat falado.
@@ -109,6 +111,6 @@ A criança **fala** a palavra; o app reconhece se **acertou**.
   categoria/lista existente.
 - Nome/ícone do app e **tema claro** (hoje só escuro).
 
-## ☁️ Distribuição
-- Criar repo GitHub + **CI** (compila APK na nuvem) e link de download perene — replicar o
-  padrão do `carlog_app`/`calistenia_app`. Depois, **Play Store** (keystore de upload).
+## ☁️ Distribuição — FEITO (repo + CI no ar)
+- ✅ Repo GitHub + **CI** (compila APK na nuvem) + link de download perene —
+  ver `AGENTS.md` §4 e `.github/workflows/build-apk.yml`. Depois, **Play Store** (keystore de upload).
