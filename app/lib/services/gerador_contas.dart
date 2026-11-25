@@ -61,23 +61,27 @@ List<Conta> gerarMultiplicacaoFacil({int? quantidade, Random? rng}) {
 }
 
 /// Gera contas de MULTIPLICAÇÃO "8 a 15 • Médio": todos os pares ordenados de
-/// fatores **8 a 15** (8×8 = **64** — `14×15` e `15×14` contam separado), em
-/// dois blocos: primeiro os **36 sem 8 nem 9** (10–15 × 10–15), depois os
-/// **28 com 8 ou 9** — cada bloco embaralhado. Produto de 64 a 225
-/// (máx `15×15`). Pontos por conta = 2. Por padrão retorna o conjunto cheio
-/// (64); [quantidade] fatia da frente (prioridade respeitada, sem repetir).
+/// fatores **8 a 15** (8×8 = **64**), em escala pelo maior fator, em níveis
+/// crescentes: **8–9** (4 pares: 8×8, 8×9, 9×8, 9×9), depois **N = 10..15**
+/// com pelo menos um fator N (5, 7, 9, 11, 13 e 15 pares). Dentro de cada
+/// nível a ordem é embaralhada. Produto de 64 a 225 (máx `15×15`). Pontos
+/// por conta = 2. Por padrão retorna o conjunto cheio (64); [quantidade]
+/// fatia da frente (escala respeitada, sem repetir).
 List<Conta> gerarMultiplicacaoMedio({int? quantidade, Random? rng}) {
   final r = rng ?? Random();
-  final sem89 = <(int, int)>[
-    for (var a = 10; a <= 15; a++)
-      for (var b = 10; b <= 15; b++) (a, b),
-  ]..shuffle(r);
-  final com89 = <(int, int)>[
-    for (var a = 8; a <= 15; a++)
-      for (var b = 8; b <= 15; b++)
-        if (a == 8 || a == 9 || b == 8 || b == 9) (a, b),
-  ]..shuffle(r);
-  final todos = [...sem89, ...com89];
+  final niveis = <List<(int, int)>>[
+    [(8, 8), (8, 9), (9, 8), (9, 9)],
+    for (var n = 10; n <= 15; n++)
+      [
+        for (var a = 8; a <= n; a++)
+          for (var b = 8; b <= n; b++)
+            if (a == n || b == n) (a, b),
+      ],
+  ];
+  for (final nivel in niveis) {
+    nivel.shuffle(r);
+  }
+  final todos = [for (final nivel in niveis) ...nivel];
   var q = quantidade ?? todos.length;
   if (q < 0) q = 0;
   if (q > todos.length) q = todos.length;

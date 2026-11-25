@@ -139,33 +139,46 @@ void main() {
       expect(pares, containsAll(['14x15', '15x14', '8x8', '15x15']));
     });
 
-    test('prioridade: 36 sem 8/9 primeiro, 28 com 8/9 depois', () {
+    test('escala: 4 (8-9) + 5 + 7 + 9 + 11 + 13 + 15, maior fator crescente',
+        () {
       final contas = gerarMultiplicacaoMedio(rng: Random(7));
-      final blocoA = contas.take(36);
-      final blocoB = contas.skip(36);
-      for (final c in blocoA) {
-        expect(c.a >= 10 && c.a <= 15, isTrue, reason: 'bloco A, a: ${c.a}');
-        expect(c.b >= 10 && c.b <= 15, isTrue, reason: 'bloco A, b: ${c.b}');
+      expect(contas.length, 64);
+      const tamanhos = [4, 5, 7, 9, 11, 13, 15];
+      const tetos = [9, 10, 11, 12, 13, 14, 15];
+      var i = 0;
+      for (var n = 0; n < tamanhos.length; n++) {
+        final nivel = contas.skip(i).take(tamanhos[n]).toList();
+        expect(nivel.length, tamanhos[n], reason: 'nível $n');
+        if (n == 0) {
+          // Nível 8–9 primeiro: exatamente 8×8, 8×9, 9×8 e 9×9.
+          expect(nivel.map((c) => '${c.a}x${c.b}').toSet(),
+              {'8x8', '8x9', '9x8', '9x9'});
+        } else {
+          // Nível N: todo par tem pelo menos um fator N, nenhum acima de N.
+          for (final c in nivel) {
+            expect(c.a == tetos[n] || c.b == tetos[n], isTrue,
+                reason: 'nível ${tetos[n]} sem $tetos[n]: ${c.a}x${c.b}');
+            expect(c.a <= tetos[n] && c.b <= tetos[n], isTrue);
+          }
+        }
+        i += tamanhos[n];
       }
-      expect(blocoA.map((c) => '${c.a}x${c.b}').toSet().length, 36);
-      expect(blocoB.length, 28);
-      for (final c in blocoB) {
-        expect(c.a == 8 || c.a == 9 || c.b == 8 || c.b == 9, isTrue,
-            reason: 'bloco B sem 8/9: ${c.a}x${c.b}');
-      }
-      // Blocos completos e disjuntos: A ∪ B = 64 pares distintos.
-      final todos =
-          contas.map((c) => '${c.a}x${c.b}').toSet();
-      expect(todos.length, 64);
+      // Níveis completos e disjuntos: 4+5+7+9+11+13+15 = 64 distintos.
+      expect(contas.map((c) => '${c.a}x${c.b}').toSet().length, 64);
     });
 
-    test('fatia de 10 fica toda no bloco prioritário (sem 8/9)', () {
+    test('fatia respeita a escala do início, sem repetir', () {
       final contas = gerarMultiplicacaoMedio(quantidade: 10, rng: Random(3));
       expect(contas.length, 10);
-      for (final c in contas) {
-        expect(c.a >= 10 && c.a <= 15, isTrue);
-        expect(c.b >= 10 && c.b <= 15, isTrue);
-      }
+      expect(contas.map((c) => '${c.a}x${c.b}').toSet().length, 10);
+      final cheias = gerarMultiplicacaoMedio(rng: Random(3));
+      expect(
+          contas.map((c) => '${c.a}x${c.b}').toList(),
+          cheias.take(10).map((c) => '${c.a}x${c.b}').toList());
+      // Primeiras 10: 4 do nível 8–9 + 5 do nível 10 + 1 do nível 11.
+      int maior(Conta c) => c.a > c.b ? c.a : c.b;
+      expect(contas.take(9).every((c) => maior(c) <= 10), isTrue);
+      expect(maior(contas.last), 11);
     });
 
     test('Conta manual: 14 × 15 = 210', () {

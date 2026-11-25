@@ -3,7 +3,7 @@
 Notas técnicas e decisões. Topo = mais recente.
 
 ## 2026-11-25 — v0.102.0 (Multiplicação fácil+médio ✖️)
-- **Conjuntos fechados:** `gerarMultiplicacaoFacil()` (2–7, 6×6=36, +1 pto) e `gerarMultiplicacaoMedio()` (8–15, 8×8=64 em 2 blocos: 36 sem 8/9 + 28 com 8/9, +2 ptos). Cada bloco embaralhado com `rng`, concatenado; `quantidade` (padrão = cheio) fatia da frente sem repetir. `gerarMultiplicacao()` 1–9 removido (menu/testes atualizados). Teste de 225: diálogo com scroll renderiza `15×15` em ~360 ms no tester, `takeException()` nulo.
+- **Conjuntos fechados:** `gerarMultiplicacaoFacil()` (2–7, 6×6=36, +1 pto, tudo embaralhado) e `gerarMultiplicacaoMedio()` (8–15, 8×8=64 em escala pelo maior fator: 4 do nível 8–9 + 5/7/9/11/13/15 dos níveis 10–15, cada nível embaralhado, +2 ptos). `quantidade` (padrão = cheio) fatia da frente sem repetir. `gerarMultiplicacao()` 1–9 removido (menu/testes atualizados). Teste de 225: diálogo com scroll renderiza `15×15` em ~360 ms no tester, `takeException()` nulo.
 - Versão `0.102.0+148`.
 
 ## 2026-11-25 — v0.101.0 (Multiplicação 1 dígito ✖️)
