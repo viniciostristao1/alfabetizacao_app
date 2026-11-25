@@ -30,8 +30,8 @@ Fluxo de trabalho para qualquer agente (ou pessoa) melhorar o app. O repositóri
 - **Português (pt-BR)** em todo texto de UI.
 - **Cores só via `AppColors`** (`theme/app_colors.dart`) — nunca `Color(0x...)` solto numa
   tela. (As cores de categoria/nível moram nos enums `Categoria`/`Nivel`.)
-  Exceção documentada: os cards de Contas usam `const`s locais — ver `NOVA_CONTA.md` §3
-  (nenhuma cor muda sem aprovação).
+  Exceção documentada: os cards de Contas usam `const`s locais — ver
+  [`NOVA_CONTA.md` §3](NOVA_CONTA.md) (nenhuma cor muda sem aprovação).
 - **Estado = Riverpod** (já há `ProviderScope`); persistência local = **shared_preferences**
   (entra com a gamificação).
 - **Arquitetura feature-based:** telas em `features/<x>/`, modelos em `models/`, dados/lógica

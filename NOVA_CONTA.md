@@ -2,7 +2,7 @@
 
 Processo fechado, aprendido criando a **Multiplicação** (v0.101.0 → v0.102.0).
 Categorias de **palavras** seguem [`NOVA_CATEGORIA.md`](NOVA_CATEGORIA.md);
-simpl categorias de **contas** (operações + gerador + grade + teclado) seguem
+categorias de **contas** (operações + gerador + grade + teclado) seguem
 este arquivo, do início ao fim — sem reinventar. Molde de referência:
 multiplicação "2 à 7 • fácil" + "8 a 15 • Médio".
 
