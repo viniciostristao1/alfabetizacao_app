@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// A grade de Contas agora tem 9 cards (Soma 1/2, Sub 1/2, Mistas 1/2,
-/// Multiplicação 1 dígito, Até 20, Escrever). Confere presença, cor única da
-/// Multiplicação e navegação — em tamanho de celular deitado e de tablet.
+/// A grade de Contas agora tem 10 cards (Soma 1/2, Sub 1/2, Mistas 1/2,
+/// 2 à 7 fácil, 8 a 15 Médio, Até 20, Escrever). Confere presença, cores das
+/// duas multiplicações e navegação — em celular deitado e tablet.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -19,48 +19,85 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('menu mostra os 9 cards, com Multiplicação em cor própria',
+  // Títulos com símbolo (+/−/+−/×) são RichText com 2 spans:
+  // find.text não acha; é preciso textContaining com findRichText: true.
+  Finder rico(String s) => find.textContaining(s, findRichText: true);
+
+  testWidgets('menu mostra os 10 cards, com as cores das multiplicações',
       (tester) async {
     await pumpMenu(tester, const Size(800, 360)); // celular deitado
 
-    // Títulos com símbolo (+/−/+−/×) são RichText com 2 spans:
-    // find.text não acha; é preciso textContaining com findRichText: true.
-    Finder rico(String s) => find.textContaining(s, findRichText: true);
     expect(rico('Soma'), findsNWidgets(2));
     expect(rico('Subtração'), findsNWidgets(2));
     expect(rico('Mistas'), findsNWidgets(2));
-    expect(rico('Multiplicação'), findsOneWidget);
-    expect(find.text('1 dígito'), findsNWidgets(4)); // soma/sub/mistas/multi
+    expect(rico('2 à 7'), findsOneWidget);
+    expect(rico('8 a 15'), findsOneWidget);
+    expect(find.text('1 dígito'), findsNWidgets(3)); // soma/sub/mistas
+    expect(find.text('fácil'), findsOneWidget);
+    expect(find.text('Médio'), findsOneWidget);
     expect(find.text('🔟 Até 20'), findsOneWidget);
     expect(find.text('✏️ Escrever'), findsOneWidget);
 
-    // Cor da Multiplicação: teal #009688, distinta das outras 5.
-    final multi = tester.widget<Material>(
-      find.ancestor(
-        of: find.textContaining('Multiplicação', findRichText: true),
-        matching: find.byType(Material),
-      ).first,
+    // Fácil mantém o teal #009688.
+    final facil = tester.widget<Material>(
+      find
+          .ancestor(
+            of: rico('2 à 7'),
+            matching: find.byType(Material),
+          )
+          .first,
     );
-    expect(multi.color, const Color(0xFF009688));
-    expect(multi.color, isNot(const Color(0xFF4CAF50))); // soma
-    expect(multi.color, isNot(const Color(0xFFF44336))); // subtração
-    expect(multi.color, isNot(const Color(0xFF2196F3))); // mistas
-    expect(multi.color, isNot(const Color(0xFF9C27B0))); // até 20
-    expect(multi.color, isNot(const Color(0xFFFF9800))); // escrever
+    expect(facil.color, const Color(0xFF009688));
+
+    // Médio usa o rosa #E91E63, distinto das outras 6.
+    final medio = tester.widget<Material>(
+      find
+          .ancestor(
+            of: rico('8 a 15'),
+            matching: find.byType(Material),
+          )
+          .first,
+    );
+    expect(medio.color, const Color(0xFFE91E63));
+    expect(medio.color, isNot(const Color(0xFF4CAF50))); // soma
+    expect(medio.color, isNot(const Color(0xFFF44336))); // subtração
+    expect(medio.color, isNot(const Color(0xFF2196F3))); // mistas
+    expect(medio.color, isNot(const Color(0xFF009688))); // fácil
+    expect(medio.color, isNot(const Color(0xFF9C27B0))); // até 20
+    expect(medio.color, isNot(const Color(0xFFFF9800))); // escrever
   });
 
-  testWidgets('tocar em Multiplicação abre o estudo com ×', (tester) async {
+  testWidgets('tocar em 2 à 7 abre o estudo fácil com ×', (tester) async {
     await pumpMenu(tester, const Size(800, 360));
 
-    final alvo = find.textContaining('Multiplicação', findRichText: true);
+    final alvo = rico('2 à 7');
     await tester.scrollUntilVisible(alvo, 200);
     await tester.pumpAndSettle();
     await tester.tap(alvo);
     await tester.pumpAndSettle();
 
     expect(find.byType(ContaEstudoScreen), findsOneWidget);
+    expect(find.textContaining('2 à 7 • fácil'), findsOneWidget);
     expect(
-        find.textContaining('Multiplicação · 1 dígito'), findsOneWidget);
+      find.descendant(
+        of: find.byType(ContaEstudoScreen),
+        matching: find.textContaining('×'),
+      ),
+      findsWidgets,
+    );
+  });
+
+  testWidgets('tocar em 8 a 15 abre o estudo médio com ×', (tester) async {
+    await pumpMenu(tester, const Size(800, 360));
+
+    final alvo = rico('8 a 15');
+    await tester.scrollUntilVisible(alvo, 200);
+    await tester.pumpAndSettle();
+    await tester.tap(alvo);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ContaEstudoScreen), findsOneWidget);
+    expect(find.textContaining('8 a 15 • Médio'), findsOneWidget);
     expect(
       find.descendant(
         of: find.byType(ContaEstudoScreen),
@@ -73,21 +110,16 @@ void main() {
   testWidgets('grade funciona no tablet deitado (1280×800)', (tester) async {
     await pumpMenu(tester, const Size(1280, 800));
 
-    final alvo = find.textContaining('Multiplicação', findRichText: true);
-    expect(alvo, findsOneWidget);
+    expect(rico('2 à 7'), findsOneWidget);
+    expect(rico('8 a 15'), findsOneWidget);
 
+    final alvo = rico('8 a 15');
     await tester.scrollUntilVisible(alvo, 200);
     await tester.pumpAndSettle();
     await tester.tap(alvo);
     await tester.pumpAndSettle();
 
     expect(find.byType(ContaEstudoScreen), findsOneWidget);
-    expect(
-      find.descendant(
-        of: find.byType(ContaEstudoScreen),
-        matching: find.textContaining('×'),
-      ),
-      findsWidgets,
-    );
+    expect(find.textContaining('8 a 15 • Médio'), findsOneWidget);
   });
 }

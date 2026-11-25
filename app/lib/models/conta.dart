@@ -3,8 +3,8 @@ enum OperacaoConta { soma, subtracao, mistas, multiplicacao }
 
 /// Uma conta de matemática (soma, subtração ou multiplicação). Guardamos os
 /// operandos e quantos **pontos** (moedas) o acerto vale: **+1** para contas de
-/// 1 dígito, **+2** para contas de 2 dígitos (pedido do usuário). A
-/// multiplicação "1 dígito" (1–9 × 1–9) vale **+1**.
+/// 1 dígito e para a multiplicação "2 à 7 • fácil" (2–7 × 2–7), **+2** para
+/// contas de 2 dígitos e para a multiplicação "8 a 15 • Médio" (8–15 × 8–15).
 class Conta {
   const Conta(this.a, this.b, this.soma, this.pontos, [this.vezes = false]);
 

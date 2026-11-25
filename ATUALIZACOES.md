@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.102.0 (2026-11-25)
+- **Multiplicação em duas categorias ✖️:** a grade de Contas agora tem **× 2 à 7 • fácil** (36 operações, fatores 2–7, teal) e **× 8 a 15 • Médio** (64 operações, fatores 8–15, rosa) — conjuntos fechados e embaralhados, sem repetir: no médio, primeiro as sem 8 nem 9. Soma, Subtração, Mistas, Até 20 e Escrever seguem iguais.
+
 ## v0.101.0 (2026-11-25)
 - **Multiplicação nas Contas ✖️:** categoria nova na grade de matemática — **× Multiplicação · 1 dígito** (fatores 1–9, produto até 81), com o mesmo teclado e bolinhas das outras contas. Soma, Subtração, Mistas, Até 20 e Escrever seguem iguais; Mistas continua sem multiplicação.
 

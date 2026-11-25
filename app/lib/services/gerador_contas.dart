@@ -22,10 +22,10 @@ List<Conta> gerarContas({
       OperacaoConta.soma => true,
       OperacaoConta.subtracao => false,
       OperacaoConta.mistas => r.nextBool(),
-      // Multiplicação tem gerador próprio (gerarMultiplicacao) e NUNCA entra
-      // em Mistas — gerarContas não gera ×.
+      // Multiplicação tem geradores próprios (gerarMultiplicacaoFacil/Medio)
+      // e NUNCA entra em Mistas — gerarContas não gera ×.
       OperacaoConta.multiplicacao => throw ArgumentError(
-          'Use gerarMultiplicacao() para multiplicação'),
+          'Use gerarMultiplicacaoFacil()/gerarMultiplicacaoMedio()'),
     };
     var a = min + r.nextInt(max - min + 1);
     var b = min + r.nextInt(max - min + 1);
@@ -43,15 +43,45 @@ List<Conta> gerarContas({
   return contas;
 }
 
-/// Gera contas de MULTIPLICAÇÃO "1 dígito": os dois fatores vão de **1 a 9**
-/// (o 0 fica de fora — `0×N=0` sempre; o 1 entra — tabuada do 1 ensina a
-/// identidade). Produto de até 81. Pontos por conta = 1 (padrão "1 dígito").
-List<Conta> gerarMultiplicacao({int quantidade = 10, Random? rng}) {
+/// Gera contas de MULTIPLICAÇÃO "2 à 7 • fácil": todos os pares ordenados de
+/// fatores **2 a 7** (6×6 = **36** — `6×7` e `7×6` contam separado),
+/// embaralhados. Produto de 4 a 49 (máx `7×7`). Pontos por conta = 1.
+/// Por padrão retorna o conjunto cheio (36); [quantidade] fatia da frente
+/// (mantém a ordem embaralhada, sem repetir dentro da sessão).
+List<Conta> gerarMultiplicacaoFacil({int? quantidade, Random? rng}) {
   final r = rng ?? Random();
-  return [
-    for (var i = 0; i < quantidade; i++)
-      Conta(1 + r.nextInt(9), 1 + r.nextInt(9), true, 1, true),
-  ];
+  final pares = <(int, int)>[
+    for (var a = 2; a <= 7; a++)
+      for (var b = 2; b <= 7; b++) (a, b),
+  ]..shuffle(r);
+  var q = quantidade ?? pares.length;
+  if (q < 0) q = 0;
+  if (q > pares.length) q = pares.length;
+  return [for (final (a, b) in pares.take(q)) Conta(a, b, true, 1, true)];
+}
+
+/// Gera contas de MULTIPLICAÇÃO "8 a 15 • Médio": todos os pares ordenados de
+/// fatores **8 a 15** (8×8 = **64** — `14×15` e `15×14` contam separado), em
+/// dois blocos: primeiro os **36 sem 8 nem 9** (10–15 × 10–15), depois os
+/// **28 com 8 ou 9** — cada bloco embaralhado. Produto de 64 a 225
+/// (máx `15×15`). Pontos por conta = 2. Por padrão retorna o conjunto cheio
+/// (64); [quantidade] fatia da frente (prioridade respeitada, sem repetir).
+List<Conta> gerarMultiplicacaoMedio({int? quantidade, Random? rng}) {
+  final r = rng ?? Random();
+  final sem89 = <(int, int)>[
+    for (var a = 10; a <= 15; a++)
+      for (var b = 10; b <= 15; b++) (a, b),
+  ]..shuffle(r);
+  final com89 = <(int, int)>[
+    for (var a = 8; a <= 15; a++)
+      for (var b = 8; b <= 15; b++)
+        if (a == 8 || a == 9 || b == 8 || b == 9) (a, b),
+  ]..shuffle(r);
+  final todos = [...sem89, ...com89];
+  var q = quantidade ?? todos.length;
+  if (q < 0) q = 0;
+  if (q > todos.length) q = todos.length;
+  return [for (final (a, b) in todos.take(q)) Conta(a, b, true, 2, true)];
 }
 
 /// Contas de SOMA com os dois números **até [limite]** (ex.: "até 20": 5+19,

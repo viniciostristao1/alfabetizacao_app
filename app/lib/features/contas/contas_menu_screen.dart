@@ -6,8 +6,9 @@ import 'conta_estudo_screen.dart';
 import 'escrever_contas_screen.dart';
 
 /// Menu do tema **Contas** (PAISAGEM, tela cheia): soma/subtração/mistas × 1 ou 2
-/// dígitos, **multiplicação 1 dígito**, **até 20**, ou **escrever contas**. Grade
-/// 4 colunas com rolagem (cabe a tela deitada; com 9 cards rola um pouco).
+/// dígitos, **multiplicação 2 à 7 (fácil) e 8 a 15 (médio)**, **até 20**, ou
+/// **escrever contas**. Grade 4 colunas com rolagem (10 cards: rola um pouco
+/// no celular deitado; no tablet cabe quase tudo).
 class ContasMenuScreen extends StatelessWidget {
   const ContasMenuScreen({super.key});
 
@@ -17,6 +18,7 @@ class ContasMenuScreen extends StatelessWidget {
   static const _teal = Color(0xFF9C27B0);
   static const _rosa = Color(0xFFFF9800);
   static const _multi = Color(0xFF009688);
+  static const _medio = Color(0xFFE91E63);
 
   void _estudo(BuildContext context, String titulo, List<Conta> contas) {
     Navigator.of(context).push(
@@ -44,8 +46,10 @@ class ContasMenuScreen extends StatelessWidget {
           gerarContas(operacao: OperacaoConta.mistas, digitos: 1))),
       ('+− Mistas', '2 dígitos', _azul, () => _estudo(context, '🧮  Mistas · 2 dígitos',
           gerarContas(operacao: OperacaoConta.mistas, digitos: 2))),
-      ('× Multiplicação', '1 dígito', _multi, () => _estudo(
-          context, '🧮  Multiplicação · 1 dígito', gerarMultiplicacao())),
+      ('× 2 à 7', 'fácil', _multi, () => _estudo(
+          context, '🧮  2 à 7 • fácil', gerarMultiplicacaoFacil())),
+      ('× 8 a 15', 'Médio', _medio, () => _estudo(
+          context, '🧮  8 a 15 • Médio', gerarMultiplicacaoMedio())),
       ('🔟 Até 20', 'soma até 20', _teal,
           () => _estudo(context, '🧮  Até 20', gerarContasAte(20))),
       ('✏️ Escrever', 'as suas contas', _rosa, () => Navigator.of(context).push(

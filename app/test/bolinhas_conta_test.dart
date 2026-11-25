@@ -55,6 +55,7 @@ void main() {
     expect(totalBolinhas(const Conta(3, 4, true, 1, true)), 12);
     expect(totalBolinhas(const Conta(9, 9, true, 1, true)), 81);
     expect(totalBolinhas(const Conta(1, 1, true, 1, true)), 1);
+    expect(totalBolinhas(const Conta(15, 15, true, 2, true)), 225);
   });
 
   testWidgets('multiplicação: a×b bolinhas verdes', (tester) async {
@@ -86,6 +87,44 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('12 + 7 = 19'), findsOneWidget);
     expect(find.byType(BolinhaContagem), findsNWidgets(19));
+
+    await tester.tap(find.text('Fechar'));
+    await tester.pumpAndSettle();
+    expect(find.byType(BolinhaContagem), findsNothing);
+  });
+
+  testWidgets('15×15: 225 bolinhas no diálogo, sem estouro e rápido',
+      (tester) async {
+    const conta = Conta(15, 15, true, 2, true); // 15 × 15 = 225
+    expect(totalBolinhas(conta), 225);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Builder(
+            builder: (context) => TextButton(
+              onPressed: () =>
+                  mostrarBolinhasDialogo(context, conta, Colors.white),
+              child: const Text('abrir'),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final cronometro = Stopwatch()..start();
+    await tester.tap(find.text('abrir'));
+    await tester.pumpAndSettle();
+    cronometro.stop();
+    debugPrint('225 bolinhas: dialogo em ${cronometro.elapsedMilliseconds} ms');
+
+    expect(find.text('15 × 15 = 225'), findsOneWidget);
+    expect(find.byType(BolinhaContagem), findsNWidgets(225));
+    expect(contarCor(tester, AppColors.acerto), 225);
+    // Sem estouro de layout (o diálogo tem rolagem) ...
+    expect(tester.takeException(), isNull);
+    // ... e renderização aceitável (generoso p/ o tester em software).
+    expect(cronometro.elapsedMilliseconds, lessThan(20000));
 
     await tester.tap(find.text('Fechar'));
     await tester.pumpAndSettle();

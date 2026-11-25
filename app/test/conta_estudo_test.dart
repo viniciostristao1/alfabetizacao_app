@@ -101,14 +101,14 @@ void main() {
     expect(find.byType(BolinhasConta), findsNothing);
   });
 
-  testWidgets('multiplicação: resposta certa aceita (+1 moeda), errada recusa',
+  testWidgets('multiplicação fácil: resposta certa aceita (+1 moeda), errada recusa',
       (tester) async {
     SharedPreferences.setMockInitialValues({});
     const contas = [Conta(3, 4, true, 1, true)]; // 3 × 4 = 12
 
     await tester.pumpWidget(
       const MaterialApp(
-          home: ContaEstudoScreen(titulo: '🧮  Multiplicação · 1 dígito', contas: contas)),
+          home: ContaEstudoScreen(titulo: '🧮  2 à 7 • fácil', contas: contas)),
     );
     await tester.pump();
 
@@ -138,6 +138,50 @@ void main() {
     await tester.tap(find.byIcon(Icons.check_rounded));
     await tester.pumpAndSettle();
     expect(await ProgressoRepository.moedas(), 1);
+    expect(find.textContaining('Você acertou 1 de 1'), findsOneWidget);
+  });
+
+  testWidgets('multiplicação médio: 14×15=210 aceita (+2 moedas), 200 recusa',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    const contas = [Conta(14, 15, true, 2, true)]; // 14 × 15 = 210
+
+    await tester.pumpWidget(
+      const MaterialApp(
+          home: ContaEstudoScreen(titulo: '🧮  8 a 15 • Médio', contas: contas)),
+    );
+    await tester.pump();
+
+    expect(find.textContaining('14 × 15'), findsOneWidget);
+
+    // errada primeiro: 200 não avança nem pontua
+    await tester.tap(find.text('2'));
+    await tester.pump();
+    await tester.tap(find.text('0'));
+    await tester.pump();
+    await tester.tap(find.text('0'));
+    await tester.pump();
+    await tester.tap(find.byIcon(Icons.check_rounded));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('14 × 15'), findsOneWidget);
+    expect(await ProgressoRepository.moedas(), 0);
+
+    // certa: 210 avança (fim → diálogo de parabéns) e dá +2
+    await tester.tap(find.byIcon(Icons.backspace_rounded));
+    await tester.pump();
+    await tester.tap(find.byIcon(Icons.backspace_rounded));
+    await tester.pump();
+    await tester.tap(find.byIcon(Icons.backspace_rounded));
+    await tester.pump();
+    await tester.tap(find.text('2'));
+    await tester.pump();
+    await tester.tap(find.text('1'));
+    await tester.pump();
+    await tester.tap(find.text('0'));
+    await tester.pump();
+    await tester.tap(find.byIcon(Icons.check_rounded));
+    await tester.pumpAndSettle();
+    expect(await ProgressoRepository.moedas(), 2);
     expect(find.textContaining('Você acertou 1 de 1'), findsOneWidget);
   });
 }

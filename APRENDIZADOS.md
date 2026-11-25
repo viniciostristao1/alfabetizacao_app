@@ -2,6 +2,10 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-11-25 — v0.102.0 (Multiplicação fácil+médio ✖️)
+- **Conjuntos fechados:** `gerarMultiplicacaoFacil()` (2–7, 6×6=36, +1 pto) e `gerarMultiplicacaoMedio()` (8–15, 8×8=64 em 2 blocos: 36 sem 8/9 + 28 com 8/9, +2 ptos). Cada bloco embaralhado com `rng`, concatenado; `quantidade` (padrão = cheio) fatia da frente sem repetir. `gerarMultiplicacao()` 1–9 removido (menu/testes atualizados). Teste de 225: diálogo com scroll renderiza `15×15` em ~360 ms no tester, `takeException()` nulo.
+- Versão `0.102.0+148`.
+
 ## 2026-11-25 — v0.101.0 (Multiplicação 1 dígito ✖️)
 - **Contas ganha `×`:** `OperacaoConta.multiplicacao` + `Conta(..., vezes)` (`resultado = a*b`, `sinal = '×'`); `gerarMultiplicacao()` (1–9, sem 0, +1 ponto, `Use gerarMultiplicacao` se `multiplicacao` cair em `gerarContas`); Mistas nunca gera `×`. `totalBolinhas = a*b` verdes; grade 4 col. com rolagem (9 cards, 7ª = Multi `#009688`). Testes: `gerarMultiplicacao` (200 seeds, nunca 0, cobre 1× e 9×), estudo (13 recusa / 12 aceita +1), bolinhas `3×4=12`, menu 9 cards celular 800×360 + tablet 1280×800.
 - **Gotchas de teste:** (1) digitar 2× o mesmo dígito ambigua `find.text('1')` (resposta exibida × tecla) — teste usa dígitos distintos (13 erra, 12 acerta); (2) títulos `+ Soma`/`− Sub`/`× Multi` são `RichText` de 2 spans — `find.text`/`textContaining` padrão não acham, usar `textContaining(s, findRichText: true)`.
