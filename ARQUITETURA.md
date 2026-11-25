@@ -26,7 +26,9 @@ Ver [`NOVA_CATEGORIA.md`](NOVA_CATEGORIA.md).)
 
 ## ➕ Criar CATEGORIA nova (Fácil/Médio/Difícil + Temas + Coleção)
 Processo fechado em [`NOVA_CATEGORIA.md`](NOVA_CATEGORIA.md) (aprendido no Espaço,
-v0.91.0 → v0.96.0) — **siga-o do início ao fim**. Resumo: enum em `categoria.dart` →
+v0.91.0 → v0.96.0) — **siga-o do início ao fim**. Categoria de **Contas/matemática**
+tem processo próprio: [`NOVA_CONTA.md`](NOVA_CONTA.md) (molde Multiplicação).
+Resumo (palavras): enum em `categoria.dart` →
 palavras por sílabas + frases no banco → menu próprio com 4 cenas
 (`NivelScreen` genérico aposentado) + Selecionar → 4 temas com foto, anéis e
 coleção → fiação no `EstudoScreen` → testes (contagem, cobertura dos temas, widget

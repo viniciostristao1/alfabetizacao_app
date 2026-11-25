@@ -8,10 +8,13 @@ Fluxo de trabalho para qualquer agente (ou pessoa) melhorar o app. O repositóri
 2. **Este `AGENTS.md`** — regras e fluxo.
 3. [`ARQUITETURA.md`](ARQUITETURA.md) — padrões (como adicionar tela/palavra/subcategoria).
 4. [`NOVA_CATEGORIA.md`](NOVA_CATEGORIA.md) — **processo fechado p/ criar categoria
-   completa** (Fácil/Médio/Difícil + Temas + Selecionar + Coleção). Ler INTEIRO
-   antes de qualquer pedido de "cria a categoria X".
+   completa de palavras** (Fácil/Médio/Difícil + Temas + Selecionar + Coleção). Ler INTEIRO
+   antes de qualquer pedido de "cria a categoria X". Categoria de **Contas/matemática**
+   → [`NOVA_CONTA.md`](NOVA_CONTA.md) (molde Multiplicação).
 5. [`APRENDIZADOS.md`](APRENDIZADOS.md) — gotchas técnicos.
-6. O código da feature que vai tocar (`app/lib/features/<feature>/`).
+6. [`PROTOCOLO_VPS.md`](PROTOCOLO_VPS.md) — antes de rodar `analyze`/`test`: 1 comando
+   por vez, fundo + log, sem build local (a VPS já derrubou sessão por OOM).
+7. O código da feature que vai tocar (`app/lib/features/<feature>/`).
 
 ## 1. Regras de ouro (NÃO violar)
 - **Projeto isolado.** Só `/root/alfabetizacao_app/`. NUNCA tocar em `/root/trading*`,
@@ -27,6 +30,8 @@ Fluxo de trabalho para qualquer agente (ou pessoa) melhorar o app. O repositóri
 - **Português (pt-BR)** em todo texto de UI.
 - **Cores só via `AppColors`** (`theme/app_colors.dart`) — nunca `Color(0x...)` solto numa
   tela. (As cores de categoria/nível moram nos enums `Categoria`/`Nivel`.)
+  Exceção documentada: os cards de Contas usam `const`s locais — ver `NOVA_CONTA.md` §3
+  (nenhuma cor muda sem aprovação).
 - **Estado = Riverpod** (já há `ProviderScope`); persistência local = **shared_preferences**
   (entra com a gamificação).
 - **Arquitetura feature-based:** telas em `features/<x>/`, modelos em `models/`, dados/lógica
@@ -34,11 +39,11 @@ Fluxo de trabalho para qualquer agente (ou pessoa) melhorar o app. O repositóri
 - **Palavras novas** vão em `services/banco_palavras.dart` como lista de **sílabas** (o nível
   = nº de sílabas). Ver ARQUITETURA. O teste garante 2–4 sílabas, sem vazio/duplicata.
 
-## 3. Verificação local (obrigatória — as "conferências")
+## 3. Verificação local (obrigatória — as "conferências", ver `PROTOCOLO_VPS.md`)
 ```bash
 cd /root/alfabetizacao_app/app
 /root/flutter/bin/flutter analyze lib/ test/   # tem de dar "No issues found!"
-/root/flutter/bin/flutter test                 # tem de passar (hoje 7 testes)
+/root/flutter/bin/flutter test                 # tem de passar (suíte verde)
 ```
 Rodar como root só emite um aviso; funciona. **Não** rode `flutter build apk` (memória/tempo).
 
