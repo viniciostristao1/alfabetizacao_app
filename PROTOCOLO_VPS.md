@@ -2,13 +2,14 @@
 
 A VPS tem **3,8 GB de RAM** e roda o jogo do Davi, o trader e as sessões de
 IA juntos. Em 2026-11-25, um `flutter analyze` com várias sessões abertas
-esgotou a memória e o `systemd-oomd` matou todos os tmux (sessões perdidas).
+provavelmente esgotou a memória e o `systemd-oomd` matou todos os tmux
+(sessões perdidas) — causa provável, não confirmada.
 Este protocolo existe para isso não se repetir. Vale para qualquer IA.
 
 ## 1. Antes de qualquer coisa pesada
 
 ```bash
-free -h   # confirmar ~2 GB livres antes de analyze/test
+free -h   # confirmar ~2 GB livres (estimativa) antes de analyze/test
 ps aux | grep -Ei "dart|flutter|java|gradle" | grep -v grep
 ```
 
@@ -26,7 +27,8 @@ relate o que foi encerrado. Nunca `killall`, nunca mexa em processo alheio
   nohup /root/flutter/bin/flutter test test/<arquivo>_test.dart --concurrency=1 > /tmp/test-<nome>.log 2>&1 &
   ```
   Acompanhe o log por polling (`tail`); se a sessão cair, o processo
-  sobrevive e o log fica em `/tmp`.
+  costuma sobreviver — mas o `systemd-oomd` pode matar o processo junto.
+  O log fica em `/tmp`.
 - **NUNCA `flutter build apk` local** (memória/tempo) — o APK sai **só via
   CI** (ver `AGENTS.md` §4). `flutter analyze` + `flutter test` é a
   verificação local.

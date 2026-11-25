@@ -19,6 +19,8 @@ Não comece sem isso:
 4. **Pontos por acerto** (+1/+2) e **tamanho da sessão** (padrão = conjunto
    cheio, sem repetir; `quantidade` fatia da frente).
 5. **Cor** de cada card (não repetir as da grade) e **posição** na grade.
+6. **A nova operação entra em Mistas?** (na Multiplicação, não — `gerarContas`
+   rejeita `×` com `throw ArgumentError`; decidir e registrar antes de codar).
 
 ## 1. Modelo — `app/lib/models/conta.dart`
 
@@ -109,3 +111,14 @@ Não comece sem isso:
   CI + `scripts/release.sh` + link do APK (ver `AGENTS.md` §4).
 - Tamanho padrão da sessão = **conjunto cheio** (36/64); se o usuário pedir
   fatias, `quantidade` já suporta.
+
+## 9. Variações futuras: divisão (só registro, não implementar)
+
+O modelo `Conta` usa **um booleano por operação** (`soma`, `vezes`) — padrão
+que não escala: cada operação nova pede mais um flag e mais branches em
+`resultado`/`sinal`. Antes de criar a divisão, decidir e registrar:
+1. **Só divisão exata ou com resto?** (ex.: `7 ÷ 2` — a resposta aceita `3`?
+   `3,5`? o teclado numérico não tem vírgula).
+2. **O modelo passa a usar um campo de operação** (ex.: um `enum` no lugar
+   dos booleanos) em vez de acumular flags? Se sim, migrar `soma`/`vezes`
+   juntos na mesma tarefa.
