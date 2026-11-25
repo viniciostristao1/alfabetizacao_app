@@ -7,8 +7,12 @@ import '../../theme/app_colors.dart';
 /// demais; nesse caso a tela abre a janela central (`mostrarBolinhasDialogo`).
 const int kMaxBolinhasInline = 40;
 
-/// Quantas bolinhas a conta vai mostrar (soma = a + b; subtração = a).
-int totalBolinhas(Conta conta) => conta.soma ? conta.a + conta.b : conta.a;
+/// Quantas bolinhas a conta vai mostrar (soma = a + b; subtração = a;
+/// multiplicação = a × b, todas verdes).
+int totalBolinhas(Conta conta) {
+  if (conta.vezes) return conta.a * conta.b;
+  return conta.soma ? conta.a + conta.b : conta.a;
+}
 
 /// Uma bolinha de contagem: **verde** = fica, **vermelha** = sai na subtração.
 /// A borda usa a cor do texto atual (`contraste`) para a bolinha aparecer tanto
@@ -43,6 +47,8 @@ class BolinhaContagem extends StatelessWidget {
 ///  - **Soma:** `a` bolinhas verdes, o sinal `+`, `b` bolinhas verdes.
 ///  - **Subtração:** `a` bolinhas; as **`b` últimas ficam vermelhas** (o que
 ///    sai) e as demais verdes (o que fica = resultado).
+///  - **Multiplicação:** `a × b` bolinhas verdes, com o sinal `×` no meio
+///    (igual à soma; contas grandes caem na janela central).
 class BolinhasConta extends StatelessWidget {
   const BolinhasConta({
     super.key,
@@ -69,7 +75,9 @@ class BolinhasConta extends StatelessWidget {
       runSpacing: espaco,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        if (conta.soma) ...[
+        if (conta.vezes) ...[
+          ..._grupo(conta.a * conta.b, AppColors.acerto),
+        ] else if (conta.soma) ...[
           ..._grupo(conta.a, AppColors.acerto),
           Text(
             conta.sinal,

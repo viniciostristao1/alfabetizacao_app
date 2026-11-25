@@ -100,4 +100,44 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(BolinhasConta), findsNothing);
   });
+
+  testWidgets('multiplicação: resposta certa aceita (+1 moeda), errada recusa',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    const contas = [Conta(3, 4, true, 1, true)]; // 3 × 4 = 12
+
+    await tester.pumpWidget(
+      const MaterialApp(
+          home: ContaEstudoScreen(titulo: '🧮  Multiplicação · 1 dígito', contas: contas)),
+    );
+    await tester.pump();
+
+    expect(find.textContaining('3 × 4'), findsOneWidget);
+
+    // errada primeiro: 13 não avança nem pontua (11 daria ambiguidade no
+    // find.text('1'): após digitar "1", a resposta exibida e a tecla têm o
+    // mesmo texto; com dígitos distintos o alvo do tap é único)
+    await tester.tap(find.text('1'));
+    await tester.pump();
+    await tester.tap(find.text('3'));
+    await tester.pump();
+    await tester.tap(find.byIcon(Icons.check_rounded));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('3 × 4'), findsOneWidget);
+    expect(await ProgressoRepository.moedas(), 0);
+
+    // certa: 12 avança (fim → diálogo de parabéns) e dá +1
+    await tester.tap(find.byIcon(Icons.backspace_rounded));
+    await tester.pump();
+    await tester.tap(find.byIcon(Icons.backspace_rounded));
+    await tester.pump();
+    await tester.tap(find.text('1'));
+    await tester.pump();
+    await tester.tap(find.text('2'));
+    await tester.pump();
+    await tester.tap(find.byIcon(Icons.check_rounded));
+    await tester.pumpAndSettle();
+    expect(await ProgressoRepository.moedas(), 1);
+    expect(find.textContaining('Você acertou 1 de 1'), findsOneWidget);
+  });
 }

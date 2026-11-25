@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.101.0 (2026-11-25)
+- **Multiplicação nas Contas ✖️:** categoria nova na grade de matemática — **× Multiplicação · 1 dígito** (fatores 1–9, produto até 81), com o mesmo teclado e bolinhas das outras contas. Soma, Subtração, Mistas, Até 20 e Escrever seguem iguais; Mistas continua sem multiplicação.
+
 ## v0.100.8 (2026-11-23)
 - **Modo Ditado 🔊:** 4ª opção em "Como mostrar as palavras" — o app fala e o Davi monta a palavra tocando as sílabas na ordem (ficha errada só pisca, sem perder ponto). Vale em todas as categorias, com a mesma pontuação e moedas do estudo.
 - **Caça-palavras no cenário 🔎:** botão novo nos menus (Animais, Espaço, Alimentos, Objetos, Nomes e Futebol) — 3 palavras escondidas na arte para achar e tocar, com parabéns e moedas no fim.

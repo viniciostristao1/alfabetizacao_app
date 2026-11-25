@@ -51,6 +51,18 @@ void main() {
     expect(totalBolinhas(const Conta(12, 7, true, 2)), 19);
   });
 
+  test('totalBolinhas: multiplicação a×b', () {
+    expect(totalBolinhas(const Conta(3, 4, true, 1, true)), 12);
+    expect(totalBolinhas(const Conta(9, 9, true, 1, true)), 81);
+    expect(totalBolinhas(const Conta(1, 1, true, 1, true)), 1);
+  });
+
+  testWidgets('multiplicação: a×b bolinhas verdes', (tester) async {
+    await montar(tester, const Conta(3, 4, true, 1, true));
+    expect(contarCor(tester, AppColors.acerto), 12);
+    expect(contarCor(tester, AppColors.danger), 0);
+  });
+
   testWidgets('janela central mostra a conta, as bolinhas e fecha',
       (tester) async {
     await tester.pumpWidget(

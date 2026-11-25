@@ -22,6 +22,10 @@ List<Conta> gerarContas({
       OperacaoConta.soma => true,
       OperacaoConta.subtracao => false,
       OperacaoConta.mistas => r.nextBool(),
+      // Multiplicação tem gerador próprio (gerarMultiplicacao) e NUNCA entra
+      // em Mistas — gerarContas não gera ×.
+      OperacaoConta.multiplicacao => throw ArgumentError(
+          'Use gerarMultiplicacao() para multiplicação'),
     };
     var a = min + r.nextInt(max - min + 1);
     var b = min + r.nextInt(max - min + 1);
@@ -37,6 +41,17 @@ List<Conta> gerarContas({
     contas.add(Conta(a, b, soma, digitos));
   }
   return contas;
+}
+
+/// Gera contas de MULTIPLICAÇÃO "1 dígito": os dois fatores vão de **1 a 9**
+/// (o 0 fica de fora — `0×N=0` sempre; o 1 entra — tabuada do 1 ensina a
+/// identidade). Produto de até 81. Pontos por conta = 1 (padrão "1 dígito").
+List<Conta> gerarMultiplicacao({int quantidade = 10, Random? rng}) {
+  final r = rng ?? Random();
+  return [
+    for (var i = 0; i < quantidade; i++)
+      Conta(1 + r.nextInt(9), 1 + r.nextInt(9), true, 1, true),
+  ];
 }
 
 /// Contas de SOMA com os dois números **até [limite]** (ex.: "até 20": 5+19,

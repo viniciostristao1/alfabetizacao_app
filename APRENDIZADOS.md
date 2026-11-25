@@ -2,6 +2,11 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-11-25 — v0.101.0 (Multiplicação 1 dígito ✖️)
+- **Contas ganha `×`:** `OperacaoConta.multiplicacao` + `Conta(..., vezes)` (`resultado = a*b`, `sinal = '×'`); `gerarMultiplicacao()` (1–9, sem 0, +1 ponto, `Use gerarMultiplicacao` se `multiplicacao` cair em `gerarContas`); Mistas nunca gera `×`. `totalBolinhas = a*b` verdes; grade 4 col. com rolagem (9 cards, 7ª = Multi `#009688`). Testes: `gerarMultiplicacao` (200 seeds, nunca 0, cobre 1× e 9×), estudo (13 recusa / 12 aceita +1), bolinhas `3×4=12`, menu 9 cards celular 800×360 + tablet 1280×800.
+- **Gotchas de teste:** (1) digitar 2× o mesmo dígito ambigua `find.text('1')` (resposta exibida × tecla) — teste usa dígitos distintos (13 erra, 12 acerta); (2) títulos `+ Soma`/`− Sub`/`× Multi` são `RichText` de 2 spans — `find.text`/`textContaining` padrão não acham, usar `textContaining(s, findRichText: true)`.
+- Versão `0.101.0+147`.
+
 ## 2026-11-23 — v0.100.8 (Ditado + Caça-palavras 🔊🔎)
 - **Ditado = 4º `ModoLeitura`** (mesmo molde do "completar"): `embaralharSilabas()` em `services/ditado.dart` + `_meioDitado` (🔊 Ouvir, slots, fichas via `_OpcaoSilaba`, desenho mantido) + `_prepararDitado`/`_escolheuDitado` (ordem estrita, erro sem penalizar, completa → `_acertou`). Frases cai p/ maiúsculas; mic e V/X escondidos como no completar; `SegmentedButton` da Config lista sozinho. Testes: `ditado_test` (pure) + `modo_ditado_test` (widget: erro não avança, ordem certa monta e passa).
 - **Caça-palavras = tela própria** (`features/caca_palavras/`): `montarRodada()` (`services/caca_palavras.dart`, 3 alvos + 3 distratores, slots fx/fy relativos c/ separação mínima) + cena full-bleed + fichas pílula + fala do alvo + moedas via `registrarAcerto` + diálogo fim. Entradas "CAÇA-PALAVRAS" nos 6 menus (mesma arte/pool do SELECIONAR). Bug pego em teste: `_alvoAtual` estourava no 3º acerto antes do diálogo → guarda p/ rodada completa. Testes: `caca_palavras_test` (pure, 20 seeds separação) + widget (errada não avança, 3 certas → parabéns → De novo). Capturas `docs/screenshots-novidades-v100.8/`.

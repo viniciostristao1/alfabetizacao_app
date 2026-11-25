@@ -6,8 +6,8 @@ import 'conta_estudo_screen.dart';
 import 'escrever_contas_screen.dart';
 
 /// Menu do tema **Contas** (PAISAGEM, tela cheia): soma/subtração/mistas × 1 ou 2
-/// dígitos, **até 20**, ou **escrever contas**. Tudo cabe numa grade 4×2 (sem
-/// rolar — aproveita a tela deitada).
+/// dígitos, **multiplicação 1 dígito**, **até 20**, ou **escrever contas**. Grade
+/// 4 colunas com rolagem (cabe a tela deitada; com 9 cards rola um pouco).
 class ContasMenuScreen extends StatelessWidget {
   const ContasMenuScreen({super.key});
 
@@ -16,6 +16,7 @@ class ContasMenuScreen extends StatelessWidget {
   static const _azul = Color(0xFF2196F3);
   static const _teal = Color(0xFF9C27B0);
   static const _rosa = Color(0xFFFF9800);
+  static const _multi = Color(0xFF009688);
 
   void _estudo(BuildContext context, String titulo, List<Conta> contas) {
     Navigator.of(context).push(
@@ -43,6 +44,8 @@ class ContasMenuScreen extends StatelessWidget {
           gerarContas(operacao: OperacaoConta.mistas, digitos: 1))),
       ('+− Mistas', '2 dígitos', _azul, () => _estudo(context, '🧮  Mistas · 2 dígitos',
           gerarContas(operacao: OperacaoConta.mistas, digitos: 2))),
+      ('× Multiplicação', '1 dígito', _multi, () => _estudo(
+          context, '🧮  Multiplicação · 1 dígito', gerarMultiplicacao())),
       ('🔟 Até 20', 'soma até 20', _teal,
           () => _estudo(context, '🧮  Até 20', gerarContasAte(20))),
       ('✏️ Escrever', 'as suas contas', _rosa, () => Navigator.of(context).push(
@@ -188,6 +191,17 @@ class _TituloComSimbolo extends StatelessWidget {
         text: TextSpan(
           children: [
             const TextSpan(text: '− ', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: Colors.white)),
+            TextSpan(text: titulo.substring(2), style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w900, color: Colors.white)),
+          ],
+        ),
+      );
+    }
+    if (titulo.startsWith('× ')) {
+      return RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          children: [
+            const TextSpan(text: '× ', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: Colors.white)),
             TextSpan(text: titulo.substring(2), style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w900, color: Colors.white)),
           ],
         ),
