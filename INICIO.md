@@ -1,10 +1,11 @@
 # Primeiras Palavras — INÍCIO (ler primeiro em toda tarefa)
 
 App **Flutter** para uma **criança aprender a ler**. Bem simples, tema **escuro**.
-Fluxo: tela principal com **4 modalidades** de palavras → escolher **nível** (nº de
-sílabas) → a tela **gira para paisagem** e mostra **uma palavra grande** de cada vez,
-com botões embaixo. **Sem áudio e sem figura** por enquanto (decisão do usuário — MVP
-minimalista). Meta futura: Play Store, como os apps irmãos.
+Fluxo: tela principal com **10 categorias** (Animais, Objetos, Alimentos, Nomes,
+Espaço, Contas, Escrever, Historinhas, Jogo da Velha, Futebol — ver `Categoria`)
+→ nível/modo conforme a categoria → telas de jogo em **paisagem** e telas de
+leitura, com botões embaixo. Com áudio (TTS + microfone com tolerância) e
+gamificação (moedas/XP/nível). Offline. Meta futura: Play Store, como os apps irmãos.
 
 > ⚠️ Projeto **isolado**. Vive **só** em `/root/alfabetizacao_app/`.
 > NUNCA tocar em `/root/trading*`, `/root/calistenia_app/`, `/root/carlog_app/`,
@@ -21,9 +22,32 @@ minimalista). Meta futura: Play Store, como os apps irmãos.
 > mapa de padrões (`ARQUITETURA.md`) · técnico/gotchas (`APRENDIZADOS`) · changelog do
 > usuário (`ATUALIZACOES`) · futuro (`IDEIAS`).
 
-## ⭐ ESTADO ATUAL (2026-08-18) — ler primeiro pós-/clear
+## ⭐ ESTADO ATUAL (2026-11-25) — ler primeiro pós-/clear
 
-**v0.3.1 — JOGO DE HABITATS + polimentos** (`flutter analyze` limpo, 10 testes passando).
+**v0.102.0** (`flutter analyze lib/ test/` limpo, 138 testes em 25 arquivos).
+
+> Histórico: o bloco abaixo era o estado em 2026-08-18 (v0.3.1) e está
+> **obsoleto** — mantido como referência de origem. O estado real é o de cima.
+
+**O que existe e funciona:**
+- **Home** — 10 categorias (`models/categoria.dart`): Animais 🐶 · Objetos 🧸 ·
+  Alimentos 🍎 · Nomes 🔤 · Espaço 🚀 · Contas 🧮 · Escrever ✏️ ·
+  Historinhas 📚 · Jogo da Velha ⭕ · Futebol ⚽ (emoji/cor são apoio visual).
+- **Contas** 🧮 (paisagem) — Soma/Subtração/Mistas 1–2 dígitos, **× 2 à 7 •
+  fácil** (36 operações, teal), **× 8 a 15 • Médio** (64 em escala,
+  rosa), Até 20, Escrever contas. Teclado numérico, bolinhas de apoio,
+  **+1/+2 moedas** por acerto. Processo fechado em `NOVA_CONTA.md`.
+- **Categorias de palavras** — Fácil/Médio/Difícil por sílabas + Temas com
+  fases + Selecionar + Coleção (processo em `NOVA_CATEGORIA.md`); Modo
+  Frases, Ditado, Caça-palavras e Quiz das posições inclusos.
+- **Áudio** — TTS (`flutter_tts`) + Modo Microfone (`speech_to_text`,
+  `services/voz.dart`, tolerância configurável).
+- **Gamificação/persistência** — moedas/XP/nível via
+  `services/progresso_repository.dart` + `shared_preferences`.
+- Assinatura estável desde v0.2.2 (`app/android/app/debug.keystore`
+  versionado — NÃO apagar). Ícone em `app/assets/icon/`.
+
+## ESTADO ANTIGO (2026-08-18, v0.3.1) — obsoleto, só histórico
 Mapa em **tela cheia** (imersivo, `BoxFit.cover`); Estudo tem **desfazer** (além da vassoura) e
 mantém a paisagem ao voltar pro mapa (`manterPaisagemAoSair`). 71 animais nos 5 habitats.
 Assinatura estável desde v0.2.2 (`app/android/app/debug.keystore` versionado — NÃO apagar).
@@ -78,8 +102,9 @@ Assinatura estável desde v0.2.2 (`app/android/app/debug.keystore` versionado �
 
 ## Técnico
 - Flutter **3.44.7** / Dart **3.12.2** em `/root/flutter`.
-- Estado: **Riverpod** (`flutter_riverpod`) — já no `ProviderScope` do `main`, pronto p/ a
-  gamificação. Persistência local: **shared_preferences** (ainda não usada; entra com moedas/troféus).
+- Estado: **Riverpod** (`flutter_riverpod`) — `ProviderScope` no `main`, gamificação
+  via `services/progresso_repository.dart`. Persistência local: **shared_preferences**
+  (moedas/XP/nível, fases, configurações).
 - Arquitetura **feature-based**: `app/lib/features/<feature>/`.
 - Pacote Android **com.vinyapps.alfabetizacao**; exibição **Primeiras Palavras**.
 - **Build de APK sai na nuvem** (padrão dos apps irmãos) quando houver repo/CI — a VPS é fraca.
@@ -97,5 +122,6 @@ Assinatura estável desde v0.2.2 (`app/android/app/debug.keystore` versionado �
 - `main.dart` — trava retrato global; a EstudoScreen gira p/ paisagem e restaura ao sair.
 
 ## Ambiente
-VPS: ~1 vCPU, pouca RAM. OK para codar/`flutter analyze`/`flutter test`; **build de APK
-sai na nuvem** quando montarmos o CI.
+VPS: ~1 vCPU, pouca RAM (3,8 GB). OK para codar/`flutter analyze`/`flutter test`
+(ver `PROTOCOLO_VPS.md` — 1 comando por vez, fundo + log); **build de APK
+sai na nuvem** via CI (`.github/workflows/build-apk.yml` → `ci-latest`).
