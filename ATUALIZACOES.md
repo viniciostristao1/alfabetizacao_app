@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.103.0 (2026-11-25)
+- **Divisão nas Contas ➗:** grade com **12 cards** — **÷ até 20 • fácil** (27 operações exatas, marrom) e **÷ até 100 • difícil** (fatias de 20 de um pool de 283, índigo), sem resto, sem 0/1/número próprio. **Bolinhas em dois tons:** multiplicação e divisão agora mostram fileiras com a líder escura (grupos) e o resto claro (tamanho do grupo). Soma, Subtração, Mistas, Até 20 e Escrever seguem iguais; Mistas segue sem × e sem ÷.
+
 ## v0.102.0 (2026-11-25)
 - **Multiplicação em duas categorias ✖️:** a grade de Contas agora tem **× 2 à 7 • fácil** (36 operações, fatores 2–7, teal) e **× 8 a 15 • Médio** (64 operações, fatores 8–15, rosa) — conjuntos fechados e embaralhados, sem repetir: no médio, em escala pelo maior fator (8–9, 10, …, 15). Soma, Subtração, Mistas, Até 20 e Escrever seguem iguais.
 

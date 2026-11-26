@@ -2,6 +2,11 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-11-25 — v0.103.0 (Divisão + bolinhas 2 tons ➗)
+- **Divisão:** `Conta(..., divisao)` (opção (a) do NOVA_CONTA §9: mais um booleano + `assert(!(vezes && divisao))`, sem refatorar o modelo) + `OperacaoConta.divisao` (rejeitada em `gerarContas`, Mistas segue sem ÷). `gerarDivisaoFacil()` (2–20 exatas sem 0/1/próprio = 27, +1 pto, cheio) e `gerarDivisaoDificil()` (pool 2–100 = 283, fatia default 20, +2 ptos — sessão cheia inviável, ver plano). Bolinhas da divisão: `b` fileiras do quociente, mesma linguagem das fileiras da mult.
+- **Bolinhas 2 tons:** `kGrupoEscuro #1C7A44` + `kGrupoClaro #62E68C` (consts locais, exceção NOVA_CONTA §3); fileiras com líder escura; `diametroFileiras()` adapta ao espaço (inline 460×110, diálogo larg. 700, piso 8px) — regra dos 40 intacta. Soma/Sub inalteradas. Testes: tons exatos (3+9, 15+210, 12÷3, 100÷2 com `takeException()` nulo), menu 12 cards 800×360 + 1280×800.
+- Versão `0.103.0+149`.
+
 ## 2026-11-25 — v0.102.0 (Multiplicação fácil+médio ✖️)
 - **Conjuntos fechados:** `gerarMultiplicacaoFacil()` (2–7, 6×6=36, +1 pto, tudo embaralhado) e `gerarMultiplicacaoMedio()` (8–15, 8×8=64 em escala pelo maior fator: 4 do nível 8–9 + 5/7/9/11/13/15 dos níveis 10–15, cada nível embaralhado, +2 ptos). `quantidade` (padrão = cheio) fatia da frente sem repetir. `gerarMultiplicacao()` 1–9 removido (menu/testes atualizados). Teste de 225: diálogo com scroll renderiza `15×15` em ~360 ms no tester, `takeException()` nulo.
 - Versão `0.102.0+148`.
