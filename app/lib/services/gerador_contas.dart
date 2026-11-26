@@ -143,21 +143,74 @@ List<Conta> gerarContasAte(int limite, {int quantidade = 10, Random? rng}) {
   ];
 }
 
-/// Interpreta uma conta escrita pelo usuário (ex.: "12 + 7", "20-8"). Aceita
-/// `+` ou `-`/`−`. Retorna null se for inválida (formato errado, número negativo
-/// ou subtração que daria resultado negativo). Pontos = 2 se houver número ≥ 10.
-Conta? parseConta(String texto) {
-  final t = texto.replaceAll(' ', '').replaceAll('−', '-');
-  final soma = t.contains('+');
-  final sub = t.contains('-');
-  if (soma == sub) return null; // precisa de exatamente um sinal
-  final partes = t.split(soma ? '+' : '-');
-  if (partes.length != 2) return null;
+/// Interpreta uma conta escrita pelo usuário (ex.: "12 + 7", "20-8", "3 × 4",
+/// "10 ÷ 2"). Aceita `+`, `-`/`−`, multiplicação com `×`/`x`/`X`/`*` e divisão
+/// com `÷`/`/`/`:`; espaços opcionais. Divisão só exata (`a % b == 0`); zero
+/// como divisor é recusado. Para `×`/`÷`, números e resultado vão até 999
+/// (teclado do estudo tem 3 dígitos). Retorna a conta ou o motivo (mensagem
+/// pronta em PT simples p/ a tela) — nunca os dois.
+({Conta? conta, String? erro}) interpretarConta(String texto) {
+  var t = texto.replaceAll(' ', '');
+  for (final v in ['−', '–', '—']) {
+    t = t.replaceAll(v, '-');
+  }
+  for (final v in ['x', 'X', '*']) {
+    t = t.replaceAll(v, '×');
+  }
+  for (final v in ['/', ':']) {
+    t = t.replaceAll(v, '÷');
+  }
+  const ops = ['+', '-', '×', '÷'];
+  final quais = ops.where(t.contains).toList();
+  if (quais.length != 1) {
+    return (conta: null, erro: _erroGenerico);
+  }
+  final op = quais.first;
+  final partes = t.split(op);
+  if (partes.length != 2) return (conta: null, erro: _erroGenerico);
   final a = int.tryParse(partes[0]);
   final b = int.tryParse(partes[1]);
-  if (a == null || b == null || a < 0 || b < 0) return null;
-  if (!soma && a < b) return null; // sem resultado negativo
-  final resultado = soma ? a + b : a - b;
+  if (a == null || b == null || a < 0 || b < 0) {
+    return (conta: null, erro: _erroGenerico);
+  }
+  final soma = op == '+';
+  final sub = op == '-';
+  final vezes = op == '×';
+  final divisao = op == '÷';
+  if (sub && a < b) return (conta: null, erro: _erroGenerico);
+  int resultado;
+  if (vezes) {
+    if (a > 999 || b > 999) return (conta: null, erro: _erroGrande);
+    resultado = a * b;
+  } else if (divisao) {
+    if (a > 999 || b > 999) return (conta: null, erro: _erroGrande);
+    if (b == 0) return (conta: null, erro: 'Divisão por zero não existe');
+    if (a % b != 0) {
+      return (conta: null, erro: 'Use uma divisão exata, sem resto');
+    }
+    resultado = a ~/ b;
+  } else {
+    resultado = soma ? a + b : a - b;
+  }
+  if ((vezes || divisao) && resultado > 999) {
+    return (conta: null, erro: _erroGrande);
+  }
   final pontos = (a >= 10 || b >= 10 || resultado >= 10) ? 2 : 1;
-  return Conta(a, b, soma, pontos);
+  final conta = switch (op) {
+    '×' => Conta(a, b, true, pontos, true),
+    '÷' => Conta(a, b, true, pontos, false, true),
+    _ => Conta(a, b, soma, pontos),
+  };
+  return (conta: conta, erro: null);
 }
+
+/// Mensagem genérica (formato errado, número negativo, subtração negativa).
+const String _erroGenerico =
+    'Conta inválida. Use "+", "−", "×" ou "÷", sem resultado negativo.';
+
+/// Mensagem de tamanho (só ×/÷; soma/sub antigas seguem sem limite).
+const String _erroGrande = 'Use números e resultado até 999.';
+
+/// Interpreta uma conta escrita pelo usuário (só a conta; null se inválida).
+/// Para a mensagem do motivo, use [interpretarConta].
+Conta? parseConta(String texto) => interpretarConta(texto).conta;

@@ -312,5 +312,84 @@ void main() {
       expect(parseConta('3 + 4 + 5'), isNull);
       expect(parseConta('5'), isNull); // sem sinal
     });
+
+    test('multiplicação: ×, x, X, * e espaços', () {
+      for (final t in ['3×4', '3x4', '3X4', '3*4', '3 × 4', '  3  ×  4  ']) {
+        final c = parseConta(t)!;
+        expect(c.vezes, isTrue);
+        expect(c.a, 3);
+        expect(c.b, 4);
+        expect(c.resultado, 12);
+        expect(c.sinal, '×');
+        expect(c.enunciado, '3 × 4');
+      }
+    });
+
+    test('divisão: ÷, / e : com espaços opcionais', () {
+      for (final t in ['10÷2', '10/2', '10:2', '10 ÷ 2']) {
+        final c = parseConta(t)!;
+        expect(c.divisao, isTrue);
+        expect(c.a, 10);
+        expect(c.b, 2);
+        expect(c.resultado, 5);
+        expect(c.sinal, '÷');
+        expect(c.enunciado, '10 ÷ 2');
+      }
+    });
+
+    test('divisão por zero recusada, com mensagem', () {
+      expect(parseConta('10÷0'), isNull);
+      expect(interpretarConta('10÷0').erro, 'Divisão por zero não existe');
+      expect(interpretarConta('10/0').erro, 'Divisão por zero não existe');
+    });
+
+    test('divisão não exata recusada, com mensagem', () {
+      expect(parseConta('10÷3'), isNull);
+      expect(interpretarConta('10÷3').erro, 'Use uma divisão exata, sem resto');
+      expect(parseConta('10:20'), isNull); // vira ÷, dá 0,5
+    });
+
+    test('limite 999 para × e ÷, com mensagem', () {
+      expect(parseConta('1000×1'), isNull);
+      expect(interpretarConta('1000×1').erro, 'Use números e resultado até 999.');
+      expect(parseConta('40×25'), isNull); // 1000 > 999
+      expect(parseConta('1000÷2'), isNull);
+      expect(parseConta('27×37')!.resultado, 999); // limite exato aceita
+    });
+
+    test('negativo e formato seguem recusados, soma/sub intactas', () {
+      expect(parseConta('2-10'), isNull); // negativo (como antes)
+      expect(parseConta('10-2-1'), isNull);
+      expect(parseConta('12,5+2'), isNull);
+      expect(parseConta('12a+3'), isNull);
+      expect(interpretarConta('7 - 12').erro, contains('sem resultado negativo'));
+      // soma e subtração antigas, mesmos resultados de sempre:
+      final soma = parseConta('12 + 7')!;
+      expect(soma.resultado, 19);
+      expect(soma.pontos, 2);
+      expect(soma.vezes, isFalse);
+      expect(soma.divisao, isFalse);
+      final sub = parseConta('20-8')!;
+      expect(sub.resultado, 12);
+      expect(sub.soma, isFalse);
+    });
+
+    test('pontos: escrita vale o resultado (difere da categoria fácil)', () {
+      // "3×4" escrita dá +2 (resultado 12 tem dois dígitos); na categoria
+      // "2 à 7 • fácil" a mesma conta vale +1. Registrado de propósito.
+      expect(parseConta('3×4')!.pontos, 2);
+      expect(parseConta('2×3')!.pontos, 1);
+      expect(parseConta('12÷3')!.pontos, 2);
+      expect(parseConta('6÷2')!.pontos, 1);
+    });
+
+    test('zero: 0÷5 e 0×7 aceitos, resultado 0', () {
+      final d = parseConta('0÷5')!;
+      expect(d.resultado, 0);
+      expect(d.pontos, 1);
+      final m = parseConta('0×7')!;
+      expect(m.resultado, 0);
+      expect(m.pontos, 1);
+    });
   });
 }
