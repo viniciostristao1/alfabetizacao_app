@@ -47,8 +47,10 @@ Não comece sem isso:
 - Assinatura `({int? quantidade, Random? rng})` — `quantidade` omitido =
   conjunto cheio; informado, fatia da frente (ordem/escala respeitadas).
   `rng` existe para os testes serem determinísticos (`Random(seed)`).
-- Não tocar em `gerarContas`/`gerarContasAte`/`parseConta` (Soma, Subtração,
-  Mistas, Até 20 e Escrever ficam intactos).
+- Não tocar em `gerarContas`/`gerarContasAte` (Soma, Subtração,
+  Mistas, Até 20 ficam intactos). `parseConta` lê as 4 operações **só na
+  tela Escrever** (exceção autorizada T001: `xX*`→`×`, `/:`→`÷`, divisão só
+  exata sem 0, ×/÷ até 999, `interpretarConta()` devolve `(conta, erro)`).
 - Divisão: `gerarDivisaoFacil()` → 27 pares exatos de dividendo 2–20
   (divisor 2–d−1: sem 0/1/próprio; quocientes 2–10), embaralhados, +1 pto,
   conjunto cheio; `gerarDivisaoDificil({quantidade = 20})` → pool de 283

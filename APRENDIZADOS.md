@@ -2,6 +2,12 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-11-26 — v0.105.0 (Escrever × e ÷ ✏️)
+- **`interpretarConta()` devolve `(conta, erro)`** (`services/gerador_contas.dart`): normaliza (`−–—`→`-`, `xX*`→`×`, `/:`→`÷`), exige 1 tipo e 1 ocorrência de operador, divisão só exata sem 0, ×/÷ limitados a 999 (números e resultado); `parseConta()` virou invólucro (testes antigos intactos). Exceção autorizada ao NOVA_CONTA §2 (só a leitura da escrita mudou).
+- **Pontos da escrita valem o resultado**: `3×4` dá +2 (resultado 12), diferente da gerada fácil (+1) — registrado de propósito, não é bug.
+- **Zero bolinhas**: fileira vazia (`colunas == 0`) rende `SizedBox.shrink` + guardas `b == 0` nos diâmetros (0÷5 e 0×7 testados, sem travar/estourar).
+- Versão `0.105.0+151`.
+
 ## 2026-11-26 — v0.104.0 (Microfone exige frase inteira 🗣️)
 - **`reconheceuFrase(frase, palavraTema, ditas)`** (`services/reconhecimento.dart`, pura/testável): palavras 3+ letras casam em sequência com a tolerância do `ConfigMic`; palavra do tema obrigatória; no máx. 1 curta (<3) pode faltar; sem nenhuma 3+ → todas obrigatórias; repetida conta por posição (casamento guloso, não conjunto). `palavrasFaltando()` alimenta o "faltou: X" no erro.
 - **Fiação:** `estudo_screen` escolhe frase/palavra por `_jogo == ModoJogo.frase` (parcial + final + msg de erro); `Voz.ouvir({pauseFor, listenFor})` com default palavra (2s/8s, timeout +4s) e frase 4s/12s. `_falharPalavra` já falava a frase — sem mudança. Modo Palavra/Contas/moedas intactos.

@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.105.0 (2026-11-26)
+- **Escrever contas com × e ÷ ✏️:** a tela "Escrever contas" agora aceita soma, subtração, multiplicação (`×`, `x`, `X`, `*`) e divisão (`÷`, `/`, `:`), com divisão só exata ("Divisão por zero não existe", "Use uma divisão exata, sem resto") e números/resultado até 999.
+
 ## v0.104.0 (2026-11-26)
 - **Microfone no modo Frases 🗣️:** agora vale a **frase inteira** — falar só a palavra não conta mais. O app perdoa 1 letrinha por palavra e no máximo 1 palavra curta (o/é/da…), exige a ordem e mostra o que faltou ("faltou: GALINHA"). No modo Palavra continua valendo só a palavra.
 
