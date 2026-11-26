@@ -2,6 +2,12 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-11-26 — v0.104.0 (Microfone exige frase inteira 🗣️)
+- **`reconheceuFrase(frase, palavraTema, ditas)`** (`services/reconhecimento.dart`, pura/testável): palavras 3+ letras casam em sequência com a tolerância do `ConfigMic`; palavra do tema obrigatória; no máx. 1 curta (<3) pode faltar; sem nenhuma 3+ → todas obrigatórias; repetida conta por posição (casamento guloso, não conjunto). `palavrasFaltando()` alimenta o "faltou: X" no erro.
+- **Fiação:** `estudo_screen` escolhe frase/palavra por `_jogo == ModoJogo.frase` (parcial + final + msg de erro); `Voz.ouvir({pauseFor, listenFor})` com default palavra (2s/8s, timeout +4s) e frase 4s/12s. `_falharPalavra` já falava a frase — sem mudança. Modo Palavra/Contas/moedas intactos.
+- **Gotcha de teste:** suíte tem 1 flake conhecido (`caca_palavras_widget_test`, tap perdido sob carga — passa isolado); `Voz` é singleton rígido sobre plugin de plataforma, sem costura p/ teste widget do fluxo do mic — regra coberta por testes unitários.
+- Versão `0.104.0+150`.
+
 ## 2026-11-25 — v0.103.0 (Divisão + bolinhas 2 tons ➗)
 - **Divisão:** `Conta(..., divisao)` (opção (a) do NOVA_CONTA §9: mais um booleano + `assert(!(vezes && divisao))`, sem refatorar o modelo) + `OperacaoConta.divisao` (rejeitada em `gerarContas`, Mistas segue sem ÷). `gerarDivisaoFacil()` (2–20 exatas sem 0/1/próprio = 27, +1 pto, cheio) e `gerarDivisaoDificil()` (pool 2–100 = 283, fatia default 20, +2 ptos — sessão cheia inviável, ver plano). Bolinhas da divisão: `b` fileiras do quociente, mesma linguagem das fileiras da mult.
 - **Bolinhas 2 tons:** `kGrupoEscuro #1C7A44` + `kGrupoClaro #62E68C` (consts locais, exceção NOVA_CONTA §3); fileiras com líder escura; `diametroFileiras()` adapta ao espaço (inline 460×110, diálogo larg. 700, piso 8px) — regra dos 40 intacta. Soma/Sub inalteradas. Testes: tons exatos (3+9, 15+210, 12÷3, 100÷2 com `takeException()` nulo), menu 12 cards 800×360 + 1280×800.

@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.104.0 (2026-11-26)
+- **Microfone no modo Frases 🗣️:** agora vale a **frase inteira** — falar só a palavra não conta mais. O app perdoa 1 letrinha por palavra e no máximo 1 palavra curta (o/é/da…), exige a ordem e mostra o que faltou ("faltou: GALINHA"). No modo Palavra continua valendo só a palavra.
+
 ## v0.103.0 (2026-11-25)
 - **Divisão nas Contas ➗:** grade com **12 cards** — **÷ até 20 • fácil** (27 operações exatas, marrom) e **÷ até 100 • difícil** (fatias de 20 de um pool de 283, índigo), sem resto, sem 0/1/número próprio. **Bolinhas em dois tons:** multiplicação e divisão agora mostram fileiras com a líder escura (grupos) e o resto claro (tamanho do grupo). Soma, Subtração, Mistas, Até 20 e Escrever seguem iguais; Mistas segue sem × e sem ÷.
 
