@@ -109,6 +109,11 @@ class Voz {
     required void Function() onFim,
     void Function(List<String> ditas)? onParcial,
     void Function(double nivel)? onNivel,
+    // Janelas de escuta (padrão = palavra isolada, rápida). No Modo Frases a
+    // criança lê devagar, palavra por palavra — a tela passa janelas maiores
+    // (frase: pauseFor 4s / listenFor 12s) para o motor não cortar no meio.
+    Duration pauseFor = const Duration(seconds: 2),
+    Duration listenFor = const Duration(seconds: 8),
   }) async {
     if (!await _init()) {
       onResultado(const []);
@@ -141,13 +146,14 @@ class Voz {
           partialResults: true, // parciais rápidos → acerto quase instantâneo
           cancelOnError: true,
           listenMode: ListenMode.confirmation,
-          listenFor: const Duration(seconds: 8),
-          pauseFor: const Duration(seconds: 2), // menos espera pra finalizar
+          listenFor: listenFor,
+          pauseFor: pauseFor, // menos espera pra finalizar
         ),
       );
       // rede de segurança: se nenhum evento concluir, encerra sozinho.
+      // Acompanha a janela (frases escutam por mais tempo).
       _timeout?.cancel();
-      _timeout = Timer(const Duration(seconds: 12), _concluir);
+      _timeout = Timer(listenFor + const Duration(seconds: 4), _concluir);
     } catch (_) {
       _concluir();
     }

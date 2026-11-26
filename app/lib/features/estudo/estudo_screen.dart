@@ -352,9 +352,9 @@ class _EstudoScreenState extends State<EstudoScreen> {
 
   // ── Modo Microfone: o Davi toca no 🎤, FALA a palavra e o app decide ──
 
-  /// Toca no microfone: começa a ouvir a criança dizer a palavra atual. Se já
-  /// estiver ouvindo, para. Se o aparelho não tiver microfone/reconhecedor,
-  /// avisa sem travar.
+  /// Toca no microfone: começa a ouvir a criança dizer a palavra/frase atual.
+  /// No Modo Frases só vale a frase inteira. Se já estiver ouvindo, para.
+  /// Se o aparelho não tiver microfone/reconhecedor, avisa sem travar.
   Future<void> _ouvirMic() async {
     if (_ouvindo) {
       await Voz.instance.parar();
@@ -379,18 +379,32 @@ class _EstudoScreenState extends State<EstudoScreen> {
       onResultado: _resultadoMic,
       onParcial: _parcialMic,
       onFim: _fimMic,
+      // No Modo Frases a criança lê devagar: janelas maiores para o motor
+      // não cortar a frase no meio (palavra isolada mantém o padrão rápido).
+      pauseFor: _jogo == ModoJogo.frase
+          ? const Duration(seconds: 4)
+          : const Duration(seconds: 2),
+      listenFor: _jogo == ModoJogo.frase
+          ? const Duration(seconds: 12)
+          : const Duration(seconds: 8),
       onNivel: (n) {
         if (mounted && _ouvindo) setState(() => _nivelMic = n);
       },
     );
   }
 
-  /// Resultado PARCIAL (enquanto fala): se já bater com a palavra, ACEITA na
-  /// hora — não espera o silêncio → acerto quase instantâneo.
+  /// Resultado PARCIAL (enquanto fala): se já bater, ACEITA na hora — não
+  /// espera o silêncio → acerto quase instantâneo. No Modo Frases só vale a
+  /// frase inteira (falar só a palavra do tema não adianta mais).
   Future<void> _parcialMic(List<String> ditas) async {
     if (_micAceito || !mounted) return;
-    final alvo = widget.palavras[_i].texto;
-    if (!reconheceu(alvo, ditas, tolerancia: _micTolerancia)) return;
+    final palavra = widget.palavras[_i];
+    final ehFrase = _jogo == ModoJogo.frase;
+    final aceitou = ehFrase
+        ? reconheceuFrase(fraseOuPalavra(palavra), palavra.texto, ditas,
+            tolerancia: _micTolerancia)
+        : reconheceu(palavra.texto, ditas, tolerancia: _micTolerancia);
+    if (!aceitou) return;
     _micAceito = true;
     unawaited(Voz.instance.parar()); // para de ouvir imediatamente
     setState(() {
@@ -419,8 +433,14 @@ class _EstudoScreenState extends State<EstudoScreen> {
       _ouvindo = false;
       _nivelMic = 0;
     });
-    final alvo = widget.palavras[_i].texto;
-    if (reconheceu(alvo, limpas, tolerancia: _micTolerancia)) {
+    final palavra = widget.palavras[_i];
+    final ehFrase = _jogo == ModoJogo.frase;
+    final alvo = ehFrase ? fraseOuPalavra(palavra) : palavra.texto;
+    final aceitou = ehFrase
+        ? reconheceuFrase(alvo, palavra.texto, limpas,
+            tolerancia: _micTolerancia)
+        : reconheceu(alvo, limpas, tolerancia: _micTolerancia);
+    if (aceitou) {
       setState(() => _statusMic = null);
       await _acertou();
       return;
@@ -430,9 +450,12 @@ class _EstudoScreenState extends State<EstudoScreen> {
       await _falharPalavra(alvo);
     } else {
       final faltam = _maxTentativas - _tentativas;
-      // mostra o que ele ouviu — ajuda a criança e a calibrar a tolerância
+      // mostra o que ele ouviu — e, no modo Frases, o que faltou dizer.
+      final faltou = ehFrase
+          ? palavrasFaltando(alvo, limpas.first, tolerancia: _micTolerancia)
+          : const <String>[];
       setState(() => _statusMic =
-          'Ouvi "${limpas.first}" 🙂 Tenta de novo (falta${faltam == 1 ? '' : 'm'} $faltam)');
+          'Ouvi "${limpas.first}" 🙂 ${faltou.isEmpty ? '' : 'faltou: ${faltou.join(' ').toUpperCase()}. '}Tenta de novo (falta${faltam == 1 ? '' : 'm'} $faltam)');
     }
   }
 

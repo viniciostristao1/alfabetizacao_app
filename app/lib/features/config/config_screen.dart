@@ -275,8 +275,9 @@ class _ConfigScreenState extends State<ConfigScreen> {
           _SecaoAcordeao(
             titulo: 'Palavra ou frases',
             descricao: 'Palavra mostra 1 palavra por vez. Frases mostra 1 frase por '
-                'palavra (ex.: LEÃO vira O LEÃO MORA NA SAVANA). No modo frases o '
-                'microfone continua ouvindo só a palavra.',
+                'palavra (ex.: LEÃO vira O LEÃO MORA NA SAVANA). No modo Frases o '
+                'microfone ouve a frase inteira: só acerta falando tudo — falar '
+                'só a palavra não vale.',
             resumo: _jogo.rotulo,
             aberta: _jogoAberta,
             onToggle: () => setState(() => _jogoAberta = !_jogoAberta),
@@ -317,7 +318,8 @@ class _ConfigScreenState extends State<ConfigScreen> {
             titulo: 'Modo microfone 🎤',
             descricao: 'O Davi lê falando: toca no 🎤 na tela das palavras, fala, e o app '
                 'decide sozinho (acerta → sobe moeda e passa; erra 3× → o app fala '
-                'a palavra e passa).',
+                'e passa). No modo Palavra vale falar só a palavra; no modo Frases '
+                'tem que falar a frase inteira.',
             resumo: _mic ? 'Ligado' : 'Desligado',
             aberta: _micAberta,
             onToggle: () => setState(() => _micAberta = !_micAberta),
