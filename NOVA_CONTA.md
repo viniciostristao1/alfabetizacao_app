@@ -1,10 +1,12 @@
 # NOVA_CONTA.md — como criar uma categoria de Contas (matemática)
 
-Processo fechado, aprendido criando a **Multiplicação** (v0.101.0 → v0.102.0).
+Processo fechado, aprendido criando a **Multiplicação** (v0.101.0 → v0.102.0)
+e a **Divisão** (v0.103.0: divisão exata + bolinhas em dois tons).
 Categorias de **palavras** seguem [`NOVA_CATEGORIA.md`](NOVA_CATEGORIA.md);
 categorias de **contas** (operações + gerador + grade + teclado) seguem
-este arquivo, do início ao fim — sem reinventar. Molde de referência:
-multiplicação "2 à 7 • fácil" + "8 a 15 • Médio".
+este arquivo, do início ao fim — sem reinventar. Moldes de referência:
+multiplicação "2 à 7 • fácil" + "8 a 15 • Médio"; divisão "÷ até 20 • fácil"
++ "÷ até 100 • difícil".
 
 ## 0. O que pedir ao usuário ANTES de começar
 
@@ -24,14 +26,17 @@ Não comece sem isso:
 
 ## 1. Modelo — `app/lib/models/conta.dart`
 
-- `enum OperacaoConta { soma, subtracao, mistas, multiplicacao }` — operação
-  nova entra aqui. `gerarContas` **nunca** gera `×`: o branch `multiplicacao`
-  dá `throw ArgumentError('Use gerarMultiplicacaoFacil()/gerarMultiplicacaoMedio()')`
-  (Mistas segue sem multiplicação).
-- `Conta(a, b, soma, pontos, [vezes = false])` — `vezes = true` é
-  multiplicação: `resultado => a * b`, `sinal => '×'`, `enunciado => 'a × b'`.
-  `soma` é ignorado quando `vezes` é true. Pontos: **+1** fácil (2–7 × 2–7),
-  **+2** médio (8–15 × 8–15).
+- `enum OperacaoConta { soma, subtracao, mistas, multiplicacao, divisao }` —
+  operação nova entra aqui. `gerarContas` **nunca** gera `×` nem `÷`: os
+  branches `multiplicacao`/`divisao` dão `throw ArgumentError`
+  (Mistas segue sem multiplicação e sem divisão).
+- `Conta(a, b, soma, pontos, [vezes = false, divisao = false])` —
+  `vezes = true` é multiplicação (`resultado => a * b`, `sinal => '×'`);
+  `divisao = true` é divisão exata (`resultado => a ~/ b`, `sinal => '÷'`).
+  `soma` é ignorado quando `vezes`/`divisao`. `assert(!(vezes && divisao))`
+  (opção (a) do §9: mais um booleano, sem refatorar o modelo). Pontos:
+  **+1** fácil (2–7 × 2–7; ÷ até 20), **+2** médio/difícil (8–15 × 8–15;
+  ÷ até 100).
 
 ## 2. Gerador — `app/lib/services/gerador_contas.dart`
 
@@ -44,6 +49,12 @@ Não comece sem isso:
   `rng` existe para os testes serem determinísticos (`Random(seed)`).
 - Não tocar em `gerarContas`/`gerarContasAte`/`parseConta` (Soma, Subtração,
   Mistas, Até 20 e Escrever ficam intactos).
+- Divisão: `gerarDivisaoFacil()` → 27 pares exatos de dividendo 2–20
+  (divisor 2–d−1: sem 0/1/próprio; quocientes 2–10), embaralhados, +1 pto,
+  conjunto cheio; `gerarDivisaoDificil({quantidade = 20})` → pool de 283
+  pares exatos de dividendo 2–100, fatia embaralhada de 20 por sessão
+  (conjunto cheio inviável p/ criança), +2 ptos. Sem `÷` em `parseConta`
+  (Escrever inalterado, como o `×`).
 
 ## 3. Card e cor na grade — `app/lib/features/contas/contas_menu_screen.dart`
 
@@ -51,11 +62,16 @@ Não comece sem isso:
   `('× 8 a 15', 'Médio', _medio, ...)` → `_estudo(context, '🧮  2 à 7 • fácil',
   gerarMultiplicacaoFacil())` (mesmo padrão dos demais; títulos do estudo
   usam os nomes exatos do pedido).
-- Posições: operações agrupadas — **7ª fácil, 8ª médio**, antes de Até 20 (a
-  grade de 4 colunas vai a 10 cards e rola; ver §7 telas).
+- Posições: operações agrupadas — **7ª fácil, 8ª médio, 9ª ÷ até 20, 10ª
+  ÷ até 100**, antes de Até 20 (a grade de 4 colunas vai a 12 cards e rola;
+  ver §7 telas).
 - Cores: fácil `_multi = Color(0xFF009688)` (teal), médio
-  `_medio = Color(0xFFE91E63)` (rosa) — distintas das 6 em uso
-  (`#4CAF50`, `#F44336`, `#2196F3`, `#9C27B0`, `#FF9800` + teal).
+  `_medio = Color(0xFFE91E63)` (rosa), divisão fácil `_divF = Color(0xFF795548)`
+  (marrom), divisão difícil `_divD = Color(0xFF3F51B5)` (índigo) — distintas
+  das 8 em uso (`#4CAF50`, `#F44336`, `#2196F3`, `#9C27B0`, `#FF9800`,
+  teal, rosa + teal do enum `Categoria.contas`). Títulos do estudo usam os
+  nomes exatos (`🧮  ÷ até 20 • fácil`, `🧮  ÷ até 100 • difícil`); branch
+  `÷ ` novo no `_TituloComSimbolo` (igual ao `× `).
 - ⚠️ **Exceção documentada à regra de cores** (`AGENTS.md` §2: "cores só via
   `AppColors`"): os cards de Contas usam `const`s locais neste arquivo (e o
   enum `Categoria` usa `Color(0x...)` próprio, ex. `contas #2DD4BF`,
@@ -70,10 +86,20 @@ Não comece sem isso:
 
 ## 5. Bolinhas — `app/lib/features/contas/bolinhas_conta.dart`
 
-- `totalBolinhas(conta)` = `a * b` (todas verdes) para `vezes`.
+- `totalBolinhas(conta)` = `a * b` para `vezes` (fileiras), `a` (dividendo)
+  para `divisao` (fileiras), `a + b` soma, `a` subtração.
+- Mult/divisão em **dois tons**: `kGrupoEscuro #1C7A44` + `kGrupoClaro #62E68C`
+  (consts locais, mesma exceção de cor do §3). Fileiras = grupos (mult: `a`
+  fileiras de `b`; divisão: `b` fileiras de `a÷b`); a **1ª de cada fileira é
+  escura** (conta os grupos), o resto é claro (posição redundante com a cor:
+  legível p/ daltônicos e em cinza). Ex.: 3×4 = 3 fileiras de (1 escura +
+  3 claras); 12÷3 idem.
 - `kMaxBolinhasInline = 40`: até 40, inline embaixo da conta; acima,
   `mostrarBolinhasDialogo` (janela central **com scroll** —
-  `SingleChildScrollView` + `maxHeight 0.85`). `15×15 = 225` vai ao diálogo.
+  `SingleChildScrollView` + `maxHeight 0.85`). `15×15 = 225` e `100÷2 = 100`
+  vão ao diálogo. O gatilho não muda — só o diâmetro adapta via
+  `diametroFileiras()` (inline: teto 460×110; diálogo: largura 700, base 28,
+  piso 8px).
 
 ## 6. Resposta e pontuação — `app/lib/features/contas/conta_estudo_screen.dart`
 
@@ -85,20 +111,25 @@ Não comece sem isso:
 ## 7. Testes (obrigatórios)
 
 - `contas_test.dart` → grupos por gerador: tamanho exato do conjunto
-  (36/64), intervalo dos fatores, produto certo, pontos, sinal `×`,
+  (36/64; divisão: 27 fácil, pool 283/fatia 20 difícil), intervalo dos
+  fatores/dividendos, exatidão (`%` zero na divisão; sem 0/1/próprio),
+  produto/quociente certo, pontos, sinal `×`/`÷`,
   cobertura total sem repetição (`pares.toSet().length == N`,
-  `containsAll` dos extremos e de `6×7`/`7×6`/`14×15`), regra de ordem
-  (fácil: tudo embaralhado; médio: blocos 4+5+7+9+11+13+15 com maior fator
-  crescente por bloco) e fatia (`quantidade` = frente da lista cheia).
-- `conta_estudo_test.dart` → certa aceita (+moedas), errada recusa e fica.
-  **Gotcha:** não digitar 2× o mesmo dígito em sequência no teste
-  (`find.text('1')` ambigua resposta exibida × tecla) — usar dígitos
-  distintos (ex.: erra `13`, acerta `12`; médio: erra `200`, acerta `210`).
-- `bolinhas_conta_test.dart` → `totalBolinhas` (inclui `15×15 = 225`) +
-  diálogo com 225: `findsNWidgets(225)`, `takeException()` nulo (sem
-  estouro) e tempo impresso/com teto generoso.
-- `contas_menu_test.dart` → nº exato de cards, subs (`1 dígito` ×3, `fácil`,
-  `Médio`), cores exatas dos cards, navegação até o estudo com `×` —
+  `containsAll` dos extremos e de `6×7`/`7×6`/`14×15`, `12÷3`/`100÷2`),
+  regra de ordem (fácil: tudo embaralhado; médio: blocos 4+5+7+9+11+13+15
+  com maior fator crescente por bloco) e fatia (`quantidade` = frente da
+  lista cheia).
+- `conta_estudo_test.dart` → certa aceita (+moedas: +1 fácil, +2 médio/
+  difícil), errada recusa e fica. Dígitos distintos (mult: erra `13`,
+  acerta `12`; médio: erra `200`, acerta `210`; divisão: fácil erra `5`,
+  acerta `4`; difícil erra `26`, acerta `25`).
+- `bolinhas_conta_test.dart` → `totalBolinhas` (inclui `15×15 = 225` e
+  `100÷2 = 100`) + diálogos com `findsNWidgets` exato, tons exatos por
+  posição (líder escura nos índices `0, b, 2b…`), `takeException()` nulo
+  (sem estouro) e tempo impresso/com teto generoso.
+- `contas_menu_test.dart` → nº exato de cards (12), subs (`1 dígito` ×3,
+  `fácil` ×2, `Médio`, `difícil`), cores exatas dos 4 cards de ×/÷,
+  navegação até o estudo com `×`/`÷` —
   **nos dois tamanhos**: celular deitado `800×360` e tablet `1280×800`
   (`scrollUntilVisible` + `pumpAndSettle` antes do toque).
 
@@ -112,13 +143,17 @@ Não comece sem isso:
 - Tamanho padrão da sessão = **conjunto cheio** (36/64); se o usuário pedir
   fatias, `quantidade` já suporta.
 
-## 9. Variações futuras: divisão (só registro, não implementar)
+## 9. Variações futuras (só registro)
 
-O modelo `Conta` usa **um booleano por operação** (`soma`, `vezes`) — padrão
-que não escala: cada operação nova pede mais um flag e mais branches em
-`resultado`/`sinal`. Antes de criar a divisão, decidir e registrar:
-1. **Só divisão exata ou com resto?** (ex.: `7 ÷ 2` — a resposta aceita `3`?
-   `3,5`? o teclado numérico não tem vírgula).
-2. **O modelo passa a usar um campo de operação** (ex.: um `enum` no lugar
-   dos booleanos) em vez de acumular flags? Se sim, migrar `soma`/`vezes`
-   juntos na mesma tarefa.
+**Divisão → FEITA na v0.103.0.** Decisões tomadas (valem de molde): só exata;
+`0`, `1` e o próprio número fora; `assert(!(vezes && divisao))` no modelo;
+fácil 27 em sessão cheia, difícil pool 283 em fatias de 20. Se chegar uma 4ª
+operação, reavaliar o campo único de operação (opção (b) abaixo).
+
+**Registro original (resolvido):** o modelo `Conta` usava **um booleano por
+operação** (`soma`, `vezes`) — padrão que não escala: cada operação nova pede
+mais um flag e mais branches em `resultado`/`sinal`. Decidido: opção (a)
+(outro booleano) agora, migração conjunta só com a 4ª operação:
+1. **Só divisão exata ou com resto?** → só exata (teclado não tem vírgula).
+2. **Campo de operação em vez de flags?** → não agora; migrar `soma`/`vezes`/
+   `divisao` juntos se preciso.

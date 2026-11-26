@@ -69,7 +69,9 @@ A criança **fala** a palavra; o app reconhece se **acertou**.
 - **Contas / matemática — FEITO (v0.12.0):** tema Contas (soma/subtração, 1-2 dígitos, teclado
   numérico, +1/+2 moedas, escrever contas). ✅ **Multiplicação FEITA:**
   v0.101.0 (× 1 dígito) → v0.102.0 (× 2 à 7 fácil, 36 ops + × 8 a 15 Médio,
-  64 ops em escala). **A evoluir:** divisão; "conta em pé"
+  64 ops em escala). ✅ **Divisão FEITA:** v0.103.0 (÷ até 20 fácil, 27 ops +
+  ÷ até 100 difícil, pool 283/fatia 20; bolinhas em dois tons). **A evoluir:**
+  "conta em pé"
   (armar a conta); contas ilustradas (🍎🍎🍎); dificuldade progressiva; e ler o resultado por voz
   quando o TTS entrar.
 - Nomes/áudio: quando entrar o TTS, o mapa fica ótimo com o nome do habitat falado.
