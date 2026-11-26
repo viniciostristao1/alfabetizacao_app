@@ -51,15 +51,23 @@ int levenshtein(String a, String b) {
 }
 
 /// Um único candidato falado ([dito]) bate com o alvo já normalizado?
-bool _bate(String alvoNorm, String dito, int tolerancia) {
-  final c = _normalizar(dito);
-  if (c.isEmpty || alvoNorm.isEmpty) return false;
-  if (c == alvoNorm) return true;
+bool _bate(String alvoNorm, String dito, int tolerancia) =>
+    _casa(alvoNorm, _normalizar(dito), tolerancia);
+
+/// Casa um alvo já normalizado com UMA palavra dita já normalizada.
+/// (Versão posicional do [_bate], para a comparação de frases.)
+bool _casa(String alvoNorm, String ditoNorm, int tolerancia) {
+  if (ditoNorm.isEmpty || alvoNorm.isEmpty) return false;
+  if (ditoNorm == alvoNorm) return true;
   if (tolerancia <= 0) return false;
-  if ((c.length - alvoNorm.length).abs() > tolerancia) return false;
-  if (kExigeMesmaInicial && c[0] != alvoNorm[0]) return false;
-  return levenshtein(c, alvoNorm) <= tolerancia;
+  if ((ditoNorm.length - alvoNorm.length).abs() > tolerancia) return false;
+  if (kExigeMesmaInicial && ditoNorm[0] != alvoNorm[0]) return false;
+  return levenshtein(ditoNorm, alvoNorm) <= tolerancia;
 }
+
+/// Palavras curtas (artigos, monossílabos): errar/faltar no máximo 1 por frase
+/// não reprova — a criança não pode perder por causa de "o"/"é"/"da".
+bool _curta(String norm) => norm.length < 3;
 
 /// A criança acertou a palavra [alvo]? [ditas] são as transcrições que o motor
 /// devolveu (a principal + as alternativas). Cada uma pode ser uma **frase**
@@ -79,4 +87,92 @@ bool reconheceu(
     }
   }
   return false;
+}
+
+/// A criança acertou a FRASE [frase] no Modo Frases? [palavraTema] é a palavra
+/// de origem (obrigatória — falar só ela não vale).
+///
+/// Regra (ordem exigida, como na leitura): todas as palavras com 3+ letras
+/// precisam casar, EM SEQUÊNCIA, com a tolerância de pronúncia; no máximo 1
+/// palavra curta (<3 letras) pode faltar/errar. Se a frase não tem nenhuma
+/// palavra com 3+ letras, TODAS precisam casar (sem folga). Palavra repetida
+/// conta cada ocorrência (o casamento é posicional, não por conjunto).
+bool reconheceuFrase(
+  String frase,
+  String palavraTema,
+  Iterable<String> ditas, {
+  int tolerancia = kTolerancia,
+}) {
+  final alvos = frase
+      .split(RegExp(r'\s+'))
+      .map(_normalizar)
+      .where((s) => s.isNotEmpty)
+      .toList();
+  if (alvos.isEmpty) return false;
+  final tema = _normalizar(palavraTema);
+  if (tema.isEmpty) return false;
+  final soCurtas = alvos.every(_curta);
+  for (final dita in ditas) {
+    final ditas = dita
+        .split(RegExp(r'\s+'))
+        .map(_normalizar)
+        .where((s) => s.isNotEmpty)
+        .toList();
+    var i = 0;
+    var faltasCurtas = 0;
+    var temTema = false;
+    var ok = true;
+    for (final alvo in alvos) {
+      var j = i;
+      while (j < ditas.length && !_casa(alvo, ditas[j], tolerancia)) {
+        j++;
+      }
+      if (j < ditas.length) {
+        if (alvo == tema) temTema = true;
+        i = j + 1;
+      } else if (_curta(alvo) && !soCurtas && faltasCurtas < 1) {
+        faltasCurtas++;
+      } else {
+        ok = false;
+        break;
+      }
+    }
+    if (ok && temTema) return true;
+  }
+  return false;
+}
+
+/// Quais palavras da [frase] NÃO foram ditas em [dita] (para o "faltou: ...").
+/// Mesma ordem e tolerância de [reconheceuFrase]; devolve na forma exibida.
+List<String> palavrasFaltando(
+  String frase,
+  String dita, {
+  int tolerancia = kTolerancia,
+}) {
+  final visiveis =
+      frase.split(RegExp(r'\s+')).where((s) => s.trim().isNotEmpty).toList();
+  final alvos = visiveis.map(_normalizar).toList();
+  final ditas = dita
+      .split(RegExp(r'\s+'))
+      .map(_normalizar)
+      .where((s) => s.isNotEmpty)
+      .toList();
+  final soCurtas = alvos.every(_curta);
+  final faltam = <String>[];
+  var i = 0;
+  var faltasCurtas = 0;
+  for (var n = 0; n < alvos.length; n++) {
+    var j = i;
+    while (j < ditas.length && !_casa(alvos[n], ditas[j], tolerancia)) {
+      j++;
+    }
+    if (j < ditas.length) {
+      i = j + 1;
+    } else if (_curta(alvos[n]) && !soCurtas && faltasCurtas < 1) {
+      faltasCurtas++;
+    } else {
+      faltam.add(visiveis[n]);
+    }
+  }
+  return faltam;
 }

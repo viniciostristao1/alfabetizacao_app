@@ -58,4 +58,92 @@ void main() {
       expect(levenshtein('gato', ''), 4);
     });
   });
+
+  group('reconheceuFrase (Modo Frases — frase inteira, em ordem)', () {
+    const frase = 'O OVO É DA GALINHA';
+    const tema = 'OVO';
+
+    test('frase completa acerta (caixa diferente)', () {
+      expect(reconheceuFrase(frase, tema, ['o ovo é da galinha']), isTrue);
+      expect(reconheceuFrase(frase, tema, ['O OVO É DA GALINHA']), isTrue);
+    });
+
+    test('variações dentro da tolerância acertam', () {
+      // motor trocou 1 letra (galinha→galina) e 1 curta (é→e)
+      expect(reconheceuFrase(frase, tema, ['o ovo e da galina']), isTrue);
+      // faltou 1 curta (é) — permitido
+      expect(reconheceuFrase(frase, tema, ['o ovo da galinha']), isTrue);
+      // recheio antes não estraga
+      expect(reconheceuFrase(frase, tema, ['ah o ovo é da galinha']), isTrue);
+    });
+
+    test('só a palavra do tema erra', () {
+      expect(reconheceuFrase(frase, tema, ['ovo']), isFalse);
+      expect(reconheceuFrase(frase, tema, ['o ovo']), isFalse);
+      expect(reconheceuFrase(frase, tema, ['galinha']), isFalse);
+    });
+
+    test('frase muito incompleta erra', () {
+      expect(reconheceuFrase(frase, tema, ['o ovo é']), isFalse);
+      expect(reconheceuFrase(frase, tema, ['é da galinha']), isFalse);
+    });
+
+    test('palavra-chave errada erra', () {
+      expect(reconheceuFrase(frase, tema, ['o ovo é da pata']), isFalse);
+    });
+
+    test('ordem trocada erra', () {
+      expect(reconheceuFrase(frase, tema, ['galinha ovo da é o']), isFalse);
+    });
+
+    test('frase sem palavra de 3+ letras exige todas', () {
+      expect(reconheceuFrase('É O PÉ', 'PÉ', ['é o pé']), isTrue);
+      // "a" no lugar de "o": curta, mas sem folga quando só há curtas
+      expect(reconheceuFrase('É O PÉ', 'PÉ', ['é a pé']), isFalse);
+      expect(reconheceuFrase('É O PÉ', 'PÉ', ['é o']), isFalse);
+    });
+
+    test('palavra repetida: ordem e contagem funcionam', () {
+      const f = 'O PATO VIU O PATO';
+      expect(reconheceuFrase(f, 'PATO', ['o pato viu o pato']), isTrue);
+      // só um PATO (o segundo, cheio, faltou) → erra
+      expect(reconheceuFrase(f, 'PATO', ['o pato viu o']), isFalse);
+      // repetição sobrando no fim não estraga
+      expect(reconheceuFrase(f, 'PATO', ['o pato viu o pato pato']), isTrue);
+    });
+
+    test('tolerância 0 exige palavras exatas (ainda ignora caixa)', () {
+      expect(
+          reconheceuFrase(frase, tema, ['o ovo é da galinha'],
+              tolerancia: 0),
+          isTrue);
+      expect(
+          reconheceuFrase(frase, tema, ['o ovo e da galina'], tolerancia: 0),
+          isFalse);
+    });
+
+    test('frase ou tema vazios → não acerta', () {
+      expect(reconheceuFrase('', tema, ['o ovo é da galinha']), isFalse);
+      expect(reconheceuFrase(frase, '', ['o ovo é da galinha']), isFalse);
+      expect(reconheceuFrase(frase, tema, const []), isFalse);
+    });
+
+    test('modo Palavra inalterado: só a palavra continua valendo', () {
+      expect(reconheceu('OVO', ['o ovo é da galinha']), isTrue);
+      expect(reconheceu('OVO', ['ovo']), isTrue);
+    });
+  });
+
+  group('palavrasFaltando (dica do "faltou: ...")', () {
+    const frase = 'O OVO É DA GALINHA';
+
+    test('frase completa → nada falta', () {
+      expect(palavrasFaltando(frase, 'o ovo é da galinha'), isEmpty);
+    });
+
+    test('lista o que não foi dito', () {
+      expect(palavrasFaltando(frase, 'o ovo'), ['DA', 'GALINHA']);
+      expect(palavrasFaltando(frase, 'o ovo é da pata'), ['GALINHA']);
+    });
+  });
 }
