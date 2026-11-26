@@ -22,10 +22,13 @@ List<Conta> gerarContas({
       OperacaoConta.soma => true,
       OperacaoConta.subtracao => false,
       OperacaoConta.mistas => r.nextBool(),
-      // Multiplicação tem geradores próprios (gerarMultiplicacaoFacil/Medio)
-      // e NUNCA entra em Mistas — gerarContas não gera ×.
+      // Multiplicação e divisão têm geradores próprios
+      // (gerarMultiplicacaoFacil/Medio, gerarDivisaoFacil/Dificil) e NUNCA
+      // entram em Mistas — gerarContas não gera × nem ÷.
       OperacaoConta.multiplicacao => throw ArgumentError(
           'Use gerarMultiplicacaoFacil()/gerarMultiplicacaoMedio()'),
+      OperacaoConta.divisao => throw ArgumentError(
+          'Use gerarDivisaoFacil()/gerarDivisaoDificil()'),
     };
     var a = min + r.nextInt(max - min + 1);
     var b = min + r.nextInt(max - min + 1);
@@ -86,6 +89,43 @@ List<Conta> gerarMultiplicacaoMedio({int? quantidade, Random? rng}) {
   if (q < 0) q = 0;
   if (q > todos.length) q = todos.length;
   return [for (final (a, b) in todos.take(q)) Conta(a, b, true, 2, true)];
+}
+
+/// Gera contas de DIVISÃO "÷ até 20 • fácil": todos os pares exatos de
+/// dividendo **2 a 20** com divisor **2 a d−1** (0, 1 e o próprio número ficam
+/// de fora — trivial; primos não têm par e saem sozinhos). São **27**
+/// operações, embaralhadas, quocientes 2–10. Pontos por conta = 1.
+/// Por padrão retorna o conjunto cheio (27); [quantidade] fatia da frente
+/// (sem repetir dentro da sessão).
+List<Conta> gerarDivisaoFacil({int? quantidade, Random? rng}) {
+  final r = rng ?? Random();
+  final pares = <(int, int)>[
+    for (var d = 2; d <= 20; d++)
+      for (var k = 2; k <= d - 1; k++)
+        if (d % k == 0) (d, k),
+  ]..shuffle(r);
+  var q = quantidade ?? pares.length;
+  if (q < 0) q = 0;
+  if (q > pares.length) q = pares.length;
+  return [for (final (d, k) in pares.take(q)) Conta(d, k, true, 1, false, true)];
+}
+
+/// Gera contas de DIVISÃO "÷ até 100 • difícil": todos os pares exatos de
+/// dividendo **2 a 100** com divisor **2 a d−1** (283 operações — sessão cheia
+/// seria longa demais p/ a criança, por isso a sessão padrão é uma **fatia
+/// de 20**, embaralhada do pool cheio). Quocientes 2–50. Pontos por conta = 2.
+/// [quantidade] fatia da frente (sem repetir dentro da fatia).
+List<Conta> gerarDivisaoDificil({int quantidade = 20, Random? rng}) {
+  final r = rng ?? Random();
+  final pares = <(int, int)>[
+    for (var d = 2; d <= 100; d++)
+      for (var k = 2; k <= d - 1; k++)
+        if (d % k == 0) (d, k),
+  ]..shuffle(r);
+  var q = quantidade;
+  if (q < 0) q = 0;
+  if (q > pares.length) q = pares.length;
+  return [for (final (d, k) in pares.take(q)) Conta(d, k, true, 2, false, true)];
 }
 
 /// Contas de SOMA com os dois números **até [limite]** (ex.: "até 20": 5+19,

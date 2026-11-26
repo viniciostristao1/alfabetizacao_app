@@ -6,9 +6,9 @@ import 'conta_estudo_screen.dart';
 import 'escrever_contas_screen.dart';
 
 /// Menu do tema **Contas** (PAISAGEM, tela cheia): soma/subtração/mistas × 1 ou 2
-/// dígitos, **multiplicação 2 à 7 (fácil) e 8 a 15 (médio)**, **até 20**, ou
-/// **escrever contas**. Grade 4 colunas com rolagem (10 cards: rola um pouco
-/// no celular deitado; no tablet cabe quase tudo).
+/// dígitos, **multiplicação 2 à 7 (fácil) e 8 a 15 (médio)**, **divisão até 20
+/// (fácil) e até 100 (difícil)**, **até 20**, ou **escrever contas**. Grade 4
+/// colunas com rolagem (12 cards: rola no celular deitado; no tablet rola pouco).
 class ContasMenuScreen extends StatelessWidget {
   const ContasMenuScreen({super.key});
 
@@ -19,6 +19,8 @@ class ContasMenuScreen extends StatelessWidget {
   static const _rosa = Color(0xFFFF9800);
   static const _multi = Color(0xFF009688);
   static const _medio = Color(0xFFE91E63);
+  static const _divF = Color(0xFF795548);
+  static const _divD = Color(0xFF3F51B5);
 
   void _estudo(BuildContext context, String titulo, List<Conta> contas) {
     Navigator.of(context).push(
@@ -50,6 +52,10 @@ class ContasMenuScreen extends StatelessWidget {
           context, '🧮  2 à 7 • fácil', gerarMultiplicacaoFacil())),
       ('× 8 a 15', 'Médio', _medio, () => _estudo(
           context, '🧮  8 a 15 • Médio', gerarMultiplicacaoMedio())),
+      ('÷ até 20', 'fácil', _divF, () => _estudo(
+          context, '🧮  ÷ até 20 • fácil', gerarDivisaoFacil())),
+      ('÷ até 100', 'difícil', _divD, () => _estudo(
+          context, '🧮  ÷ até 100 • difícil', gerarDivisaoDificil())),
       ('🔟 Até 20', 'soma até 20', _teal,
           () => _estudo(context, '🧮  Até 20', gerarContasAte(20))),
       ('✏️ Escrever', 'as suas contas', _rosa, () => Navigator.of(context).push(
@@ -206,6 +212,17 @@ class _TituloComSimbolo extends StatelessWidget {
         text: TextSpan(
           children: [
             const TextSpan(text: '× ', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: Colors.white)),
+            TextSpan(text: titulo.substring(2), style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w900, color: Colors.white)),
+          ],
+        ),
+      );
+    }
+    if (titulo.startsWith('÷ ')) {
+      return RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          children: [
+            const TextSpan(text: '÷ ', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: Colors.white)),
             TextSpan(text: titulo.substring(2), style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w900, color: Colors.white)),
           ],
         ),

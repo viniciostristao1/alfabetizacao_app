@@ -68,6 +68,13 @@ void main() {
           throwsArgumentError);
     });
 
+    test('mistas não aceita divisao via gerarContas', () {
+      expect(
+          () => gerarContas(
+              operacao: OperacaoConta.divisao, digitos: 1),
+          throwsArgumentError);
+    });
+
     test('até 20: soma com os dois números ≤ 20', () {
       final contas = gerarContasAte(20, quantidade: 80, rng: Random(5));
       expect(contas.length, 80);
@@ -197,6 +204,85 @@ void main() {
       expect(c.resultado, 12);
       expect(c.sinal, '×');
       expect(c.enunciado, '3 × 4');
+    });
+  });
+
+  group('gerarDivisaoFacil (÷ até 20 • fácil)', () {
+    test('27 operações exatas, dividendo 2-20, sem 0/1/próprio, +1 ponto',
+        () {
+      final contas = gerarDivisaoFacil(rng: Random(7));
+      expect(contas.length, 27);
+      final pares = <String>{};
+      for (final c in contas) {
+        expect(c.divisao, isTrue);
+        expect(c.a >= 2 && c.a <= 20, isTrue, reason: 'dividendo: ${c.a}');
+        expect(c.b >= 2, isTrue, reason: 'sem 0 nem 1: ${c.b}');
+        expect(c.b < c.a, isTrue, reason: 'sem o próprio número: ${c.b}');
+        expect(c.a % c.b, 0, reason: 'só exata: ${c.a}÷${c.b}');
+        expect(c.resultado, c.a ~/ c.b);
+        expect(c.pontos, 1);
+        expect(c.sinal, '÷');
+        expect(c.enunciado, '${c.a} ÷ ${c.b}');
+        pares.add('${c.a}÷${c.b}');
+      }
+      // Conjunto fechado: 27 pares distintos, sem repetir antes de esgotar.
+      expect(pares.length, 27);
+      expect(pares, containsAll(['12÷3', '6÷2', '20÷10', '4÷2']));
+    });
+
+    test('fatia respeita a ordem embaralhada, sem repetir', () {
+      final contas = gerarDivisaoFacil(quantidade: 10, rng: Random(3));
+      expect(contas.length, 10);
+      expect(contas.map((c) => '${c.a}÷${c.b}').toSet().length, 10);
+      final cheias = gerarDivisaoFacil(rng: Random(3));
+      expect(
+          contas.map((c) => '${c.a}÷${c.b}').toList(),
+          cheias.take(10).map((c) => '${c.a}÷${c.b}').toList());
+    });
+
+    test('mesma semente, mesma ordem (determinístico)', () {
+      final a = gerarDivisaoFacil(rng: Random(11)).map((c) => '${c.a}÷${c.b}');
+      final b = gerarDivisaoFacil(rng: Random(11)).map((c) => '${c.a}÷${c.b}');
+      expect(a.toList(), b.toList());
+    });
+  });
+
+  group('gerarDivisaoDificil (÷ até 100 • difícil)', () {
+    test('pool cheio: 283 operações exatas, dividendo ≤100, +2 pontos', () {
+      final contas = gerarDivisaoDificil(quantidade: 500, rng: Random(7));
+      expect(contas.length, 283);
+      final pares = <String>{};
+      for (final c in contas) {
+        expect(c.divisao, isTrue);
+        expect(c.a >= 2 && c.a <= 100, isTrue, reason: 'dividendo: ${c.a}');
+        expect(c.b >= 2, isTrue, reason: 'sem 0 nem 1: ${c.b}');
+        expect(c.b < c.a, isTrue, reason: 'sem o próprio número: ${c.b}');
+        expect(c.a % c.b, 0, reason: 'só exata: ${c.a}÷${c.b}');
+        expect(c.resultado, c.a ~/ c.b);
+        expect(c.pontos, 2);
+        expect(c.sinal, '÷');
+        pares.add('${c.a}÷${c.b}');
+      }
+      expect(pares.length, 283);
+      expect(pares, containsAll(['100÷2', '100÷50', '81÷9', '64÷8']));
+    });
+
+    test('fatia padrão de 20, sem repetir, frente do pool', () {
+      final contas = gerarDivisaoDificil(rng: Random(3));
+      expect(contas.length, 20);
+      expect(contas.map((c) => '${c.a}÷${c.b}').toSet().length, 20);
+      final cheias = gerarDivisaoDificil(quantidade: 283, rng: Random(3));
+      expect(
+          contas.map((c) => '${c.a}÷${c.b}').toList(),
+          cheias.take(20).map((c) => '${c.a}÷${c.b}').toList());
+    });
+
+    test('Conta manual: 12 ÷ 3 = 4', () {
+      const c = Conta(12, 3, true, 1, false, true);
+      expect(c.divisao, isTrue);
+      expect(c.resultado, 4);
+      expect(c.sinal, '÷');
+      expect(c.enunciado, '12 ÷ 3');
     });
   });
 

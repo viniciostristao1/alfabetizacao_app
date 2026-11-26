@@ -184,4 +184,75 @@ void main() {
     expect(await ProgressoRepository.moedas(), 2);
     expect(find.textContaining('Você acertou 1 de 1'), findsOneWidget);
   });
+
+  testWidgets('divisão fácil: 12÷3=4 aceita (+1 moeda), 5 recusa',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    const contas = [Conta(12, 3, true, 1, false, true)]; // 12 ÷ 3 = 4
+
+    await tester.pumpWidget(
+      const MaterialApp(
+          home: ContaEstudoScreen(titulo: '🧮  ÷ até 20 • fácil', contas: contas)),
+    );
+    await tester.pump();
+
+    expect(find.textContaining('12 ÷ 3'), findsOneWidget);
+
+    // errada primeiro: 5 não avança nem pontua
+    await tester.tap(find.text('5'));
+    await tester.pump();
+    await tester.tap(find.byIcon(Icons.check_rounded));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('12 ÷ 3'), findsOneWidget);
+    expect(await ProgressoRepository.moedas(), 0);
+
+    // certa: 4 avança (fim → diálogo de parabéns) e dá +1
+    await tester.tap(find.byIcon(Icons.backspace_rounded));
+    await tester.pump();
+    await tester.tap(find.text('4'));
+    await tester.pump();
+    await tester.tap(find.byIcon(Icons.check_rounded));
+    await tester.pumpAndSettle();
+    expect(await ProgressoRepository.moedas(), 1);
+    expect(find.textContaining('Você acertou 1 de 1'), findsOneWidget);
+  });
+
+  testWidgets('divisão difícil: 100÷4=25 aceita (+2 moedas), 26 recusa',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    const contas = [Conta(100, 4, true, 2, false, true)]; // 100 ÷ 4 = 25
+
+    await tester.pumpWidget(
+      const MaterialApp(
+          home:
+              ContaEstudoScreen(titulo: '🧮  ÷ até 100 • difícil', contas: contas)),
+    );
+    await tester.pump();
+
+    expect(find.textContaining('100 ÷ 4'), findsOneWidget);
+
+    // errada primeiro: 26 não avança nem pontua
+    await tester.tap(find.text('2'));
+    await tester.pump();
+    await tester.tap(find.text('6'));
+    await tester.pump();
+    await tester.tap(find.byIcon(Icons.check_rounded));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('100 ÷ 4'), findsOneWidget);
+    expect(await ProgressoRepository.moedas(), 0);
+
+    // certa: 25 avança (fim → diálogo de parabéns) e dá +2
+    await tester.tap(find.byIcon(Icons.backspace_rounded));
+    await tester.pump();
+    await tester.tap(find.byIcon(Icons.backspace_rounded));
+    await tester.pump();
+    await tester.tap(find.text('2'));
+    await tester.pump();
+    await tester.tap(find.text('5'));
+    await tester.pump();
+    await tester.tap(find.byIcon(Icons.check_rounded));
+    await tester.pumpAndSettle();
+    expect(await ProgressoRepository.moedas(), 2);
+    expect(find.textContaining('Você acertou 1 de 1'), findsOneWidget);
+  });
 }

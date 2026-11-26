@@ -303,7 +303,21 @@ class _ContaEstudoScreenState extends State<ContaEstudoScreen> {
                                     child: BolinhasConta(
                                       conta: _conta,
                                       contraste: ui,
-                                      diametro: 22,
+                                      // Fileiras (mult/divisão) adaptam o
+                                      // diâmetro p/ caber na faixa 460×110.
+                                      diametro: (_conta.vezes ||
+                                              _conta.divisao)
+                                          ? diametroFileiras(
+                                              fileiras: _conta.vezes
+                                                  ? _conta.a
+                                                  : _conta.b,
+                                              colunas: _conta.vezes
+                                                  ? _conta.b
+                                                  : _conta.a ~/ _conta.b,
+                                              larguraMax: 460,
+                                              alturaMax: 110,
+                                            ).toDouble()
+                                          : 22,
                                     ),
                                   ),
                                 ),
