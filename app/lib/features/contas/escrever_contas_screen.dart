@@ -5,9 +5,9 @@ import '../../services/gerador_contas.dart';
 import '../../theme/app_colors.dart';
 import 'conta_estudo_screen.dart';
 
-/// "Escrever contas" (RETRATO): o pai/mãe digita contas próprias (ex.: "12 + 7"),
-/// toca no **+** e monta a lista. Ao confirmar, as contas rodam no estudo. A
-/// lista fica salva entre sessões (ContasEscritas).
+/// "Escrever contas" (RETRATO): o pai/mãe digita contas próprias (ex.: "12 + 7",
+/// "3 × 4", "10 ÷ 2"), toca no **+** e monta a lista. Ao confirmar, as contas
+/// rodam no estudo. A lista fica salva entre sessões (ContasEscritas).
 class EscreverContasScreen extends StatefulWidget {
   const EscreverContasScreen({super.key});
 
@@ -47,12 +47,14 @@ class _EscreverContasScreenState extends State<EscreverContasScreen> {
   void _adicionar() {
     final texto = _campo.text.trim();
     if (texto.isEmpty) {
-      _avisar('Escreva uma conta primeiro (ex.: 12 + 7)');
+      _avisar('Escreva uma conta primeiro (ex.: 12 + 7, 3 × 4, 10 ÷ 2)');
       return;
     }
-    final conta = parseConta(texto);
+    final inter = interpretarConta(texto);
+    final conta = inter.conta;
     if (conta == null) {
-      _avisar('Conta inválida. Use "+" ou "−" e sem resultado negativo.');
+      _avisar(inter.erro ??
+          'Conta inválida. Use "+", "−", "×" ou "÷", sem resultado negativo.');
       return;
     }
     // guarda já normalizada (ex.: "12 + 7")
@@ -106,12 +108,13 @@ class _EscreverContasScreenState extends State<EscreverContasScreen> {
               child: Row(
                 children: [
                   Expanded(
-                    child: TextField(
-                      controller: _campo,
-                      onSubmitted: (_) => _adicionar(),
-                      textInputAction: TextInputAction.done,
-                      decoration: InputDecoration(
-                        hintText: 'Escreva uma conta (ex.: 12 + 7)',
+                      child: TextField(
+                        controller: _campo,
+                        onSubmitted: (_) => _adicionar(),
+                        textInputAction: TextInputAction.done,
+                        decoration: InputDecoration(
+                          hintText:
+                              'Escreva uma conta (ex.: 12 + 7, 3 × 4, 10 ÷ 2)',
                         prefixIcon: const Icon(Icons.calculate_rounded),
                         filled: true,
                         fillColor: AppColors.surface2,
@@ -142,7 +145,7 @@ class _EscreverContasScreenState extends State<EscreverContasScreen> {
                   ? const Center(
                       child: Text(
                         'Nenhuma conta ainda.\n'
-                        'Escreva uma acima (ex.: 12 + 7) e toque no +',
+                        'Escreva uma acima (ex.: 12 + 7, 3 × 4, 10 ÷ 2) e toque no +',
                         textAlign: TextAlign.center,
                         style: TextStyle(color: AppColors.dim),
                       ),

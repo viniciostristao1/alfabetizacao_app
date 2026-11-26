@@ -63,6 +63,17 @@ void main() {
     expect(totalBolinhas(const Conta(100, 2, true, 2, false, true)), 100);
   });
 
+  testWidgets('zero bolinhas: 0÷5 e 0×7 não mostram nada nem estouram',
+      (tester) async {
+    await montar(tester, const Conta(0, 5, true, 1, false, true));
+    expect(find.byType(BolinhaContagem), findsNothing);
+    expect(tester.takeException(), isNull);
+
+    await montar(tester, const Conta(0, 7, true, 1, true));
+    expect(find.byType(BolinhaContagem), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('multiplicação em dois tons: a escuras + resto claras',
       (tester) async {
     await montar(tester, const Conta(3, 4, true, 1, true));

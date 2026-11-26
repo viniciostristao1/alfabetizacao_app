@@ -311,9 +311,12 @@ class _ContaEstudoScreenState extends State<ContaEstudoScreen> {
                                               fileiras: _conta.vezes
                                                   ? _conta.a
                                                   : _conta.b,
-                                              colunas: _conta.vezes
-                                                  ? _conta.b
-                                                  : _conta.a ~/ _conta.b,
+                                              colunas: _conta.b == 0
+                                                  ? 0
+                                                  : (_conta.vezes
+                                                      ? _conta.b
+                                                      : _conta.a ~/
+                                                          _conta.b),
                                               larguraMax: 460,
                                               alturaMax: 110,
                                             ).toDouble()

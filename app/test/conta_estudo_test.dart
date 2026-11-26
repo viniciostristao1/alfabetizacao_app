@@ -255,4 +255,42 @@ void main() {
     expect(await ProgressoRepository.moedas(), 2);
     expect(find.textContaining('Você acertou 1 de 1'), findsOneWidget);
   });
+
+  testWidgets('zero: 0÷5 e 0×7 aceitam 0, sem travar nem estourar',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    const contas = [
+      Conta(0, 5, true, 1, false, true), // 0 ÷ 5 = 0
+      Conta(0, 7, true, 1, true), // 0 × 7 = 0
+    ];
+
+    await tester.pumpWidget(
+      const MaterialApp(
+          home: ContaEstudoScreen(titulo: 'Teste', contas: contas)),
+    );
+    await tester.pump();
+
+    // bolinhas de 0÷5: faixa vazia, sem estouro
+    await tester.tap(find.byIcon(Icons.circle_outlined));
+    await tester.pump();
+    expect(find.byType(BolinhasConta), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.tap(find.byIcon(Icons.circle_outlined));
+    await tester.pump();
+
+    expect(find.textContaining('0 ÷ 5'), findsOneWidget);
+    await tester.tap(find.text('0'));
+    await tester.pump();
+    await tester.tap(find.byIcon(Icons.check_rounded));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('0 × 7'), findsOneWidget);
+    expect(await ProgressoRepository.moedas(), 1);
+
+    await tester.tap(find.text('0'));
+    await tester.pump();
+    await tester.tap(find.byIcon(Icons.check_rounded));
+    await tester.pumpAndSettle();
+    expect(await ProgressoRepository.moedas(), 2);
+    expect(find.textContaining('Você acertou 2 de 2'), findsOneWidget);
+  });
 }

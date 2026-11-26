@@ -107,8 +107,11 @@ class BolinhasConta extends StatelessWidget {
     if (conta.vezes || conta.divisao) {
       // Fileiras = grupos: mult `a` fileiras de `b`; divisão `b` fileiras
       // de `a÷b`. A líder escura de cada fileira conta os grupos.
+      // Conta zerada (ex.: 0×7, 0÷5): fileira vazia não desenha nada.
       final fileiras = conta.vezes ? conta.a : conta.b;
-      final colunas = conta.vezes ? conta.b : conta.a ~/ conta.b;
+      final colunas =
+          conta.b == 0 ? 0 : (conta.vezes ? conta.b : conta.a ~/ conta.b);
+      if (colunas == 0) return const SizedBox.shrink();
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -225,9 +228,11 @@ class _BolinhasDialogo extends StatelessWidget {
                           ? diametroFileiras(
                               fileiras:
                                   conta.vezes ? conta.a : conta.b,
-                              colunas: conta.vezes
-                                  ? conta.b
-                                  : conta.a ~/ conta.b,
+                              colunas: conta.b == 0
+                                  ? 0
+                                  : (conta.vezes
+                                      ? conta.b
+                                      : conta.a ~/ conta.b),
                               larguraMax: 700,
                               base: 28,
                             ).toDouble()
