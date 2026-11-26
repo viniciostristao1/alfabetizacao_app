@@ -7,10 +7,39 @@ import '../../theme/app_colors.dart';
 /// demais; nesse caso a tela abre a janela central (`mostrarBolinhasDialogo`).
 const int kMaxBolinhasInline = 40;
 
+/// Os dois tons da multiplicação/divisão em fileiras: o **escuro** marca os
+/// grupos (1ª bolinha de cada fileira = conta os grupos), o **claro** completa
+/// cada fileira (fileira inteira = tamanho do grupo). Posição redundante com a
+/// cor (legível p/ daltônicos e em cinza). Consts locais sob a exceção
+/// documentada em `NOVA_CONTA.md` §3 (nada muda no `AppColors`).
+const Color kGrupoEscuro = Color(0xFF1C7A44);
+const Color kGrupoClaro = Color(0xFF62E68C);
+
+/// Diâmetro adaptativo p/ fileiras: cabem `fileiras` linhas em `alturaMax` e
+/// `colunas` bolinhas em `larguraMax` (piso 8px — pontinho ainda legível).
+/// Mantém a regra dos 40 intacta: só o tamanho adapta, o gatilho não muda.
+int diametroFileiras({
+  required int fileiras,
+  required int colunas,
+  required double larguraMax,
+  double? alturaMax,
+  int base = 22,
+}) {
+  var d = base;
+  final porLargura = (larguraMax / (1.3 * colunas - 0.3)).floor();
+  if (porLargura < d) d = porLargura;
+  if (alturaMax != null) {
+    final porAltura = (alturaMax / (1.3 * fileiras - 0.3)).floor();
+    if (porAltura < d) d = porAltura;
+  }
+  return d < 8 ? 8 : d;
+}
+
 /// Quantas bolinhas a conta vai mostrar (soma = a + b; subtração = a;
-/// multiplicação = a × b, todas verdes).
+/// multiplicação = a × b, em fileiras; divisão = a, repartido em fileiras).
 int totalBolinhas(Conta conta) {
   if (conta.vezes) return conta.a * conta.b;
+  if (conta.divisao) return conta.a;
   return conta.soma ? conta.a + conta.b : conta.a;
 }
 
@@ -47,8 +76,13 @@ class BolinhaContagem extends StatelessWidget {
 ///  - **Soma:** `a` bolinhas verdes, o sinal `+`, `b` bolinhas verdes.
 ///  - **Subtração:** `a` bolinhas; as **`b` últimas ficam vermelhas** (o que
 ///    sai) e as demais verdes (o que fica = resultado).
-///  - **Multiplicação:** `a × b` bolinhas verdes, com o sinal `×` no meio
-///    (igual à soma; contas grandes caem na janela central).
+///  - **Multiplicação:** `a` fileiras de `b` bolinhas; a **1ª de cada fileira
+///    é escura** (conta os grupos = `a`), o resto é claro (fileira = `b`).
+///    Ex.: 3×4 = 3 fileiras de (1 escura + 3 claras).
+///  - **Divisão:** mesma linguagem — `b` fileiras de `a÷b` (reparte o
+///    dividendo em grupos do tamanho do divisor). Ex.: 12÷3 = 3 fileiras de 4.
+///  - Fileiras cabem pela largura (`diametroFileiras`); contas grandes caem
+///    na janela central com scroll.
 class BolinhasConta extends StatelessWidget {
   const BolinhasConta({
     super.key,
@@ -70,14 +104,43 @@ class BolinhasConta extends StatelessWidget {
   Widget build(BuildContext context) {
     final espaco = diametro * 0.3;
     final verdes = conta.soma ? 0 : conta.a - conta.b;
+    if (conta.vezes || conta.divisao) {
+      // Fileiras = grupos: mult `a` fileiras de `b`; divisão `b` fileiras
+      // de `a÷b`. A líder escura de cada fileira conta os grupos.
+      final fileiras = conta.vezes ? conta.a : conta.b;
+      final colunas = conta.vezes ? conta.b : conta.a ~/ conta.b;
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (var i = 0; i < fileiras; i++) ...[
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                BolinhaContagem(
+                    cor: kGrupoEscuro,
+                    contraste: contraste,
+                    diametro: diametro),
+                for (var j = 1; j < colunas; j++)
+                  Padding(
+                    padding: EdgeInsets.only(left: espaco),
+                    child: BolinhaContagem(
+                        cor: kGrupoClaro,
+                        contraste: contraste,
+                        diametro: diametro),
+                  ),
+              ],
+            ),
+            if (i < fileiras - 1) SizedBox(height: espaco),
+          ],
+        ],
+      );
+    }
     return Wrap(
       spacing: espaco,
       runSpacing: espaco,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        if (conta.vezes) ...[
-          ..._grupo(conta.a * conta.b, AppColors.acerto),
-        ] else if (conta.soma) ...[
+        if (conta.soma) ...[
           ..._grupo(conta.a, AppColors.acerto),
           Text(
             conta.sinal,
@@ -158,7 +221,17 @@ class _BolinhasDialogo extends StatelessWidget {
                     child: BolinhasConta(
                       conta: conta,
                       contraste: AppColors.text,
-                      diametro: 34,
+                      diametro: (conta.vezes || conta.divisao)
+                          ? diametroFileiras(
+                              fileiras:
+                                  conta.vezes ? conta.a : conta.b,
+                              colunas: conta.vezes
+                                  ? conta.b
+                                  : conta.a ~/ conta.b,
+                              larguraMax: 700,
+                              base: 28,
+                            ).toDouble()
+                          : 34,
                     ),
                   ),
                 ),

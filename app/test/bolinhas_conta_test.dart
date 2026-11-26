@@ -58,10 +58,40 @@ void main() {
     expect(totalBolinhas(const Conta(15, 15, true, 2, true)), 225);
   });
 
-  testWidgets('multiplicação: a×b bolinhas verdes', (tester) async {
+  test('totalBolinhas: divisão = dividendo', () {
+    expect(totalBolinhas(const Conta(12, 3, true, 1, false, true)), 12);
+    expect(totalBolinhas(const Conta(100, 2, true, 2, false, true)), 100);
+  });
+
+  testWidgets('multiplicação em dois tons: a escuras + resto claras',
+      (tester) async {
     await montar(tester, const Conta(3, 4, true, 1, true));
-    expect(contarCor(tester, AppColors.acerto), 12);
+    expect(contarCor(tester, kGrupoEscuro), 3);
+    expect(contarCor(tester, kGrupoClaro), 9);
+    expect(contarCor(tester, AppColors.acerto), 0);
     expect(contarCor(tester, AppColors.danger), 0);
+    // Líder escura abre cada fileira (posições 0, 4 e 8 = 3 grupos de 4).
+    final bolinhas = tester
+        .widgetList<BolinhaContagem>(find.byType(BolinhaContagem))
+        .toList();
+    expect(bolinhas.length, 12);
+    for (var i = 0; i < 12; i++) {
+      expect(bolinhas[i].cor, i % 4 == 0 ? kGrupoEscuro : kGrupoClaro);
+    }
+  });
+
+  testWidgets('divisão: divisor fileiras do quociente, líder escura',
+      (tester) async {
+    await montar(tester, const Conta(12, 3, true, 1, false, true));
+    expect(contarCor(tester, kGrupoEscuro), 3);
+    expect(contarCor(tester, kGrupoClaro), 9);
+    final bolinhas = tester
+        .widgetList<BolinhaContagem>(find.byType(BolinhaContagem))
+        .toList();
+    expect(bolinhas.length, 12);
+    for (var i = 0; i < 12; i++) {
+      expect(bolinhas[i].cor, i % 4 == 0 ? kGrupoEscuro : kGrupoClaro);
+    }
   });
 
   testWidgets('janela central mostra a conta, as bolinhas e fecha',
@@ -120,8 +150,48 @@ void main() {
 
     expect(find.text('15 × 15 = 225'), findsOneWidget);
     expect(find.byType(BolinhaContagem), findsNWidgets(225));
-    expect(contarCor(tester, AppColors.acerto), 225);
+    expect(contarCor(tester, kGrupoEscuro), 15);
+    expect(contarCor(tester, kGrupoClaro), 210);
     // Sem estouro de layout (o diálogo tem rolagem) ...
+    expect(tester.takeException(), isNull);
+    // ... e renderização aceitável (generoso p/ o tester em software).
+    expect(cronometro.elapsedMilliseconds, lessThan(20000));
+
+    await tester.tap(find.text('Fechar'));
+    await tester.pumpAndSettle();
+    expect(find.byType(BolinhaContagem), findsNothing);
+  });
+
+  testWidgets('100÷2: 100 bolinhas no diálogo, sem estouro e rápido',
+      (tester) async {
+    const conta = Conta(100, 2, true, 2, false, true); // 100 ÷ 2 = 50
+    expect(totalBolinhas(conta), 100);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Builder(
+            builder: (context) => TextButton(
+              onPressed: () =>
+                  mostrarBolinhasDialogo(context, conta, Colors.white),
+              child: const Text('abrir'),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final cronometro = Stopwatch()..start();
+    await tester.tap(find.text('abrir'));
+    await tester.pumpAndSettle();
+    cronometro.stop();
+    debugPrint('100 bolinhas: dialogo em ${cronometro.elapsedMilliseconds} ms');
+
+    expect(find.text('100 ÷ 2 = 50'), findsOneWidget);
+    expect(find.byType(BolinhaContagem), findsNWidgets(100));
+    expect(contarCor(tester, kGrupoEscuro), 2);
+    expect(contarCor(tester, kGrupoClaro), 98);
+    // Sem estouro de layout (o diálogo tem scroll) ...
     expect(tester.takeException(), isNull);
     // ... e renderização aceitável (generoso p/ o tester em software).
     expect(cronometro.elapsedMilliseconds, lessThan(20000));
