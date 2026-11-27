@@ -2,6 +2,11 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-11-27 — v0.105.1 (Caça-palavras: barra no topo, T003)
+- **Causa do trava-rodada:** na Stack (`fit.expand`) o `SafeArea > Align(topCenter)` recebia constraints tight e a Row ocupava a altura toda (medido 8..352 em 800x360), centralizando a pílula em y~156-203 — dentro da banda das fichas; o slot (0.50,0.45) ficava sempre coberto (17/50 rodadas travavam em 800x360, 7/50 em 864x411, pool original, 50 layouts). Cobertura por outra ficha: 0/50 (separação mínima segura).
+- **Conserto (opção (a)):** `Positioned(top/left/right)` com o `SafeArea` dentro — a Row embrulha o conteúdo (~46px) no topo, com notch protegido; slots/cena/separação intactos. Folga em h=360: pílula 8-54 vs ficha mais alta (fy 0.24, topo ~66). `IgnorePointer` na pílula (opção (c)) foi descartado: tap passaria, mas a ficha seguiria escondida.
+- Versão `0.105.1+152`.
+
 ## 2026-11-26 — v0.105.0 (Escrever × e ÷ ✏️)
 - **`interpretarConta()` devolve `(conta, erro)`** (`services/gerador_contas.dart`): normaliza (`−–—`→`-`, `xX*`→`×`, `/:`→`÷`), exige 1 tipo e 1 ocorrência de operador, divisão só exata sem 0, ×/÷ limitados a 999 (números e resultado); `parseConta()` virou invólucro (testes antigos intactos). Exceção autorizada ao NOVA_CONTA §2 (só a leitura da escrita mudou).
 - **Pontos da escrita valem o resultado**: `3×4` dá +2 (resultado 12), diferente da gerada fácil (+1) — registrado de propósito, não é bug.

@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.105.1 (2026-11-27)
+- **Caça-palavras com barra no topo:** a pílula "Ache:" e os botões agora ficam fixos no topo da tela — antes, em celular deitado, a pílula caía no meio da cena e cobria fichas, travando a rodada.
+
 ## v0.105.0 (2026-11-26)
 - **Escrever contas com × e ÷ ✏️:** a tela "Escrever contas" agora aceita soma, subtração, multiplicação (`×`, `x`, `X`, `*`) e divisão (`÷`, `/`, `:`), com divisão só exata ("Divisão por zero não existe", "Use uma divisão exata, sem resto") e números/resultado até 999.
 

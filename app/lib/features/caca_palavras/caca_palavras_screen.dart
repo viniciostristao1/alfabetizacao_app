@@ -195,10 +195,14 @@ class _CacaPalavrasScreenState extends State<CacaPalavrasScreen> {
                     ),
                   ),
                 ),
-              // topo: voltar + "Ache: X (n/3)" + 🔊 + moedas
-              SafeArea(
-                child: Align(
-                  alignment: Alignment.topCenter,
+              // topo: voltar + "Ache: X (n/3)" + 🔊 + moedas, ancorado no
+              // topo (T003): o Align expandia a Row na altura toda e a pílula
+              // ficava centralizada no meio da cena, cobrindo fichas.
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: SafeArea(
                   child: Padding(
                     padding: const EdgeInsets.all(8),
                     child: Row(

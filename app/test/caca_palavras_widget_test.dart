@@ -31,25 +31,18 @@ String _distrator(WidgetTester tester, String alvo) {
 
 Future<void> _abrirCaca(WidgetTester tester) async {
   SharedPreferences.setMockInitialValues({});
-  // Viewport de tablet (960x720 lógicos) DE PROPÓSITO (ver T003 · PENDENCIA
-  // na ponte): com a tela achatada de 800x360, a pílula do "Ache:"
-  // (centralizada na fileira do topo) cobria o centro de fichas sorteadas
-  // no slot (0.50, 0.45) e o tap errava o alvo (~1/4 das vezes) — defeito
-  // REAL do app em celular, NÃO corrigido nesta manutenção. Palavras curtas
-  // (≤6 letras): pílulas estreitas não encostam umas nas outras dada a
-  // separação mínima dos slots.
-  tester.view.physicalSize = const Size(1920, 1440);
-  tester.view.devicePixelRatio = 2.0;
+  // Celular deitado (800x360 lógicos, como em layout_test): depois da T003
+  // (barra do topo ancorada no topo) nenhuma ficha fica sob a pílula.
+  tester.view.physicalSize = const Size(800, 360);
+  tester.view.devicePixelRatio = 1.0;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
-  final curtas =
-      todosOsAnimais().where((p) => p.texto.length <= 6).take(12).toList();
   await tester.pumpWidget(
     MaterialApp(
       home: CacaPalavrasScreen(
         titulo: 'X',
         imagem: 'assets/habitats/mapa_animais.jpg',
-        palavras: curtas,
+        palavras: todosOsAnimais().take(12).toList(),
       ),
     ),
   );
