@@ -4,7 +4,6 @@ import 'package:alfabetizacao/models/categoria.dart';
 import 'package:alfabetizacao/models/palavra.dart';
 import 'package:alfabetizacao/services/caca_recentes.dart';
 import 'package:alfabetizacao/services/grade_caca.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
