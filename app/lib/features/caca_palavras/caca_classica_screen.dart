@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 
 import '../../models/categoria.dart';
 import '../../models/palavra.dart';
+import '../../services/caca_recentes.dart';
 import '../../services/fala.dart';
 import '../../services/grade_caca.dart';
 import '../../services/progresso_repository.dart';
@@ -54,6 +55,7 @@ class _CacaClassicaScreenState extends State<CacaClassicaScreen> {
   late int _nPalavras;
   late List<Palavra> _pool;
   late GradeCaca _grade;
+  List<String> _recentes = [];
   final _achadas = <String>{};
   List<Pos> _preview = [];
   Pos? _ancora;
@@ -70,12 +72,38 @@ class _CacaClassicaScreenState extends State<CacaClassicaScreen> {
     _direcoes = direcoesParaNivel(widget.nivel);
     _nPalavras = nPalavrasParaNivel(widget.nivel);
     _pool = widget.candidatas ?? palavrasParaCaca(widget.tema, widget.nivel);
-    _grade = gerarGrade(_pool,
-        tamanho: _tamanho,
-        direcoes: _direcoes,
-        nPalavras: _nPalavras,
-        rng: widget.seed == null ? Random() : Random(widget.seed));
+    _grade = _montar(
+        widget.seed == null ? Random() : Random(widget.seed!));
     _carregarPontuacao();
+    _sincronizarMemoria();
+  }
+
+  /// Monta a grade tirando as palavras das últimas rodadas (memória).
+  GradeCaca _montar(Random rng) => gerarGrade(
+      aplicarRecentes(_pool, _recentes, _nPalavras),
+      tamanho: _tamanho,
+      direcoes: _direcoes,
+      nPalavras: _nPalavras,
+      rng: rng);
+
+  List<String> _textosDaGrade() =>
+      [for (final e in _grade.escondidas) e.texto];
+
+  /// Carrega a memória e, se houver recentes, refaz a primeira grade sem
+  /// elas; depois guarda as palavras da rodada. Com memória vazia (testes,
+  /// 1º uso) mantém a grade inicial — determinística com a semente.
+  Future<void> _sincronizarMemoria() async {
+    final recentes =
+        await CacaRecentes.carregar(widget.tema, widget.nivel);
+    if (!mounted) return;
+    if (recentes.isNotEmpty) {
+      setState(() {
+        _recentes = recentes;
+        _grade = _montar(Random());
+      });
+    }
+    unawaited(CacaRecentes.guardar(
+        widget.tema, widget.nivel, _textosDaGrade()));
   }
 
   Future<void> _carregarPontuacao() async {
@@ -199,17 +227,25 @@ class _CacaClassicaScreenState extends State<CacaClassicaScreen> {
   }
 
   void _novaCacada() {
+    unawaited(_novaCacadaComMemoria());
+  }
+
+  /// Nova rodada evitando as palavras recém-usadas (memória por tema/nível;
+  /// se faltar palavra, libera as mais antigas primeiro).
+  Future<void> _novaCacadaComMemoria() async {
+    final recentes =
+        await CacaRecentes.carregar(widget.tema, widget.nivel);
+    if (!mounted) return;
     setState(() {
-      _grade = gerarGrade(_pool,
-          tamanho: _tamanho,
-          direcoes: _direcoes,
-          nPalavras: _nPalavras,
-          rng: Random());
+      _recentes = recentes;
+      _grade = _montar(Random());
       _achadas.clear();
       _preview = [];
       _ancora = null;
       _moedasRodada = 0;
     });
+    unawaited(CacaRecentes.guardar(
+        widget.tema, widget.nivel, _textosDaGrade()));
   }
 
   @override

@@ -163,6 +163,51 @@ void main() {
     expect(find.textContaining('(1/5)'), findsOneWidget);
   });
 
+  testWidgets('nova cacada nao repete as palavras da rodada anterior',
+      (tester) async {
+    final pool = [
+      const Palavra(['ga', 'to'], Categoria.futebol),
+      const Palavra(['bo', 'la'], Categoria.futebol),
+      const Palavra(['sol'], Categoria.futebol),
+      const Palavra(['lu', 'a'], Categoria.espaco),
+      const Palavra(['gol'], Categoria.futebol),
+      const Palavra(['mar'], Categoria.espaco),
+    ];
+    SharedPreferences.setMockInitialValues({});
+    tester.view.physicalSize = const Size(800, 360);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: CacaClassicaScreen(
+          titulo: 'Caça',
+          tema: Categoria.futebol,
+          nivel: Nivel.facil,
+          candidatas: pool,
+          seed: 4,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    Set<String> rodada() => {
+          for (final p in pool)
+            if (find.text(p.texto.toUpperCase()).evaluate().isNotEmpty)
+              p.texto,
+        };
+    final antes = rodada();
+    expect(antes.length, 3);
+
+    await tester.tap(find.text('NOVA CAÇADA'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('(0/3)'), findsOneWidget);
+    final depois = rodada();
+    expect(depois.length, 3);
+    // Pool 6, rodada 3, memória exclui as 3 anteriores: disjuntas.
+    expect(depois.intersection(antes), isEmpty);
+  });
+
   testWidgets('menu: 6 temas + 3 niveis + JOGAR abre o jogo', (tester) async {
     SharedPreferences.setMockInitialValues({});
     tester.view.physicalSize = const Size(800, 360);
