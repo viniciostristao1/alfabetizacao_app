@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.106.0 (2026-11-27)
+- **Caça-palavras de verdade:** agora é grade de letras como em revista — a criança arrasta o dedo sobre os quadrados para achar as palavras, com a lista ao lado. Virou categoria nova na tela inicial (card Caça-Palavras): escolha o tema (Animais, Objetos, Alimentos, Nomes, Espaço, Futebol) e o nível (Fácil 6x6, Médio 7x7, Difícil 8x8). As entradas antigas dentro dos menus saíram.
+
 ## v0.105.1 (2026-11-27)
 - **Caça-palavras com barra no topo:** a pílula "Ache:" e os botões agora ficam fixos no topo da tela — antes, em celular deitado, a pílula caía no meio da cena e cobria fichas, travando a rodada.
 

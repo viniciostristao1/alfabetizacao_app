@@ -2,6 +2,13 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-11-27 — v0.106.0 (Caça-palavras clássico como categoria nova, T004)
+- **Molde Contas, não NOVA_CATEGORIA:** categoria especial sem banco próprio (reusa o pool das 6 categorias via `palavrasParaCaca`); sem Nivel/Estudo/temas/coleção; pontos só por `registrarAcerto`.
+- **Gerador puro (`services/grade_caca.dart`):** maiores primeiro + retry do tabuleiro (12x, fica o melhor), 300 tentativas/palavra; snap por projeção unitária com desempate por desvio perpendicular; inverso aceito sempre (não frustra); recheio A–Z sem K/W/Y (palavras com K/W/Y vêm do pool).
+- **Futebol difícil (opção a):** só CAMISETA+ATACANTE cabiam em 8 → completa com as 3 de 3 sílabas mais longas: BANDEIRA, ZAGUEIRO, INGRESSO (lista exata em teste).
+- **37px em 800x360 (8x8):** letra filha do quadrado (sempre por cima da cor), preview translúcido + borda, achado verde; medido em teste (faixa 33–41).
+- **Removidos:** `caca_palavras_screen.dart`, `services/caca_palavras.dart`, `caca_palavras_test.dart`, `caca_palavras_widget_test.dart` + 6 entradas CAÇA-PALAVRAS (menus ficam só com SELECIONAR). `banco_palavras_test` ignora `cacaPalavras` (como Contas). Versão `0.106.0+153`.
+
 ## 2026-11-27 — v0.105.1 (Caça-palavras: barra no topo, T003)
 - **Causa do trava-rodada:** na Stack (`fit.expand`) o `SafeArea > Align(topCenter)` recebia constraints tight e a Row ocupava a altura toda (medido 8..352 em 800x360), centralizando a pílula em y~156-203 — dentro da banda das fichas; o slot (0.50,0.45) ficava sempre coberto (17/50 rodadas travavam em 800x360, 7/50 em 864x411, pool original, 50 layouts). Cobertura por outra ficha: 0/50 (separação mínima segura).
 - **Conserto (opção (a)):** `Positioned(top/left/right)` com o `SafeArea` dentro — a Row embrulha o conteúdo (~46px) no topo, com notch protegido; slots/cena/separação intactos. Folga em h=360: pílula 8-54 vs ficha mais alta (fy 0.24, topo ~66). `IgnorePointer` na pílula (opção (c)) foi descartado: tap passaria, mas a ficha seguiria escondida.
