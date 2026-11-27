@@ -41,7 +41,9 @@ void main() {
       for (final c in Categoria.values) {
         // "Escrever" é a categoria DO USUÁRIO (palavras digitadas na tela) —
         // não tem banco próprio.
-        if (c == Categoria.escrever || c == Categoria.contas || c == Categoria.historinhas || c == Categoria.jogoDaVelha) continue;
+        // Contas, Historinhas, Jogo da Velha e Caça-Palavras também não têm
+        // banco próprio (o Caça-Palavras reusa o pool das 6 categorias).
+        if (c == Categoria.escrever || c == Categoria.contas || c == Categoria.historinhas || c == Categoria.jogoDaVelha || c == Categoria.cacaPalavras) continue;
         for (final n in Nivel.values) {
           expect(
             contarPalavras(c, n),

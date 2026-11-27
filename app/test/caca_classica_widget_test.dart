@@ -121,6 +121,48 @@ void main() {
     expect(find.text('Você achou todas!'), findsOneWidget);
   });
 
+  testWidgets('caca dificil 8x8 em 800x360: celula ~37px e arrasto marca',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    tester.view.physicalSize = const Size(800, 360);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: CacaClassicaScreen(
+          titulo: 'Caça-palavras · Futebol · Difícil',
+          tema: Categoria.futebol,
+          nivel: Nivel.dificil,
+          seed: 2,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.textContaining('(0/5)'), findsOneWidget);
+
+    // Célula ~37px (lado ~296/8): área de toque de criança, letra ~19px
+    // sempre por cima da cor (filha do quadrado, nunca coberta).
+    final grade = tester.getRect(find.byKey(const Key('caca-grade')));
+    final cel = grade.width / 8;
+    expect(cel, inInclusiveRange(33.0, 41.0));
+
+    // Arrastar a 1a palavra marca e conta mesmo em 37px.
+    final esperada = gerarGrade(
+        palavrasParaCaca(Categoria.futebol, Nivel.dificil),
+        tamanho: 8,
+        direcoes: Direcao.todas8,
+        nPalavras: 5,
+        rng: Random(2));
+    final primeira =
+        esperada.escondidas.first.grade.characters.first;
+    final letra = tester.getRect(find.text(primeira).first);
+    expect(letra.width, greaterThan(5));
+    expect(letra.height, greaterThan(5));
+    await _arrastar(tester, esperada.escondidas.first.celulas, 8);
+    expect(find.textContaining('(1/5)'), findsOneWidget);
+  });
+
   testWidgets('menu: 6 temas + 3 niveis + JOGAR abre o jogo', (tester) async {
     SharedPreferences.setMockInitialValues({});
     tester.view.physicalSize = const Size(800, 360);

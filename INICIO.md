@@ -1,8 +1,8 @@
 # Primeiras Palavras — INÍCIO (ler primeiro em toda tarefa)
 
 App **Flutter** para uma **criança aprender a ler**. Bem simples, tema **escuro**.
-Fluxo: tela principal com **10 categorias** (Animais, Objetos, Alimentos, Nomes,
-Espaço, Contas, Escrever, Historinhas, Jogo da Velha, Futebol — ver `Categoria`)
+Fluxo: tela principal com **11 categorias** (Animais, Objetos, Alimentos, Nomes,
+Espaço, Contas, Escrever, Historinhas, Jogo da Velha, Futebol, Caça-Palavras — ver `Categoria`)
 → nível/modo conforme a categoria → telas de jogo em **paisagem** e telas de
 leitura, com botões embaixo. Com áudio (TTS + microfone com tolerância) e
 gamificação (moedas/XP/nível). Offline. Meta futura: Play Store, como os apps irmãos.

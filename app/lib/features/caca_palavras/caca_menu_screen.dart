@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../models/categoria.dart';
-import '../../services/grade_caca.dart';
 import '../../services/progresso_repository.dart';
 import 'caca_classica_screen.dart';
 
@@ -40,10 +39,12 @@ class _CacaMenuScreenState extends State<CacaMenuScreen> {
   Future<void> _carregar() async {
     final moedas = await ProgressoRepository.moedas();
     final xp = await ProgressoRepository.xp();
-    if (mounted) setState(() {
-      _moedas = moedas;
-      _xp = xp;
-    });
+    if (mounted) {
+      setState(() {
+        _moedas = moedas;
+        _xp = xp;
+      });
+    }
   }
 
   void _jogar() {
@@ -58,7 +59,9 @@ class _CacaMenuScreenState extends State<CacaMenuScreen> {
       ),
     )
         .then((_) {
-      if (mounted) _carregar();
+      if (mounted) {
+      _carregar();
+    }
     });
   }
 

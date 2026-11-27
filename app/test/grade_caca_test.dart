@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:alfabetizacao/models/categoria.dart';
 import 'package:alfabetizacao/models/palavra.dart';
-import 'package:alfabetizacao/services/banco_palavras.dart';
 import 'package:alfabetizacao/services/grade_caca.dart';
 import 'package:flutter_test/flutter_test.dart';
 
