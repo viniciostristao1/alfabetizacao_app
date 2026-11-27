@@ -17,7 +17,8 @@ enum Categoria {
   escrever('Escrever', '✏️', Color(0xFFF472B6)),
   historinhas('Historinhas', '📚', Color(0xFFFBBF24)),
   jogoDaVelha('Jogo da Velha', '⭕', Color(0xFF6C5CE7)),
-  futebol('Futebol', '⚽', Color(0xFF2E9D44));
+  futebol('Futebol', '⚽', Color(0xFF2E9D44)),
+  cacaPalavras('Caça-Palavras', '🔎', Color(0xFF00838F));
 
   const Categoria(this.rotulo, this.emoji, this.cor);
 

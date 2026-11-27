@@ -4,7 +4,6 @@ import '../../models/categoria.dart';
 import '../../models/palavra.dart';
 import '../../services/banco_palavras.dart';
 import '../../services/progresso_repository.dart';
-import '../caca_palavras/caca_palavras_screen.dart';
 import '../estudo/estudo_screen.dart';
 import '../selecao/selecao_alimentos_screen.dart';
 import 'alimentos_temas_screen.dart';
@@ -54,20 +53,6 @@ class _AlimentosMenuScreenState extends State<AlimentosMenuScreen> {
   void _abrirTemas(BuildContext context) async {
     await Navigator.of(context).push(
       MaterialPageRoute(builder: (_) => const AlimentosTemasScreen()),
-    );
-    if (mounted) _carregar();
-  }
-
-  /// Caça-palavras na arte do menu (3 palavras escondidas por rodada).
-  Future<void> _abrirCacaPalavras() async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => CacaPalavrasScreen(
-          titulo: '🔎  Caça-palavras · Alimentos',
-          imagem: 'assets/alimentos/alimentos_temas.png',
-          palavras: todosOsAlimentos(),
-        ),
-      ),
     );
     if (mounted) _carregar();
   }
@@ -195,12 +180,6 @@ class _AlimentosMenuScreenState extends State<AlimentosMenuScreen> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _BotaoTransparente(
-                      icon: Icons.visibility_rounded,
-                      texto: 'CAÇA-PALAVRAS',
-                      onTap: _abrirCacaPalavras,
-                    ),
-                    const SizedBox(height: 8),
                     _BotaoTransparente(
                       icon: Icons.search,
                       texto: 'SELECIONAR ALIMENTOS',

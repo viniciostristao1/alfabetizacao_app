@@ -12,6 +12,7 @@ import '../colecao/colecao_objetos_screen.dart';
 import '../colecao/colecao_screen.dart';
 import '../escrever/escrever_screen.dart';
 import '../alimentos/alimentos_menu_screen.dart';
+import '../caca_palavras/caca_menu_screen.dart';
 import '../espaco/espaco_menu_screen.dart';
 import '../futebol/futebol_menu_screen.dart';
 import '../habitat/habitat_map_screen.dart';
@@ -66,6 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Categoria.historinhas => const HistorinhasMenuScreen(),
           Categoria.jogoDaVelha => const JogoDaVelhaScreen(),
           Categoria.futebol => const FutebolMenuScreen(),
+          Categoria.cacaPalavras => const CacaMenuScreen(),
         },
       ),
     );

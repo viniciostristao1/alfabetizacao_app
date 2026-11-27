@@ -4,7 +4,6 @@ import '../../models/categoria.dart';
 import '../../models/palavra.dart';
 import '../../services/banco_palavras.dart';
 import '../../services/progresso_repository.dart';
-import '../caca_palavras/caca_palavras_screen.dart';
 import '../estudo/estudo_screen.dart';
 import '../selecao/selecao_futebol_screen.dart';
 import 'futebol_posicoes_screen.dart';
@@ -61,20 +60,6 @@ class _FutebolMenuScreenState extends State<FutebolMenuScreen> {
   Future<void> _abrirPosicoes() async {
     await Navigator.of(context).push(
       MaterialPageRoute(builder: (_) => const FutebolPosicoesScreen()),
-    );
-    if (mounted) _carregar();
-  }
-
-  /// Caça-palavras na arte do menu (3 palavras escondidas por rodada).
-  Future<void> _abrirCacaPalavras() async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => CacaPalavrasScreen(
-          titulo: '🔎  Caça-palavras · Futebol',
-          imagem: 'assets/futebol/futebol_temas.png',
-          palavras: todosOsFutebol(),
-        ),
-      ),
     );
     if (mounted) _carregar();
   }
@@ -202,12 +187,6 @@ class _FutebolMenuScreenState extends State<FutebolMenuScreen> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _BotaoTransparente(
-                      icon: Icons.visibility_rounded,
-                      texto: 'CAÇA-PALAVRAS',
-                      onTap: _abrirCacaPalavras,
-                    ),
-                    const SizedBox(height: 8),
                     _BotaoTransparente(
                       icon: Icons.search,
                       texto: 'SELECIONAR FUTEBOL',
