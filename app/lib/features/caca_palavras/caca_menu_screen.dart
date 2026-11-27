@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 
 import '../../models/categoria.dart';
+import '../../services/grade_caca.dart';
 import '../../services/progresso_repository.dart';
 import 'caca_classica_screen.dart';
 
-/// Menu do Caça-palavras (PAISAGEM, molde ContasMenuScreen): a criança
-/// escolhe o TEMA das palavras (6 categorias, com o pool que já existe) e o
-/// NÍVEL (fácil/médio/difícil) e toca em JOGAR. Grade com rolagem — cabe no
-/// celular deitado (800x360, 864x411) e no tablet com os mesmos widgets.
+/// Menu do Caça-palavras (molde ContasMenuScreen): a criança escolhe o TEMA
+/// das palavras (6 categorias, com o pool que já existe) e o NÍVEL
+/// (fácil/médio/difícil) e toca em JOGAR.
+///
+/// Deitado (o caso real — o app trava paisagem): 2 colunas; esquerda = temas
+/// (3 colunas x 2 fileiras, cartões baixos de 72px), direita = níveis lado a
+/// lado (56px) + resumo da escolha + JOGAR grande. Retrato (defensivo, só em
+/// teste): 1 coluna com temas 2x3. Cada coluna tem rolagem de segurança
+/// (SingleChildScrollView): só rola se faltar altura (fonte ampliada ou
+/// insets grandes); nenhum cartão fica cortado sem poder rolar.
 class CacaMenuScreen extends StatefulWidget {
   const CacaMenuScreen({super.key});
 
@@ -47,6 +54,9 @@ class _CacaMenuScreenState extends State<CacaMenuScreen> {
     }
   }
 
+  String get _resumo =>
+      '${_tema.rotulo} · ${_nivel.rotulo} · ${palavrasParaCaca(_tema, _nivel).length} palavras';
+
   void _jogar() {
     Navigator.of(context)
         .push(
@@ -60,8 +70,8 @@ class _CacaMenuScreenState extends State<CacaMenuScreen> {
     )
         .then((_) {
       if (mounted) {
-      _carregar();
-    }
+        _carregar();
+      }
     });
   }
 
@@ -82,6 +92,10 @@ class _CacaMenuScreenState extends State<CacaMenuScreen> {
                     shape: const CircleBorder(),
                     child: InkWell(
                       customBorder: const CircleBorder(),
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      focusColor: Colors.transparent,
                       onTap: () => Navigator.of(context).pop(),
                       child: const Padding(
                         padding: EdgeInsets.all(10),
@@ -120,75 +134,55 @@ class _CacaMenuScreenState extends State<CacaMenuScreen> {
                 ],
               ),
               const SizedBox(height: 8),
-              const Text(
-                'TEMA DAS PALAVRAS',
-                style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 0.5),
-              ),
-              const SizedBox(height: 4),
               Expanded(
-                flex: 5,
-                child: GridView.count(
-                  crossAxisCount: 3,
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
-                  childAspectRatio: 3.4,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: [
-                    for (final t in _temas)
-                      _TemaCard(
-                        key: Key('caca-tema-${t.name}'),
-                        categoria: t,
-                        selecionado: t == _tema,
-                        onTap: () => setState(() => _tema = t),
+                child: LayoutBuilder(
+                  builder: (context, c) {
+                    final deitado = c.maxWidth > c.maxHeight;
+                    if (deitado) {
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(flex: 7, child: _colunaTemas()),
+                          const SizedBox(width: 10),
+                          Expanded(flex: 5, child: _colunaDireita()),
+                        ],
+                      );
+                    }
+                    return SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          _rotulo('TEMA DAS PALAVRAS'),
+                          const SizedBox(height: 4),
+                          for (var r = 0; r < 3; r++)
+                            Row(
+                              children: [
+                                for (var i = 0; i < 2; i++)
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(4),
+                                      child: SizedBox(
+                                        height: 64,
+                                        child: _TemaCard(
+                                          key: Key(
+                                              'caca-tema-${_temas[r * 2 + i].name}'),
+                                          categoria: _temas[r * 2 + i],
+                                          selecionado:
+                                              _temas[r * 2 + i] == _tema,
+                                          onTap: () => setState(() =>
+                                              _tema = _temas[r * 2 + i]),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          const SizedBox(height: 6),
+                          _colunaDireita(rolar: false),
+                        ],
                       ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 6),
-              const Text(
-                'NÍVEL',
-                style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 0.5),
-              ),
-              const SizedBox(height: 4),
-              Expanded(
-                flex: 2,
-                child: GridView.count(
-                  crossAxisCount: 3,
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
-                  childAspectRatio: 3.4,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: [
-                    for (final n in Nivel.values)
-                      _NivelCard(
-                        key: Key('caca-nivel-${n.name}'),
-                        nivel: n,
-                        selecionado: n == _nivel,
-                        onTap: () => setState(() => _nivel = n),
-                      ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 8),
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton.icon(
-                  key: const Key('caca-jogar'),
-                  onPressed: _jogar,
-                  icon: const Icon(Icons.play_arrow_rounded, size: 26),
-                  label: const Text(
-                    'JOGAR',
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
-                  ),
+                    );
+                  },
                 ),
               ),
             ],
@@ -197,8 +191,132 @@ class _CacaMenuScreenState extends State<CacaMenuScreen> {
       ),
     );
   }
+
+  /// Coluna rolável que centraliza quando sobra altura e rola se faltar.
+  Widget _caixaRolavel(Widget child) {
+    return LayoutBuilder(
+      builder: (context, c) => SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: c.maxHeight),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [child],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _rotulo(String texto) {
+    return Text(
+      texto,
+      style: const TextStyle(
+          color: Colors.white70,
+          fontSize: 13,
+          fontWeight: FontWeight.w800,
+          letterSpacing: 0.5),
+    );
+  }
+
+  /// Coluna esquerda no deitado: 6 temas em 3 colunas x 2 fileiras de 72px.
+  Widget _colunaTemas() {
+    return _caixaRolavel(
+      Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _rotulo('TEMA DAS PALAVRAS'),
+          const SizedBox(height: 4),
+          for (var r = 0; r < 2; r++)
+            Row(
+              children: [
+                for (var i = 0; i < 3; i++)
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: SizedBox(
+                        height: 72,
+                        child: _TemaCard(
+                          key: Key('caca-tema-${_temas[r * 3 + i].name}'),
+                          categoria: _temas[r * 3 + i],
+                          selecionado: _temas[r * 3 + i] == _tema,
+                          onTap: () =>
+                              setState(() => _tema = _temas[r * 3 + i]),
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+        ],
+      ),
+    );
+  }
+
+  /// Coluna direita no deitado (e bloco inferior no retrato): 3 níveis lado
+  /// a lado (56px) + resumo da escolha + JOGAR grande.
+  Widget _colunaDireita({bool rolar = true}) {
+    final corpo = Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _rotulo('NÍVEL'),
+        const SizedBox(height: 4),
+        Row(
+          children: [
+            for (final n in Nivel.values)
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: SizedBox(
+                    height: 56,
+                    child: _NivelCard(
+                      key: Key('caca-nivel-${n.name}'),
+                      nivel: n,
+                      selecionado: n == _nivel,
+                      onTap: () => setState(() => _nivel = n),
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(height: 6),
+        Text(
+          _resumo,
+          key: const Key('caca-resumo'),
+          textAlign: TextAlign.center,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+              color: Colors.white,
+              fontSize: 15,
+              fontWeight: FontWeight.w800),
+        ),
+        const SizedBox(height: 6),
+        SizedBox(
+          height: 56,
+          child: FilledButton.icon(
+            key: const Key('caca-jogar'),
+            onPressed: _jogar,
+            icon: const Icon(Icons.play_arrow_rounded, size: 26),
+            label: const Text(
+              'JOGAR',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
+            ),
+          ),
+        ),
+      ],
+    );
+    if (!rolar) return corpo;
+    return _caixaRolavel(corpo);
+  }
 }
 
+/// Estilo ÚNICO de seleção (temas e níveis): selecionado = borda 3 + fundo
+/// na cor; não-selecionado = fundo escuro + borda fina clara. Overlays do
+/// InkWell neutralizados para nenhum cartão ficar com cinza fantasma.
 class _TemaCard extends StatelessWidget {
   const _TemaCard(
       {super.key,
@@ -219,6 +337,10 @@ class _TemaCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(14),
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        hoverColor: Colors.transparent,
+        focusColor: Colors.transparent,
         onTap: onTap,
         child: Container(
           decoration: BoxDecoration(
@@ -231,7 +353,7 @@ class _TemaCard extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(categoria.emoji, style: const TextStyle(fontSize: 22)),
+              Text(categoria.emoji, style: const TextStyle(fontSize: 20)),
               const SizedBox(width: 6),
               Flexible(
                 child: Text(
@@ -239,7 +361,7 @@ class _TemaCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 15,
+                      fontSize: 14,
                       fontWeight: FontWeight.w800),
                 ),
               ),
@@ -271,6 +393,10 @@ class _NivelCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(14),
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        hoverColor: Colors.transparent,
+        focusColor: Colors.transparent,
         onTap: onTap,
         child: Container(
           decoration: BoxDecoration(
@@ -285,7 +411,7 @@ class _NivelCard extends StatelessWidget {
               nivel.rotulo,
               style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 16,
+                  fontSize: 15,
                   fontWeight: FontWeight.w900),
             ),
           ),
