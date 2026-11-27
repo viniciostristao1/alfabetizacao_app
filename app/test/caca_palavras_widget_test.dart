@@ -31,21 +31,28 @@ String _distrator(WidgetTester tester, String alvo) {
 
 Future<void> _abrirCaca(WidgetTester tester) async {
   SharedPreferences.setMockInitialValues({});
-  tester.view.physicalSize = const Size(1600, 720);
+  // Viewport de tablet (960x720 lógicos): com a tela achatada de 800x360, a
+  // pílula do "Ache:" (centralizada na fileira do topo) cobria o centro de
+  // fichas sorteadas no slot (0.50, 0.45) e o tap errava o alvo (~1/4 das
+  // vezes). Palavras curtas (≤6 letras): pílulas estreitas não encostam
+  // umas nas outras dada a separação mínima dos slots.
+  tester.view.physicalSize = const Size(1920, 1440);
   tester.view.devicePixelRatio = 2.0;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
+  final curtas =
+      todosOsAnimais().where((p) => p.texto.length <= 6).take(12).toList();
   await tester.pumpWidget(
     MaterialApp(
       home: CacaPalavrasScreen(
         titulo: 'X',
         imagem: 'assets/habitats/mapa_animais.jpg',
-        palavras: todosOsAnimais().take(12).toList(),
+        palavras: curtas,
       ),
     ),
   );
-  await tester.pump(const Duration(milliseconds: 400));
-  await tester.pump(const Duration(milliseconds: 400));
+  // assenta tudo (entrada de cena + TTS mockado) antes do 1º toque
+  await tester.pumpAndSettle();
 }
 
 void main() {
@@ -57,22 +64,25 @@ void main() {
     expect(find.textContaining('(0/3)'), findsOneWidget);
 
     // distrator: continua 0/3.
-    await tester.tap(find.text(_distrator(tester, _alvoAtual(tester))).first);
-    await tester.pump(const Duration(milliseconds: 200));
+    final errado = find.text(_distrator(tester, _alvoAtual(tester))).first;
+    await tester.pumpAndSettle(); // fora de transição → o tap não erra o alvo
+    await tester.tap(errado);
+    await tester.pumpAndSettle();
     expect(find.textContaining('(0/3)'), findsOneWidget);
 
     // 3 alvos na ordem pedida.
     for (var n = 1; n <= 3; n++) {
-      await tester.tap(find.text(_alvoAtual(tester)).first);
-      await tester.pump(const Duration(milliseconds: 300));
-      await tester.pump(const Duration(milliseconds: 300));
+      final certo = find.text(_alvoAtual(tester)).first;
+      await tester.pumpAndSettle(); // fora de transição → o tap não erra o alvo
+      await tester.tap(certo);
+      await tester.pumpAndSettle();
       if (n < 3) expect(find.textContaining('($n/3)'), findsOneWidget);
     }
 
     // parabéns com "De novo" → volta para (0/3).
     expect(find.text('Você achou todas! 🎉'), findsOneWidget);
     await tester.tap(find.text('De novo'));
-    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pumpAndSettle();
     expect(find.textContaining('(0/3)'), findsOneWidget);
   });
 }
