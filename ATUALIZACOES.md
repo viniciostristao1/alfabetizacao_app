@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.106.1 (2026-11-27)
+- **Caça-palavras sem repetição:** nenhuma rodada traz a mesma palavra duas vezes (antes QUADRO podia aparecer dobrado), e a "Nova caçada" evita repetir as palavras da rodada anterior — mais variedade em todos os temas e níveis.
+
 ## v0.106.0 (2026-11-27)
 - **Caça-palavras de verdade:** agora é grade de letras como em revista — a criança arrasta o dedo sobre os quadrados para achar as palavras, com a lista ao lado. Virou categoria nova na tela inicial (card Caça-Palavras): escolha o tema (Animais, Objetos, Alimentos, Nomes, Espaço, Futebol) e o nível (Fácil 6x6, Médio 7x7, Difícil 8x8). As entradas antigas dentro dos menus saíram.
 

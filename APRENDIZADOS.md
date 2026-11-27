@@ -2,6 +2,12 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-11-27 — v0.106.1 (Variedade do caça-palavras, T005)
+- **Causa do QUADRO duplicado:** banco repete o texto entre base e temas (ex. `quadro` em museu+escola, BOLO x3 em Alimentos); o pool juntava tudo sem dedup e o gerador colocava as cópias (letras iguais nunca conflitam). Fix: dedup por texto no `palavrasParaCaca` + pulo de texto já escondido no `gerarGrade` (defesa em profundidade).
+- **Causa do COSMOS:** o maiores-primeiro tentava as longas em toda rodada (Espaço fácil só tem COSMOS com 6 letras). Fix: sorteio total + retry-best 12x300; centenas de sorteios (100 seeds x 18 combos) provam N distintas e acháveis.
+- **Regra B (difícil = 4síl + 3síl mais longas até 10):** pools finais — animais 10, objetos 11, alimentos 13, nomes/espaço/futebol 10; zero palavras novas. Listas exatas travadas em teste (desempate alfabético do `todosOs`).
+- **Memória `caca_recentes_v1`** (StringList `tema|nivel|texto`, teto 120): Nova caçada exclui recentes, libera as mais antigas primeiro; só a última rodada por combo é guardada (basta para seguidas disjuntas). Versão `0.106.1+154`.
+
 ## 2026-11-27 — v0.106.0 (Caça-palavras clássico como categoria nova, T004)
 - **Molde Contas, não NOVA_CATEGORIA:** categoria especial sem banco próprio (reusa o pool das 6 categorias via `palavrasParaCaca`); sem Nivel/Estudo/temas/coleção; pontos só por `registrarAcerto`.
 - **Gerador puro (`services/grade_caca.dart`):** maiores primeiro + retry do tabuleiro (12x, fica o melhor), 300 tentativas/palavra; snap por projeção unitária com desempate por desvio perpendicular; inverso aceito sempre (não frustra); recheio A–Z sem K/W/Y (palavras com K/W/Y vêm do pool).
