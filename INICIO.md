@@ -21,6 +21,7 @@ gamificação (moedas/XP/nível). Offline. Meta futura: Play Store, como os apps
 > Papéis dos docs: referência (`INICIO`) · **regras/como contribuir (`AGENTS.md`)** ·
 > mapa de padrões (`ARQUITETURA.md`) · técnico/gotchas (`APRENDIZADOS`) · changelog do
 > usuário (`ATUALIZACOES`) · futuro (`IDEIAS`).
+> Ponte com a Muse (Drive): ver `AGENTS.md` §6 — a ponte é a ÚNICA fonte do que foi feito entre sessões.
 
 ## ⭐ ESTADO ATUAL (2026-11-25) — ler primeiro pós-/clear
 

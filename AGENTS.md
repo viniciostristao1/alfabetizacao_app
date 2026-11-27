@@ -75,3 +75,26 @@ Rodar como root só emite um aviso; funciona. **Não** rode `flutter build apk` 
 - [ ] Se mexeu no banco de palavras: sílabas corretas (2–4), sem duplicata; teste passa.
 - [ ] Versão subida (`pubspec.yaml` + `versao.dart`) se a mudança é visível.
 - [ ] 1 linha em `ATUALIZACOES.md` (se visível) + nota em `APRENDIZADOS.md`.
+
+## 6. Ponte com a Muse (Drive)
+
+Canal entre a IA-VPS (aqui) e a Muse (chat do Claude, que responde ao Vinicios).
+(a) O que e: arquivo `gdrive:Muse/ponte_jogo_do_davi/ponte_jogo_do_davi.md`
+(id `1BpXcDxJiXjukT8tfhKq-bgAnvlko_mdk`). A IA-VPS escreve; a Muse le o fim
+e responde no chat; o Vinicios cola a resposta no terminal.
+(b) Procedimento seguro de escrita com rclone (sempre, uma etapa por vez):
+baixar de novo antes de editar; guardar copia de seguranca com data e hora em
+`/tmp`; conferir tamanho e ModTime; acrescentar SO no fim; subir; baixar de
+novo e conferir que o fim e o que voce escreveu.
+(c) Regra: TODA entrada (PLANO, EXECUTADO, PENDENCIA) sobe para o Drive no
+mesmo momento em que aparece no terminal. Nunca dizer "registrado na ponte"
+sem ter conferido o upload (tamanho novo + fim do arquivo baixado de novo).
+(d) Formato: cabecalho `### [AAAA-MM-DD HH:MM] Tnnn · PLANO/EXECUTADO/PENDENCIA`
+(UTF-8, sem emoji, hora de Brasilia via `TZ=America/Sao_Paulo date +"%Y-%m-%d %H:%M"`);
+no EXECUTADO, checklist com `[FEITO AAAA-MM-DD HH:MM]`, `[PENDENTE]` ou
+`[NAO FEITO: motivo]`, alem de commits, testes, versao, link do .apk e
+"O que ainda falta". Nunca gravar senhas, chaves ou dados pessoais.
+(e) Se o rclone falhar: dizer claramente no terminal que o upload falhou e
+seguir (sem fingir registro).
+(f) A ponte e a UNICA fonte do que foi feito entre sessoes: ao retomar, ler o
+fim dela e conferir com `git log`.
