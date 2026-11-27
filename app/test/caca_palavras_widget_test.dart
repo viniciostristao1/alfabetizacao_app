@@ -31,11 +31,13 @@ String _distrator(WidgetTester tester, String alvo) {
 
 Future<void> _abrirCaca(WidgetTester tester) async {
   SharedPreferences.setMockInitialValues({});
-  // Viewport de tablet (960x720 lógicos): com a tela achatada de 800x360, a
-  // pílula do "Ache:" (centralizada na fileira do topo) cobria o centro de
-  // fichas sorteadas no slot (0.50, 0.45) e o tap errava o alvo (~1/4 das
-  // vezes). Palavras curtas (≤6 letras): pílulas estreitas não encostam
-  // umas nas outras dada a separação mínima dos slots.
+  // Viewport de tablet (960x720 lógicos) DE PROPÓSITO (ver T003 · PENDENCIA
+  // na ponte): com a tela achatada de 800x360, a pílula do "Ache:"
+  // (centralizada na fileira do topo) cobria o centro de fichas sorteadas
+  // no slot (0.50, 0.45) e o tap errava o alvo (~1/4 das vezes) — defeito
+  // REAL do app em celular, NÃO corrigido nesta manutenção. Palavras curtas
+  // (≤6 letras): pílulas estreitas não encostam umas nas outras dada a
+  // separação mínima dos slots.
   tester.view.physicalSize = const Size(1920, 1440);
   tester.view.devicePixelRatio = 2.0;
   addTearDown(tester.view.resetPhysicalSize);
