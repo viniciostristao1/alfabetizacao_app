@@ -127,14 +127,20 @@ bool serveParaGrade(Palavra p, int tamanho) {
   return g.length >= 2 && g.length <= tamanho;
 }
 
-/// Pool de um tema + nível para o caça-palavras (ordem de preferência, sem
-/// embaralhar — o sorteio com semente acontece no [gerarGrade]).
+/// Pool de um tema + nível para o caça-palavras (sem embaralhar — o sorteio
+/// com semente acontece no [gerarGrade]).
+///
+/// Sem texto repetido (o banco duplica palavras entre base e temas, ex.
+/// QUADRO em museu+escola, BOLO em base+padaria+mercado): mantém a primeira
+/// ocorrência, para nenhuma rodada trazer a mesma palavra duas vezes.
 ///
 /// Fácil: 1–2 sílabas que cabem em 6. Médio: 3 sílabas que cabem em 7.
-/// Difícil: 4 sílabas que cabem em 8; se forem menos de 5 (caso do Futebol:
-/// só CAMISETA e ATACANTE cabem), completa com as 3 sílabas mais longas que
-/// cabem em 8, até chegar a 5 (decisão T004-a: Futebol difícil =
-/// CAMISETA, ATACANTE, BANDEIRA, ZAGUEIRO, INGRESSO).
+/// Difícil (regra B, T005): 4 sílabas que cabem em 8 + 3 sílabas mais longas
+/// que cabem em 8, até o pool ter 10 (ou acabarem as 3 sílabas). Listas
+/// exatas travadas em teste: animais 9+[avestruz]; nomes 7+[Gabriel,
+/// Lorenzo, Ricardo]; espaço 5+[foguete, decolar, Saturno, galáxia,
+/// estrela]; futebol 2+[bandeira, zagueiro, ingresso, jogador, torcida,
+/// estádio, lateral, goleiro]; objetos 11 e alimentos 13 ficam só com as 4.
 List<Palavra> palavrasParaCaca(Categoria tema, Nivel nivel) {
   List<Palavra> base() => switch (tema) {
         Categoria.animais => todosOsAnimais(),
@@ -145,7 +151,12 @@ List<Palavra> palavrasParaCaca(Categoria tema, Nivel nivel) {
         Categoria.futebol => todosOsFutebol(),
         _ => const <Palavra>[],
       };
-  final todas = base();
+  // Dedup por texto (mantém a primeira): base e temas repetem palavras.
+  final vistas = <String>{};
+  final todas = <Palavra>[];
+  for (final p in base()) {
+    if (vistas.add(p.texto)) todas.add(p);
+  }
   final tam = tamanhoParaNivel(nivel);
   List<Palavra> de(int silabas) {
     final lista = todas
@@ -167,24 +178,24 @@ List<Palavra> palavrasParaCaca(Categoria tema, Nivel nivel) {
     case Nivel.media:
       return de(3);
     case Nivel.dificil:
+      // Regra B: completa até 10 com as 3 sílabas mais longas (estável:
+      // mantém a ordem de porDificuldade entre as do mesmo tamanho).
       final quatro = de(4);
-      if (quatro.length >= nPalavrasParaNivel(nivel)) return quatro;
-      // Completa com as 3 sílabas mais longas (que cabem em 8).
       final tres = de(3);
-      tres.sort((a, b) {
-        final la = textoGradeDe(a.texto).length;
-        final lb = textoGradeDe(b.texto).length;
-        if (la != lb) return lb.compareTo(la);
-        return Palavra.porDificuldade(a, b);
-      });
-      final faltam = nPalavrasParaNivel(nivel) - quatro.length;
+      tres.sort((a, b) => textoGradeDe(b.texto)
+          .length
+          .compareTo(textoGradeDe(a.texto).length));
+      const alvo = 10;
+      final faltam = (alvo - quatro.length).clamp(0, tres.length);
       return [...quatro, ...tres.take(faltam)];
   }
 }
 
 /// Gera a grade (função pura, determinística com [rng] com semente):
-/// filtra o que cabe, embaralha, posiciona até [nPalavras] sem conflito
-/// (célula vazia ou mesma letra) e preenche o resto com letras aleatórias.
+/// filtra o que cabe, embaralha tudo (sem viés de tamanho — variedade entre
+/// rodadas), posiciona até [nPalavras] sem conflito (célula vazia ou mesma
+/// letra) e preenche o resto com letras aleatórias. A saída nunca repete
+/// palavra (verificação final: texto já escondido é pulado).
 GradeCaca gerarGrade(
   List<Palavra> candidatas, {
   required int tamanho,
@@ -193,18 +204,12 @@ GradeCaca gerarGrade(
   Random? rng,
 }) {
   final r = rng ?? Random();
-  // Ordem de tentativa: sorteia, mas coloca as maiores primeiro (cabe mais
-  // palavra em grade pequena; determinístico com a semente).
-  final comChave = candidatas
+  // Sorteio sem reposição: embaralha tudo; a robustez do posicionamento vem
+  // das tentativas (abaixo), não da ordem das palavras.
+  final ordem = candidatas
       .where((p) => serveParaGrade(p, tamanho))
-      .map((p) => (p, r.nextDouble()))
       .toList()
-    ..sort((a, b) {
-      final la = textoGradeDe(a.$1.texto).length;
-      final lb = textoGradeDe(b.$1.texto).length;
-      if (la != lb) return lb.compareTo(la);
-      return a.$2.compareTo(b.$2);
-    });
+    ..shuffle(r);
   final ordemDirecoes = direcoes.toList()..shuffle(r);
 
   // Tenta o tabuleiro inteiro algumas vezes e fica com o melhor (mais
@@ -216,8 +221,10 @@ GradeCaca gerarGrade(
     final celulas =
         List.generate(tamanho, (_) => List.filled(tamanho, ''));
     final escondidas = <PalavraEscondida>[];
-    for (final (p, _) in comChave) {
+    for (final p in ordem) {
       if (escondidas.length >= nPalavras) break;
+      // Verificação final: nunca repete palavra na mesma rodada.
+      if (escondidas.any((e) => e.texto == p.texto)) continue;
       final g = textoGradeDe(p.texto);
       var colocada = false;
       for (var tentativa = 0; tentativa < 300 && !colocada; tentativa++) {

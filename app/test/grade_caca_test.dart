@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:alfabetizacao/models/categoria.dart';
 import 'package:alfabetizacao/models/palavra.dart';
+import 'package:alfabetizacao/services/banco_palavras.dart';
 import 'package:alfabetizacao/services/grade_caca.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -58,16 +59,28 @@ void main() {
             reason: 'difícil/$t');
       }
     });
-    test('Futebol difícil (decisão T004-a): 2 de 4 sílabas + 3 de 3 sílabas',
-        () {
+    test('Futebol difícil (regra B, T005): 2 de 4 + 8 de 3 até 10', () {
       final pool = palavrasParaCaca(Categoria.futebol, Nivel.dificil);
       final grades = pool.map((p) => textoGradeDe(p.texto)).toList();
-      expect(pool.length, 5);
+      expect(pool.length, 10);
       // As 2 de 4 sílabas que cabem em 8.
       expect(grades, containsAll(['CAMISETA', 'ATACANTE']));
-      // As 3 de 3 sílabas mais longas (8 letras).
-      expect(grades, containsAll(['BANDEIRA', 'ZAGUEIRO', 'INGRESSO']));
-      // Nenhuma com espaço/hífen e nenhuma maior que a grade 8.
+      // As 8 de 3 sílabas mais longas que cabem em 8 (ordem: tamanho,
+      // desempate alfabético).
+      expect(
+          grades,
+          containsAll([
+            'BANDEIRA',
+            'INGRESSO',
+            'ZAGUEIRO',
+            'ESTADIO',
+            'GOLEIRO',
+            'JOGADOR',
+            'LATERAL',
+            'PENALTI'
+          ]));
+      // Nenhuma repetida, nenhuma com espaço/hífen, nenhuma maior que 8.
+      expect(grades.toSet().length, pool.length);
       for (final p in pool) {
         expect(p.texto.contains(' '), isFalse);
         expect(p.texto.contains('-'), isFalse);
@@ -75,6 +88,52 @@ void main() {
       for (final g in grades) {
         expect(g.length, lessThanOrEqualTo(8));
       }
+    });
+
+    test('listas exatas da regra B (animais, nomes, espaço)', () {
+      String nomes(Categoria c) => palavrasParaCaca(c, Nivel.dificil)
+          .map((p) => p.texto)
+          .join('|');
+      expect(palavrasParaCaca(Categoria.animais, Nivel.dificil).length, 10);
+      expect(
+          nomes(Categoria.animais),
+          contains('avestruz'));
+      expect(palavrasParaCaca(Categoria.nomes, Nivel.dificil).length, 10);
+      for (final nome in ['Beatriz', 'Gabriel', 'Lorenzo']) {
+        expect(nomes(Categoria.nomes), contains(nome));
+      }
+      expect(palavrasParaCaca(Categoria.espaco, Nivel.dificil).length, 10);
+      for (final palavra in [
+        'decolar',
+        'eclipse',
+        'estação',
+        'estrela',
+        'foguete'
+      ]) {
+        expect(nomes(Categoria.espaco), contains(palavra));
+      }
+    });
+
+    test('pool sem texto repetido (QUADRO/BOLO não duplicam)', () {
+      for (final t in [
+        Categoria.animais,
+        Categoria.objetos,
+        Categoria.alimentos,
+        Categoria.nomes,
+        Categoria.espaco,
+        Categoria.futebol,
+      ]) {
+        for (final n in Nivel.values) {
+          final pool = palavrasParaCaca(t, n);
+          final textos = pool.map((p) => p.texto).toList();
+          expect(textos.toSet().length, textos.length,
+              reason: 'texto repetido em $t/$n');
+        }
+      }
+      // O caso do bug: QUADRO estava em museu+escola.
+      final faceis =
+          palavrasParaCaca(Categoria.objetos, Nivel.facil);
+      expect(faceis.where((p) => p.texto == 'quadro').length, 1);
     });
   });
 
@@ -210,26 +269,39 @@ void main() {
           g.escondidas.map((e) => e.grade).toSet(), {'GATO', 'BOLA'});
     });
 
-    test('50 seeds por nível: sem sobreposição inválida e tudo achável', () {
-      final configs = [
-        (Nivel.facil, 20),
-        (Nivel.media, 20),
-        (Nivel.dificil, 10),
+    test('gerarGrade ignora duplicata de entrada (verificação final)',
+        () {
+      final pool = [
+        const Palavra(['ga', 'to'], Categoria.futebol),
+        const Palavra(['ga', 'to'], Categoria.futebol),
+        const Palavra(['bo', 'la'], Categoria.futebol),
       ];
-      for (final (nivel, seeds) in configs) {
+      final g = gerarGrade(pool,
+          tamanho: 6,
+          direcoes: Direcao.paraFrente2,
+          nPalavras: 3,
+          rng: Random(2));
+      final textos = g.escondidas.map((e) => e.texto).toList();
+      expect(textos.toSet().length, textos.length);
+    });
+
+    test('centenas de sorteios por tema e nível: N distintas e acháveis',
+        () {
+      const temas = [
+        Categoria.animais,
+        Categoria.objetos,
+        Categoria.alimentos,
+        Categoria.nomes,
+        Categoria.espaco,
+        Categoria.futebol,
+      ];
+      for (final nivel in Nivel.values) {
         final tam = tamanhoParaNivel(nivel);
         final dirs = direcoesParaNivel(nivel);
         final n = nPalavrasParaNivel(nivel);
-        for (final tema in [
-          Categoria.animais,
-          Categoria.objetos,
-          Categoria.alimentos,
-          Categoria.nomes,
-          Categoria.espaco,
-          Categoria.futebol,
-        ]) {
+        for (final tema in temas) {
           final pool = palavrasParaCaca(tema, nivel);
-          for (var seed = 0; seed < seeds; seed++) {
+          for (var seed = 0; seed < 100; seed++) {
             final g = gerarGrade(pool,
                 tamanho: tam,
                 direcoes: dirs,
@@ -237,6 +309,10 @@ void main() {
                 rng: Random(seed));
             expect(g.escondidas.length, n,
                 reason: '$tema/$nivel seed $seed');
+            final textos =
+                g.escondidas.map((e) => e.texto).toList();
+            expect(textos.toSet().length, n,
+                reason: 'repetida em $tema/$nivel seed $seed: $textos');
             for (final e in g.escondidas) {
               expect(_ocorrencias(g, e.grade, dirs), greaterThanOrEqualTo(1),
                   reason: '$tema/$nivel seed $seed ${e.grade}');
@@ -245,6 +321,36 @@ void main() {
         }
       }
     });
+
+    test('banco sem colisão de forma de grade (anti-QUADRO futuro)', () {
+      for (final cat in [
+        Categoria.animais,
+        Categoria.objetos,
+        Categoria.alimentos,
+        Categoria.nomes,
+        Categoria.espaco,
+        Categoria.futebol,
+      ]) {
+        final formas = <String, String>{};
+        for (final p in [
+          ...todosOsAnimais(),
+          ...todosOsObjetos(),
+          ...todosOsAlimentos(),
+          ...todosOsNomes(),
+          ...todosOsEspaco(),
+          ...todosOsFutebol(),
+        ]) {
+          if (p.categoria != cat) continue;
+          final g = textoGradeDe(p.texto);
+          if (formas.containsKey(g)) {
+            expect(formas[g], p.texto,
+                reason: '$g vem de 2 textos em $cat');
+          }
+          formas[g] = p.texto;
+        }
+      }
+    });
+
   });
 
   group('seleção (lógica pura do arrasto)', () {
