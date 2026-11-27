@@ -2,6 +2,11 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-11-27 — v0.106.2 (Menu do caça em 2 colunas, T006)
+- **Cortes:** a Column somava mais altura que o útil com insets/fonte/tela menor e as grades sem rolagem cortavam em vez de rolar. Fix: deitado em Row (temas 3x2 de 72px + direita com níveis lado a lado 56px, resumo e JOGAR 56px); cada coluna com scroll de segurança que centraliza com folga e rola se faltar.
+- **Cinza fantasma:** código pintava todos os não-selecionados iguais — era overlay transitório do InkWell; neutralizado (splash/highlight/focus/hover transparentes) nos dois grupos + teste que toca, solta e confere a cor única.
+- **Medido:** 5 tamanhos x fonte 1.0/1.3 sem overflow (pior: 640x360 x1.3 com JOGAR em 271–327; 360x800 x1.3 em 685–741). Suite 220/220. Versão `0.106.2+155`.
+
 ## 2026-11-27 — v0.106.1 (Variedade do caça-palavras, T005)
 - **Causa do QUADRO duplicado:** banco repete o texto entre base e temas (ex. `quadro` em museu+escola, BOLO x3 em Alimentos); o pool juntava tudo sem dedup e o gerador colocava as cópias (letras iguais nunca conflitam). Fix: dedup por texto no `palavrasParaCaca` + pulo de texto já escondido no `gerarGrade` (defesa em profundidade).
 - **Causa do COSMOS:** o maiores-primeiro tentava as longas em toda rodada (Espaço fácil só tem COSMOS com 6 letras). Fix: sorteio total + retry-best 12x300; centenas de sorteios (100 seeds x 18 combos) provam N distintas e acháveis.

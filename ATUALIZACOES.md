@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.106.2 (2026-11-27)
+- **Menu do caça-palavras reorganizado:** temas de um lado e nível do outro, com cartões menores, resumo da escolha ("Futebol · Fácil · 3 palavras") e botão JOGAR grande — sem nada cortado na tela deitada.
+
 ## v0.106.1 (2026-11-27)
 - **Caça-palavras sem repetição:** nenhuma rodada traz a mesma palavra duas vezes (antes QUADRO podia aparecer dobrado), e a "Nova caçada" evita repetir as palavras da rodada anterior — mais variedade em todos os temas e níveis.
 
