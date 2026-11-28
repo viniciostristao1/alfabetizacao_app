@@ -83,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.black.withValues(alpha: 0.45),
         foregroundColor: Colors.white,
         elevation: 0,
-        titleSpacing: 16,
+        titleSpacing: 8,
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -123,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Center(
               child: Container(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                 decoration: BoxDecoration(
                   color: AppColors.surface2,
                   borderRadius: BorderRadius.circular(16),
@@ -207,33 +207,45 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.45),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Text(
-                      'Escolha um tema',
-                      style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                    Expanded(
-                    child: GridView.count(
-                      crossAxisCount: 4,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
-                      childAspectRatio: 2.2,
-                      children: [
-                        for (final c in Categoria.values)
-                          _CategoriaCard(
-                            categoria: c,
-                            onTap: () => _abrirCategoria(c),
+                  Expanded(
+                    child: LayoutBuilder(
+                      builder: (context, c) {
+                        // Fileira = altura útil / 3 (11 categorias em 4x3,
+                        // sem rolagem no normal); teto de 120px no tablet.
+                        var fileira =
+                            (c.maxHeight - 20.0) / 3.0;
+                        final comTeto = fileira > 120.0;
+                        fileira = fileira.clamp(48.0, 120.0);
+                        final grade = GridView.count(
+                          crossAxisCount: 4,
+                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 10,
+                          childAspectRatio:
+                              (c.maxWidth - 30.0) / 4.0 / fileira,
+                          shrinkWrap: true,
+                          children: [
+                            for (final cat in Categoria.values)
+                              _CategoriaCard(
+                                categoria: cat,
+                                icone: (fileira * 0.32)
+                                    .clamp(20.0, 32.0),
+                                fonte: (fileira * 0.135)
+                                    .clamp(10.0, 13.0),
+                                onTap: () => _abrirCategoria(cat),
+                              ),
+                          ],
+                        );
+                        // Com teto (tablet), centraliza a grade na sobra.
+                        if (!comTeto) return grade;
+                        return Center(
+                          child: SizedBox(
+                            height: fileira * 3 + 20,
+                            child: grade,
                           ),
-                      ],
+                        );
+                      },
                     ),
                   ),
                 ],
@@ -247,9 +259,15 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class _CategoriaCard extends StatelessWidget {
-  const _CategoriaCard({required this.categoria, required this.onTap});
+  const _CategoriaCard(
+      {required this.categoria,
+      required this.icone,
+      required this.fonte,
+      required this.onTap});
 
   final Categoria categoria;
+  final double icone;
+  final double fonte;
   final VoidCallback onTap;
 
   @override
@@ -271,17 +289,23 @@ class _CategoriaCard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (categoria == Categoria.jogoDaVelha)
-                const Row(
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('X', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: AppColors.accent, height: 1)),
-                    SizedBox(width: 2),
-                    Text('O', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: AppColors.danger, height: 1)),
+              if (categoria == Categoria.jogoDaVelha)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('X', style: TextStyle(fontSize: icone, fontWeight: FontWeight.w900, color: AppColors.accent, height: 1)),
+                    const SizedBox(width: 2),
+                    Text('O', style: TextStyle(fontSize: icone, fontWeight: FontWeight.w900, color: AppColors.danger, height: 1)),
                   ],
                 )
               else
-                Text(categoria.emoji, style: const TextStyle(fontSize: 28)),
+                Text(categoria.emoji, style: TextStyle(fontSize: icone)),
               const SizedBox(height: 2),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -290,12 +314,15 @@ class _CategoriaCard extends StatelessWidget {
                   textAlign: TextAlign.center,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 12,
+                  style: TextStyle(
+                    fontSize: fonte,
                     fontWeight: FontWeight.w800,
                     color: AppColors.text,
                     height: 1.1,
                   ),
+                ),
+              ),
+                  ],
                 ),
               ),
             ],

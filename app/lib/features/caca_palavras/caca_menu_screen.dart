@@ -140,11 +140,11 @@ class _CacaMenuScreenState extends State<CacaMenuScreen> {
                     final deitado = c.maxWidth > c.maxHeight;
                     if (deitado) {
                       return Row(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(flex: 7, child: _colunaTemas()),
+                          Expanded(flex: 7, child: _colunaTemas(c.maxHeight)),
                           const SizedBox(width: 10),
-                          Expanded(flex: 5, child: _colunaDireita()),
+                          Expanded(flex: 5, child: _colunaDireita(c.maxHeight)),
                         ],
                       );
                     }
@@ -178,7 +178,7 @@ class _CacaMenuScreenState extends State<CacaMenuScreen> {
                               ],
                             ),
                           const SizedBox(height: 6),
-                          _colunaDireita(rolar: false),
+                          _colunaDireita(double.infinity, rolar: false),
                         ],
                       ),
                     );
@@ -192,14 +192,32 @@ class _CacaMenuScreenState extends State<CacaMenuScreen> {
     );
   }
 
-  /// Coluna rolável que centraliza quando sobra altura e rola se faltar.
-  Widget _caixaRolavel(Widget child) {
+  /// Alturas calculadas da altura útil H (opção A da T007): cada coluna
+  /// preenche o que cabe com botões grandes (até o teto) e o que sobrar
+  /// fica embaixo — conteúdo sempre ANCORADO NO TOPO. Só centraliza quando
+  /// a folga é grande (tablet com teto atingido); se faltar altura, rola.
+  /// Retorna (fileiraTema, botaoNivel, jogar, alturaConteudo, centralizar).
+  (double, double, double, double, bool) _alturas(double h) {
+    var fileira = ((h - 26.0) / 2.0).clamp(56.0, 96.0);
+    var nivel = (fileira * 0.85).clamp(52.0, 64.0);
+    var jogar = fileira.clamp(52.0, 64.0);
+    final esquerda = 18.0 + 4.0 + fileira * 2 + 4.0;
+    final direita = 18.0 + 4.0 + nivel + 6.0 + 22.0 + 6.0 + jogar;
+    final conteudo = esquerda > direita ? esquerda : direita;
+    return (fileira, nivel, jogar, conteudo, h - conteudo > 150.0);
+  }
+
+  /// Coluna rolável: ancorada no topo; centraliza só com folga grande
+  /// (tablet); rola se faltar altura (segurança).
+  Widget _caixaRolavel(Widget child, {required bool centralizar}) {
     return LayoutBuilder(
       builder: (context, c) => SingleChildScrollView(
         child: ConstrainedBox(
           constraints: BoxConstraints(minHeight: c.maxHeight),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: centralizar
+                ? MainAxisAlignment.center
+                : MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [child],
           ),
@@ -213,15 +231,18 @@ class _CacaMenuScreenState extends State<CacaMenuScreen> {
       texto,
       style: const TextStyle(
           color: Colors.white70,
-          fontSize: 13,
+          fontSize: 12,
           fontWeight: FontWeight.w800,
           letterSpacing: 0.5),
     );
   }
 
-  /// Coluna esquerda no deitado: 6 temas em 3 colunas x 2 fileiras de 72px.
-  Widget _colunaTemas() {
+  /// Coluna esquerda no deitado: 6 temas em 3 colunas x 2 fileiras.
+  /// Fileiras crescem com H até o teto de 96px.
+  Widget _colunaTemas(double h) {
+    final (fileira, _, _, _, centralizar) = _alturas(h);
     return _caixaRolavel(
+      centralizar: centralizar,
       Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -229,25 +250,31 @@ class _CacaMenuScreenState extends State<CacaMenuScreen> {
           _rotulo('TEMA DAS PALAVRAS'),
           const SizedBox(height: 4),
           for (var r = 0; r < 2; r++)
-            Row(
-              children: [
-                for (var i = 0; i < 3; i++)
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: SizedBox(
-                        height: 72,
-                        child: _TemaCard(
-                          key: Key('caca-tema-${_temas[r * 3 + i].name}'),
-                          categoria: _temas[r * 3 + i],
-                          selecionado: _temas[r * 3 + i] == _tema,
-                          onTap: () =>
-                              setState(() => _tema = _temas[r * 3 + i]),
+            Padding(
+              padding: EdgeInsets.only(bottom: r == 0 ? 4 : 0),
+              child: Row(
+                children: [
+                  for (var i = 0; i < 3; i++)
+                    Expanded(
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.symmetric(horizontal: 4),
+                        child: SizedBox(
+                          height: fileira,
+                          child: _TemaCard(
+                            key: Key(
+                                'caca-tema-${_temas[r * 3 + i].name}'),
+                            categoria: _temas[r * 3 + i],
+                            selecionado:
+                                _temas[r * 3 + i] == _tema,
+                            onTap: () => setState(
+                                () => _tema = _temas[r * 3 + i]),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
         ],
       ),
@@ -255,8 +282,9 @@ class _CacaMenuScreenState extends State<CacaMenuScreen> {
   }
 
   /// Coluna direita no deitado (e bloco inferior no retrato): 3 níveis lado
-  /// a lado (56px) + resumo da escolha + JOGAR grande.
-  Widget _colunaDireita({bool rolar = true}) {
+  /// a lado + resumo da escolha + JOGAR grande.
+  Widget _colunaDireita(double h, {bool rolar = true}) {
+    final (_, nivel, jogar, _, centralizar) = _alturas(h);
     final corpo = Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -268,9 +296,9 @@ class _CacaMenuScreenState extends State<CacaMenuScreen> {
             for (final n in Nivel.values)
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(4),
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: SizedBox(
-                    height: 56,
+                    height: nivel,
                     child: _NivelCard(
                       key: Key('caca-nivel-${n.name}'),
                       nivel: n,
@@ -291,26 +319,27 @@ class _CacaMenuScreenState extends State<CacaMenuScreen> {
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
               color: Colors.white,
-              fontSize: 15,
+              fontSize: 13,
               fontWeight: FontWeight.w800),
         ),
         const SizedBox(height: 6),
         SizedBox(
-          height: 56,
+          height: jogar,
           child: FilledButton.icon(
             key: const Key('caca-jogar'),
             onPressed: _jogar,
             icon: const Icon(Icons.play_arrow_rounded, size: 26),
             label: const Text(
               'JOGAR',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
+              style:
+                  TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
             ),
           ),
         ),
       ],
     );
     if (!rolar) return corpo;
-    return _caixaRolavel(corpo);
+    return _caixaRolavel(corpo, centralizar: centralizar);
   }
 }
 

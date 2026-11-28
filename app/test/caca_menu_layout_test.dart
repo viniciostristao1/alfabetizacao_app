@@ -55,28 +55,42 @@ void main() {
           expect(find.byKey(const Key('caca-resumo')), findsOneWidget);
           expect(find.byKey(const Key('caca-jogar')), findsOneWidget);
 
-          // Nenhum cartão além da tela (corte sem rolagem).
-          for (final c in Categoria.values) {
-            if (![
-              Categoria.animais,
-              Categoria.objetos,
-              Categoria.alimentos,
-              Categoria.nomes,
-              Categoria.espaco,
-              Categoria.futebol,
-            ].contains(c)) {
-              continue;
+          // Sem rolagem no normal: nenhum cartão além da tela. Com fonte
+          // ampliada a rolagem de segurança pode aparecer (sem exceção).
+          if (escala == 1.0) {
+            for (final c in Categoria.values) {
+              if (![
+                Categoria.animais,
+                Categoria.objetos,
+                Categoria.alimentos,
+                Categoria.nomes,
+                Categoria.espaco,
+                Categoria.futebol,
+              ].contains(c)) {
+                continue;
+              }
+              final r =
+                  tester.getRect(find.byKey(Key('caca-tema-${c.name}')));
+              expect(r.top, greaterThanOrEqualTo(-0.5),
+                  reason: '${c.name} acima da tela');
+              expect(r.bottom,
+                  lessThanOrEqualTo(tamanho.height + 0.5),
+                  reason: '${c.name} cortado embaixo em $tamanho x$escala');
             }
-            final r = tester.getRect(find.byKey(Key('caca-tema-${c.name}')));
-            expect(r.top, greaterThanOrEqualTo(-0.5),
-                reason: '${c.name} acima da tela');
-            expect(r.bottom,
-                lessThanOrEqualTo(tamanho.height + 0.5),
-                reason: '${c.name} cortado embaixo em $tamanho x$escala');
           }
         });
       }
     }
+  });
+
+  testWidgets('menu ancorado no topo em 864x411 (sem faixas pretas)',
+      (tester) async {
+    await _pumpMenu(tester, const Size(864, 411), 1.0);
+    final topo = tester.getRect(find.text('TEMA DAS PALAVRAS'));
+    // Conteúdo começa no terço de cima, não solto no meio.
+    expect(topo.top, lessThan(411 * 0.45));
+    final jogar = tester.getRect(find.byKey(const Key('caca-jogar')));
+    expect(jogar.bottom, lessThanOrEqualTo(411.5));
   });
 
   testWidgets('seleção: um estilo só, sem cinza fantasma', (tester) async {
