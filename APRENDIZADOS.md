@@ -2,6 +2,10 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-11-28 — v0.106.4 (Lista limpa + casos T008, sem mudar regra do mic)
+- **Ajuste 1:** marcador `[ ]`/`[X]` removido do `_ItemLista` (só layout; riscado + verde seguem como único sinal; widget confere `lineThrough`).
+- **Ajuste 2:** matriz T008 rodada no código real — falar só o tema numa frase de 3+ palavras é recusado em tol 0/1/2 (sem falha); 4 casos travados em teste com "O pato nada na lagoa". Regra intacta (banco: 519 frases, 3–7 palavras). Versão `0.106.4+157`.
+
 ## 2026-11-27 — v0.106.3 (Topo ancorado + fileiras calculadas, T007)
 - **Menu:** fileiras/botões calculados de H (temas até 96px, nível até 64, JOGAR até 64, pisos 48/52/52); coluna com scroll de segurança ancorada no topo, centro só com folga >150px (tablet); overlays do InkWell neutralizados (cinza fantasma era transitório).
 - **Home:** frase removida; fileira = min((útil-20)/3, 120) via aspect calculado; ícone/fonte proporcionais + FittedBox scaleDown (fonte 1.3); grade centralizada só com teto; AppBar com titleSpacing/chip menores (estouro prévio com fonte 1.3).

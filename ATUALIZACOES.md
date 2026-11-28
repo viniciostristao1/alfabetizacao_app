@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.106.4 (2026-11-28)
+- **Lista do caça-palavras sem marcadores:** saiu o `[ ]`/`[X]` da frente de cada palavra — a achada continua riscada e verde, mais limpa para a criança ler.
+
 ## v0.106.3 (2026-11-27)
 - **Tela inicial e menu do caça-palavras ajustados:** a frase "Escolha um tema" saiu e as 11 categorias agora cabem inteiras na tela deitada, sem precisar rolar. O menu do caça-palavras abre no topo com botões maiores (tema, nível e JOGAR), sem cortes.
 
