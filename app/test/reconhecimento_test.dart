@@ -83,6 +83,28 @@ void main() {
       expect(reconheceuFrase(frase, tema, ['galinha']), isFalse);
     });
 
+    test('T008: "O pato nada na lagoa" — só o tema ou pedaços erram', () {
+      const f = 'O pato nada na lagoa';
+      const t = 'pato';
+      for (final tol in [0, 1, 2]) {
+        expect(reconheceuFrase(f, t, ['pato'], tolerancia: tol), isFalse,
+            reason: 'tol $tol');
+        expect(reconheceuFrase(f, t, ['o pato'], tolerancia: tol), isFalse,
+            reason: 'tol $tol');
+        expect(reconheceuFrase(f, t, ['pato nada'], tolerancia: tol), isFalse,
+            reason: 'tol $tol');
+        expect(
+            reconheceuFrase(f, t, ['pato nada lagoa'], tolerancia: tol),
+            isFalse,
+            reason: 'tol $tol');
+        expect(
+            reconheceuFrase(f, t, ['o pato nada na lagoa'],
+                tolerancia: tol),
+            isTrue,
+            reason: 'tol $tol');
+      }
+    });
+
     test('frase muito incompleta erra', () {
       expect(reconheceuFrase(frase, tema, ['o ovo é']), isFalse);
       expect(reconheceuFrase(frase, tema, ['é da galinha']), isFalse);

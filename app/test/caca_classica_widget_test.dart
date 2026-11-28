@@ -84,10 +84,13 @@ void main() {
       expect(find.textContaining('(0/3)'), findsOneWidget);
     }
 
-    // Palavra certa: marca, risca a lista e soma moedas.
+    // Palavra certa: marca, risca a lista (riscado + verde, sem marcador)
+    // e soma moedas.
     await _arrastar(tester, alvo.celulas, 6);
     expect(find.textContaining('(1/3)'), findsOneWidget);
-    expect(find.textContaining('[X]'), findsOneWidget);
+    final riscada =
+        tester.widget<Text>(find.text(alvo.texto.toUpperCase()));
+    expect(riscada.style?.decoration, TextDecoration.lineThrough);
 
     // A mesma de novo: sem efeito (sem somar).
     final moedasAntes = find.textContaining('🪙').evaluate().isNotEmpty;

@@ -523,14 +523,6 @@ class _ItemLista extends StatelessWidget {
                 const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             child: Row(
               children: [
-                Text(
-                  achada ? '[X]' : '[ ]',
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w800),
-                ),
-                const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     texto.toUpperCase(),
