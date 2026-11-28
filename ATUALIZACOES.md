@@ -2,6 +2,9 @@
 
 Mudanças visíveis para o usuário. Topo = mais recente.
 
+## v0.106.3 (2026-11-27)
+- **Tela inicial e menu do caça-palavras ajustados:** a frase "Escolha um tema" saiu e as 11 categorias agora cabem inteiras na tela deitada, sem precisar rolar. O menu do caça-palavras abre no topo com botões maiores (tema, nível e JOGAR), sem cortes.
+
 ## v0.106.2 (2026-11-27)
 - **Menu do caça-palavras reorganizado:** temas de um lado e nível do outro, com cartões menores, resumo da escolha ("Futebol · Fácil · 3 palavras") e botão JOGAR grande — sem nada cortado na tela deitada.
 

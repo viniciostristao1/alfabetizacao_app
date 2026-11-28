@@ -2,6 +2,11 @@
 
 Notas técnicas e decisões. Topo = mais recente.
 
+## 2026-11-27 — v0.106.3 (Topo ancorado + fileiras calculadas, T007)
+- **Menu:** fileiras/botões calculados de H (temas até 96px, nível até 64, JOGAR até 64, pisos 48/52/52); coluna com scroll de segurança ancorada no topo, centro só com folga >150px (tablet); overlays do InkWell neutralizados (cinza fantasma era transitório).
+- **Home:** frase removida; fileira = min((útil-20)/3, 120) via aspect calculado; ícone/fonte proporcionais + FittedBox scaleDown (fonte 1.3); grade centralizada só com teto; AppBar com titleSpacing/chip menores (estouro prévio com fonte 1.3).
+- **Medido:** menu JOGAR até 292 (800x360) e 336 (864x411); Home última fileira em 323–377; zero overflow nos 5 tamanhos x fonte 1.0/1.3. Suite 229/229. Versão `0.106.3+156`.
+
 ## 2026-11-27 — v0.106.2 (Menu do caça em 2 colunas, T006)
 - **Cortes:** a Column somava mais altura que o útil com insets/fonte/tela menor e as grades sem rolagem cortavam em vez de rolar. Fix: deitado em Row (temas 3x2 de 72px + direita com níveis lado a lado 56px, resumo e JOGAR 56px); cada coluna com scroll de segurança que centraliza com folga e rola se faltar.
 - **Cinza fantasma:** código pintava todos os não-selecionados iguais — era overlay transitório do InkWell; neutralizado (splash/highlight/focus/hover transparentes) nos dois grupos + teste que toca, solta e confere a cor única.
